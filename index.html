@@ -122,6 +122,7 @@
     <button class="top-btn" onclick="exportFeedback()">ENVIAR FEEDBACK A CLAUDE</button>
     <button class="top-btn-outline" onclick="toggle('estrategia')">ESTRATEGIA PPOS</button>
     <button class="top-btn-outline" onclick="toggle('ideas-section')">PROPONER IDEA</button>
+    <button class="top-btn-outline" onclick="toggle('config-section')" title="Configuración">⚙️</button>
 </div>
 
 <!-- ESTRATEGIA PPOS -->
@@ -153,6 +154,20 @@
             <tr><td>Polémicos / Opinión</td><td>Mitos del mercado</td><td>La verdad con datos</td><td>Transparencia</td><td>Contra la corriente</td></tr>
         </tbody>
     </table>
+</div>
+
+<!-- CONFIG -->
+<div id="config-section" style="display:none;max-width:700px;margin:0 auto 24px;">
+    <div style="background:#fff;border:1px solid #E8E4DD;border-radius:12px;padding:20px;box-shadow:0 1px 3px #0001;">
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:12px;">Configuración</div>
+        <p style="font-size:11px;color:#777;margin-bottom:10px;">Pegá el token de GitHub para sincronizar feedback en la nube. Solo se guarda en este dispositivo.</p>
+        <input id="gh-token-input" type="password" placeholder="GitHub token (ghp_...)" class="idea-input" style="font-size:11px;letter-spacing:1px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button class="top-btn" onclick="setGhToken(document.getElementById('gh-token-input').value);document.getElementById('config-msg').style.display='block';setTimeout(()=>document.getElementById('config-msg').style.display='none',3000);">GUARDAR TOKEN</button>
+            <span id="config-status" style="font-size:10px;color:#999;"></span>
+        </div>
+        <div id="config-msg" style="color:#2D8C5A;font-size:10px;margin-top:6px;display:none;">Token guardado.</div>
+    </div>
 </div>
 
 <!-- IDEAS -->
@@ -1940,20 +1955,41 @@ let curSearch = '';
 
 function toggle(id) { const e=document.getElementById(id); e.style.display=e.style.display==='none'?'block':'none'; }
 
-// JSONBlob IDs
-const BLOB_FEEDBACK = '019d53ed-735d-78e7-b2ba-6f8a70a202c4';
-const BLOB_IDEAS = '019d53ed-8645-7e68-ac41-7a436af655a1';
-const BLOB_API = 'https://jsonblob.com/api/jsonBlob';
+// GitHub repo storage
+const GH_REPO = 'santiagomfunes-crypto/dashboard-guiones';
+const GH_API = 'https://api.github.com/repos/' + GH_REPO + '/contents/';
+const GH_RAW = 'https://raw.githubusercontent.com/' + GH_REPO + '/main/';
+function getGhToken() { return localStorage.getItem('gh_token') || ''; }
+function setGhToken(t) { localStorage.setItem('gh_token', t); }
+
+async function ghRead(file) {
+    const r = await fetch(GH_RAW + file + '?t=' + Date.now());
+    if (r.ok) return r.json();
+    return null;
+}
+
+async function ghWrite(file, data) {
+    const token = getGhToken();
+    if (!token) { alert('Configurá el token en ⚙️ para sincronizar.'); return; }
+    let sha = '';
+    try {
+        const r = await fetch(GH_API + file, { headers: { 'Authorization': 'token ' + token } });
+        if (r.ok) { const j = await r.json(); sha = j.sha; }
+    } catch(e) {}
+    const body = { message: 'update ' + file, content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))), branch: 'main' };
+    if (sha) body.sha = sha;
+    await fetch(GH_API + file, { method: 'PUT', headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+}
 
 async function saveFeedback(data) {
     localStorage.setItem('fb', JSON.stringify(data));
-    try { await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(data) }); } catch(e) {}
+    try { await ghWrite('feedback.json', data); } catch(e) {}
 }
 
 async function exportFeedback() {
     try {
-        await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(feedbackData) });
-        alert('Feedback sincronizado en la nube. Claude lo puede leer.');
+        await ghWrite('feedback.json', feedbackData);
+        alert('Feedback sincronizado. Claude lo puede leer.');
     } catch(e) {
         navigator.clipboard.writeText(JSON.stringify(feedbackData,null,2)).then(()=>alert('Copiado. Pegalo en Claude Code.')).catch(()=>prompt('Copiá esto:',JSON.stringify(feedbackData)));
     }
@@ -1961,8 +1997,8 @@ async function exportFeedback() {
 
 async function loadFeedback() {
     try {
-        const r = await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { headers:{'Accept':'application/json'} });
-        if (r.ok) { const cloud = await r.json(); const local = JSON.parse(localStorage.getItem('fb')||'{}'); feedbackData = {...cloud}; for(const[id,fb] of Object.entries(local)){if(!feedbackData[id]||(fb.notas&&fb.notas!==(feedbackData[id].notas||'')))feedbackData[id]=fb;} localStorage.setItem('fb',JSON.stringify(feedbackData)); render(); updateStats(); return; }
+        const cloud = await ghRead('feedback.json');
+        if (cloud) { const local = JSON.parse(localStorage.getItem('fb')||'{}'); feedbackData = {...cloud}; for(const[id,fb] of Object.entries(local)){if(!feedbackData[id]||(fb.notas&&fb.notas!==(feedbackData[id].notas||'')))feedbackData[id]=fb;} localStorage.setItem('fb',JSON.stringify(feedbackData)); render(); updateStats(); return; }
     } catch(e){}
     feedbackData = JSON.parse(localStorage.getItem('fb')||'{}');
     render(); updateStats();
@@ -2086,15 +2122,16 @@ function updateStats() {
 
 // IDEAS
 let ideasData=[];
-async function loadIdeas(){try{const r=await fetch(`${BLOB_API}/${BLOB_IDEAS}`,{headers:{'Accept':'application/json'}});if(r.ok)ideasData=await r.json();}catch(e){ideasData=JSON.parse(localStorage.getItem('ideas')||'[]');}renderIdeas();}
+async function loadIdeas(){try{const cloud=await ghRead('ideas.json');if(cloud){ideasData=cloud;localStorage.setItem('ideas',JSON.stringify(ideasData));renderIdeas();return;}}catch(e){}ideasData=JSON.parse(localStorage.getItem('ideas')||'[]');renderIdeas();}
 function renderIdeas(){const l=document.getElementById('ideas-list');if(!ideasData.length){l.innerHTML='<div style="text-align:center;color:#bbb;font-size:11px;padding:14px;">No hay ideas pendientes</div>';return;}l.innerHTML=ideasData.map(i=>`<div style="background:#fff;border:1px solid #E8E4DD;border-radius:8px;padding:12px;margin-bottom:6px;"><div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#8B6F3A;font-weight:600;">${i.autor||'Anónimo'}</span><span style="font-size:9px;color:#bbb;">${i.fecha||''}</span></div>${i.angulo?`<span style="font-size:8px;padding:2px 6px;border-radius:4px;background:#F5F5F3;color:#999;display:inline-block;margin:4px 0;">${i.angulo}</span>`:''}<div style="font-size:12px;font-weight:600;margin:4px 0;">${i.tema}</div><div style="font-size:11px;color:#777;">${i.detalle}</div></div>`).join('');}
-async function enviarIdea(){const idea={autor:document.getElementById('idea-autor').value||'Santiago',angulo:document.getElementById('idea-angulo').value,tema:document.getElementById('idea-tema').value,detalle:document.getElementById('idea-detalle').value,fecha:new Date().toLocaleDateString('es-AR'),estado:'pendiente'};if(!idea.tema){alert('Poné el tema');return;}ideasData.push(idea);localStorage.setItem('ideas',JSON.stringify(ideasData));try{await fetch(`${BLOB_API}/${BLOB_IDEAS}`,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(ideasData)});}catch(e){}document.getElementById('idea-tema').value='';document.getElementById('idea-detalle').value='';document.getElementById('idea-angulo').value='';document.getElementById('idea-msg').style.display='block';setTimeout(()=>document.getElementById('idea-msg').style.display='none',3000);renderIdeas();}
+async function enviarIdea(){const idea={autor:document.getElementById('idea-autor').value||'Santiago',angulo:document.getElementById('idea-angulo').value,tema:document.getElementById('idea-tema').value,detalle:document.getElementById('idea-detalle').value,fecha:new Date().toLocaleDateString('es-AR'),estado:'pendiente'};if(!idea.tema){alert('Poné el tema');return;}ideasData.push(idea);localStorage.setItem('ideas',JSON.stringify(ideasData));try{await ghWrite('ideas.json',ideasData);}catch(e){}document.getElementById('idea-tema').value='';document.getElementById('idea-detalle').value='';document.getElementById('idea-angulo').value='';document.getElementById('idea-msg').style.display='block';setTimeout(()=>document.getElementById('idea-msg').style.display='none',3000);renderIdeas();}
 
-setInterval(async()=>{try{const r=await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`,{headers:{'Accept':'application/json'}});if(r.ok){const d=await r.json();if(JSON.stringify(d)!==JSON.stringify(feedbackData)){feedbackData=d;render();updateStats();}}}catch(e){}},60000);
+setInterval(async()=>{try{const d=await ghRead('feedback.json');if(d&&JSON.stringify(d)!==JSON.stringify(feedbackData)){feedbackData=d;render();updateStats();}}catch(e){}},60000);
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')cerrarModal();});
 loadFeedback();
 loadIdeas();
+if(getGhToken()){document.getElementById('config-status')&&(document.getElementById('config-status').textContent='Token configurado ✓');}
 </script>
 </body>
 </html>
