@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guiones — Santiago Funes RE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #F5F5F3; color: #1a1a2e; min-height: 100vh; padding: 24px; }
+        a { color: #8B6F3A; }
+        .header { text-align: center; margin-bottom: 24px; padding: 24px 0; border-bottom: 2px solid #E8E4DD; }
+        .header h1 { font-family: 'Cinzel', serif; font-size: 24px; letter-spacing: 3px; color: #1a1a2e; margin-bottom: 4px; }
+        .header .sub { color: #8B6F3A; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; }
+        .top-actions { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+        .top-btn { background: #8B6F3A; color: #fff; border: none; padding: 9px 20px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: 1px; transition: all 0.2s; }
+        .top-btn:hover { opacity: 0.85; }
+        .top-btn-outline { background: #fff; color: #8B6F3A; border: 1px solid #8B6F3A; padding: 9px 20px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 1px; transition: all 0.2s; }
+        .top-btn-outline:hover { background: #8B6F3A11; }
+        .stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { background: #fff; border: 1px solid #E8E4DD; border-radius: 10px; padding: 12px 22px; text-align: center; box-shadow: 0 1px 3px #0001; }
+        .stat-card .number { font-family: 'Cinzel', serif; font-size: 22px; color: #8B6F3A; }
+        .stat-card .label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-top: 2px; }
+        .search-box { display: flex; justify-content: center; margin-bottom: 16px; }
+        .search-box input { width: 100%; max-width: 400px; padding: 10px 16px; border: 1px solid #E8E4DD; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px; background: #fff; outline: none; }
+        .search-box input:focus { border-color: #8B6F3A; }
+        .filters { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+        .filter-btn { background: #fff; border: 1px solid #E8E4DD; color: #999; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Montserrat', sans-serif; transition: all 0.2s; }
+        .filter-btn:hover, .filter-btn.active { background: #8B6F3A; color: #fff; border-color: #8B6F3A; }
+        .cat-filters { display: flex; gap: 5px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .cat-btn { background: #fff; border: 1px solid #E8E4DD; color: #777; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 9px; letter-spacing: 0.5px; font-family: 'Montserrat', sans-serif; transition: all 0.2s; }
+        .cat-btn:hover, .cat-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .section-title { font-family: 'Cinzel', serif; font-size: 15px; color: #8B6F3A; margin: 24px 0 12px; padding-left: 10px; border-left: 3px solid #8B6F3A; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; margin-bottom: 16px; }
+        .card { background: #fff; border: 1px solid #E8E4DD; border-radius: 10px; padding: 16px; transition: all 0.2s; box-shadow: 0 1px 3px #0001; }
+        .card:hover { border-color: #8B6F3A66; box-shadow: 0 2px 8px #0002; }
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .card-num { font-family: 'Cinzel', serif; font-size: 14px; color: #8B6F3A; }
+        .badge { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+        .b-prob { background: #FDE8E8; color: #C8453A; }
+        .b-prod { background: #E8F5EE; color: #2D8C5A; }
+        .b-sol { background: #E8F0FD; color: #4A90D9; }
+        .b-con { background: #FDF3E8; color: #D48A2C; }
+        .card-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; color: #1a1a2e; }
+        .card-hook { font-size: 11px; color: #777; line-height: 1.5; font-style: italic; }
+        .card-meta { font-size: 10px; color: #bbb; margin-top: 6px; letter-spacing: 1px; text-transform: uppercase; }
+        .card-actions { display: flex; gap: 6px; margin-top: 8px; }
+        .btn { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 10px; font-family: 'Montserrat', sans-serif; font-weight: 600; transition: all 0.2s; }
+        .btn-ver { background: #8B6F3A; color: #fff; }
+        .btn-ver:hover { opacity: 0.85; }
+        .btn-status { background: #F5F5F3; color: #999; border: 1px solid #E8E4DD; }
+        .btn-status:hover { border-color: #8B6F3A; color: #8B6F3A; }
+        .btn-status.filmado { background: #E8F5EE; color: #2D8C5A; border-color: #2D8C5A; }
+        .btn-status.publicado { background: #E8F0FD; color: #4A90D9; border-color: #4A90D9; }
+        .has-fb { font-size: 9px; color: #8B6F3A; margin-top: 4px; opacity: 0.7; }
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000aa; z-index: 100; overflow-y: auto; }
+        .modal-bg.open { display: flex; justify-content: center; padding: 40px 20px; }
+        .modal { background: #fff; border-radius: 14px; width: 100%; max-width: 640px; padding: 28px; position: relative; height: fit-content; color: #1a1a2e; }
+        .modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: #ccc; font-size: 24px; cursor: pointer; }
+        .modal-close:hover { color: #333; }
+        .modal-num { font-family: 'Cinzel', serif; font-size: 18px; color: #8B6F3A; margin-bottom: 4px; }
+        .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+        .modal-section { font-size: 9px; color: #8B6F3A; letter-spacing: 2px; text-transform: uppercase; margin: 16px 0 4px; font-weight: 600; }
+        .modal-text { font-size: 13px; color: #444; line-height: 1.9; white-space: pre-wrap; }
+        .modal-screen { font-size: 11px; color: #888; line-height: 1.6; }
+        .modal-caption { font-size: 11px; color: #888; line-height: 1.6; }
+        .feedback-area { margin-top: 18px; padding-top: 16px; border-top: 1px solid #E8E4DD; }
+        .feedback-label { font-size: 10px; color: #8B6F3A; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+        .feedback-textarea { width: 100%; background: #F5F5F3; border: 1px solid #E8E4DD; border-radius: 8px; color: #333; padding: 10px; font-family: 'Montserrat', sans-serif; font-size: 12px; min-height: 60px; resize: vertical; }
+        .feedback-textarea:focus { outline: none; border-color: #8B6F3A; }
+        .feedback-textarea::placeholder { color: #bbb; }
+        .rating { display: flex; gap: 4px; margin: 6px 0; }
+        .star { font-size: 18px; cursor: pointer; color: #ddd; transition: color 0.15s; }
+        .star.active { color: #8B6F3A; }
+        .star:hover { color: #8B6F3A; }
+        .feedback-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .btn-save { background: #8B6F3A; color: #fff; padding: 8px 18px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10px; }
+        .btn-save:hover { opacity: 0.85; }
+        .btn-outline { background: #fff; color: #8B6F3A; border: 1px solid #8B6F3A; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 10px; }
+        .btn-outline:hover { background: #8B6F3A11; }
+        .btn-reset { background: #fff; color: #C8453A; border: 1px solid #C8453A44; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 10px; }
+        .saved-msg { color: #2D8C5A; font-size: 10px; margin-top: 6px; display: none; }
+        .ppos-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 8px; margin-bottom: 16px; }
+        .ppos-card { border-radius: 8px; padding: 12px; }
+        .ppos-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        .ppos-table th { text-align: left; padding: 6px; color: #999; border-bottom: 1px solid #E8E4DD; }
+        .ppos-table td { padding: 5px 6px; color: #777; border-bottom: 1px solid #F5F5F3; }
+        .ppos-table td:first-child { color: #1a1a2e; font-weight: 500; }
+        .idea-input { width: 100%; background: #F5F5F3; border: 1px solid #E8E4DD; border-radius: 8px; color: #333; padding: 10px; font-family: 'Montserrat', sans-serif; font-size: 12px; margin-bottom: 8px; }
+        .idea-input:focus { outline: none; border-color: #8B6F3A; }
+        .idea-select { width: 100%; background: #F5F5F3; border: 1px solid #E8E4DD; border-radius: 8px; color: #333; padding: 10px; font-family: 'Montserrat', sans-serif; font-size: 12px; margin-bottom: 8px; }
+        .counter { text-align: center; font-size: 11px; color: #bbb; margin-bottom: 16px; }
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .grid { grid-template-columns: 1fr; }
+            .modal { padding: 18px; }
+            .ppos-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PASSWORD -->
+<div id="lock-screen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#F5F5F3;z-index:9999;display:flex;align-items:center;justify-content:center;">
+    <div style="text-align:center;background:#fff;padding:40px 32px;border-radius:14px;border:1px solid #E8E4DD;box-shadow:0 2px 12px #0001;max-width:340px;width:90%;">
+        <div style="font-family:'Cinzel',serif;font-size:20px;color:#1a1a2e;letter-spacing:3px;margin-bottom:4px;">Santiago Funes</div>
+        <div style="font-size:11px;color:#8B6F3A;letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;">Dashboard de Guiones</div>
+        <input id="pw-input" type="password" placeholder="Contraseña" style="width:100%;padding:12px;border:1px solid #E8E4DD;border-radius:8px;font-family:'Montserrat',sans-serif;font-size:15px;text-align:center;letter-spacing:6px;margin-bottom:12px;outline:none;" onkeydown="if(event.key==='Enter')checkPw()">
+        <button onclick="checkPw()" style="width:100%;background:#8B6F3A;color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;letter-spacing:2px;">ENTRAR</button>
+        <div id="pw-error" style="color:#C8453A;font-size:11px;margin-top:10px;display:none;">Contraseña incorrecta</div>
+    </div>
+</div>
+
+<div id="app-content" style="display:none;">
+
+<div class="header">
+    <h1>Santiago Funes</h1>
+    <div class="sub">Dashboard de Guiones · Real Estate</div>
+</div>
+
+<div class="top-actions">
+    <button class="top-btn" onclick="exportFeedback()">ENVIAR FEEDBACK A CLAUDE</button>
+    <button class="top-btn-outline" onclick="toggle('estrategia')">ESTRATEGIA PPOS</button>
+    <button class="top-btn-outline" onclick="toggle('ideas-section')">PROPONER IDEA</button>
+</div>
+
+<!-- ESTRATEGIA PPOS -->
+<div id="estrategia" style="display:none;max-width:900px;margin:0 auto 24px;padding:20px;background:#fff;border:1px solid #E8E4DD;border-radius:12px;box-shadow:0 1px 3px #0001;">
+    <div style="text-align:center;margin-bottom:14px;">
+        <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:3px;">ESTRATEGIA PPOS</div>
+        <div style="font-size:10px;color:#999;margin-top:4px;">Cada tema × 4 ángulos = 4 videos. 12 temas = hasta 240 videos.</div>
+    </div>
+    <div class="ppos-grid">
+        <div class="ppos-card" style="background:#FDE8E8;border:1px solid #C8453A33;"><div style="font-size:11px;font-weight:700;color:#C8453A;margin-bottom:4px;">P — PROBLEMA</div><div style="font-size:10px;color:#666;">Dolor real que la audiencia siente</div></div>
+        <div class="ppos-card" style="background:#E8F5EE;border:1px solid #2D8C5A33;"><div style="font-size:11px;font-weight:700;color:#2D8C5A;margin-bottom:4px;">P — PRODUCTO</div><div style="font-size:10px;color:#666;">Posicionar la oportunidad</div></div>
+        <div class="ppos-card" style="background:#E8F0FD;border:1px solid #4A90D933;"><div style="font-size:11px;font-weight:700;color:#4A90D9;margin-bottom:4px;">S — SOLUCIÓN</div><div style="font-size:10px;color:#666;">Presentar la respuesta</div></div>
+        <div class="ppos-card" style="background:#FDF3E8;border:1px solid #D48A2C33;"><div style="font-size:11px;font-weight:700;color:#D48A2C;margin-bottom:4px;">O — OTRO</div><div style="font-size:10px;color:#666;">Desafiar lo que la mayoría piensa</div></div>
+    </div>
+    <table class="ppos-table">
+        <thead><tr><th>TEMA</th><th style="color:#C8453A;">PROBLEMA</th><th style="color:#2D8C5A;">PRODUCTO</th><th style="color:#4A90D9;">SOLUCIÓN</th><th style="color:#D48A2C;">OTRO</th></tr></thead>
+        <tbody>
+            <tr><td>Inversión / Números</td><td>La plata pierde valor</td><td>Renta + apreciación</td><td>Diversificar en ladrillos</td><td>"Tandil está cara"</td></tr>
+            <tr><td>Crédito hipotecario</td><td>Generación sin comprar</td><td>Tasas bajando</td><td>El crédito como herramienta</td><td>"Es una trampa"</td></tr>
+            <tr><td>Costos de construcción</td><td>Sube todos los meses</td><td>Por qué cuestan lo que cuestan</td><td>Construir más = baja</td><td>"Desarrolladores ambiciosos"</td></tr>
+            <tr><td>Fideicomiso / pozo</td><td>Miedo a que te estafen</td><td>Ahorro 30-40%</td><td>Cómo funciona</td><td>"El pozo es más caro"</td></tr>
+            <tr><td>Tandil como negocio</td><td>Nadie dimensiona Tandil</td><td>Tech + industria + turismo</td><td>Ciudad intermedia ideal</td><td>"Es una burbuja"</td></tr>
+            <tr><td>Alquileres / Acceso</td><td>No llegan a fin de mes</td><td>Comprar vs alquilar</td><td>Construir = bajan</td><td>"Regular funciona"</td></tr>
+            <tr><td>Mercado Argentina</td><td>Precios suben</td><td>Mejor momento en años</td><td>Reglas claras</td><td>"Estamos en burbuja"</td></tr>
+            <tr><td>Primer departamento</td><td>4 de 10 no se independizan</td><td>Cuánto necesitás</td><td>Crédito + interior</td><td>"No me alcanza"</td></tr>
+            <tr><td>Mudarse al interior</td><td>BsAs insostenible</td><td>Ciudades intermedias</td><td>Remoto + calidad</td><td>"Interior sin laburo"</td></tr>
+            <tr><td>Infraestructura</td><td>Servicios al tope</td><td>Inversión pública</td><td>Desarrollo con plan</td><td>"Que paren de construir"</td></tr>
+            <tr><td>Detrás de escena</td><td>Lo difícil del negocio</td><td>Día a día real</td><td>Cómo arrancar</td><td>"Es fácil ser broker"</td></tr>
+            <tr><td>Polémicos / Opinión</td><td>Mitos del mercado</td><td>La verdad con datos</td><td>Transparencia</td><td>Contra la corriente</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- IDEAS -->
+<div id="ideas-section" style="display:none;max-width:700px;margin:0 auto 24px;">
+    <div style="background:#fff;border:1px solid #E8E4DD;border-radius:12px;padding:20px;box-shadow:0 1px 3px #0001;">
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:12px;">Nueva idea de guion</div>
+        <input id="idea-autor" placeholder="Tu nombre" class="idea-input">
+        <select id="idea-angulo" class="idea-select"><option value="">Ángulo PPOS</option><option value="P-Problema">P — Problema</option><option value="P-Producto">P — Producto</option><option value="S-Solución">S — Solución</option><option value="O-Otro">O — Otro</option></select>
+        <input id="idea-tema" placeholder="Tema" class="idea-input">
+        <textarea id="idea-detalle" placeholder="Detalle..." class="idea-input" style="min-height:60px;resize:vertical;"></textarea>
+        <button class="top-btn" onclick="enviarIdea()">ENVIAR IDEA</button>
+        <div id="idea-msg" style="color:#2D8C5A;font-size:10px;margin-top:6px;display:none;">Idea enviada.</div>
+    </div>
+    <div id="ideas-list" style="margin-top:10px;"></div>
+</div>
+
+<div class="stats">
+    <div class="stat-card"><div class="number" id="s-total">0</div><div class="label">Total</div></div>
+    <div class="stat-card"><div class="number" id="s-listos">0</div><div class="label">Listos</div></div>
+    <div class="stat-card"><div class="number" id="s-filmados">0</div><div class="label">Filmados</div></div>
+    <div class="stat-card"><div class="number" id="s-publicados">0</div><div class="label">Publicados</div></div>
+</div>
+
+<div class="search-box"><input id="search" placeholder="Buscar guion..." oninput="doSearch()"></div>
+
+<div class="filters">
+    <button class="filter-btn active" onclick="setAng('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="setAng('prob',this)">Problema</button>
+    <button class="filter-btn" onclick="setAng('prod',this)">Producto</button>
+    <button class="filter-btn" onclick="setAng('sol',this)">Solución</button>
+    <button class="filter-btn" onclick="setAng('con',this)">Otro</button>
+</div>
+<div class="cat-filters">
+    <button class="cat-btn active" onclick="setCat('todos',this)">Todos</button>
+    <button class="cat-btn" onclick="setCat('Inversión',this)">Inversión</button>
+    <button class="cat-btn" onclick="setCat('Crédito',this)">Crédito</button>
+    <button class="cat-btn" onclick="setCat('Costos',this)">Costos</button>
+    <button class="cat-btn" onclick="setCat('Fideicomiso',this)">Fideicomiso</button>
+    <button class="cat-btn" onclick="setCat('Tandil',this)">Tandil</button>
+    <button class="cat-btn" onclick="setCat('Alquileres',this)">Alquileres</button>
+    <button class="cat-btn" onclick="setCat('Mercado',this)">Mercado</button>
+    <button class="cat-btn" onclick="setCat('PrimerDepto',this)">1er Depto</button>
+    <button class="cat-btn" onclick="setCat('Mudarse',this)">Mudarse</button>
+    <button class="cat-btn" onclick="setCat('Infra',this)">Infraestructura</button>
+    <button class="cat-btn" onclick="setCat('Escena',this)">Escena</button>
+    <button class="cat-btn" onclick="setCat('Polémicos',this)">Polémicos</button>
+</div>
+
+<div class="counter" id="counter"></div>
+<div id="content"></div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)cerrarModal()">
+    <div class="modal">
+        <button class="modal-close" onclick="cerrarModal()">&times;</button>
+        <div id="modal-badge"></div>
+        <div class="modal-num" id="modal-num"></div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-section">Guion completo</div>
+        <div class="modal-text" id="modal-text"></div>
+        <div class="modal-section">Textos en pantalla</div>
+        <div class="modal-screen" id="modal-screen"></div>
+        <div class="modal-section">Caption Instagram</div>
+        <div class="modal-caption" id="modal-ig"></div>
+        <div class="modal-section">Caption TikTok</div>
+        <div class="modal-caption" id="modal-tk"></div>
+        <div class="modal-section">Fuentes de datos</div>
+        <div class="modal-caption" id="modal-fuentes" style="font-size:10px;color:#999;line-height:1.8;"></div>
+        <div class="feedback-area">
+            <div class="feedback-label">Tu feedback para Claude</div>
+            <div class="rating" id="modal-rating"></div>
+            <textarea class="feedback-textarea" id="modal-notas" placeholder="Qué cambiarías, qué no te gusta, qué ajustar..."></textarea>
+            <div class="feedback-actions">
+                <button class="btn-save" onclick="guardarFeedback()">Guardar</button>
+                <button class="btn-outline" id="btn-status" onclick="cambiarStatus()">Filmado</button>
+                <button class="btn-reset" onclick="resetFeedback()">Reset</button>
+            </div>
+            <div class="saved-msg" id="saved-msg">Guardado.</div>
+        </div>
+    </div>
+</div>
+
+</div><!-- /app-content -->
+
+<script>
+const PW='1234';
+function checkPw(){if(document.getElementById('pw-input').value===PW){localStorage.setItem('sf-auth','ok');document.getElementById('lock-screen').style.display='none';document.getElementById('app-content').style.display='block';}else{document.getElementById('pw-error').style.display='block';document.getElementById('pw-input').value='';}}
+if(localStorage.getItem('sf-auth')==='ok'){document.getElementById('lock-screen').style.display='none';document.getElementById('app-content').style.display='block';}else{document.getElementById('lock-screen').style.display='flex';}
+try{document.getElementById('pw-input').focus();}catch(e){}
+</script>
+
+<script>
+const guiones = [
+// ═══════════════════════════════════════
+// INVERSIÓN / NÚMEROS (10)
+// ═══════════════════════════════════════
+{id:"INV1",tema:"Inversión",t:"Tandil está cara? Comparemos con Buenos Aires",ang:"con",
+hook:"Me ponen mucho en los comentarios que Tandil está cara. Y yo siempre pregunto lo mismo: cara comparada con qué.",
+text:`"Me ponen mucho en los comentarios que Tandil está cara. Que los números son altos. Y yo siempre pregunto lo mismo: cara comparada con qué."
+
+"Comparemos con Buenos Aires, que es lo que todo el mundo conoce."
+
+"Un departamento en Buenos Aires hoy te da una renta neta del 3 y medio por ciento anual. En Tandil, estás arriba del 4 y medio, hay zonas donde llegás al 5. Solo en renta, Tandil ya le gana a Buenos Aires."
+
+"Pero la diferencia grande está en la apreciación. Buenos Aires es una ciudad que no crece en población. Tandil creció un 20% en el último censo, casi el doble del promedio nacional. Mil porteños por año se mudan acá."
+
+"Una ciudad que crece más rápido es una ciudad donde los precios suben más rápido. El metro cuadrado en Buenos Aires está estancado hace años. En Tandil viene subiendo."
+
+"Y encima, el metro cuadrado en Tandil hoy está entre 2.000 y 2.600 dólares. En Palermo el promedio está en 3.390. Eso es un 30 a 40% menos. Ese diferencial es margen de apreciación puro."
+
+"Entonces Tandil te da más renta que Buenos Aires, más apreciación que Buenos Aires, y el metro cuadrado es un 30 a 40% más barato."
+
+"Está cara Tandil? O lo que pasa es que si la comparás con Buenos Aires, resulta que es mejor negocio."`,
+screen:"RENTA CABA: 3,5% · RENTA TANDIL: 4,5-5% · CRECIMIENTO TANDIL: +20% · 1.000 PORTEÑOS/AÑO · M² PALERMO: $3.390 · TANDIL: $2.000-2.600 · -30/40%",
+ig:"Tandil está cara? Comparemos con Buenos Aires. Renta CABA: 3,5%. Tandil: 4,5-5%. Buenos Aires no crece en población. Tandil creció 20%. M² Palermo: $3.400, Tandil: $2.000-2.600. Más renta, más apreciación, menos precio. Está cara?\n#RealEstate #Tandil #Inversiones #Argentina #BuenosAires",
+tk:"Tandil está cara? Comparemos con Buenos Aires. Te vas a sorprender. #Tandil #RealEstate #Argentina",
+fuentes:"• Renta CABA ~3,5% neto → Reporte Inmobiliario ene 2026\n• Renta Tandil ~4,5-5% → Ref. mercado Santiago\n• Crecimiento 20,5% → Censo 2022 INDEC\n• 1.000 porteños/año → Infonegocios\n• M² Palermo 3.452 → Zonaprop feb 2026\n• M² Tandil 2.000-2.600 → Santiago"},
+
+{id:"INV2",tema:"Inversión",t:"Cuánta plata necesitás para invertir en real estate",ang:"sol",
+hook:"Todo el mundo piensa que para invertir en real estate necesitás 200 mil dólares. No es así.",
+text:`"Todo el mundo piensa que para invertir en real estate necesitás 200 mil dólares. No es así."
+
+"En Tandil podés entrar a un fideicomiso al costo con un anticipo de 20 mil dólares y cuotas durante la obra. Podés comprar un lote desde 17 mil dólares. Un monoambiente usado, desde 50 mil."
+
+"Si tenés acceso a crédito, con un 25% de anticipo y un sueldo que te califique, podés comprar un departamento sin tener toda la plata."
+
+"El real estate no es solo para millonarios. Es para cualquiera que entienda que poner plata en un activo que se revaloriza es mejor que dejarla parada."
+
+"La barrera de entrada es más baja de lo que pensás. Lo que falta no es plata, es información."`,
+screen:"FIDEICOMISO: DESDE $20K ANTICIPO · LOTE: DESDE $17K · MONOAMBIENTE: DESDE $50K · CRÉDITO: 25% ANTICIPO",
+ig:"Para invertir en real estate no necesitás 200 mil dólares. Fideicomiso desde 20K de anticipo. Lote desde 17K. Monoambiente desde 50K. Con crédito, 25% de anticipo. La barrera es más baja de lo que pensás.\n#Inversiones #RealEstate #Tandil #Argentina",
+tk:"Cuánta plata necesitás para invertir en real estate? Menos de lo que pensás. #RealEstate #Inversiones",
+fuentes:"• Lotes desde USD 17.000 → Zonaprop Tandil\n• Fideicomiso anticipo ~30% → Mercado Tandil\n• Crédito anticipo 25% → Banco Ciudad mar 2026"},
+
+{id:"INV3",tema:"Inversión",t:"Los números reales de una operación inmobiliaria",ang:"prod",
+hook:"Nadie te muestra los números reales de una operación inmobiliaria. Yo te los voy a mostrar.",
+text:`"Nadie te muestra los números reales de una operación inmobiliaria. Yo te los voy a mostrar."
+
+"Comprás un departamento de 2 ambientes en Tandil por 100 mil dólares. Lo ponés en alquiler. Hoy un 2 ambientes se alquila desde 400 mil pesos por mes. Sacale expensas, impuestos, algún arreglo, te queda una renta neta del 4 al 5% anual."
+
+"Pero eso es solo la renta. El departamento además se revaloriza. En una ciudad que crece, los precios suben. Las propiedades en pozo subieron entre un 10 y un 15% el último año."
+
+"Entonces tenés dos cosas: un ingreso mensual y un activo que vale más. Eso no te lo da un plazo fijo. No te lo da un bono. No te lo da tener los dólares abajo del colchón."
+
+"El real estate no es la inversión más sexy. Pero es la más consistente."`,
+screen:"DEPTO $100K · ALQUILER $400K+/MES · RENTA NETA 4-5% · APRECIACIÓN 10-15% · RENTA + APRECIACIÓN",
+ig:"Los números reales: depto $100K, alquiler $400K+/mes, renta neta 4-5%. Más apreciación del 10-15%. Renta + un activo que vale más cada año.\n#RealEstate #Inversiones #Tandil #NúmerosReales",
+tk:"Los números reales de una operación inmobiliaria. Sin verso. #RealEstate #Inversiones",
+fuentes:"• Alquiler 2 amb Tandil $400K+ → Mercado mar 2026\n• Renta ~5% anual → Reporte Inmobiliario\n• Apreciación pozo 10-15% → Newsweek / BBVA Research"},
+
+{id:"INV4",tema:"Inversión",t:"Tu plata en el banco pierde todos los días",ang:"prob",
+hook:"Si tenés dólares guardados, estás perdiendo plata todos los días. Y no lo sabés.",
+text:`"Si tenés dólares guardados, estás perdiendo plata todos los días. Y no lo sabés."
+
+"El dólar en Argentina parece seguro, pero el dólar a nivel mundial pierde poder de compra. La inflación en Estados Unidos fue del 3 y pico el año pasado. Tu billete de cien dólares hoy compra menos que hace un año."
+
+"Un plazo fijo en dólares te da menos del 2% anual. Ni siquiera le gana a la inflación americana."
+
+"Mientras tanto, el metro cuadrado en Tandil subió. Los alquileres subieron. Los costos de construcción subieron. Todo lo que podías comprar con esos dólares, ahora sale más caro."
+
+"La plata quieta siempre pierde. No importa en qué moneda esté. La pregunta no es si invertir, es en qué."`,
+screen:"INFLACIÓN USA: 3%+ · PLAZO FIJO USD: <2% · M² SUBE · ALQUILERES SUBEN · PLATA QUIETA PIERDE",
+ig:"Tenés dólares guardados? Estás perdiendo plata. Inflación USA 3%+, plazo fijo USD <2%. Mientras tanto, el m², los alquileres, todo sube. La plata quieta siempre pierde.\n#Inversiones #Dólares #RealEstate #Argentina",
+tk:"Si tenés dólares guardados, estás perdiendo plata. #Inversiones #RealEstate",
+fuentes:"• Inflación USA ~3% → BLS 2025\n• Plazo fijo USD <2% → Ref. bancaria Argentina\n• M² Tandil en alza → Zonaprop"},
+
+{id:"INV5",tema:"Inversión",t:"Comprar para alquilar: cuánto te queda limpio",ang:"prod",
+hook:"Mucha gente me pregunta: 'Si compro un depto para alquilar, cuánto me queda?' Te hago las cuentas.",
+text:`"Mucha gente me pregunta: si compro un depto para alquilar, cuánto me queda. Te hago las cuentas."
+
+"Departamento de 2 ambientes en Tandil. Precio: ponele 100 mil dólares. Alquiler mensual: 400 mil pesos."
+
+"De eso sacale: expensas que paga el propietario, monotributo o ganancias, algún mes vacío entre inquilinos, y un fondo para arreglos. Te queda limpio un 4% anual sobre lo que pusiste."
+
+"Suena poco? Sumale que el departamento se revaloriza. En ciudades que crecen, la apreciación es de entre 5 y 10% anual. Eso te da un retorno total del 9 al 14%."
+
+"Ninguna inversión conservadora en el mundo te da eso. El truco del real estate es que ganás por dos lados a la vez: renta y apreciación. Los que miran solo la renta no entienden el negocio."`,
+screen:"DEPTO $100K · ALQUILER $400K/MES · NETO: 4% · APRECIACIÓN: 5-10% · RETORNO TOTAL: 9-14%",
+ig:"Comprar para alquilar: depto $100K, alquiler $400K/mes, renta neta 4%. Sumale apreciación 5-10%. Retorno total: 9-14%. Ganás por dos lados.\n#RealEstate #AlquilerInversión #Tandil #Argentina",
+tk:"Cuánto te queda si comprás un depto para alquilar? Las cuentas reales. #RealEstate #Inversiones",
+fuentes:"• Alquiler 2 amb $400K+ → Mercado mar 2026\n• Renta neta ~4-5% → Reporte Inmobiliario\n• Apreciación ciudades crecimiento → BBVA Research"},
+
+{id:"INV6",tema:"Inversión",t:"Departamento vs garage vs local comercial",ang:"prod",
+hook:"No todo en real estate es comprar un departamento. Hay opciones que casi nadie mira y que rinden más.",
+text:`"No todo en real estate es comprar un departamento. Hay opciones que casi nadie mira y que rinden más."
+
+"Un garage en Tandil lo conseguís desde 15 mil dólares. La renta es chica en plata, pero sobre lo que pusiste es alta: entre 6 y 8% anual. Más que un departamento."
+
+"Un local comercial, dependiendo la zona, te puede dar una renta del 7 al 9%. Más riesgo si se te va el inquilino, pero más retorno."
+
+"Un departamento es el punto medio: renta del 4 al 5%, pero con la apreciación más predecible."
+
+"La clave es diversificar. No meter todo en lo mismo. Un garage, un departamento y un local es un portfolio inmobiliario que te genera ingresos por tres lados."
+
+"No hay una sola forma de invertir en real estate. Hay muchas. Y la mayoría de la gente solo conoce una."`,
+screen:"GARAGE: $15K · RENTA 6-8% · LOCAL: RENTA 7-9% · DEPTO: RENTA 4-5% · DIVERSIFICAR",
+ig:"No todo es departamentos. Garage desde $15K, renta 6-8%. Local comercial, 7-9%. Depto, 4-5% + apreciación. La clave es diversificar.\n#RealEstate #Inversiones #Portfolio #Tandil",
+tk:"Garage, local o departamento? Lo que nadie te cuenta. #RealEstate #Inversiones",
+fuentes:"• Garage desde $15K → Mercado Tandil\n• Renta garage 6-8% → Ref. mercado\n• Renta local 7-9% → Ref. mercado\n• Renta depto 4-5% → Reporte Inmobiliario"},
+
+{id:"INV7",tema:"Inversión",t:"El que compró hace 3 años hoy tiene esto",ang:"prod",
+hook:"Un cliente compró un 2 ambientes en pozo en 2023. Puso 65 mil dólares. Hoy ese departamento vale más de 100 mil.",
+text:`"Un cliente compró un 2 ambientes en pozo en 2023. Puso 65 mil dólares. Hoy ese departamento vale más de 100 mil. Son 3 años."
+
+"Eso es un retorno del 50% en dólares. No en pesos, en dólares. Mientras el que tenía los 65 mil en el banco, con un plazo fijo en dólares, hoy tiene 68 mil."
+
+"Esto no es magia. Es lo que pasa cuando comprás en una ciudad que crece, en el momento correcto."
+
+"Obvio que no todos los departamentos suben igual. No todas las zonas. No todos los desarrolladores. Pero el que investigó, eligió bien y se animó, hoy tiene un activo que vale un 50% más."
+
+"El mejor momento para comprar fue hace 3 años. El segundo mejor momento es hoy."`,
+screen:"2023: $65K EN POZO · 2026: $100K+ · +50% EN DÓLARES · PLAZO FIJO: $68K · EL TIEMPO PREMIA",
+ig:"2023: compró en pozo por $65K. Hoy vale $100K+. Eso es +50% en dólares en 3 años. Mientras tanto el plazo fijo te daba $68K. El que se animó, ganó.\n#RealEstate #Inversiones #Tandil #ComprarEnPozo",
+tk:"Compró en pozo en 2023 por 65 mil. Hoy vale más de 100 mil. #RealEstate #Inversiones",
+fuentes:"• Caso real Santiago\n• Apreciación pozo 10-15% anual → BBVA Research\n• Plazo fijo USD <2% → Ref. bancaria"},
+
+{id:"INV8",tema:"Inversión",t:"Cuánto sale mantener un departamento",ang:"prob",
+hook:"Antes de comprar un departamento para invertir, tenés que saber cuánto te cuesta mantenerlo.",
+text:`"Antes de comprar un departamento para invertir, tenés que saber cuánto te cuesta mantenerlo. Porque si no hacés esa cuenta, te comés la renta."
+
+"Expensas: depende el edificio, pero calculá entre 80 y 150 mil pesos por mes. Impuestos: tasa municipal, ABL, entre 20 y 40 mil. Si lo tenés alquilado, el inquilino paga servicios. Si está vacío, los pagás vos."
+
+"Después tenés el mantenimiento: una canilla que pierde, una pared que se descascara, un calefón que se rompe. Calculá un fondo del 5% de la renta bruta para imprevistos."
+
+"Y si usás una inmobiliaria para administrarlo, entre un 5 y un 8% del alquiler."
+
+"Hacé bien las cuentas ANTES. No después. La renta bruta no es lo que te queda. El negocio es bueno, pero tenés que saber los números reales."`,
+screen:"EXPENSAS: $80-150K · IMPUESTOS: $20-40K · MANTENIMIENTO: 5% · ADMINISTRACIÓN: 5-8% · HACÉ LAS CUENTAS ANTES",
+ig:"Antes de comprar para alquilar, hacé las cuentas: expensas $80-150K, impuestos $20-40K, mantenimiento 5%, administración 5-8%. La renta bruta NO es lo que te queda. Sabé los números antes.\n#RealEstate #Inversiones #NúmerosReales #Argentina",
+tk:"Cuánto cuesta mantener un departamento? Hacé las cuentas antes. #RealEstate #Inversiones",
+fuentes:"• Expensas promedio → Mercado Tandil 2026\n• Comisión administración 5-8% → Cámara Inmobiliaria"},
+
+{id:"INV9",tema:"Inversión",t:"El peor momento para comprar fue no comprar",ang:"con",
+hook:"Todos esperan el 'momento perfecto' para comprar. Te cuento un secreto: no existe.",
+text:`"Todos esperan el 'momento perfecto' para comprar. Te cuento un secreto: no existe."
+
+"En 2020, con el covid, la gente decía 'esperá que va a bajar más'. En 2021, 'la economía está mal'. En 2022, 'no hay crédito'. En 2023, 'las elecciones'. En 2024, 'a ver qué pasa con Milei'."
+
+"Mientras tanto, los precios subieron. El costo de construcción subió un 118% en dólares desde octubre del 2023. El metro cuadrado en Tandil pasó de menos de 1.500 a más de 2.000."
+
+"El que esperó, hoy paga más. Siempre es así. Los costos de construcción no bajan. La demanda no baja. Las excusas son las únicas que se mantienen."
+
+"El peor momento para comprar fue hace 5 años. El segundo peor es hoy. Y mañana va a ser peor todavía."`,
+screen:"2020: ESPERÁ · 2021: ESPERÁ · 2022: ESPERÁ · COSTO +118% EN USD · EL QUE ESPERÓ PAGA MÁS",
+ig:"2020: esperá. 2021: esperá. 2022: esperá. Costo de construcción: +118% en USD. El que esperó, hoy paga más. No existe el momento perfecto.\n#RealEstate #Inversiones #CostosConstrucción #Argentina",
+tk:"Todos esperan el momento perfecto. No existe. #RealEstate #Inversiones",
+fuentes:"• Costo construcción +118% en USD desde oct 2023 → CAC / BBVA Research\n• M² Tandil evolución → Zonaprop"},
+
+{id:"INV10",tema:"Inversión",t:"Un departamento como plan de retiro",ang:"sol",
+hook:"Tenés 30 años. Si comprás un departamento hoy, a los 55 lo tenés pago y te da un ingreso todos los meses.",
+text:`"Tenés 30 años. Si comprás un departamento hoy con crédito a 20 años, a los 50 lo tenés pago y te da un ingreso todos los meses. Sin tocar tu jubilación."
+
+"Y si en vez de uno comprás dos o tres a lo largo de tu vida, a los 55 tenés un ingreso pasivo que no depende de ningún gobierno, ningún banco, ningún empleador."
+
+"La mayoría de la gente piensa en el retiro a los 55. Y ahí ya es tarde. El real estate es un juego de largo plazo. Cada año que esperás es un año menos de apreciación."
+
+"No hay AFJP. No hay jubilación que te salve. Tu retiro lo armás vos. Y un departamento que se alquila es la forma más predecible de tener ingresos cuando dejes de trabajar."`,
+screen:"HOY: COMPRÁS CON CRÉDITO · 20 AÑOS: LO PAGASTE · RENTA MENSUAL DE POR VIDA · TU RETIRO LO ARMÁS VOS",
+ig:"A los 30 comprás con crédito. A los 50 lo tenés pago. Renta de por vida sin depender de nadie. No hay AFJP que te salve. Tu retiro lo armás vos.\n#RealEstate #Retiro #Inversiones #Argentina #PlanDeRetiro",
+tk:"Tu plan de retiro: un departamento que comprás hoy. #RealEstate #Retiro #Argentina",
+fuentes:"• Crédito a 20 años → Banco Ciudad / Nación\n• Renta ~5% anual → Reporte Inmobiliario"},
+
+// ═══════════════════════════════════════
+// CRÉDITO / FINANCIAMIENTO (10)
+// ═══════════════════════════════════════
+{id:"CR1",tema:"Crédito",t:"Las tasas están bajando en todos los bancos",ang:"sol",
+hook:"Hace dos semanas el Banco Ciudad lanzó un crédito hipotecario con tasa al 7,5% más UVA. Dos puntos abajo del mercado.",
+text:`"Hace dos semanas el Banco Ciudad lanzó un crédito hipotecario con tasa al 7,5% más UVA. Dos puntos abajo del mercado. Y no es el único: el Hipotecario bajó de 13,9 a 12,5. El ICBC de 11 a 10,5. Todos están bajando."
+
+"Esto es algo que mucha gente no dimensiona. Durante 7 años no hubo crédito en Argentina. Siete. Si no tenías los dólares, no comprabas."
+
+"En 2025 volvió con 44 mil operaciones y 3.679 millones de dólares en financiamiento. El mejor número desde 2018."
+
+"La cuota en muchos casos es menor que un alquiler. Estás pagando lo mismo pero por algo tuyo."
+
+"El crédito no es una trampa. Es la herramienta que le faltaba a la clase media. Y ahora está."`,
+screen:"TASA 7,5% + UVA · TASAS BAJANDO · 44K CRÉDITOS 2025 · CUOTA < ALQUILER",
+ig:"Banco Ciudad: 7,5% + UVA. Las tasas bajan en todos los bancos. 44 mil créditos en 2025. La cuota es menor que muchos alquileres.\n#CréditoHipotecario #RealEstate #Argentina",
+tk:"Tasas bajando. Cuota menor que el alquiler. #CréditoHipotecario #Argentina",
+fuentes:"• Tasa 7,5% + UVA → La Nación (18 mar 2026)\n• Hipotecario 13,9→12,5% → Infobae\n• 44K ops 2025 → Tejido Urbano\n• USD 3.679M → Tejido Urbano"},
+
+{id:"CR2",tema:"Crédito",t:"El crédito UVA no es una trampa",ang:"con",
+hook:"Escucho mucha gente decir 'el crédito UVA es una trampa'. Y lo entiendo, en 2018 pasó algo feo.",
+text:`"Escucho mucha gente decir 'el crédito UVA es una trampa, te endeudás para siempre'. Y lo entiendo, en 2018 pasó algo feo."
+
+"Pero hoy el contexto es otro. La inflación está bajando, hay reglas más claras, las cuotas en muchos casos son menores que un alquiler."
+
+"Pensalo así: estar 20 años pagando algo que es tuyo es mejor que estar 20 años pagando algo que es de otro."
+
+"El alquiler también se ajusta. También sube. Pero al final de 20 años no tenés nada. Con el crédito al menos tenés un departamento."
+
+"El crédito UVA en 2018 fue un problema porque la inflación se fue a la estratósfera. Hoy la inflación viene bajando mes a mes. El contexto importa."`,
+screen:"2018 ≠ 2026 · CUOTA < ALQUILER · 20 AÑOS TUYO VS DE OTRO · INFLACIÓN BAJANDO",
+ig:"El crédito UVA es una trampa? El alquiler es la verdadera trampa. 20 años pagando algo que nunca es tuyo.\n#CréditoHipotecario #UVA #RealEstate #Argentina",
+tk:"El crédito es trampa? Alquilar 20 años es trampa. #Crédito #Argentina",
+fuentes:"• Crisis UVA 2018 → Múltiples fuentes\n• Inflación bajando → INDEC\n• Cuota < alquiler → Comparación de mercado"},
+
+{id:"CR3",tema:"Crédito",t:"Sacás un crédito por primera vez: qué esperar",ang:"sol",
+hook:"Si estás pensando en sacar tu primer crédito hipotecario, te cuento cómo es el proceso real.",
+text:`"Si estás pensando en sacar tu primer crédito hipotecario, te cuento cómo es el proceso real. Sin humo."
+
+"Primero: necesitás un ingreso demostrable. Si estás en blanco, con recibo de sueldo es más fácil. Si sos monotributista, necesitás antigüedad y facturación constante."
+
+"Segundo: el banco te presta hasta un 75% del valor de la propiedad. El resto lo ponés vos. Si el departamento sale 100 mil dólares, necesitás 25 mil de bolsillo."
+
+"Tercero: la cuota no puede superar el 25 al 30% de tu ingreso. Eso es lo que determina cuánto te prestan."
+
+"Cuarto: demora. Desde que arrancás hasta que tenés la plata, pueden pasar 45 a 90 días. Hay tasación, hay escribanía, hay burocracia."
+
+"No es un trámite de un día. Pero tampoco es imposible. 44 mil personas lo hicieron el año pasado."`,
+screen:"75% FINANCIA EL BANCO · 25% DE BOLSILLO · CUOTA MAX 25-30% INGRESO · 45-90 DÍAS PROCESO · 44K LO HICIERON EN 2025",
+ig:"Tu primer crédito: el banco financia 75%, vos ponés 25%. Cuota máxima 25-30% de tu ingreso. Demora 45-90 días. 44 mil lo hicieron en 2025.\n#CréditoHipotecario #PrimerCrédito #Argentina #RealEstate",
+tk:"Tu primer crédito hipotecario: lo que tenés que saber. #Crédito #Argentina",
+fuentes:"• Financia hasta 75% → Banco Ciudad mar 2026\n• Cuota max 25-30% ingreso → BCRA regulación\n• 44K créditos 2025 → Tejido Urbano"},
+
+{id:"CR4",tema:"Crédito",t:"Cuánto tenés que ganar para que te den un hipotecario",ang:"prod",
+hook:"La pregunta que me hacen todos: cuánto tengo que ganar para que me den un crédito hipotecario.",
+text:`"La pregunta que me hacen todos: cuánto tengo que ganar para que me den un crédito hipotecario. Y la respuesta depende de cuánto quieras comprar."
+
+"Ejemplo real. Departamento en Tandil, 80 mil dólares. El banco te financia el 75%: 60 mil. A 20 años con tasa del 8% más UVA."
+
+"La cuota hoy arrancaría en unos 500 mil pesos. Si la cuota no puede pasar el 25% de tu sueldo, necesitás un ingreso de al menos 2 millones por mes."
+
+"Si son dos titulares, se suman los ingresos. Una pareja que entre los dos gana 2 millones y medio, califica cómoda."
+
+"Y hay algo que mucha gente no sabe: Banco Nación ya otorgó más de 20 mil créditos. Es el banco más activo. Las tasas más bajas. Si tenés cuenta sueldo ahí, arrancá por ese lado."`,
+screen:"DEPTO $80K · FINANCIA $60K · CUOTA ~$500K · INGRESO: $2M+ · EN PAREJA: $2,5M · BANCO NACIÓN: +20K CRÉDITOS",
+ig:"Cuánto necesitás ganar? Depto $80K, cuota ~$500K, ingreso mínimo $2M. En pareja, $2,5M. Banco Nación ya dio +20 mil créditos.\n#CréditoHipotecario #Hipotecario #Argentina #RealEstate",
+tk:"Cuánto tenés que ganar para un crédito hipotecario? #Crédito #Argentina",
+fuentes:"• Banco Nación +20.000 créditos → Infobae feb 2026\n• Cuota max 25% → BCRA\n• Tasa referencia ~8% + UVA → Mercado mar 2026"},
+
+{id:"CR5",tema:"Crédito",t:"Las cuentas del UVA que nadie hace",ang:"prod",
+hook:"Todo el mundo habla de UVA pero nadie hace las cuentas bien. Yo te las hago.",
+text:`"Todo el mundo habla de UVA pero nadie hace las cuentas bien. Yo te las hago."
+
+"UVA se ajusta por inflación. Si la inflación es del 2% mensual, tu cuota sube 2% por mes. Suena aterrador."
+
+"Pero tu alquiler también sube. Tu sueldo, en general, también sube. La diferencia es que al final del crédito tenés un departamento. Al final del alquiler no tenés nada."
+
+"Hacé esta cuenta: si hoy pagás 400 mil de alquiler y la cuota del crédito es 500 mil, la diferencia son 100 mil pesos. Eso es lo que te cuesta ser propietario en vez de inquilino."
+
+"En 20 años, ambos van a subir. Pero solo uno te deja algo. Y ese algo se revaloriza solo."`,
+screen:"UVA = AJUSTE POR INFLACIÓN · ALQUILER TAMBIÉN SUBE · DIFERENCIA: $100K/MES · EN 20 AÑOS: DEPTO VS NADA",
+ig:"UVA se ajusta por inflación. Pero el alquiler también. La diferencia: al final del crédito tenés un depto. Al final del alquiler, nada.\n#UVA #CréditoHipotecario #Argentina #RealEstate",
+tk:"Las cuentas del UVA que nadie hace. #UVA #Crédito #Argentina",
+fuentes:"• UVA ajuste por CER/inflación → BCRA\n• Alquiler 2 amb $400K+ → Mercado 2026"},
+
+{id:"CR6",tema:"Crédito",t:"7 años sin poder comprar",ang:"prob",
+hook:"Durante 7 años no hubo crédito hipotecario en Argentina. Siete años. Una generación entera.",
+text:`"Durante 7 años no hubo crédito hipotecario en Argentina. Siete años. Una generación entera que arrancó a laburar, juntó plata, hizo números, y no pudo comprar."
+
+"No porque no quisieran. No porque no pudieran pagar la cuota. Sino porque el crédito directamente no existía."
+
+"Si arrancaste a laburar en 2017, hasta 2024 no tuviste acceso a financiamiento para tu primera vivienda. Eso son los años más productivos de tu vida."
+
+"Ahora volvió. Con 44 mil operaciones en 2025 y tasas que bajan mes a mes. El 20% de las escrituras del año pasado se hicieron con financiamiento bancario. El número más alto desde 2018."
+
+"Es una ventana. No sabemos cuánto va a durar. Pero ahora está abierta."`,
+screen:"7 AÑOS SIN CRÉDITO · 44K OPERACIONES 2025 · 20% ESCRITURAS CON BANCO · VENTANA ABIERTA",
+ig:"7 años sin crédito hipotecario. Una generación sin poder comprar. Ahora volvió: 44K operaciones, 20% de escrituras con banco. La ventana está abierta.\n#CréditoHipotecario #Argentina #RealEstate",
+tk:"7 años sin poder comprar. Ahora el crédito volvió. #Crédito #Argentina",
+fuentes:"• 7 años sin crédito → BBVA Research\n• 44K operaciones → Tejido Urbano\n• 20% escrituras con financiamiento → Newsweek / Infobae"},
+
+{id:"CR7",tema:"Crédito",t:"Los bancos están compitiendo por darte plata",ang:"prod",
+hook:"Algo que no pasaba hace años: los bancos están compitiendo entre ellos para darte un crédito hipotecario.",
+text:`"Algo que no pasaba hace años: los bancos están compitiendo entre ellos para darte un crédito hipotecario."
+
+"El Hipotecario bajó de 13,9 a 12,5. El ICBC de 11 a 10,5. Patagonia de 14 a 12,5. Ciudad lanzó una línea especial al 7,5."
+
+"Cada mes que pasa, algún banco baja la tasa. Están peleándose por captar clientes. Eso no pasaba desde 2017."
+
+"Qué significa para vos: que si hace 3 meses averiguaste y la tasa era alta, hoy probablemente sea más baja. Y en 3 meses puede ser más baja todavía."
+
+"Los bancos no bajan tasas porque son generosos. Las bajan porque el negocio les conviene y quieren volumen. Aprovechá eso."`,
+screen:"HIPOTECARIO: 13,9→12,5 · ICBC: 11→10,5 · PATAGONIA: 14→12,5 · CIUDAD: 7,5 · COMPETENCIA = MEJOR PARA VOS",
+ig:"Los bancos compitiendo: Hipotecario 12,5%, ICBC 10,5%, Ciudad 7,5%. Las tasas bajan mes a mes. Esto no pasaba desde 2017.\n#CréditoHipotecario #TasasBajando #Argentina #RealEstate",
+tk:"Los bancos compiten por darte plata. Aprovechá. #Crédito #Argentina",
+fuentes:"• Hipotecario 13,9→12,5% → Infobae\n• ICBC 11→10,5% → Infobae\n• Patagonia 14→12,5% → Infobae\n• Ciudad 7,5% → La Nación mar 2026"},
+
+{id:"CR8",tema:"Crédito",t:"Cuota vs alquiler: el número que te cambia la cabeza",ang:"prod",
+hook:"Te voy a dar un número que te va a cambiar la cabeza. La cuota de un crédito hipotecario hoy en muchos casos es menor que un alquiler.",
+text:`"Te voy a dar un número que te va a cambiar la cabeza. La cuota de un crédito hipotecario hoy en muchos casos es igual o menor que un alquiler."
+
+"Un 2 ambientes en Tandil se alquila desde 400 mil pesos. La cuota de un crédito por un departamento similar, con la tasa más baja del mercado, arranca en números parecidos."
+
+"La diferencia: el alquiler se lo llevás al dueño. La cuota la ponés en algo que es tuyo."
+
+"En 20 años de alquiler, gastaste más de 100 millones de pesos a valores de hoy y no tenés nada. Con el crédito tenés un departamento."
+
+"No te digo que sea fácil. Te digo que hagas la comparación. Porque muchos pueden y no lo saben."`,
+screen:"ALQUILER 2 AMB: $400K+ · CUOTA CRÉDITO: SIMILAR · 20 AÑOS ALQUILER = $0 · 20 AÑOS CRÉDITO = DEPTO",
+ig:"Alquiler 2 amb: $400K+. Cuota crédito: similar. La diferencia: en 20 años de alquiler no tenés nada. Con crédito, tenés un depto.\n#CréditoHipotecario #AlquilerVsCrédito #Argentina",
+tk:"La cuota del crédito es igual al alquiler. Pero uno te deja algo. #Crédito #Argentina",
+fuentes:"• Alquiler 2 amb $400K+ → Mercado mar 2026\n• Cuota crédito → Simulación Banco Ciudad"},
+
+{id:"CR9",tema:"Crédito",t:"Ahorrar para comprar sin crédito: la cuenta imposible",ang:"prob",
+hook:"Cuánto tardás en juntar para un departamento sin crédito. Hice la cuenta y es deprimente.",
+text:`"Cuánto tardás en juntar para un departamento sin crédito. Hice la cuenta."
+
+"Departamento de 80 mil dólares. Si ahorrás 500 dólares por mes, que es un montón para el sueldo argentino promedio, tardás 160 meses. Son más de 13 años."
+
+"Pero acá está el problema: mientras juntás, el departamento sube de precio. El costo de construcción sube todos los meses. Estás corriendo una carrera que no podés ganar."
+
+"Por eso el crédito existe. No es deuda, es apalancamiento. Comprás hoy a precio de hoy, pagás en cuotas que se ajustan junto con tu sueldo, y el departamento se revaloriza mientras lo pagás."
+
+"El que espera a juntar toda la plata, en 13 años va a estar juntando para algo que sale el doble."`,
+screen:"$80K ÷ $500/MES = 160 MESES = 13 AÑOS · MIENTRAS JUNTÁS, EL PRECIO SUBE · CRÉDITO = COMPRAR HOY A PRECIO DE HOY",
+ig:"80 mil dólares, ahorrando 500/mes = 13 años. Pero mientras juntás, el precio sube. El crédito te deja comprar hoy a precio de hoy.\n#Ahorro #CréditoHipotecario #RealEstate #Argentina",
+tk:"Cuánto tardás en juntar para un depto sin crédito? 13 años. Y el precio sube. #Crédito #Argentina",
+fuentes:"• Cálculo propio\n• Costo construcción sube mensualmente → CAC"},
+
+{id:"CR10",tema:"Crédito",t:"Sin ingresos brutos ni sellos en CABA",ang:"prod",
+hook:"Algo que poca gente sabe: si sacás un crédito hipotecario en CABA, no pagás ingresos brutos ni impuesto de sellos.",
+text:`"Algo que poca gente sabe: si sacás un crédito hipotecario en CABA, no pagás ingresos brutos ni impuesto de sellos sobre la operación. Eso te ahorra entre un 3 y un 5% del valor total."
+
+"En un departamento de 100 mil dólares, eso son entre 3 y 5 mil dólares menos de gastos."
+
+"Cada provincia tiene sus propias reglas. En Buenos Aires provincia hay exenciones parciales. Pero el punto es: infórmate sobre los beneficios fiscales antes de comprar, porque pueden cambiar mucho la ecuación."
+
+"El crédito hipotecario no es solo la cuota. Son las condiciones alrededor. Impuestos, seguros, gastos de escritura. Todo suma o todo resta."
+
+"Preguntá. Averiguá. Los que más ganan en real estate son los que más saben."`,
+screen:"CABA: SIN IIBB NI SELLOS · AHORRO 3-5% · EN $100K = $3-5K MENOS · INFORMATE ANTES",
+ig:"En CABA, crédito hipotecario sin Ingresos Brutos ni Sellos. Eso te ahorra 3-5% del valor. En $100K son $3-5K menos. Informate antes de comprar.\n#CréditoHipotecario #Impuestos #RealEstate #Argentina",
+tk:"Esto te ahorra miles de dólares y nadie te lo dice. #Crédito #Argentina",
+fuentes:"• Sin IIBB ni Sellos hipotecarios CABA → AGIP / Gobierno CABA"},
+
+// ═══════════════════════════════════════
+// COSTOS DE CONSTRUCCIÓN (8)
+// ═══════════════════════════════════════
+{id:"CO1",tema:"Costos",t:"Por qué los departamentos cuestan lo que cuestan",ang:"prod",
+hook:"Mucha gente dice 'los departamentos nuevos están caros'. Y yo siempre pregunto lo mismo: sabés cuánto sale construirlos?",
+text:`"Mucha gente dice 'los departamentos nuevos están caros'. Y yo siempre pregunto lo mismo: sabés cuánto sale construirlos?"
+
+"La Cámara Argentina de la Construcción publica un índice todos los meses. Y sube todos los meses. La mano de obra sube más que los materiales: en febrero subió 1,7% contra 1,1%."
+
+"Un departamento nuevo no es caro porque el desarrollador quiere. Es caro porque construirlo es caro. Cada albañil, cada electricista, cada plomero cobra más que el mes anterior."
+
+"La próxima vez que veas el precio de un departamento a estrenar, pensá en todo lo que hay atrás: meses de obra, cientos de trabajadores, materiales que suben. El precio tiene una razón."`,
+screen:"ÍNDICE CAC · MANO DE OBRA +1,7% · MATERIALES +1,1% · SUBE TODOS LOS MESES",
+ig:"Los deptos nuevos son caros? Sabés cuánto sale construirlos? La mano de obra sube más que los materiales. El precio tiene una razón.\n#Construccion #RealEstate #IndiceCAC #Argentina",
+tk:"Los deptos nuevos son caros. Pero sabés cuánto sale construirlos? #Construccion #IndiceCAC",
+fuentes:"• Índice CAC feb 2026: +1,30% total, materiales +1,10%, mano obra +1,70% → Cifras Online"},
+
+{id:"CO2",tema:"Costos",t:"El índice CAC: el número que tenés que conocer",ang:"prod",
+hook:"Si estás pensando en comprar un departamento, tenés que conocer este número.",
+text:`"Si estás pensando en comprar un departamento, tenés que conocer este número."
+
+"La Cámara Argentina de la Construcción publica todos los meses cuánto sale construir. Se llama Índice CAC."
+
+"Septiembre 2025: subió 3,3%. Octubre: 2,7%. Noviembre: 1,5%. Diciembre: 1,3%. Enero: 2,3%. Febrero: 1,3%. Todos los meses para arriba."
+
+"De junio a febrero, el costo pasó de 16.600 a 19.400. Casi un 17% en 8 meses. Y la mano de obra sube más que los materiales."
+
+"El departamento que hoy te parece caro, en 6 meses te va a parecer barato. Porque el que se construya mañana va a costar más. Los números son públicos."`,
+screen:"ÍNDICE CAC · SEP 3,3% → FEB 1,3% · +17% EN 8 MESES · MANO OBRA > MATERIALES",
+ig:"Índice CAC: +17% en 8 meses. Los precios tienen una razón. El que hoy te parece caro, en 6 meses va a parecer barato.\n#IndiceCAC #Construccion #RealEstate #Argentina",
+tk:"El número que tenés que conocer si vas a comprar. #IndiceCAC #Construccion",
+fuentes:"• Serie CAC jun-feb → Cifras Online\n• 16.643 → 19.453 = +16,9%"},
+
+{id:"CO3",tema:"Costos",t:"Cuánto sale construir una casa hoy",ang:"prod",
+hook:"Mucha gente sueña con construir su propia casa. Pero cuánto sale realmente.",
+text:`"Mucha gente sueña con construir su propia casa. Pero cuánto sale realmente. Te doy los números."
+
+"Hoy el metro cuadrado de construcción está arriba de 1.500 dólares. Una casa de 120 metros, que es una casa normal de 3 ambientes con patio, te sale arriba de 180 mil dólares. Solo la construcción, sin el terreno."
+
+"El terreno en Tandil, dependiendo la zona, va desde 17 mil hasta 200 mil dólares."
+
+"Y eso es hoy. El costo sube todos los meses. Si arrancás en junio y terminás en 18 meses, lo que presupuestaste al principio no alcanza al final."
+
+"Construir una casa es hermoso, pero necesitás saber los números antes de arrancar. Y necesitás un colchón del 15 al 20% extra para imprevistos."`,
+screen:"M² CONSTRUCCIÓN: +$1.500 · CASA 120M²: +$180K · TERRENO: $17K-200K · PLAZO: 12-18 MESES · COLCHÓN: +15-20%",
+ig:"Construir una casa de 120m²: +$180K solo construcción. Terreno aparte: $17K-200K. El costo sube mes a mes. Necesitás un colchón del 15-20%.\n#Construccion #Casa #Tandil #CuántoSale",
+tk:"Cuánto sale construir una casa hoy? Estos son los números reales. #Construccion #Casa",
+fuentes:"• M² construcción +$1.500 → CAC / Mercado\n• Terrenos $17K-200K → Zonaprop Tandil"},
+
+{id:"CO4",tema:"Costos",t:"Mano de obra: el costo que nadie ve",ang:"prob",
+hook:"Cuando pensás en construcción, pensás en cemento, hierro, ladrillos. Pero el costo más grande no es ese.",
+text:`"Cuando pensás en construcción, pensás en cemento, hierro, ladrillos. Pero el costo más grande y el que más sube no son los materiales. Es la mano de obra."
+
+"En febrero, los materiales subieron 1,1%. La mano de obra subió 1,7%. Y esto viene así hace meses."
+
+"Los convenios colectivos de UOCRA se actualizan, las cargas sociales pesan, y hay escasez de oficiales calificados. Un buen electricista o plomero hoy tiene más trabajo del que puede tomar."
+
+"Esto no se va a revertir. No hay un escenario donde la mano de obra baje. Los albañiles no van a cobrar menos el año que viene."
+
+"Por eso el costo de construcción solo va para un lado. Y por eso cada mes que pasa, construir sale más caro. No es especulación, es estructura."`,
+screen:"MATERIALES: +1,1% · MANO DE OBRA: +1,7% · CONVENIOS UOCRA · ESCASEZ DE OFICIALES · NO SE REVIERTE",
+ig:"El costo que nadie ve: la mano de obra sube más que los materiales. Febrero: mano de obra +1,7% vs materiales +1,1%. Y no va a bajar.\n#Construccion #ManoDeObra #IndiceCAC #Argentina",
+tk:"El costo más grande de la construcción no es el material. #Construccion #ManoDeObra",
+fuentes:"• CAC feb 2026: materiales +1,10%, mano obra +1,70% → Cifras Online\n• UOCRA convenios → IERIC"},
+
+{id:"CO5",tema:"Costos",t:"El desarrollador gana lo que pensás?",ang:"con",
+hook:"Mucha gente piensa que los desarrolladores se llenan de plata. Que ponen un edificio y se hacen millonarios. La realidad es bastante distinta.",
+text:`"Mucha gente piensa que los desarrolladores se llenan de plata. La realidad es bastante distinta."
+
+"Un desarrollo inmobiliario tarda entre 2 y 3 años de inicio a fin. El margen de un desarrollador serio está entre un 15 y un 25% sobre el costo total. Suena mucho, pero es sobre 2 o 3 años."
+
+"De eso sacale: imprevistos de obra, meses de retraso, costos financieros, impuestos, honorarios, seguro, publicidad. El margen real baja."
+
+"Y el riesgo? Si la economía se complica, si la inflación se dispara, si la venta se tranca, el desarrollador es el que se come el problema."
+
+"Los que se llenan de plata son los que hacen volumen y tienen espalda financiera. Los chicos trabajan con márgenes ajustados y mucho riesgo."
+
+"No digo que no sea un buen negocio. Digo que no es lo que la gente piensa."`,
+screen:"PLAZO: 2-3 AÑOS · MARGEN: 15-25% · IMPREVISTOS + RETRASOS + IMPUESTOS · RIESGO REAL · NO ES LO QUE PENSÁS",
+ig:"Los desarrolladores se llenan de plata? Margen 15-25% sobre 2-3 años, menos imprevistos, retrasos, impuestos. El riesgo es alto. No es lo que pensás.\n#Desarrollo #Construccion #RealEstate #Argentina",
+tk:"El desarrollador gana lo que pensás? Spoiler: no. #Desarrollo #RealEstate",
+fuentes:"• Márgenes desarrollo 15-25% → Ref. mercado\n• Plazo promedio 2-3 años → CAC / Mercado"},
+
+{id:"CO6",tema:"Costos",t:"De la nada al llavero: cuánto tarda un edificio",ang:"prod",
+hook:"Cuánto tarda un edificio desde que se empieza a construir hasta que te dan la llave.",
+text:`"Cuánto tarda un edificio desde que se empieza a construir hasta que te dan la llave. Te lo cuento."
+
+"El proyecto, los planos, los permisos municipales: entre 6 meses y un año. Después arranca la obra."
+
+"La excavación y la estructura, que es lo más pesado, entre 12 y 18 meses. Después vienen las terminaciones: instalaciones, pisos, pinturas, entre 6 y 10 meses más."
+
+"En total: de proyecto a entrega, un edificio de 30 a 40 departamentos tarda entre 24 y 36 meses. Dos a tres años."
+
+"Cada mes de retraso es un mes más de costos que suben. Por eso los desarrolladores con experiencia son más eficientes y pueden ofrecer mejor precio."
+
+"Cuando comprás en pozo, no estás comprando un departamento. Estás comprando tiempo a tu favor."`,
+screen:"PROYECTO: 6-12 MESES · ESTRUCTURA: 12-18 MESES · TERMINACIONES: 6-10 MESES · TOTAL: 24-36 MESES",
+ig:"De la nada al llavero: proyecto 6-12 meses, estructura 12-18, terminaciones 6-10. Total: 2-3 años. Cada mes de retraso es costo.\n#Construccion #Edificio #RealEstate #Tandil",
+tk:"Cuánto tarda un edificio? De la nada al llavero. #Construccion #RealEstate",
+fuentes:"• Plazos promedio → CAC / Mercado Tandil\n• Experiencia Estudio Pascua"},
+
+{id:"CO7",tema:"Costos",t:"Por qué construir va a seguir subiendo",ang:"prob",
+hook:"El costo de construcción subió 118% en dólares desde octubre de 2023. Y no va a parar.",
+text:`"El costo de construcción subió 118% en dólares desde octubre de 2023. Y no va a parar."
+
+"Las razones son estructurales. La mano de obra sube por los convenios colectivos. Los materiales importados suben con el dólar. La energía sube. Los fletes suben."
+
+"No hay un solo componente del costo que esté bajando. El índice CAC subió todos los meses desde que se tiene registro reciente."
+
+"¿Qué significa para vos? Que cada mes que esperás para comprar o construir, te sale más caro. No estoy vendiendo urgencia, estoy mostrando una tendencia que no tiene forma de revertirse."
+
+"El metro cuadrado más barato ya pasó. El de hoy es el más barato que va a haber."`,
+screen:"COSTO +118% EN USD · CAC SUBE TODOS LOS MESES · MANO OBRA + MATERIALES + ENERGÍA · EL M² MÁS BARATO YA PASÓ",
+ig:"Costo de construcción: +118% en USD desde oct 2023. Sube todos los meses. Mano de obra, materiales, energía. El m² más barato ya pasó.\n#Construccion #CostoDeConstrucción #Argentina #RealEstate",
+tk:"El costo de construcción subió 118% en dólares. Y no para. #Construccion #Argentina",
+fuentes:"• +118% en USD desde oct 2023 → CAC / BBVA Research\n• CAC sube todos los meses → Cifras Online"},
+
+{id:"CO8",tema:"Costos",t:"Nuevo vs usado: por qué la diferencia de precio",ang:"sol",
+hook:"Mucha gente no entiende por qué un departamento nuevo vale más que uno usado. La explicación es simple.",
+text:`"Mucha gente no entiende por qué un departamento nuevo vale más que uno usado. La explicación es simple."
+
+"Un departamento nuevo se construyó con costos de hoy. Materiales que subieron, mano de obra que subió, normas que se endurecieron. Tiene mejor aislación, mejores instalaciones, mejor distribución."
+
+"Un departamento usado, ponele de los 90 o 2000, se construyó cuando el metro cuadrado costaba una fracción de lo que cuesta ahora."
+
+"La diferencia no es capricho del mercado. Es costo de reposición. Si quisieras construir ese departamento nuevo hoy, te saldría lo que sale. No hay forma de hacerlo más barato."
+
+"Comprar usado es una buena opción si necesitás precio. Comprar nuevo es mejor inversión a largo plazo por la apreciación."`,
+screen:"NUEVO = COSTOS DE HOY · USADO = COSTOS DE ANTES · COSTO DE REPOSICIÓN · NUEVO: MEJOR INVERSIÓN LP",
+ig:"Nuevo vale más que usado. No es capricho: es costo de reposición. Se construyó con costos de hoy. Usado es buen precio, nuevo es mejor inversión a largo plazo.\n#Nuevo #Usado #RealEstate #Argentina",
+tk:"Por qué un depto nuevo vale más que uno usado? La explicación simple. #RealEstate #Argentina",
+fuentes:"• Costos construcción actuales → CAC\n• Diferencial nuevo/usado → Zonaprop"},
+
+// ═══════════════════════════════════════
+// FIDEICOMISO / POZO (4)
+// ═══════════════════════════════════════
+{id:"FP1",tema:"Fideicomiso",t:"Qué es comprar en pozo (explicado simple)",ang:"sol",
+hook:"Mucha gente escucha 'fideicomiso al costo' y se asusta. Suena a algo complicado, a algo que puede salir mal.",
+text:`"Mucha gente escucha 'fideicomiso al costo' y se asusta. Y hay razones para tener miedo. Pero el concepto es simple."
+
+"Un fideicomiso al costo es esto: un grupo de personas junta plata para construir un edificio. Cada uno pone su parte, mes a mes, y al final recibe su departamento al precio que costó construirlo. Sin margen de ganancia. Costo puro."
+
+"Hoy un departamento terminado en Tandil se vende entre 2.000 y 2.600 dólares el metro. El costo de construcción está en 1.500. Eso es un 30 a 40% menos."
+
+"Tenés que bancarte 24 a 30 meses de obra. Pagás cuotas que se ajustan por el índice CAC."
+
+"Un fideicomiso con un desarrollador serio es una de las mejores formas de acceder. Uno con alguien que apareció ayer, es un riesgo. La diferencia es quién lo maneja."`,
+screen:"COSTO PURO SIN MARGEN · M² CONSTRUIR: ~$1.500 · M² TERMINADO: $2.000-2.600 · AHORRO 30-40%",
+ig:"Fideicomiso al costo: pagás el costo real, sin margen. M² construcción ~$1.500, terminado se vende a 2.000-2.600. Ahorro del 30-40%. La clave: quién lo maneja.\n#Fideicomiso #RealEstate #ComprarEnPozo #Tandil",
+tk:"Fideicomiso al costo explicado en 2 minutos. Sin humo. #Fideicomiso #RealEstate",
+fuentes:"• M² construcción ~$1.500 → CAC\n• M² terminado 2.000-2.600 → Santiago / Zonaprop\n• CAC sube todos los meses → Cifras Online"},
+
+{id:"FP2",tema:"Fideicomiso",t:"El miedo a comprar en pozo",ang:"prob",
+hook:"'Y si me cagan?' Eso es lo primero que piensa la mayoría cuando le hablás de comprar en pozo.",
+text:`"'Y si me cagan?' Eso es lo primero que piensa la mayoría cuando le hablás de comprar en pozo. Y tiene sentido."
+
+"Hubo fideicomisos que se frenaron a la mitad y los compradores se quedaron con un esqueleto de hormigón y un juicio."
+
+"El problema no es el fideicomiso. Es que mucha gente se mete sin preguntar."
+
+"Antes de poner un peso, hacé tres preguntas. Uno: cuántos edificios terminó esta empresa. No cuántos arrancó, cuántos terminó. Dos: en cuánto tiempo los entregó. Tres: hablá con alguien que ya le haya comprado."
+
+"Si las respuestas te cierran, es probablemente la forma más inteligente de acceder. Si no te cierran, salí corriendo."
+
+"El miedo está bien. Que te paralice, no."`,
+screen:"¿Y SI ME CAGAN? · 3 PREGUNTAS · ¿CUÁNTOS TERMINÓ? · ¿EN CUÁNTO TIEMPO? · HABLÁ CON UN CLIENTE",
+ig:"'¿Y si me cagan?' 3 preguntas antes de comprar en pozo: ¿cuántos terminó? ¿en cuánto tiempo? ¿qué dice un cliente? El miedo está bien. Que te paralice, no.\n#Fideicomiso #ComprarEnPozo #RealEstate #Argentina",
+tk:"Lo primero que tenés que preguntar antes de comprar en pozo. #Fideicomiso #RealEstate",
+fuentes:"• Patrimonio fideicomiso inembargable → Ley 24.441"},
+
+{id:"FP3",tema:"Fideicomiso",t:"Comprar en pozo: los números reales",ang:"prod",
+hook:"Te voy a mostrar los números reales de comprar en pozo vs comprar terminado.",
+text:`"Te voy a mostrar los números reales de comprar en pozo vs comprar terminado."
+
+"Un departamento de 50 metros en Tandil terminado: entre 100 y 130 mil dólares. El mismo en pozo: entre 60 y 80 mil. Pagás el costo de construcción puro."
+
+"Entrás con un anticipo del 30% y cuotas mensuales que se ajustan por el índice CAC. El riesgo: que cuando termines hayas puesto más de lo que pensabas."
+
+"Pero aún así, el que compra en pozo paga entre un 20 y un 35% menos que el que compra terminado."
+
+"Si tenés los dólares, terminado te da certeza. Si querés financiar y bancarte la obra, el pozo te da un precio que no vas a conseguir de otra forma."
+
+"Los dos caminos son válidos. Lo importante es que entiendas los números."`,
+screen:"50M² TERMINADO: $100-130K · 50M² POZO: $60-80K · ANTICIPO 30% · AHORRO 20-35%",
+ig:"Pozo vs terminado: 50m² terminado $100-130K. En pozo $60-80K. Ahorro 20-35%. Terminado = certeza. Pozo = mejor precio.\n#Fideicomiso #ComprarEnPozo #RealEstate #Tandil",
+tk:"Los números reales de pozo vs terminado. #Fideicomiso #RealEstate",
+fuentes:"• M² terminado 2.000-2.600 → Santiago\n• M² construcción ~1.500 → CAC\n• Ahorro 20-35% → Reporte Inmobiliario"},
+
+{id:"FP4",tema:"Fideicomiso",t:"'El pozo hoy sale más caro que terminado'",ang:"con",
+hook:"Vi una nota que decía que en Buenos Aires hoy el metro cuadrado en pozo está más caro que el terminado. Y es verdad.",
+text:`"Vi una nota que decía que en Buenos Aires hoy el pozo está más caro que el terminado. Y es verdad. En CABA el pozo promedió 3.000 el metro y el terminado 2.900."
+
+"Pero hay un detalle que nadie cuenta. Los departamentos terminados de hoy se construyeron entre 2022 y 2024, cuando el costo estaba entre 700 y 1.000 dólares el metro. Hoy no baja de 1.500."
+
+"Esos terminados baratos se están acabando. Los que se construyen ahora van a costar más."
+
+"En Tandil la historia es distinta. El diferencial todavía existe."
+
+"El dato no es si hoy el pozo es más caro o barato. El dato es hacia dónde van los precios. Y van para arriba."`,
+screen:"CABA POZO: $3.000 VS TERMINADO $2.900 · SE CONSTRUYÓ A $700-1.000 · HOY: +$1.500 · TANDIL: DIFERENCIAL EXISTE",
+ig:"En CABA el pozo sale más que el terminado. Pero los terminados se construyeron a $700-1.000 el m². Hoy cuesta +$1.500. Esos baratos se acaban.\n#Fideicomiso #RealEstate #ComprarEnPozo #Argentina",
+tk:"El pozo más caro que el terminado? Hay algo que nadie te cuenta. #Fideicomiso #RealEstate",
+fuentes:"• CABA pozo $3.032 vs terminado $2.897 → iProfesional\n• Costo 2022-2024: $700-1.000 → CAC\n• Actual: +$1.500 → CAC feb 2026"},
+
+// ═══════════════════════════════════════
+// TANDIL COMO NEGOCIO (12)
+// ═══════════════════════════════════════
+{id:"TN1",tema:"Tandil",t:"Tandil: lo que nadie ve",ang:"prod",
+hook:"Tandil tiene un polo tecnológico con más de 2.000 empleados. Sueldos entre un 35 y un 55% arriba de la media.",
+text:`"Tandil tiene un polo tecnológico con más de 2.000 empleados. Sueldos entre un 35 y un 55% arriba de la media. Un Parque Industrial con 72 empresas donde planifican el segundo porque el primero no da abasto."
+
+"La Facultad de Ingeniería arrancó con un 30% más de inscriptos. Mil porteños por año se mudan. Abre un local gastronómico por semana."
+
+"El mercado inmobiliario tuvo en febrero el mejor registro de operaciones desde 2008."
+
+"Esto no es una ciudad turística. Es una economía diversificada que crece. Y eso se refleja en el valor de las propiedades."`,
+screen:"2.000 TECH · 72 EMPRESAS · +30% INSCRIPTOS · MEJOR FEB DESDE 2008",
+ig:"2.000 empleados en tech. 72 empresas en el Parque Industrial. Mejor febrero desde 2008. Tandil no es lo que pensás.\n#Tandil #RealEstate #Tecnología",
+tk:"2.000 empleados en tech. 72 empresas. Tandil no es lo que pensás. #Tandil #RealEstate",
+fuentes:"• Cluster Tech Tandil\n• 72 empresas PI → Municipio\n• +30% Ingeniería → El Diario de Tandil"},
+
+{id:"TN2",tema:"Tandil",t:"Tandil era mejor antes?",ang:"con",
+hook:"Me encanta cuando me dicen que Tandil era mejor antes. Yo siempre pregunto lo mismo: antes cuándo.",
+text:`"Me encanta cuando me dicen que Tandil era mejor antes. Antes cuándo."
+
+"Porque la Tandil de hoy tiene un polo tecnológico con más de 2.000 empleados. Un Parque Industrial con 72 empresas que no da abasto. En enero escrituraron 3 empresas nuevas."
+
+"El crédito hipotecario volvió. Las tasas están bajando. Hay gente invirtiendo, construyendo, apostando."
+
+"Tandil no era mejor antes. Está en su mejor momento. Y el que no lo ve, se lo va a perder."`,
+screen:"2.000 TECH · 72 EMPRESAS · CRÉDITO VOLVIÓ · MEJOR MOMENTO",
+ig:"Tandil era mejor antes. Antes cuándo. 2.000 en tech, 72 empresas, crédito volviendo.\n#Tandil #CrecimientoUrbano #RealEstate",
+tk:"Tandil era mejor antes. Antes cuándo. #Tandil #Argentina",
+fuentes:"• Cluster Tech\n• 72 empresas → Municipio\n• 3 empresas ene 2026 → El Diario de Tandil"},
+
+{id:"TN3",tema:"Tandil",t:"Tandil vs Córdoba para invertir",ang:"prod",
+hook:"Si estás pensando en invertir en el interior, probablemente estés mirando Córdoba o Tandil. Te cuento la diferencia.",
+text:`"Si estás pensando en invertir en el interior, probablemente mirás Córdoba o Tandil. Te cuento la diferencia."
+
+"Córdoba es más grande, más mercado, más oferta. El metro cuadrado en Nueva Córdoba está entre 2.200 y 2.800 dólares."
+
+"Tandil es más chica, más concentrada, con menos oferta y una demanda que crece más rápido. El metro cuadrado está entre 2.000 y 2.600."
+
+"En Tandil el polo tech genera sueldos altos. El turismo mueve plata todo el año. Y hay un pipeline de 72 empresas industriales más un segundo parque en planificación."
+
+"Córdoba es una apuesta segura. Tandil es una apuesta con más upside. Mercado más chico, menos competencia, más margen de apreciación."
+
+"No digo que una sea mejor que la otra. Digo que Tandil hoy tiene algo que Córdoba ya perdió: precios de entrada bajos."`,
+screen:"CÓRDOBA: M² $2.200-2.800 · TANDIL: M² $2.000-2.600 · TANDIL: TECH + INDUSTRIA + TURISMO · MÁS UPSIDE",
+ig:"Córdoba vs Tandil para invertir. Córdoba: más grande, más mercado. Tandil: más upside, precios de entrada más bajos, demanda creciente.\n#Tandil #Córdoba #Inversiones #RealEstate",
+tk:"Córdoba o Tandil para invertir? La diferencia que nadie te dice. #Tandil #Inversiones",
+fuentes:"• M² Nueva Córdoba → Zonaprop 2026\n• M² Tandil → Santiago\n• 72 empresas PI → Municipio"},
+
+{id:"TN4",tema:"Tandil",t:"Tandil vs Palermo en números",ang:"prod",
+hook:"El metro cuadrado en Palermo está arriba de 3.400 dólares. En Tandil, entre 2.000 y 2.600.",
+text:`"El metro cuadrado en Palermo está arriba de 3.400 dólares. En Tandil, entre 2.000 y 2.600."
+
+"Eso es entre un 30 y un 40% menos. Un 2 ambientes que en Palermo te sale 130 mil dólares, en Tandil lo conseguís por 80 a 100."
+
+"Y ojo, no estoy comparando con un pueblo. Tandil tiene universidad, polo tech con Globant, Parque Industrial con 72 empresas, turismo todo el año."
+
+"La renta por alquiler es similar: entre 4 y 5% anual en ambos casos. Pero la apreciación en Tandil tiene más recorrido porque el techo de precio todavía está lejos."
+
+"Si estás en Buenos Aires y querés invertir, mirá el interior. Los números dan mejor."`,
+screen:"PALERMO: $3.400/M² · TANDIL: $2.000-2.600 · -30/40% · 2 AMB PALERMO: $130K · TANDIL: $80-100K",
+ig:"Palermo: $3.400/m². Tandil: $2.000-2.600. Un 2 amb en Palermo: $130K. En Tandil: $80-100K. Misma renta, más recorrido de precio.\n#Tandil #Palermo #RealEstate #Inversiones",
+tk:"Palermo vs Tandil. Los números que nadie te muestra. #Tandil #RealEstate",
+fuentes:"• M² Palermo 3.452 → Zonaprop feb 2026\n• M² Tandil 2.000-2.600 → Santiago\n• Renta ~5% → Reporte Inmobiliario"},
+
+{id:"TN5",tema:"Tandil",t:"El polo tech y lo que significa para el real estate",ang:"prod",
+hook:"Globant tiene oficinas en Tandil. Y no es la única empresa tech. Hay más de 2.000 empleados en el sector.",
+text:`"Globant tiene oficinas en Tandil. Y no es la única empresa tech. Hay más de 2.000 empleados en el sector. Con sueldos entre un 35 y un 55% arriba de la media."
+
+"Qué significa eso para el real estate: demanda solvente. Gente joven que gana bien, que quiere vivir en Tandil, que puede pagar alquiler o acceder a crédito."
+
+"La Facultad de Ingeniería de la UNICEN arrancó con un 30% más de inscriptos. Eso es la cantera de empleados del futuro."
+
+"Una ciudad con polo tech no es lo mismo que una ciudad turística. El tech genera empleo estable, todo el año, con sueldos en dólares o indexados."
+
+"Tandil no es Sierra de la Ventana. Es una economía que se diversifica. Y eso sostiene los precios del real estate."`,
+screen:"GLOBANT EN TANDIL · 2.000 EMPLEADOS TECH · SUELDOS +35-55% · UNICEN +30% INSCRIPTOS · EMPLEO ESTABLE",
+ig:"Globant en Tandil. 2.000 empleados tech con sueldos +35-55% arriba de la media. UNICEN +30% inscriptos. Demanda solvente = precios sostenidos.\n#Tandil #Tech #RealEstate #Globant",
+tk:"Globant en Tandil. Lo que significa para el real estate. #Tandil #Tech #RealEstate",
+fuentes:"• 2.000 empleados → Cluster Tech\n• Sueldos +35-55% → Ref. mercado\n• UNICEN +30% → El Diario de Tandil"},
+
+{id:"TN6",tema:"Tandil",t:"1.000 porteños por año se mudan a Tandil",ang:"prod",
+hook:"Mil porteños por año eligen Tandil para vivir. No para vacacionar. Para quedarse.",
+text:`"Mil porteños por año eligen Tandil para vivir. No para vacacionar. Para quedarse."
+
+"Eso son más de 80 familias por mes buscando casa, departamento, alquiler. 80 familias que llegan con poder adquisitivo de Buenos Aires a un mercado más chico."
+
+"Qué pasa cuando tenés demanda constante de un mercado más grande entrando a uno más chico: los precios suben. Lógica pura."
+
+"Y no son solo porteños. La UNICEN trae miles de estudiantes de todo el país. El polo tech atrae talento. El turismo genera trabajo."
+
+"Tandil crece por todos los frentes. Y cada persona que llega necesita un techo."`,
+screen:"1.000 PORTEÑOS/AÑO · 80 FAMILIAS/MES · PODER ADQUISITIVO BsAs · DEMANDA CONSTANTE · PRECIOS SUBEN",
+ig:"1.000 porteños por año se mudan a Tandil. 80 familias/mes con poder adquisitivo de BsAs en un mercado más chico. Los precios suben por lógica.\n#Tandil #Mudarse #RealEstate #Demanda",
+tk:"1.000 porteños por año se mudan a Tandil. Sabés lo que eso significa? #Tandil #RealEstate",
+fuentes:"• 1.000 porteños/año → Infonegocios\n• UNICEN estudiantes → UNICEN\n• Polo tech → Cluster Tech Tandil"},
+
+{id:"TN7",tema:"Tandil",t:"El Parque Industrial se queda chico",ang:"prod",
+hook:"El Parque Industrial de Tandil tiene 72 empresas. Y ya están planificando el segundo porque no entra nadie más.",
+text:`"El Parque Industrial de Tandil tiene 72 empresas. Y ya están planificando el segundo porque no entra nadie más."
+
+"En enero de 2026 escrituraron 3 empresas nuevas: Viejo Nacho, Carrocera Tandil y COOPAGRO. El Gobierno Nacional puso 170 millones para infraestructura."
+
+"Cada empresa que se instala genera empleos directos e indirectos. Y cada empleo nuevo es una persona que necesita dónde vivir."
+
+"Esto es lo que sostiene un mercado inmobiliario a largo plazo. No el turismo, no la moda, no una nota en Infobae. La industria."
+
+"Una ciudad con industria diversificada no depende de una sola cosa. Y eso es lo que hace que invertir acá tenga sentido."`,
+screen:"72 EMPRESAS · SEGUNDO PARQUE EN PLAN · 3 NUEVAS ENE 2026 · $170M NACIÓN · INDUSTRIA = CIMIENTO",
+ig:"72 empresas en el Parque Industrial. Segundo parque en planificación. 3 empresas nuevas en enero. $170M del Gobierno Nacional. Industria = base del real estate.\n#Tandil #ParqueIndustrial #RealEstate #Industria",
+tk:"El Parque Industrial de Tandil no da abasto. #Tandil #Industria #RealEstate",
+fuentes:"• 72 empresas → Municipio\n• 3 nuevas ene 2026 → El Diario de Tandil\n• $170M → Gobierno Nacional"},
+
+{id:"TN8",tema:"Tandil",t:"Tandil en 5 años",ang:"prod",
+hook:"Si Tandil sigue creciendo al ritmo actual, en 5 años va a ser una ciudad muy distinta.",
+text:`"Si Tandil sigue creciendo al ritmo actual, en 5 años va a ser una ciudad muy distinta. Y los precios también."
+
+"La ciudad creció un 20% entre censos. Hoy tiene 150 mil habitantes. Si mantiene el ritmo, en 2030 ronda los 165 mil."
+
+"El Parque Industrial va por el segundo. El polo tech sigue creciendo. El crédito hipotecario está reactivando operaciones. La planta depuradora se amplía."
+
+"Todo esto es infraestructura para una ciudad más grande. Los que están construyendo hoy lo saben. Tesla XXI tiene 135 unidades entregadas y 52 en construcción."
+
+"El que compra hoy, en 5 años va a mirar para atrás y decir 'menos mal que me animé'. Siempre pasa."`,
+screen:"150K HAB → ~165K EN 2030 · 2DO PARQUE INDUSTRIAL · CRÉDITO REACTIVADO · TESLA: 135 + 52 · EL QUE COMPRA HOY GANA",
+ig:"Tandil: 150K habitantes, creciendo al 20%. En 2030 ronda los 165K. Segundo parque industrial. Crédito reactivado. El que compra hoy gana.\n#Tandil #Proyección #RealEstate #Inversiones",
+tk:"Tandil en 5 años. Mirá los números. #Tandil #RealEstate",
+fuentes:"• 150.162 hab → Censo 2022 INDEC\n• Tesla 135+52 → El Diario de Tandil\n• Segundo PI → Municipio"},
+
+{id:"TN9",tema:"Tandil",t:"No es una burbuja",ang:"con",
+hook:"Me dicen 'Tandil está en una burbuja'. Y les pregunto: sabés lo que es una burbuja?",
+text:`"Me dicen 'Tandil está en una burbuja'. Y les pregunto: sabés lo que es una burbuja?"
+
+"Una burbuja es cuando los precios suben sin razón fundamental. Especulación pura. Crédito fácil sin control."
+
+"Tandil tiene demanda real: mil porteños por año, universidad, polo tech, industria. Tiene oferta limitada: no podés construir en las sierras, el suelo disponible es finito."
+
+"Los precios suben porque hay más gente queriendo vivir acá que departamentos disponibles. Eso no es burbuja. Es oferta y demanda."
+
+"Miami en 2008 era una burbuja. Tandil en 2026 es una ciudad que crece con fundamentos. Los que dicen burbuja nunca miraron los datos."`,
+screen:"BURBUJA = SIN FUNDAMENTO · TANDIL: DEMANDA REAL · 1.000/AÑO + UNICEN + TECH + INDUSTRIA · OFERTA LIMITADA · NO ES BURBUJA",
+ig:"Tandil en burbuja? Una burbuja es sin fundamento. Tandil tiene demanda real: 1.000 porteños/año, universidad, tech, industria. Los precios suben por oferta y demanda.\n#Tandil #Burbuja #RealEstate #Argentina",
+tk:"Me dicen que Tandil está en burbuja. Sabés lo que es una burbuja? #Tandil #RealEstate",
+fuentes:"• 1.000 porteños/año → Infonegocios\n• UNICEN → UNICEN\n• 72 empresas PI → Municipio"},
+
+{id:"TN10",tema:"Tandil",t:"30 mil personas en 4 días",ang:"prod",
+hook:"El año pasado en Semana Santa entraron 30 mil personas a Tandil en 4 días.",
+text:`"El año pasado en Semana Santa entraron 30 mil personas a Tandil en 4 días. Cada una dejó 270 mil pesos."
+
+"Tandil tiene 8 mil plazas hoteleras habilitadas. Entró el doble. Eso es demanda de alojamiento que no se cubre."
+
+"Un departamento no solo se revaloriza por el crecimiento. Tenés renta de alquiler temporario: Semana Santa, invierno, fines de semana largos."
+
+"Mil porteños se mudan por año. Pero miles más vienen de visita y no tienen dónde quedarse. Ahí hay una oportunidad que poca gente mira."`,
+screen:"30.000 EN 4 DÍAS · $270K/TURISTA · 8.000 PLAZAS · ENTRA EL DOBLE · OPORTUNIDAD",
+ig:"Semana Santa: 30K personas, 8K plazas, entra el doble. Oportunidad inmobiliaria que nadie mira.\n#Tandil #RealEstate #AlquilerTemporario",
+tk:"30 mil personas en 4 días. 8 mil plazas. Entra el doble. #Tandil #RealEstate",
+fuentes:"• ~30.000 visitantes → El Eco\n• $271.529/turista → CAME\n• 8.000 plazas → Municipio"},
+
+{id:"TN11",tema:"Tandil",t:"La UNICEN y la demanda que nadie cuenta",ang:"prod",
+hook:"La UNICEN tiene su sede central en Tandil. Miles de estudiantes llegan todos los años. Y todos necesitan dónde vivir.",
+text:`"La UNICEN tiene su sede central en Tandil. Miles de estudiantes llegan todos los años. Y todos necesitan dónde vivir."
+
+"Un estudiante que llega alquila mínimo 3 años. Muchos se quedan 5, 6 o más. Y cuando terminan, si encuentran laburo acá, se quedan."
+
+"Ingeniería arrancó con un 30% más de inscriptos. Eso es demanda de alquileres garantizada."
+
+"Un departamento cerca de la universidad se alquila solo. No necesitás publicarlo ni pagar comisión. La demanda viene a vos."
+
+"Las ciudades universitarias tienen un piso de demanda que no baja nunca. Y Tandil, encima, tiene tech e industria. Es el combo completo."`,
+screen:"UNICEN SEDE CENTRAL · MILES DE ESTUDIANTES · INGENIERÍA +30% · ALQUILER GARANTIZADO · PISO DE DEMANDA",
+ig:"UNICEN en Tandil: miles de estudiantes por año. Ingeniería +30% inscriptos. Demanda de alquiler garantizada. Ciudad universitaria = piso de demanda permanente.\n#Tandil #UNICEN #Alquileres #RealEstate",
+tk:"Miles de estudiantes por año. Todos necesitan dónde vivir. #Tandil #UNICEN",
+fuentes:"• UNICEN sede central → UNICEN\n• +30% Ingeniería → El Diario de Tandil"},
+
+{id:"TN12",tema:"Tandil",t:"La gastronomía como termómetro económico",ang:"prod",
+hook:"Hay algo que uso como termómetro de una ciudad: la gastronomía. Si abren restaurantes, la economía está bien.",
+text:`"Hay algo que uso como termómetro: la gastronomía. Si abren restaurantes, la economía está bien. Si cierran, está mal."
+
+"En Tandil abre un local gastronómico por semana. Hay más de 20 viñedos. La Feria del Parque tiene 350 artesanos. La Estación de Trenes tiene 40 emprendedores."
+
+"Nadie abre un restaurante en una ciudad que no crece. Nadie pone un viñedo donde no hay turismo."
+
+"La gastronomía es demanda real. Es gente que viene, gasta, y vuelve. Es empleo, es inversión, es un ecosistema que se retroalimenta."
+
+"Cuando veo que siguen abriendo locales, sé que la ciudad está sana. Y cuando la ciudad está sana, los precios del real estate se sostienen."`,
+screen:"1 LOCAL/SEMANA · 20+ VIÑEDOS · 350 ARTESANOS FERIA · GASTRONOMÍA = TERMÓMETRO · CIUDAD SANA",
+ig:"En Tandil abre un local gastronómico por semana. 20+ viñedos. 350 artesanos en la Feria. La gastronomía es el termómetro: si crece, la ciudad está sana.\n#Tandil #Gastronomía #Economía #RealEstate",
+tk:"La gastronomía como termómetro de una ciudad. #Tandil #Economía",
+fuentes:"• Feria del Parque 350 artesanos → Municipio\n• 20+ viñedos → Turismo Tandil\n• Estación 40 emprendedores → Municipio"},
+
+// ═══════════════════════════════════════
+// ALQUILERES (8)
+// ═══════════════════════════════════════
+{id:"AL1",tema:"Alquileres",t:"El problema no es la oferta, es el acceso",ang:"prob",
+hook:"En Tandil hoy hay más de 1.200 propiedades publicadas en venta. Oferta hay. Entonces cuál es el problema.",
+text:`"En Tandil hoy hay más de 1.200 propiedades publicadas en venta. Oferta hay. Entonces cuál es el problema."
+
+"El problema es que la gente no puede acceder. El 25% gasta entre el 60 y el 100% de su sueldo en alquiler. Y el 68% está endeudado."
+
+"Ahora el crédito volvió, con 44 mil operaciones en 2025. Las tasas bajan."
+
+"De a poco se está destrabando. Pero falta. Hay una generación entera que estuvo 7 años sin poder comprar."`,
+screen:"1.200+ EN VENTA · 68% ENDEUDADOS · TASA 7,5% + UVA · TASAS BAJANDO",
+ig:"1.200+ propiedades en venta en Tandil. El problema no es la oferta. Es que la gente no puede acceder.\n#Tandil #Alquileres #RealEstate",
+tk:"1.200 propiedades en venta. El problema no es la oferta. #Tandil #Alquileres",
+fuentes:"• 1.200+ → Zonaprop mar 2026\n• 68% endeudados → Enc. Nac. Inquilinos\n• 44K créditos → Tejido Urbano"},
+
+{id:"AL2",tema:"Alquileres",t:"Construir, no regular",ang:"sol",
+hook:"Todos se quejan de los alquileres. La solución no es regularlos. Eso ya se probó y fue un desastre.",
+text:`"Todos se quejan de los alquileres. Y tienen razón. Pero la solución no es regularlos."
+
+"Se probó. Ley de alquileres. Resultado: los propietarios sacaron los departamentos del mercado, la oferta cayó y los precios subieron más."
+
+"La solución es construir. Más departamentos, más oferta, precios que se acomodan solos. Ley básica de la economía."
+
+"Cada edificio que se levanta son familias que dejan de competir por los mismos alquileres."`,
+screen:"REGULAR = DESASTRE · CONSTRUIR = SOLUCIÓN · MÁS OFERTA = MENOS PRECIO",
+ig:"Regular alquileres ya se probó y fue un desastre. La solución es construir.\n#Alquileres #Construccion #RealEstate",
+tk:"La solución a los alquileres no es regular. Es construir. #Alquileres",
+fuentes:"• Ley de Alquileres derogada → El Cronista"},
+
+{id:"AL3",tema:"Alquileres",t:"Cuánto del sueldo se te va en alquiler",ang:"prob",
+hook:"El 25% de los inquilinos en Argentina gasta entre el 60 y el 100% de su sueldo en alquiler. Leíste bien.",
+text:`"El 25% de los inquilinos en Argentina gasta entre el 60 y el 100% de su sueldo en alquiler. Leíste bien. Todo el sueldo."
+
+"Y el 68% está endeudado. No por comprar cosas, sino por llegar a fin de mes pagando el techo."
+
+"Un 2 ambientes en Buenos Aires se alquila entre 580 y 760 mil pesos. En Tandil estamos arriba de 400 mil."
+
+"Con esos números, ahorrar para un departamento es imposible. Estás atrapado en una rueda."
+
+"El crédito hipotecario es la salida para muchos. Porque la cuota en varios casos es similar al alquiler, pero al final tenés algo."
+
+"Si gastás el 100% del sueldo en alquiler y no juntás nada, tu situación en 5 años es exactamente la misma. Eso es lo preocupante."`,
+screen:"25% GASTA 60-100% DEL SUELDO · 68% ENDEUDADO · CABA: $580-760K · TANDIL: $400K+ · RUEDA SIN SALIDA",
+ig:"25% gasta hasta el 100% del sueldo en alquiler. 68% endeudado. Un 2 amb en CABA: hasta $760K. La rueda sin salida.\n#Alquileres #Argentina #RealEstate #CréditoHipotecario",
+tk:"El 25% gasta todo el sueldo en alquiler. Todo. #Alquileres #Argentina",
+fuentes:"• 25% gasta 60-100% → Enc. Nac. Inquilinos\n• 68% endeudados → Enc. Nac. Inquilinos\n• CABA $580-760K → Col. Inmobiliario CABA"},
+
+{id:"AL4",tema:"Alquileres",t:"Alquilar toda la vida: cuánto perdés",ang:"prob",
+hook:"Si alquilás desde los 25 hasta los 55, son 30 años. Hacé la cuenta de cuánto gastaste.",
+text:`"Si alquilás desde los 25 hasta los 55, son 30 años. Son 360 meses de alquiler."
+
+"A un promedio de 400 mil pesos por mes, a valores de hoy, son 144 millones de pesos. Y el alquiler sube todos los años."
+
+"Al final de esos 30 años no tenés nada. Ni una pared. Ni un metro cuadrado."
+
+"Si en vez de alquilar hubieras sacado un crédito a 20 años, a los 45 ya eras propietario y los últimos 10 años de renta te los guardabas enteros."
+
+"No te estoy diciendo que sea fácil comprar. Te estoy diciendo que alquilar toda la vida es carísimo. Y nadie hace esa cuenta."`,
+screen:"30 AÑOS · 360 MESES · $400K/MES = $144M · AL FINAL: $0 · CON CRÉDITO: PROPIETARIO A LOS 45",
+ig:"30 años de alquiler = 360 cuotas = $144 millones a valores de hoy. Al final: nada. Con crédito a 20 años, a los 45 sos propietario.\n#Alquileres #Comprar #RealEstate #Argentina",
+tk:"30 años de alquiler. 144 millones. Al final: nada. #Alquileres #Argentina",
+fuentes:"• Alquiler promedio $400K+ → Mercado 2026\n• Cálculo propio"},
+
+{id:"AL5",tema:"Alquileres",t:"Alquiler temporario: los números",ang:"prod",
+hook:"Tenés un departamento en Tandil y querés ponerlo en alquiler temporario. Te cuento los números.",
+text:`"Tenés un departamento en Tandil y querés ponerlo en temporario. Te cuento los números."
+
+"Un 2 ambientes lindo se alquila por noche entre 30 y 50 mil pesos en temporada alta. En un fin de semana largo llenás 3 noches: 90 a 150 mil pesos."
+
+"Tandil tiene fines de semana largos, Semana Santa, vacaciones de invierno, verano. Sumá Semana Santa: 30 mil turistas en 4 días, entran el doble de las plazas."
+
+"Si lo alquilás 15 noches al mes promedio, te puede dar más que un alquiler tradicional. Pero ojo: más gestión, más rotación, más desgaste."
+
+"No es para todos. Pero si tenés un departamento bien ubicado y te bancás la gestión, la renta es superior."`,
+screen:"NOCHE TEMP ALTA: $30-50K · FDL: $90-150K · SS: 30K TURISTAS · 15 NOCHES/MES > ALQUILER TRAD",
+ig:"Alquiler temporario en Tandil: $30-50K/noche en temporada. Fin de semana largo: $90-150K. Más renta que tradicional si lo gestionás bien.\n#AlquilerTemporario #Tandil #RealEstate #Inversiones",
+tk:"Cuánto da un depto en Tandil en alquiler temporario? #Tandil #AlquilerTemporario",
+fuentes:"• Precios temp → Booking / Airbnb Tandil 2026\n• 30K turistas SS → El Eco"},
+
+{id:"AL6",tema:"Alquileres",t:"Propietario vs inquilino: la brecha crece",ang:"prob",
+hook:"En Argentina la brecha entre propietarios e inquilinos se agranda cada año. Y eso es un problema serio.",
+text:`"En Argentina la brecha entre propietarios e inquilinos se agranda cada año."
+
+"El propietario tiene un activo que se revaloriza. Cobra alquiler. No depende de un tercero para tener techo."
+
+"El inquilino gasta un porcentaje enorme de su sueldo en algo que no es suyo. No ahorra. No capitaliza. Y cada año el alquiler sube."
+
+"Hace 20 años, el 15% de los hogares en Tandil alquilaba. Hoy el 30%. Se duplicó."
+
+"Esto no se arregla solo. Se arregla con más construcción, más crédito y más información. Porque mucha gente que podría comprar, no sabe que puede."`,
+screen:"PROPIETARIO: ACTIVO + RENTA · INQUILINO: GASTO SIN RETORNO · TANDIL: 15% → 30% ALQUILA · SE DUPLICÓ",
+ig:"La brecha crece: el propietario capitaliza, el inquilino gasta sin retorno. En Tandil se duplicó el % de inquilinos. Se arregla con construcción y crédito.\n#Alquileres #PropietarioVsInquilino #Argentina",
+tk:"Propietario vs inquilino. La brecha crece cada año. #Alquileres #Argentina",
+fuentes:"• 30% inquilinos vs 15,5% en 2001 → Censo / El Eco"},
+
+{id:"AL7",tema:"Alquileres",t:"La ley de alquileres: qué aprendimos",ang:"sol",
+hook:"La ley de alquileres fue un desastre. Pero dejó una lección importante.",
+text:`"La ley de alquileres fue un desastre. Pero dejó una lección importante."
+
+"Se regularon plazos, ajustes, condiciones. Resultado: los propietarios sacaron departamentos del mercado. La oferta cayó. Los precios subieron más."
+
+"Cuando intervenís un mercado con reglas que no entienden la dinámica, el mercado te pasa por encima."
+
+"La solución siempre fue la misma: más oferta. Más construcción. Más crédito para que la gente pueda comprar y deje de alquilar."
+
+"La ley se derogó. El mercado se está reacomodando. Pero la lección queda: no podés resolver con regulación lo que se resuelve con construcción."`,
+screen:"LEY DE ALQUILERES · OFERTA CAYÓ · PRECIOS SUBIERON · DEROGADA · LECCIÓN: MÁS OFERTA, NO MÁS REGULACIÓN",
+ig:"La ley de alquileres: se reguló, la oferta cayó, los precios subieron. La lección: no se resuelve con regulación, se resuelve con construcción.\n#LeyAlquileres #RealEstate #Argentina",
+tk:"La ley de alquileres fue un desastre. La lección que dejó. #Alquileres #Argentina",
+fuentes:"• Ley de Alquileres derogada → El Cronista / Infobae"},
+
+{id:"AL8",tema:"Alquileres",t:"'Mejor alquilar e invertir la diferencia'",ang:"con",
+hook:"Me dicen 'mejor alquilo barato e invierto la diferencia en la bolsa'. Suena inteligente, pero casi nadie lo hace.",
+text:`"Me dicen 'mejor alquilo barato e invierto la diferencia en la bolsa'. Suena inteligente. Pero hay un problema."
+
+"Casi nadie lo hace. La diferencia no se invierte: se gasta. Un viaje, un auto, un imprevisto. La plata líquida se va."
+
+"El departamento te obliga a ahorrar. Cada cuota es ahorro forzado en un activo que se revaloriza. Es la disciplina que el mercado financiero no te da."
+
+"Y encima: en Argentina, cuánto confiás en tener acceso estable a la bolsa? Cepos, regulaciones, impuestos al dólar. El ladrillo no te lo congelan."
+
+"El que puede comprar y alquila para 'invertir la diferencia', en 10 años tiene menos patrimonio que el que compró. Está demostrado."`,
+screen:"'INVIERTO LA DIFERENCIA' · CASI NADIE LO HACE · DEPTO = AHORRO FORZADO · LADRILLO NO SE CONGELA",
+ig:"'Alquilo e invierto la diferencia'. Suena inteligente, casi nadie lo hace. La diferencia se gasta. El departamento te obliga a ahorrar. Y el ladrillo no te lo congelan.\n#Alquilar #Invertir #RealEstate #Argentina",
+tk:"Mejor alquilar e invertir la diferencia? Casi nadie lo hace. #RealEstate #Argentina",
+fuentes:"• Análisis comportamental inversión → Ref. mercado"},
+
+// ═══════════════════════════════════════
+// MERCADO ARGENTINA (8)
+// ═══════════════════════════════════════
+{id:"MK1",tema:"Mercado",t:"El mercado inmobiliario argentino se despertó",ang:"prod",
+hook:"44 mil créditos hipotecarios en 2025. 3.679 millones de dólares en financiamiento. El mejor número desde 2018.",
+text:`"44 mil créditos hipotecarios en 2025. 3.679 millones de dólares en financiamiento. El mejor número desde 2018."
+
+"Febrero de 2026: 7.655 compraventas en CABA. El mejor febrero desde 2008."
+
+"El 20% de las escrituras se hicieron con financiamiento bancario. El nivel más alto en años."
+
+"Tasas bajando, bancos compitiendo, operaciones subiendo. El mercado no se está despertando, ya se despertó."
+
+"Y esto recién arranca. Porque cuando el crédito se consolida, el efecto es exponencial. Más gente compra, más gente vende, más gente construye."`,
+screen:"44K CRÉDITOS · $3.679M · MEJOR FEB DESDE 2008 · 20% CON BANCO · EL MERCADO SE DESPERTÓ",
+ig:"44K créditos. $3.679M. Mejor febrero desde 2008. 20% de escrituras con banco. El mercado ya se despertó.\n#MercadoInmobiliario #Argentina #RealEstate #CréditoHipotecario",
+tk:"El mercado inmobiliario argentino se despertó. Los números. #MercadoInmobiliario #Argentina",
+fuentes:"• 44K créditos → Tejido Urbano\n• USD 3.679M → Tejido Urbano\n• 7.655 CABA feb → Colegio Escribanos\n• 20% con banco → Newsweek"},
+
+{id:"MK2",tema:"Mercado",t:"Argentina está barata en dólares",ang:"prod",
+hook:"Para alguien de afuera, Argentina hoy está regalada. El metro cuadrado en Buenos Aires está en 2.455 dólares.",
+text:`"Para alguien de afuera, Argentina hoy está regalada. El metro cuadrado promedio en Buenos Aires está en 2.455 dólares."
+
+"En Montevideo, 3.000. En Santiago de Chile, 2.800. En São Paulo, 3.500. En Lima, 2.200 pero con menos calidad."
+
+"Buenos Aires tiene la arquitectura, la gastronomía, la cultura. Y precios por debajo de la región."
+
+"En el interior es más barato todavía. Tandil: 2.000 a 2.600. Con sierras, universidad, polo tech."
+
+"Cuando un país estabiliza su economía, los precios se acomodan al nivel regional. Si Argentina va para ese lado, comprar hoy es comprar con descuento."`,
+screen:"BsAs: $2.455 · MONTEVIDEO: $3.000 · SANTIAGO: $2.800 · SÃO PAULO: $3.500 · ARGENTINA ESTÁ BARATA",
+ig:"Argentina está barata en dólares. BsAs $2.455/m² vs Montevideo $3.000, Santiago $2.800, São Paulo $3.500. Si la economía estabiliza, comprar hoy es descuento.\n#Argentina #RealEstate #MercadoInmobiliario",
+tk:"Argentina está barata en dólares. Mirá la comparación. #Argentina #RealEstate",
+fuentes:"• M² CABA 2.455 → Zonaprop feb 2026\n• Comparativos regionales → Properati / Global Property Guide"},
+
+{id:"MK3",tema:"Mercado",t:"Qué pasa cuando un país estabiliza",ang:"sol",
+hook:"Chile en los 90. Uruguay en los 2000. Colombia después de la paz. ¿Qué pasó con el real estate en todos esos casos?",
+text:`"Chile en los 90. Uruguay en los 2000. Colombia después de la paz. Qué pasó con el real estate? Subió. En todos los casos."
+
+"Cuando un país estabiliza su economía, pasan tres cosas: vuelve el crédito, baja el riesgo país, entra inversión extranjera."
+
+"Las tres cosas le pegan al real estate. El crédito genera demanda. La baja de riesgo país atrae capitales. La inversión extranjera sube los precios."
+
+"Argentina está en ese camino. No estoy diciendo que ya llegó. Estoy diciendo que si llega, los que compraron antes ganan."
+
+"El real estate premia a los que se adelantan, no a los que esperan confirmación. Cuando todos estén seguros, los precios ya subieron."`,
+screen:"CHILE 90s · URUGUAY 2000s · COLOMBIA POST-PAZ · TODOS SUBIERON · CRÉDITO + BAJA RIESGO + INVERSIÓN · EL QUE SE ADELANTA GANA",
+ig:"Chile 90s, Uruguay 2000s, Colombia post-paz: el real estate subió en todos. Cuando Argentina estabilice, pasa lo mismo. El que se adelanta gana.\n#Argentina #RealEstate #Inversiones #MercadoInmobiliario",
+tk:"Qué pasa cuando un país estabiliza? Mirá Chile, Uruguay, Colombia. #Argentina #RealEstate",
+fuentes:"• Casos Chile/Uruguay/Colombia → Global Property Guide\n• Crédito Argentina → BBVA Research"},
+
+{id:"MK4",tema:"Mercado",t:"Mejor febrero desde 2008",ang:"prod",
+hook:"En febrero de 2026 se hicieron 7.655 compraventas en CABA. Es el mejor febrero desde 2008.",
+text:`"En febrero de 2026 se hicieron 7.655 compraventas en CABA. El mejor febrero desde 2008."
+
+"Qué significa: que la gente está comprando. Que hay confianza. Que el crédito está moviendo el mercado."
+
+"El 20% de esas escrituras se hicieron con financiamiento bancario. El nivel más alto desde 2018."
+
+"Esto no es un pico de un mes. Es una tendencia. Cada mes hay más operaciones que el anterior. El mercado se está normalizando."
+
+"Y cuando el mercado se normaliza, los precios suben. Porque más gente comprando con más crédito disponible genera presión sobre la oferta."`,
+screen:"7.655 COMPRAVENTAS · MEJOR FEB DESDE 2008 · 20% CON BANCO · TENDENCIA ALCISTA",
+ig:"7.655 compraventas en CABA en febrero. Mejor febrero desde 2008. 20% con financiamiento bancario. El mercado se normaliza.\n#MercadoInmobiliario #CABA #Argentina #RealEstate",
+tk:"Mejor febrero desde 2008. 7.655 compraventas. #MercadoInmobiliario #Argentina",
+fuentes:"• 7.655 compraventas → Colegio Escribanos CABA\n• 20% con banco → Infobae feb 2026"},
+
+{id:"MK5",tema:"Mercado",t:"'Los precios van a bajar'",ang:"con",
+hook:"'Esperá que los precios van a bajar.' Llevo años escuchando eso. Y los precios nunca bajaron.",
+text:`"'Esperá que los precios van a bajar.' Llevo años escuchando eso."
+
+"Los costos de construcción subieron 118% en dólares. La mano de obra sube todos los meses. Los materiales suben. El suelo disponible es cada vez menos."
+
+"No hay un solo factor que empuje los precios para abajo. No hay exceso de oferta. No hay caída de demanda. No hay crédito barato incontrolado que genere burbuja."
+
+"Los que esperan la baja están esperando algo que no tiene lógica económica."
+
+"Los precios pueden estancarse un tiempo. Pueden subir más despacio. Pero bajar? Con estos costos y esta demanda? No."`,
+screen:"COSTOS +118% · MANO OBRA SUBE · MATERIALES SUBEN · SUELO LIMITADO · NO HAY FACTOR DE BAJA",
+ig:"'Los precios van a bajar.' Costos +118% en USD, mano de obra sube, materiales suben, suelo se acaba. No hay un solo factor de baja.\n#Precios #RealEstate #Argentina #MercadoInmobiliario",
+tk:"Los precios van a bajar? Mirá los números. #RealEstate #Argentina",
+fuentes:"• +118% costos → CAC / BBVA Research\n• CAC sube todos los meses → Cifras Online"},
+
+{id:"MK6",tema:"Mercado",t:"'Estamos en burbuja'",ang:"con",
+hook:"'El mercado inmobiliario argentino está en burbuja.' No. Y te explico por qué.",
+text:`"'El mercado inmobiliario argentino está en burbuja.' No. Y te explico por qué."
+
+"Una burbuja se forma cuando hay crédito fácil sin control, especulación masiva y precios desconectados de los fundamentos."
+
+"En Argentina hay 44 mil créditos al año. En Estados Unidos antes de 2008 se otorgaban millones. No estamos ni cerca."
+
+"Los precios suben porque los costos suben. No por especulación. El índice CAC subió 17% en 8 meses. Los materiales y la mano de obra no bajan."
+
+"Y la demanda es real: gente que necesita dónde vivir, no inversores comprando para revender."
+
+"Cuando escuches 'burbuja', preguntá: con qué crédito? Con qué especulación? Los datos no la sostienen."`,
+screen:"BURBUJA: CRÉDITO FÁCIL + ESPECULACIÓN · ARG: 44K CRÉDITOS (NO MILLONES) · COSTOS REALES SUBEN · DEMANDA REAL · NO HAY BURBUJA",
+ig:"Burbuja? 44K créditos al año, no millones. Los precios suben porque los costos suben. La demanda es real. Los datos no sostienen la burbuja.\n#Burbuja #MercadoInmobiliario #Argentina #RealEstate",
+tk:"Estamos en burbuja? Los datos dicen que no. #MercadoInmobiliario #Argentina",
+fuentes:"• 44K créditos → Tejido Urbano\n• CAC +17% → Cifras Online"},
+
+{id:"MK7",tema:"Mercado",t:"'Comprar en Argentina es tirar la plata'",ang:"con",
+hook:"Me dicen 'comprar en Argentina es tirar la plata, mejor invertí afuera'. Y les pregunto: con qué retorno?",
+text:`"Me dicen 'comprar en Argentina es tirar la plata, mejor invertí afuera'. Y les pregunto: con qué retorno?"
+
+"Un departamento en Miami rinde entre 3 y 4% de renta neta. Acá rendís entre 4 y 5%. Y la apreciación en ciudades que crecen es mayor."
+
+"La barrera de entrada afuera es más alta. Un departamento en Miami sale 300 mil dólares mínimo. Acá arrancás con menos de 100."
+
+"Y hay algo más: en Argentina vivís, conocés el mercado, podés ver tu propiedad, hablar con el inquilino, elegir la zona."
+
+"Invertir afuera tiene sentido para diversificar. Pero decir que invertir acá es tirar la plata es no conocer los números."`,
+screen:"MIAMI RENTA: 3-4% · TANDIL: 4-5% · MIAMI ENTRADA: $300K+ · TANDIL: <$100K · ARGENTINA NO ES TIRAR PLATA",
+ig:"Invertir en Argentina es tirar la plata? Miami renta 3-4%, entrada $300K. Tandil renta 4-5%, entrada <$100K. Los números dicen otra cosa.\n#Argentina #Inversiones #RealEstate #Miami",
+tk:"Comprar en Argentina es tirar la plata? Mirá la comparación con Miami. #Argentina #RealEstate",
+fuentes:"• Renta Miami 3-4% → Global Property Guide\n• Renta Tandil ~5% → Reporte Inmobiliario\n• Precios Miami → Zillow"},
+
+{id:"MK8",tema:"Mercado",t:"La renta se estabiliza en 5% anual",ang:"prod",
+hook:"La renta por alquiler en Argentina se estabilizó en un 5% anual. Y eso es competitivo contra casi cualquier inversión.",
+text:`"La renta por alquiler en Argentina se estabilizó en un 5% anual. Eso es neto, después de gastos."
+
+"Comparalo: plazo fijo en dólares, menos del 2%. Bonos del Tesoro USA, 4,5% con riesgo cero pero sin apreciación del activo. S&P 500, 7% ajustado por inflación pero con volatilidad extrema."
+
+"El real estate te da 5% de renta más apreciación. En una ciudad que crece, sumá entre 5 y 10% de apreciación. Retorno total: 10 a 15% anual."
+
+"Y encima es tangible. Podés verlo, tocarlo, alquilarlo, usarlo. No es un número en una pantalla que puede caer 30% en un mes."
+
+"No es la inversión más rápida. Pero es la más sólida."`,
+screen:"RENTA 5% · PLAZO FIJO <2% · TREASURY 4,5% · S&P 7% CON VOLATILIDAD · RE: 5% + APRECIACIÓN = 10-15%",
+ig:"Renta real estate: 5% + apreciación 5-10% = retorno total 10-15%. Plazo fijo <2%. Treasury 4,5%. S&P 7% con volatilidad. El real estate es lo más sólido.\n#Inversiones #RealEstate #Renta #Argentina",
+tk:"5% de renta + apreciación. El real estate le gana a casi todo. #RealEstate #Inversiones",
+fuentes:"• Renta ~5% → Reporte Inmobiliario\n• Plazo fijo <2% → Ref. bancaria\n• Treasury ~4,5% → FRED\n• S&P ~7% real → NYU Stern"},
+
+// ═══════════════════════════════════════
+// PRIMER DEPARTAMENTO (8)
+// ═══════════════════════════════════════
+{id:"PD1",tema:"PrimerDepto",t:"Tengo 25 años, por dónde arranco",ang:"sol",
+hook:"Tenés 25 años y querés comprar tu primer departamento. Te digo exactamente por dónde arrancar.",
+text:`"Tenés 25 años y querés comprar tu primer departamento. Te digo por dónde arrancar."
+
+"Primero: informate sobre crédito hipotecario. Si estás en relación de dependencia, con antigüedad y buen sueldo, podés calificar."
+
+"Segundo: no arranques por el departamento de tus sueños. Arrancá por el que podés pagar. Un monoambiente, un 2 ambientes chico. Tu primer departamento es una inversión, no tu casa para siempre."
+
+"Tercero: mirá ciudades intermedias. Si vivís en Buenos Aires y podés laburar remoto, un departamento en Tandil cuesta entre 30 y 40% menos."
+
+"Cuarto: hablá con un profesional. No con tu tío que compró en el 95. Con alguien que conozca el mercado de hoy."
+
+"El error más grande que veo es esperar al 'momento perfecto'. El momento perfecto es cuando tenés la información y la decisión."`,
+screen:"1. INFORMATE SOBRE CRÉDITO · 2. ARRANCÁ CHICO · 3. MIRÁ CIUDADES INTERMEDIAS · 4. HABLÁ CON UN PROFESIONAL · EL MOMENTO ES CUANDO DECIDÍS",
+ig:"25 años y querés comprar: 1) Informate sobre crédito 2) Arrancá chico 3) Mirá ciudades intermedias 4) Hablá con un profesional. No esperes al momento perfecto.\n#PrimerDepto #JóvenesInversores #RealEstate #Argentina",
+tk:"Tenés 25 y querés tu primer depto? Por dónde arrancás. #PrimerDepto #RealEstate",
+fuentes:"• Crédito disponible → BBVA Research\n• Tandil -30/40% vs CABA → Zonaprop"},
+
+{id:"PD2",tema:"PrimerDepto",t:"Solo vs en pareja: la estrategia cambia",ang:"sol",
+hook:"No es lo mismo comprar solo que en pareja. La estrategia es completamente distinta.",
+text:`"No es lo mismo comprar solo que en pareja. La estrategia cambia."
+
+"Solo: necesitás todo el anticipo y todo el ingreso para calificar. Te conviene algo chico, un monoambiente o 2 ambientes, que puedas pagar sin ahogarte."
+
+"En pareja: se suman los ingresos. Lo que solo no te daba para un 2 ambientes, en pareja te da para un 3. El banco mira el ingreso total del grupo familiar."
+
+"Pero ojo con un error común: no compres pensando en la pareja de hoy, comprá pensando en tu patrimonio. Definí bien cómo queda la propiedad legalmente."
+
+"Si son pareja sin estar casados, un condominio o un fideicomiso a nombre de los dos. Si están casados, sociedad conyugal."
+
+"La parte romántica es una cosa. La parte patrimonial es otra. Separalas."`,
+screen:"SOLO: ALGO CHICO, TODO TU INGRESO · PAREJA: SE SUMAN INGRESOS · DEFINÍ LA PROPIEDAD LEGALMENTE · ROMANCE ≠ PATRIMONIO",
+ig:"Solo o en pareja? La estrategia cambia. Solo: algo chico. Pareja: se suman ingresos, más capacidad. Pero definí la propiedad legalmente. Romance ≠ patrimonio.\n#PrimerDepto #ComprarEnPareja #RealEstate #Argentina",
+tk:"Comprás solo o en pareja? La estrategia cambia. #PrimerDepto #RealEstate",
+fuentes:"• Suma de ingresos → BCRA regulación créditos\n• Condominio / soc. conyugal → Código Civil"},
+
+{id:"PD3",tema:"PrimerDepto",t:"El monoambiente como primera inversión",ang:"sol",
+hook:"Tu primera inversión inmobiliaria no tiene que ser un 3 ambientes con balcón terraza. Puede ser un monoambiente.",
+text:`"Tu primera inversión no tiene que ser un 3 ambientes con terraza. Puede ser un monoambiente."
+
+"Un monoambiente en Tandil lo conseguís desde 50 mil dólares. Se alquila rápido porque hay demanda de estudiantes y jóvenes profesionales."
+
+"La renta porcentual de un monoambiente es mayor que la de un departamento grande. Porque el alquiler no baja proporcionalmente al tamaño."
+
+"Es la puerta de entrada al real estate. Lo comprás, lo alquilás, y con la renta y tu ahorro, en unos años comprás el segundo."
+
+"Los grandes inversores inmobiliarios no arrancaron con un edificio. Arrancaron con un monoambiente."`,
+screen:"MONOAMBIENTE: DESDE $50K · ALTA DEMANDA · RENTA % MAYOR · PUERTA DE ENTRADA · DEL MONO AL PORTFOLIO",
+ig:"Monoambiente desde $50K. Alta demanda. Renta % mayor que un depto grande. Es la puerta de entrada al real estate.\n#Monoambiente #PrimeraInversión #RealEstate #Tandil",
+tk:"Tu primera inversión: un monoambiente. #RealEstate #PrimeraInversión",
+fuentes:"• Monoambiente desde $50K → Zonaprop Tandil\n• Demanda estudiantil → UNICEN"},
+
+{id:"PD4",tema:"PrimerDepto",t:"Tus viejos compraron casa a los 30. Vos podés?",ang:"prob",
+hook:"Tus viejos compraron casa a los 30. Vos tenés 30 y estás alquilando. Qué cambió.",
+text:`"Tus viejos compraron casa a los 30. Vos tenés 30 y estás alquilando. Qué cambió."
+
+"Cambió todo. En los 90 había crédito accesible y los sueldos en dólares eran más altos relativamente. La relación sueldo-metro cuadrado era otra."
+
+"Hoy 4 de cada 10 jóvenes no logran independizarse. Cuatro de diez."
+
+"Pero ahora volvió el crédito. Y en ciudades intermedias el metro cuadrado está 30 a 40% abajo de Buenos Aires."
+
+"No va a ser como fue para tus viejos. Pero podés. Con crédito, con información, y capaz no con una casa sino con un departamento chico."
+
+"El error es comparar tu situación con la de tus viejos y deprimirte. En vez de eso, fijate qué opciones tenés hoy."`,
+screen:"TUS VIEJOS: CRÉDITO + SUELDOS ALTOS · VOS: 4 DE 10 NO SE INDEPENDIZAN · HOY: CRÉDITO VOLVIÓ · CIUDADES INTERMEDIAS -30/40%",
+ig:"Tus viejos compraron a los 30. Vos tenés 30 y alquilás. Cambió todo. Pero hoy hay crédito, hay ciudades intermedias -30%. No es como antes, pero podés.\n#PrimerDepto #Jóvenes #RealEstate #Argentina",
+tk:"Tus viejos compraron casa a los 30. Vos podés? #PrimerDepto #Argentina",
+fuentes:"• 4 de 10 → INDEC / Infobae 2026\n• Crédito volvió → BBVA Research"},
+
+{id:"PD5",tema:"PrimerDepto",t:"Ubicación, metros o precio: qué priorizás",ang:"sol",
+hook:"Cuando comprás tu primer departamento tenés que elegir: buena ubicación, metros amplios o precio bajo. Las tres juntas no existen.",
+text:`"Cuando comprás tu primer departamento tenés que elegir: buena ubicación, metros amplios o precio bajo. Las tres juntas no existen."
+
+"Si priorizás ubicación: vas a pagar más por metro. Pero un departamento bien ubicado se alquila más rápido y se revaloriza mejor."
+
+"Si priorizás metros: te vas más lejos del centro. Más espacio pero menos demanda de alquiler."
+
+"Si priorizás precio: comprás algo chico en zona media. Buena entrada pero crecimiento más lento."
+
+"Mi consejo: para primera inversión, priorizá ubicación. Un monoambiente bien ubicado vale más que un 3 ambientes en las afueras."
+
+"La ubicación no se cambia. Los metros se mejoran más adelante cuando vendés y comprás algo más grande."`,
+screen:"UBICACIÓN · METROS · PRECIO · ELEGÍ 2 DE 3 · PRIMERA INVERSIÓN: PRIORIZÁ UBICACIÓN",
+ig:"Ubicación, metros o precio: elegí 2 de 3. Para primera inversión, priorizá ubicación. Un mono bien ubicado vale más que un 3 amb lejos.\n#PrimerDepto #Ubicación #RealEstate #Consejo",
+tk:"Ubicación, metros o precio. Cuál priorizás? #PrimerDepto #RealEstate",
+fuentes:"• Principio ubicación → Fundamentos inmobiliarios"},
+
+{id:"PD6",tema:"PrimerDepto",t:"4 de cada 10 jóvenes no se independizan",ang:"prob",
+hook:"4 de cada 10 jóvenes en Argentina no logran independizarse. Cuatro de diez.",
+text:`"4 de cada 10 jóvenes en Argentina no logran independizarse. Es un dato de 2026."
+
+"En Buenos Aires es peor. Los alquileres suben más que los sueldos. Y comprar sin crédito era imposible."
+
+"Pero ahora volvió el crédito. Y en ciudades intermedias como Tandil, donde el metro cuadrado está 40% abajo de Buenos Aires, acceder con financiamiento es real."
+
+"El que se anima a salir de Capital hoy tiene opciones que antes no existían."`,
+screen:"4 DE 10 · CRÉDITO VOLVIÓ · TANDIL: M² -40% VS CABA · OPCIONES NUEVAS",
+ig:"4 de 10 jóvenes no se independizan. Pero el crédito volvió y en ciudades intermedias el m² está -40% vs BsAs.\n#Argentina #Jóvenes #RealEstate #CréditoHipotecario",
+tk:"4 de 10 jóvenes no pueden independizarse. Hay una salida. #Argentina",
+fuentes:"• 4 de 10 → INDEC / Infobae 2026\n• Tandil -40% vs CABA → Zonaprop"},
+
+{id:"PD7",tema:"PrimerDepto",t:"Errores del primer comprador",ang:"prob",
+hook:"Voy a contarte los 3 errores que veo en los que compran su primer departamento. Los cometen todos.",
+text:`"Los 3 errores que veo en los que compran su primer departamento."
+
+"Uno: compran pensando en vivir, no en invertir. Tu primer departamento es un activo, no tu casa para siempre. Comprá con la cabeza, no con el corazón."
+
+"Dos: no hacen las cuentas completas. El precio del departamento no es todo. Sumale escritura, impuestos, mudanza, arreglos. Un 5 a 8% extra sobre el precio."
+
+"Tres: no averiguan sobre crédito antes de buscar. Van al revés: se enamoran de un departamento y después averiguan si les da el crédito. Primero calificá, después buscá."
+
+"El primer departamento es el más importante porque te abre la puerta al patrimonio inmobiliario. No lo compres mal."`,
+screen:"ERROR 1: CORAZÓN > CABEZA · ERROR 2: NO SUMAR GASTOS EXTRA 5-8% · ERROR 3: BUSCAR ANTES DE CALIFICAR · COMPRÁ CON LA CABEZA",
+ig:"3 errores del primer comprador: 1) Comprar con el corazón 2) No sumar gastos extra (5-8%) 3) No calificar crédito antes de buscar. El primer depto es el más importante.\n#PrimerDepto #Errores #RealEstate #Argentina",
+tk:"Los 3 errores de todo primer comprador. #PrimerDepto #RealEstate",
+fuentes:"• Gastos escritura 5-8% → Colegio Escribanos"},
+
+{id:"PD8",tema:"PrimerDepto",t:"La trampa de 'esperar al momento justo'",ang:"con",
+hook:"'Voy a esperar a que bajen los precios.' 'Voy a esperar a juntar más.' 'Voy a esperar a que se estabilice.'",
+text:`"'Voy a esperar a que bajen.' 'Voy a esperar a juntar más.' 'Voy a esperar a que se estabilice.' Siempre esperando."
+
+"El costo de esperar un año: si el metro cuadrado sube un 10%, un departamento de 80 mil dólares pasa a costar 88 mil. Son 8 mil dólares que perdiste por esperar."
+
+"Y no es solo el precio. Son 12 meses de alquiler tirados. Son 12 meses sin apreciación. Es tiempo que no vuelve."
+
+"No digo que haya que comprar sin pensar. Digo que 'esperar' no es una estrategia. Es miedo disfrazado de prudencia."
+
+"El momento justo es cuando tenés la información, el acceso al crédito y la decisión. No cuando el mercado te pide permiso."`,
+screen:"ESPERAR 1 AÑO · M² +10% = $8K PERDIDOS · + 12 MESES ALQUILER · ESPERAR NO ES ESTRATEGIA",
+ig:"Esperar un año: si el m² sube 10%, perdés $8K + 12 meses de alquiler. Esperar no es estrategia. Es miedo disfrazado de prudencia.\n#PrimerDepto #ComprarAhora #RealEstate #Argentina",
+tk:"Esperar al momento justo? Eso no existe. #PrimerDepto #RealEstate",
+fuentes:"• Apreciación ~10% anual → BBVA Research"},
+
+// ═══════════════════════════════════════
+// MUDARSE AL INTERIOR (6)
+// ═══════════════════════════════════════
+{id:"MU1",tema:"Mudarse",t:"El éxodo de Buenos Aires",ang:"prob",
+hook:"Un 2 ambientes en Capital se alquila entre 580 y 760 mil pesos. Con ese número, mucha gente no llega a fin de mes.",
+text:`"Un 2 ambientes en Capital se alquila entre 580 y 760 mil pesos. Con ese número, mucha gente directamente no llega a fin de mes."
+
+"Lo que está pasando es un éxodo. Inquilinos que se van al conurbano. Profesionales al interior. Familias que dicen 'para qué me quedo acá'."
+
+"Tandil es uno de los destinos que más crece. Calidad de vida, laburo, sierras, y un metro cuadrado entre 35 y 40% menos que Buenos Aires."`,
+screen:"$580-760K ALQUILER CABA · ÉXODO AL INTERIOR · TANDIL: -40% EL M²",
+ig:"CABA: hasta $760K de alquiler. La gente se va. Tandil crece con ese éxodo. M² 40% menos.\n#BuenosAires #Tandil #RealEstate #Mudarse",
+tk:"La gente se va de Buenos Aires. Y sé adónde van. #Tandil #Mudarse",
+fuentes:"• Alquiler CABA $580-760K → Col. Inmobiliario CABA\n• Tandil -40% → Zonaprop"},
+
+{id:"MU2",tema:"Mudarse",t:"Buenos Aires ya no da",ang:"prob",
+hook:"El costo de vida en Buenos Aires se volvió insostenible para mucha gente. Y no es solo el alquiler.",
+text:`"El costo de vida en Buenos Aires se volvió insostenible para mucha gente. Y no es solo el alquiler."
+
+"Es el transporte, la comida, las expensas, los servicios. Un 2 ambientes en Palermo: mínimo 600 mil de alquiler más 100 mil de expensas. Y eso antes de comer."
+
+"El que labura remoto se hace la pregunta obvia: para qué pago esto si puedo vivir en otro lado por la mitad."
+
+"Las ciudades intermedias están creciendo por esto. Tandil, Bariloche, Carlos Paz, Mar del Plata. Gente que se va y no vuelve."
+
+"Buenos Aires sigue siendo Buenos Aires. Pero el costo de pertenecer es cada vez más alto."`,
+screen:"PALERMO: $600K ALQUILER + $100K EXPENSAS · TRABAJO REMOTO · CIUDADES INTERMEDIAS CRECEN · EL COSTO DE PERTENECER",
+ig:"Palermo: $600K alquiler + $100K expensas. Antes de comer. El trabajo remoto cambió todo. Las ciudades intermedias crecen con los que se van.\n#BuenosAires #Mudarse #CiudadesIntermedias #Argentina",
+tk:"Buenos Aires ya no da. La gente se va. #BuenosAires #Mudarse",
+fuentes:"• Alquileres Palermo → Col. Inmobiliario CABA\n• Ciudades intermedias → CONICET"},
+
+{id:"MU3",tema:"Mudarse",t:"El trabajo remoto cambió todo",ang:"sol",
+hook:"El trabajo remoto cambió las reglas del juego inmobiliario. Completamente.",
+text:`"El trabajo remoto cambió las reglas del juego inmobiliario."
+
+"Antes, vivías donde trabajabas. Si laburabas en CABA, vivías en CABA o en el conurbano. No había opción."
+
+"Ahora, si laburás para una empresa de Buenos Aires o del exterior, podés vivir en cualquier lado. Y 'cualquier lado' con sierras, menos ruido y metro cuadrado 40% más barato, suena bastante bien."
+
+"Tandil tiene fibra óptica, coworkings, y un polo tech que demuestra que se puede laburar de acá."
+
+"El remoto no es una moda. Es una transformación estructural. Y las ciudades intermedias son las grandes ganadoras."`,
+screen:"ANTES: VIVÍAS DONDE LABURABAS · AHORA: LABURÁS DONDE VIVÍS · TANDIL: -40% M² · FIBRA + COWORKING + TECH · TRANSFORMACIÓN ESTRUCTURAL",
+ig:"Antes vivías donde laburabas. Ahora laburás donde vivís. Tandil: -40% el m², fibra, coworkings, polo tech. El remoto cambió todo.\n#TrabajoRemoto #Mudarse #Tandil #RealEstate",
+tk:"El trabajo remoto cambió todo para el real estate. #TrabajoRemoto #Tandil",
+fuentes:"• Polo tech Tandil → Cluster Tech\n• M² -40% → Zonaprop"},
+
+{id:"MU4",tema:"Mudarse",t:"'En el interior no hay laburo'",ang:"con",
+hook:"Me dicen 'en el interior no hay laburo'. Y me río. Porque claramente no conocen Tandil.",
+text:`"Me dicen 'en el interior no hay laburo'. Claramente no conocen Tandil."
+
+"Polo tech con más de 2.000 empleados, incluyendo Globant. Parque Industrial con 72 empresas y un segundo en planificación. Universidad que genera profesionales."
+
+"Hay sueldos tech que son iguales o mejores que en Buenos Aires. Y el costo de vida es la mitad."
+
+"El interior cambió. Ya no es lo que era hace 20 años. Las ciudades intermedias como Tandil tienen economías diversificadas."
+
+"'No hay laburo' es la excusa de alguien que no investigó. Los números dicen lo contrario."`,
+screen:"2.000 TECH · GLOBANT · 72 EMPRESAS PI · UNICEN · SUELDOS = CABA · COSTO DE VIDA = MITAD",
+ig:"En el interior no hay laburo? 2.000 tech, Globant, 72 empresas, UNICEN. Sueldos iguales a CABA, costo de vida la mitad.\n#Interior #Tandil #Laburo #RealEstate",
+tk:"En el interior no hay laburo. Seguro? #Tandil #Interior",
+fuentes:"• 2.000 tech → Cluster Tech\n• Globant → Globant Tandil\n• 72 empresas → Municipio"},
+
+{id:"MU5",tema:"Mudarse",t:"Lo que priorizás cuando te mudás",ang:"sol",
+hook:"Cuando alguien me dice que se quiere mudar a Tandil, le hago tres preguntas.",
+text:`"Cuando alguien me dice que se quiere mudar a Tandil, le hago tres preguntas."
+
+"Una: de qué trabajás y podés hacerlo remoto? Porque si no, primero resolvé el laburo."
+
+"Dos: venís solo o con familia? Porque con chicos, mirá escuelas, salud, distancia al centro."
+
+"Tres: querés comprar o alquilar primero? Mi consejo siempre es alquilar 6 meses para conocer la ciudad, los barrios, la dinámica. Y después comprás sabiendo."
+
+"El error más común es comprar antes de conocer. Te enamorás de un barrio por Instagram y resulta que en invierno es un congelador sin gas natural."
+
+"Informate, vení, viví un tiempo, y después decidí."`,
+screen:"1. RESOLVÉ EL LABURO · 2. SOLO O CON FAMILIA · 3. ALQUILÁ 6 MESES PRIMERO · NO COMPRES SIN CONOCER",
+ig:"Querés mudarte a Tandil? 1) Resolvé el laburo 2) Pensá en la familia 3) Alquilá 6 meses antes de comprar. No compres sin conocer.\n#Mudarse #Tandil #Consejo #RealEstate",
+tk:"Querés mudarte a Tandil? Estas 3 preguntas primero. #Mudarse #Tandil",
+fuentes:"• Experiencia Santiago / mercado Tandil"},
+
+{id:"MU6",tema:"Mudarse",t:"La calidad de vida tiene precio (y es más bajo)",ang:"prod",
+hook:"Calidad de vida. Todo el mundo la quiere. Pero nadie habla de cuánto cuesta realmente.",
+text:`"Calidad de vida. Todo el mundo la quiere. Pero cuánto cuesta?"
+
+"En Buenos Aires, calidad de vida es pagar 700 mil de alquiler, una hora de viaje al trabajo, y estresarte todos los días."
+
+"En Tandil, calidad de vida es alquilar por 400 mil, llegar al trabajo en 15 minutos, y tener las sierras a media hora."
+
+"CONICET ubica a Tandil entre las mejores ciudades intermedias del país, junto a Bariloche y Ushuaia."
+
+"La calidad de vida no es subjetiva cuando los datos la respaldan: más verde, menos estrés, mejor relación costo-ingreso."
+
+"Y lo mejor: el metro cuadrado está entre 30 y 40% abajo de Buenos Aires. Comprás calidad de vida a precio de descuento."`,
+screen:"CABA: $700K ALQUILER + 1H VIAJE · TANDIL: $400K + 15 MIN · CONICET: MEJORES CIUDADES · -30/40% M²",
+ig:"CABA: $700K alquiler, 1h de viaje. Tandil: $400K, 15 min, sierras. CONICET: mejores ciudades intermedias. M² -30/40%. Calidad de vida a precio de descuento.\n#CalidadDeVida #Tandil #Mudarse #RealEstate",
+tk:"La calidad de vida tiene precio. Y en Tandil es más bajo. #Tandil #CalidadDeVida",
+fuentes:"• CONICET ciudades intermedias → CONICET\n• Alquileres comparativos → Zonaprop"},
+
+// ═══════════════════════════════════════
+// INFRAESTRUCTURA (4)
+// ═══════════════════════════════════════
+{id:"IF1",tema:"Infra",t:"Más edificios, pero qué pasa con los servicios",ang:"prob",
+hook:"Cada vez hay más edificios en Tandil. Pero hay una pregunta que nadie hace: qué pasa con los servicios.",
+text:`"Cada vez hay más edificios en Tandil. Pero qué pasa con los servicios."
+
+"La planta depuradora norte está al tope. Opera desde 2009. Atiende a 22 mil personas y necesita absorber otras 22 mil."
+
+"Se hace una ampliación de más de 6 mil millones de pesos. Duplica la capacidad. Pero tarda 720 días."
+
+"Yo estoy a favor del desarrollo. Siempre. Pero el desarrollo sin infraestructura es un problema."
+
+"La buena noticia: se está invirtiendo. Planta de efluentes, planta de hormigón, extensión de redes. Pero tiene que ir más rápido."`,
+screen:"PLANTA AL TOPE · $6.000M AMPLIACIÓN · 22K + 22K · 720 DÍAS · DESARROLLO SÍ, CON INFRAESTRUCTURA",
+ig:"Más edificios pero qué pasa con los servicios. Planta depuradora al tope. $6.000M en ampliarla. Desarrollo sí, con infraestructura.\n#Tandil #Infraestructura #DesarrolloUrbano",
+tk:"Más edificios. Pero qué pasa con los servicios. #Tandil #Infraestructura",
+fuentes:"• Planta depuradora → El Diario de Tandil / Provincia\n• $6.000M → Provincia BsAs\n• Planta hormigón $395M → Construar"},
+
+{id:"IF2",tema:"Infra",t:"La planta de hormigón municipal",ang:"sol",
+hook:"El municipio de Tandil acaba de firmar un contrato para una planta municipal de hormigón. Inversión: 395 millones de pesos.",
+text:`"El municipio de Tandil acaba de firmar un contrato para una planta municipal de hormigón. Inversión: 395 millones de pesos."
+
+"Qué significa: hormigón más barato y más rápido para obra pública. Cordones cuneta, veredas, bocas de tormenta, sin depender de terceros."
+
+"Esto agiliza la infraestructura. Y una ciudad con mejor infraestructura sostiene mejor el crecimiento inmobiliario."
+
+"Además, el Gobierno Nacional puso 170 millones para el Parque Industrial. Se planifica el segundo parque."
+
+"Cuando ves inversión en infraestructura, sabés que la ciudad está pensando a largo plazo. Y eso es bueno para el que invierte en real estate."`,
+screen:"PLANTA HORMIGÓN: $395M · GOBIERNO NACIONAL PI: $170M · 2DO PARQUE · INVERSIÓN = LARGO PLAZO",
+ig:"Planta de hormigón municipal: $395M. Gobierno Nacional para PI: $170M. Segundo parque en planificación. Tandil invierte a largo plazo.\n#Tandil #Infraestructura #Inversión #RealEstate",
+tk:"Tandil: planta de hormigón propia. Lo que significa. #Tandil #Infraestructura",
+fuentes:"• Planta hormigón $395M → Construar\n• $170M PI → Gobierno Nacional"},
+
+{id:"IF3",tema:"Infra",t:"El centro de Tandil: solo para los grandes",ang:"prob",
+hook:"Algo que está pasando en Tandil y que poca gente habla: el centro se está volviendo solo para los grandes.",
+text:`"Algo que está pasando en Tandil y que poca gente habla: el centro se está volviendo solo para los grandes."
+
+"Los lotes en el centro cuestan tanto que solo los desarrolladores con espalda financiera pueden comprarlos. El chico que quería hacer 10 departamentos quedó afuera."
+
+"Eso concentra el mercado en pocas manos. Y cuando hay pocos jugadores, los precios los ponen ellos."
+
+"No digo que esté mal que las empresas grandes construyan. Pero la diversidad de desarrolladores es sana para el mercado."
+
+"En las zonas nuevas todavía hay oportunidad para proyectos más chicos. Pero el centro es otro juego."`,
+screen:"CENTRO: SOLO PARA GRANDES · LOTES CAROS · CONCENTRACIÓN · ZONAS NUEVAS: MÁS OPORTUNIDAD",
+ig:"El centro de Tandil se vuelve solo para los grandes. Lotes caros, concentración. En las zonas nuevas todavía hay oportunidad para proyectos más chicos.\n#Tandil #Desarrollo #RealEstate #MercadoInmobiliario",
+tk:"El centro de Tandil: solo para los grandes. #Tandil #Desarrollo",
+fuentes:"• Centro solo para grandes → El Diario de Tandil"},
+
+{id:"IF4",tema:"Infra",t:"Desarrollo con planificación",ang:"sol",
+hook:"Tandil tiene plan de ordenamiento territorial desde 2006. No es una ciudad que crece a lo loco.",
+text:`"Tandil tiene plan de ordenamiento territorial desde 2006. No es una ciudad que crece a lo loco."
+
+"Hay zonas donde se puede construir en altura y zonas donde no. Hay protección de sierras. Hay regulación de usos del suelo."
+
+"Eso es sano. Porque un desarrollo sin planificación genera problemas de servicios, de tránsito, de calidad de vida."
+
+"Las ciudades que más valen a largo plazo son las que crecen con orden. Que no le meten un edificio de 10 pisos en una cuadra de casas bajas."
+
+"Tandil no es perfecta en esto. Pero tiene marco. Y eso le da previsibilidad al que invierte."`,
+screen:"PLAN ORDENAMIENTO DESDE 2006 · PROTECCIÓN SIERRAS · REGULACIÓN USO SUELO · CRECIMIENTO CON ORDEN · PREVISIBILIDAD",
+ig:"Tandil tiene plan de ordenamiento desde 2006. Protección de sierras, regulación de suelo. Las ciudades que más valen crecen con orden.\n#Tandil #Planificación #DesarrolloUrbano #RealEstate",
+tk:"Tandil crece con plan. Y eso vale. #Tandil #Planificación",
+fuentes:"• POT Tandil desde 2006 → Municipio"},
+
+// ═══════════════════════════════════════
+// DETRÁS DE ESCENA (10)
+// ═══════════════════════════════════════
+{id:"DE1",tema:"Escena",t:"Un día en la vida de un broker",ang:"prod",
+hook:"La gente piensa que un broker muestra departamentos y cobra comisión. Te cuento cómo es un día real.",
+text:`"La gente piensa que un broker muestra departamentos y cobra comisión. Te cuento cómo es un día real."
+
+"A las 8 ya estoy respondiendo WhatsApps. Consultas de ayer, seguimientos, gente que vio un aviso. Después, recorridas: 3 o 4 propiedades para valuar."
+
+"Al mediodía, reuniones con desarrolladores. Tarde, visitas con clientes. Cada visita es una hora entre viaje, mostrar y charlar."
+
+"Entre medio: publicar propiedades, sacar fotos, editar, responder comentarios, actualizar precios."
+
+"A las 9 de la noche sigo contestando WhatsApps. Porque el cliente que trabaja todo el día, a las 9 es cuando pregunta."
+
+"No es glamoroso. Pero cuando cerrás una operación y le entregás las llaves a alguien, vale la pena."`,
+screen:"8AM: WHATSAPPS · MAÑANA: VALUACIONES · MEDIODÍA: DESARROLLADORES · TARDE: VISITAS · NOCHE: MÁS WHATSAPP · NO ES GLAMOROSO, VALE LA PENA",
+ig:"Un día real de broker: WhatsApp desde las 8, valuaciones, visitas, fotos, responder hasta las 9pm. No es glamoroso. Pero cuando entregás llaves, vale la pena.\n#BrokerLife #RealEstate #DetrásDeCena #Argentina",
+tk:"Un día real en la vida de un broker. #BrokerLife #RealEstate",
+fuentes:"• Experiencia propia"},
+
+{id:"DE2",tema:"Escena",t:"Cómo es una escritura por dentro",ang:"prod",
+hook:"El día de la escritura parece simple: firmás y listo. Pero adentro pasa mucho más de lo que ves.",
+text:`"El día de la escritura parece simple: firmás y listo. Pero adentro pasa mucho más."
+
+"Antes de llegar: certificados de dominio, informe de inhibiciones, libre deuda de expensas, municipal, provincial. Todo tiene que estar limpio."
+
+"El escribano lee el acta. Ambas partes firman. Se entrega el cheque o se hace la transferencia. Llaves."
+
+"Pero antes de ese momento, hubo semanas de preparación. Revisar títulos, chequear que no haya embargos, coordinar con el banco si hay crédito."
+
+"Una escritura trabada puede retrasar todo un mes. Por eso es clave tener un buen escribano y un broker que controle el proceso."
+
+"Cuando te entregan las llaves, ese momento tiene meses de trabajo atrás. Y es el mejor momento del negocio."`,
+screen:"CERTIFICADOS · LIBRE DEUDA · INFORME INHIBICIONES · FIRMA · LLAVES · SEMANAS DE PREPARACIÓN",
+ig:"Una escritura por dentro: certificados, libre deuda, informes, firma, llaves. Semanas de preparación para ese momento. El mejor momento del negocio.\n#Escritura #RealEstate #DetrásDeCena",
+tk:"Cómo es una escritura por dentro. #RealEstate #Escritura",
+fuentes:"• Proceso escritural → Colegio Escribanos"},
+
+{id:"DE3",tema:"Escena",t:"La operación más difícil que tuve",ang:"prob",
+hook:"No todas las operaciones salen bien. Te cuento de una que casi no cierra.",
+text:`"No todas las operaciones salen bien. Te cuento de una que casi no cierra."
+
+"Un comprador con crédito aprobado, un vendedor apurado, todo encaminado. Hasta que en la revisión de títulos apareció un embargo viejo, de una deuda del dueño anterior."
+
+"Un embargo que el vendedor no sabía que existía. Había que levantarlo antes de escriturar. Y levantarlo lleva tiempo, abogados, juzgado."
+
+"El comprador se puso nervioso. El vendedor, desesperado. Tardamos 3 meses extra en resolverlo."
+
+"Al final se cerró. Pero aprendí algo: siempre, siempre, revisá los títulos al principio. No al final."
+
+"En este negocio, los problemas aparecen cuando menos los esperás. Y la diferencia entre un broker bueno y uno malo es cómo los resuelve."`,
+screen:"CRÉDITO APROBADO · EMBARGO VIEJO · 3 MESES EXTRA · SIEMPRE REVISÁ TÍTULOS PRIMERO · LA DIFERENCIA: CÓMO RESOLVÉS",
+ig:"Operación que casi no cierra: embargo viejo en los títulos, 3 meses extra. Lección: siempre revisá títulos al principio. La diferencia es cómo resolvés.\n#RealEstate #DetrásDeCena #Experiencia",
+tk:"La operación que casi no cierra. #RealEstate #DetrásDeCena",
+fuentes:"• Experiencia propia"},
+
+{id:"DE4",tema:"Escena",t:"Lo que nadie te dice de laburar en real estate",ang:"con",
+hook:"Todo el mundo ve los números: comisiones, operaciones, departamentos. Pero nadie ve lo otro.",
+text:`"Todo el mundo ve los números. Pero nadie ve lo otro."
+
+"Que podés estar 2 meses sin cerrar una operación. Que un cliente que te ocupó 3 semanas se va con otro broker. Que la operación que estaba 'segura' se cae el día antes de la escritura."
+
+"Que no tenés sueldo fijo. Que tus ingresos dependen 100% de cerrar. Que si no vendés, no comés."
+
+"Que laburás sábados, domingos, feriados. Porque el cliente que trabaja de lunes a viernes, el sábado quiere ver departamentos."
+
+"Es un laburo que paga bien cuando funciona. Pero tiene una volatilidad que no todo el mundo se banca."
+
+"Si te gusta el trato con la gente, te apasiona el mercado y te bancás la incertidumbre, es increíble. Si no, es un infierno."`,
+screen:"2 MESES SIN CERRAR · CLIENTES QUE SE VAN · OPERACIONES QUE SE CAEN · SIN SUELDO FIJO · FINES DE SEMANA · TE BANCA O NO TE BANCÁS",
+ig:"Lo que nadie dice del real estate: meses sin cerrar, clientes que se van, sin sueldo fijo, fines de semana. Si te banca la incertidumbre, es increíble. Si no, es un infierno.\n#RealEstate #LaVerdad #DetrásDeCena",
+tk:"Lo que nadie te dice de laburar en real estate. #RealEstate #LaVerdad",
+fuentes:"• Experiencia propia"},
+
+{id:"DE5",tema:"Escena",t:"Visitar 10 departamentos en un día",ang:"prod",
+hook:"Hoy visité 10 departamentos para un cliente que busca para inversión. Te cuento qué vi.",
+text:`"Hoy visité 10 departamentos para un cliente. Te cuento qué vi."
+
+"De los 10: 3 no coincidían con las fotos. Más chicos, más viejos, peor estado del que mostraban."
+
+"2 tenían problemas de humedad que no se veían en las fotos. 1 tenía un problema de título que el dueño no mencionó."
+
+"3 estaban bien pero sobrevaluados. El metro cuadrado pedido no se justificaba por la zona ni la calidad."
+
+"1 solo de los 10 era un buen negocio. Uno de diez."
+
+"Por eso es importante tener un profesional que filtre. Porque si vas vos solo a ver 10 departamentos, perdés una semana de tu vida y probablemente elegís mal."`,
+screen:"10 DEPTOS · 3 NO COINCIDÍAN · 2 HUMEDAD · 1 PROBLEMA DE TÍTULO · 3 SOBREVALUADOS · 1 BUEN NEGOCIO · 1 DE 10",
+ig:"Visité 10 deptos para un cliente. 3 no coincidían, 2 humedad, 1 problema legal, 3 caros. Solo 1 era buen negocio. 1 de 10. Por eso necesitás un profesional.\n#RealEstate #Visitas #DetrásDeCena",
+tk:"10 departamentos. Solo 1 era buen negocio. #RealEstate #DetrásDeCena",
+fuentes:"• Experiencia propia"},
+
+{id:"DE6",tema:"Escena",t:"Cómo se negocia una propiedad",ang:"prod",
+hook:"La negociación de una propiedad no es como en las películas. No hay golpes de mesa ni ultimátums.",
+text:`"La negociación de una propiedad no es como en las películas."
+
+"Primero: entender por qué vende el vendedor. Si necesita plata urgente, hay más margen. Si no tiene apuro, hay menos."
+
+"Segundo: hacer una oferta con fundamento. No tirar un número bajo para 'ver qué pasa'. Eso ofende y cierra puertas."
+
+"Tercero: el margen real de negociación en Tandil hoy es de entre un 5 y un 10%. Si algo se publica a 100 mil, podés cerrar entre 90 y 95."
+
+"Cuarto: la negociación no es solo precio. Es plazo de entrega, forma de pago, muebles incluidos, arreglos previos."
+
+"Los mejores negocios se cierran cuando las dos partes sienten que ganaron."`,
+screen:"1. POR QUÉ VENDE · 2. OFERTA CON FUNDAMENTO · 3. MARGEN 5-10% · 4. NO SOLO PRECIO · LAS DOS PARTES GANAN",
+ig:"Cómo se negocia: 1) Entendé por qué vende 2) Oferta con fundamento 3) Margen 5-10% 4) Negociá más que el precio. Las dos partes ganan.\n#Negociación #RealEstate #Comprar #Argentina",
+tk:"Cómo se negocia una propiedad de verdad. #RealEstate #Negociación",
+fuentes:"• Experiencia propia / mercado Tandil"},
+
+{id:"DE7",tema:"Escena",t:"Lo que el vendedor no te cuenta",ang:"con",
+hook:"Cuando un vendedor te muestra una propiedad, hay cosas que no te va a decir. Y vos tenés que saber preguntar.",
+text:`"Cuando un vendedor te muestra una propiedad, hay cosas que no te va a decir."
+
+"No te va a decir que el vecino de arriba tiene pérdidas de agua. No te va a decir que en invierno entra humedad por la medianera. No te va a decir que las expensas subieron 40% este año."
+
+"Tampoco te va a decir que hace 8 meses que la tiene publicada y no la vende. Que ya bajó el precio dos veces."
+
+"Preguntá todo. Cuánto tiempo lleva publicada. Cuánto paga de expensas. Si el consorcio tiene deuda. Si hubo arreglos estructurales."
+
+"Un comprador informado negocia mejor. Un comprador que no pregunta, se lleva sorpresas."`,
+screen:"LO QUE NO TE DICEN · HUMEDAD · EXPENSAS · TIEMPO PUBLICADA · DEUDA CONSORCIO · PREGUNTÁ TODO",
+ig:"Lo que el vendedor no te dice: humedad, expensas reales, tiempo publicada, deuda del consorcio. Preguntá todo. Un comprador informado negocia mejor.\n#Comprar #RealEstate #Consejos #Argentina",
+tk:"Lo que el vendedor no te cuenta de una propiedad. #RealEstate #Comprar",
+fuentes:"• Experiencia propia"},
+
+{id:"DE8",tema:"Escena",t:"Manejo las dos puntas de una operación",ang:"prod",
+hook:"En mi negocio manejo las dos puntas: comprador y vendedor. Sé que suena raro, pero te explico por qué.",
+text:`"En mi negocio manejo las dos puntas: comprador y vendedor. Sé que suena raro."
+
+"El vendedor me confía su propiedad y quiere el mejor precio. El comprador confía en mi criterio y quiere el mejor negocio."
+
+"Mi trabajo es que la operación se cierre en un punto justo para los dos. Que el vendedor venda a un precio real y que el comprador compre algo que vale lo que paga."
+
+"La ventaja de manejar las dos puntas: conozco toda la información. Puedo evitar malentendidos, acelerar la negociación y resolver problemas antes de que escalen."
+
+"La desventaja: si no sos transparente, perdés la confianza de los dos. Por eso la transparencia no es opcional. Es el negocio."`,
+screen:"COMPRADOR + VENDEDOR · PUNTO JUSTO · TODA LA INFORMACIÓN · RESOLVER ANTES QUE ESCALE · TRANSPARENCIA = NEGOCIO",
+ig:"Manejo las dos puntas: comprador y vendedor. La clave: transparencia total con los dos. Si no sos transparente, no hay negocio.\n#RealEstate #Broker #Transparencia #Argentina",
+tk:"Manejo las dos puntas de cada operación. Te explico por qué. #RealEstate #Broker",
+fuentes:"• Modelo de negocio Santiago"},
+
+{id:"DE9",tema:"Escena",t:"El WhatsApp de un broker a las 11 de la noche",ang:"prod",
+hook:"A las 11 de la noche me suena el WhatsApp. 'Santiago, vi un departamento, me lo podés mostrar mañana?' Esto es todos los días.",
+text:`"A las 11 de la noche me suena el WhatsApp. 'Santiago, vi un departamento, me lo podés mostrar mañana?' Esto es todos los días."
+
+"El real estate no tiene horario. Porque tus clientes laburan de 9 a 18 y cuando tienen un rato libre, a las 10 de la noche, ahí te escriben."
+
+"Un broker que no contesta un sábado a las 8pm pierde operaciones. Así de simple."
+
+"No es para quejarse. Es la realidad del negocio. Si querés horario de oficina, no es para vos."
+
+"Pero tiene un beneficio: cuando cerrás una operación a las 10 de la noche porque contestaste un mensaje a las 11 de la noche anterior, entendés por qué lo hacés."`,
+screen:"11PM: WHATSAPP · NO HAY HORARIO · SÁBADO 8PM · CONTESTAR = CERRAR · NO CONTESTAR = PERDER",
+ig:"11pm: WhatsApp. No hay horario en real estate. El que contesta un sábado a las 8pm, cierra. El que no, pierde.\n#BrokerLife #RealEstate #WhatsApp #DetrásDeCena",
+tk:"El WhatsApp de un broker a las 11 de la noche. #BrokerLife #RealEstate",
+fuentes:"• Experiencia propia"},
+
+{id:"DE10",tema:"Escena",t:"Construir es generar laburo",ang:"sol",
+hook:"Un edificio en construcción genera laburo directo para albañiles, electricistas, plomeros, pintores, herreros.",
+text:`"Un edificio en construcción genera laburo para albañiles, electricistas, plomeros, pintores, herreros. E indirecto para corralones, ferreterías, fletes, arquitectos."
+
+"Cuando alguien dice 'que dejen de construir' está diciendo 'que dejen de generar laburo'."
+
+"Cada edificio que se levanta son departamentos al mercado, laburo para cientos de personas y familias que dejan de alquilar."`,
+screen:"ALBAÑILES, ELECTRICISTAS, PLOMEROS · + DEPTOS + LABURO · FRENAR = MENOS EMPLEO",
+ig:"'Que dejen de construir' = 'que dejen de generar laburo'. Cada edificio es empleo y familias con techo.\n#Construccion #Empleo #RealEstate",
+tk:"'Que dejen de construir' = 'que dejen de generar laburo'. #Construccion",
+fuentes:"• Construcción genera empleo → CAC / IERIC"},
+
+// ═══════════════════════════════════════
+// POLÉMICOS / OPINIÓN (12)
+// ═══════════════════════════════════════
+{id:"PO1",tema:"Polémicos",t:"'Los desarrolladores se llenan de plata'",ang:"con",
+hook:"Siempre escucho lo mismo: 'los desarrolladores son todos unos chantas que se llenan de plata'. Vamos a ver.",
+text:`"'Los desarrolladores se llenan de plata.' Vamos a ver."
+
+"Un edificio tarda 2 a 3 años. El margen es del 15 al 25% sobre el costo. Pero de eso sacale imprevistos, inflación, impuestos, meses de retraso."
+
+"El desarrollador pone la guita al principio y cobra al final. Si la economía se complica a la mitad, es el que más pierde."
+
+"Algunos ganan bien? Sí. Los que hacen volumen y tienen experiencia. Los chicos trabajan con márgenes finísimos."
+
+"Pero sin desarrolladores no hay departamentos. Sin departamentos no hay alquileres. Sin alquileres no hay dónde vivir."
+
+"Antes de criticar, preguntá cuánto riesgo estás dispuesto a tomar vos."`,
+screen:"2-3 AÑOS · MARGEN 15-25% · IMPREVISTOS · INFLACIÓN · SIN DESARROLLADORES NO HAY DEPTOS",
+ig:"Los desarrolladores se llenan de plata? Margen 15-25% en 2-3 años, menos imprevistos e inflación. Sin ellos no hay deptos ni alquileres.\n#Desarrolladores #RealEstate #Construccion",
+tk:"Los desarrolladores se llenan de plata. Seguro? #RealEstate #Construccion",
+fuentes:"• Márgenes → Ref. mercado"},
+
+{id:"PO2",tema:"Polémicos",t:"'Tandil se está llenando de edificios'",ang:"con",
+hook:"'Tandil se está llenando de edificios.' Sí. Y eso es bueno.",
+text:`"'Tandil se está llenando de edificios.' Sí. Y eso es bueno."
+
+"La ciudad crece. Llega gente nueva. La UNICEN trae estudiantes. El polo tech trae profesionales. Mil porteños se mudan por año."
+
+"Esa gente necesita dónde vivir. Si no construís, la demanda supera la oferta y los alquileres se van a las nubes."
+
+"37 proyectos solo en Avenida Avellaneda. Suena a mucho. Pero son departamentos para familias que hoy no tienen techo propio."
+
+"Yo prefiero los problemas de una ciudad que crece a los problemas de una que se vacía."`,
+screen:"CRECE: UNICEN + TECH + PORTEÑOS · NECESITAN DÓNDE VIVIR · 37 PROYECTOS AVELLANEDA · CRECER > VACIARSE",
+ig:"Tandil se llena de edificios? Sí. Y es bueno. La gente que llega necesita dónde vivir. Yo prefiero los problemas de una ciudad que crece.\n#Tandil #Edificios #Crecimiento #RealEstate",
+tk:"Tandil se llena de edificios. Y eso es bueno. #Tandil #Crecimiento",
+fuentes:"• 37 proyectos Avellaneda → El Eco\n• 1.000 porteños/año → Infonegocios"},
+
+{id:"PO3",tema:"Polémicos",t:"'Mejor alquilar e invertir la diferencia'",ang:"con",
+hook:"Es la frase favorita de los gurúes financieros: 'alquilá barato e invertí la diferencia'. Suena brillante en un Excel.",
+text:`"'Alquilá barato e invertí la diferencia.' Suena brillante en un Excel. En la vida real, casi nadie lo hace."
+
+"La diferencia no se invierte. Se gasta. Un viaje, un auto, un imprevisto. La plata líquida tiene una forma mágica de desaparecer."
+
+"El departamento es ahorro forzado. Cada cuota es plata que ponés en un activo que se revaloriza. Te obliga a ser disciplinado."
+
+"Y hay otro tema: en Argentina, cuánto confiás en tener acceso estable a instrumentos financieros? Cepos, regulaciones, impuestos. El ladrillo no te lo congelan."
+
+"Si sos de los pocos que realmente invierten la diferencia, felicitaciones. Pero el 95% no lo hace."`,
+screen:"SUENA BRILLANTE EN EXCEL · EN LA VIDA REAL: SE GASTA · DEPTO = AHORRO FORZADO · LADRILLO NO SE CONGELA · 95% NO LO HACE",
+ig:"'Alquilá e invertí la diferencia.' En la vida real, la diferencia se gasta. El depto te obliga a ahorrar. Y el ladrillo no te lo congelan.\n#Alquilar #Invertir #RealEstate #Argentina",
+tk:"Alquilar e invertir la diferencia? Casi nadie lo hace. #RealEstate #Argentina",
+fuentes:"• Comportamiento inversión → Ref. mercado"},
+
+{id:"PO4",tema:"Polémicos",t:"'Las inmobiliarias cobran demasiado'",ang:"con",
+hook:"La comisión inmobiliaria parece mucha plata. Te explico qué hay detrás.",
+text:`"La comisión inmobiliaria parece mucha plata. Te explico qué hay detrás."
+
+"Un broker trabaja semanas en una operación: busca propiedades, las valúa, saca fotos, publica, responde consultas, coordina visitas, negocia, acompaña la escritura."
+
+"Si la operación se cae, que pasa seguido, no cobra nada. Cero. Semanas de trabajo perdidas."
+
+"La comisión es por el resultado, no por la hora. Y en un mercado donde 1 de cada 10 propiedades es buen negocio, el filtro que hace un buen broker te ahorra más de lo que cobra."
+
+"Un mal broker cobra de más. Un buen broker te hace ganar más de lo que le pagás."`,
+screen:"SEMANAS DE TRABAJO · SI SE CAE: COBRA $0 · 1 DE 10 BUEN NEGOCIO · MAL BROKER: COBRA DE MÁS · BUEN BROKER: TE HACE GANAR",
+ig:"La comisión parece mucha plata. Pero si la operación se cae, cobra $0. Un buen broker te ahorra más de lo que cobra.\n#Inmobiliaria #Comisión #RealEstate #Argentina",
+tk:"Las inmobiliarias cobran demasiado? Te explico qué hay detrás. #RealEstate #Inmobiliaria",
+fuentes:"• Modelo comisión → Cámara Inmobiliaria"},
+
+{id:"PO5",tema:"Polémicos",t:"'El real estate es solo para ricos'",ang:"con",
+hook:"Me dicen 'el real estate es para ricos, yo no puedo'. Y les pregunto: qué es ser rico para vos?",
+text:`"Me dicen 'el real estate es para ricos'. Y les pregunto: qué es ser rico para vos?"
+
+"Porque con 17 mil dólares comprás un lote. Con 20 mil entrás a un fideicomiso. Con 50 mil, un monoambiente."
+
+"Si tenés acceso a crédito, con un sueldo decente y el 25% de anticipo podés comprar tu primer departamento."
+
+"El real estate no es solo edificios de lujo en Puerto Madero. Es un monoambiente en Tandil que se alquila y se revaloriza."
+
+"La barrera no es la plata. Es la creencia de que no podés. Y esa creencia te mantiene alquilando toda la vida."`,
+screen:"LOTE: $17K · FIDEICOMISO: $20K ANTICIPO · MONO: $50K · CRÉDITO: 25% ANTICIPO · LA BARRERA ES LA CREENCIA",
+ig:"'El real estate es para ricos.' Lote desde $17K. Fideicomiso desde $20K. Monoambiente desde $50K. La barrera no es la plata, es la creencia.\n#RealEstate #ParaTodos #Inversiones #Argentina",
+tk:"El real estate es solo para ricos? Mirá estos números. #RealEstate #ParaTodos",
+fuentes:"• Lotes $17K → Zonaprop\n• Crédito 25% anticipo → Banco Ciudad"},
+
+{id:"PO6",tema:"Polémicos",t:"'Comprar es atarse'",ang:"con",
+hook:"Me dicen 'comprar un departamento es atarse a un lugar'. Alquilar toda la vida es atarse a pagar sin capitalizar.",
+text:`"'Comprar es atarse.' Y alquilar toda la vida es atarse a pagar sin capitalizar."
+
+"Un departamento que comprás, lo podés alquilar si te vas. Lo podés vender si querés. No estás atado, tenés un activo."
+
+"El que alquila está atado a un gasto fijo que sube todos los años, sin retorno."
+
+"La libertad no es no tener nada. Es tener opciones. Y un departamento te da opciones que alquilar no."
+
+"Podés vivir ahí, alquilarlo, venderlo, usarlo de garantía, dejárselo a tus hijos. Eso no es atarse. Es construir patrimonio."`,
+screen:"COMPRAR: ALQUILAR + VENDER + VIVIR + GARANTÍA · ALQUILAR: PAGAR SIN RETORNO · LIBERTAD = OPCIONES · PATRIMONIO ≠ ATARSE",
+ig:"Comprar es atarse? Un depto lo alquilás, lo vendés, lo usás de garantía. Alquilar es pagar sin capitalizar. Libertad es tener opciones.\n#Comprar #Alquilar #RealEstate #Argentina",
+tk:"Comprar es atarse? Alquilar toda la vida es atarse a pagar sin capitalizar. #RealEstate",
+fuentes:"• Análisis patrimonial → Ref. mercado"},
+
+{id:"PO7",tema:"Polémicos",t:"'Los departamentos chicos no sirven'",ang:"con",
+hook:"'Para qué voy a comprar un monoambiente, no sirve para nada.' Sirve para más de lo que pensás.",
+text:`"'Para qué voy a comprar un mono, no sirve para nada.' Sirve para más de lo que pensás."
+
+"Un monoambiente es la inversión con mayor renta porcentual. Se alquila rápido. Tiene menos gastos. La demanda es enorme por estudiantes y jóvenes profesionales."
+
+"Es la puerta de entrada al patrimonio inmobiliario. Lo comprás con 50 mil dólares, lo alquilás, y en unos años te financiás el segundo."
+
+"Los grandes inversores no arrancaron con un piso en Puerto Madero. Arrancaron con un mono."
+
+"Dejar de comprar porque 'es chico' es como no empezar a correr porque no podés hacer un maratón. Empezá."`,
+screen:"MONO: MAYOR RENTA % · SE ALQUILA RÁPIDO · MENOS GASTOS · PUERTA DE ENTRADA · EMPEZÁ",
+ig:"'Un mono no sirve.' Mayor renta %, se alquila rápido, puerta de entrada al patrimonio. Los grandes inversores arrancaron así.\n#Monoambiente #Inversiones #RealEstate",
+tk:"Los monoambientes no sirven? Sirven para más de lo que pensás. #RealEstate #Inversiones",
+fuentes:"• Renta monoambientes → Ref. mercado"},
+
+{id:"PO8",tema:"Polémicos",t:"'Era mejor cuando Tandil era chica'",ang:"con",
+hook:"Otra vez el 'era mejor antes'. Era mejor cuando no había crédito? Cuando no había laburo tech?",
+text:`"Otra vez el 'era mejor antes'. Era mejor cuando no había crédito? Cuando no había laburo tech? Cuando no había turismo todo el año?"
+
+"La nostalgia es linda. Pero no paga las cuentas."
+
+"Tandil chica era una ciudad con menos opciones, menos trabajo, menos conectividad. Linda para pasear un fin de semana, no para hacer carrera."
+
+"Tandil grande tiene problemas: tránsito, servicios, precios. Pero también tiene oportunidades que antes no existían."
+
+"Yo prefiero una ciudad con problemas de crecimiento que una ciudad con problemas de abandono."`,
+screen:"ERA MEJOR ANTES = NOSTALGIA · SIN CRÉDITO · SIN TECH · SIN TURISMO · PREFIERO PROBLEMAS DE CRECIMIENTO",
+ig:"'Era mejor cuando Tandil era chica.' Era mejor sin crédito, sin tech, sin turismo? La nostalgia no paga las cuentas. Prefiero problemas de crecimiento.\n#Tandil #Crecimiento #RealEstate",
+tk:"Era mejor cuando Tandil era chica? #Tandil #Crecimiento",
+fuentes:"• Crecimiento Tandil → Censo / INDEC"},
+
+{id:"PO9",tema:"Polémicos",t:"'Invertir afuera es mejor'",ang:"con",
+hook:"'Para qué invertir en Argentina si puedo invertir afuera.' Depende de cuánto tengas y cuánto sepas.",
+text:`"'Para qué invertir en Argentina si puedo invertir afuera.' Depende."
+
+"Si tenés 300 mil dólares y acceso a mercados internacionales, diversificar afuera tiene sentido."
+
+"Pero si tenés 50 a 100 mil, que es lo que tiene la mayoría, invertir acá te da mejor retorno por tu plata."
+
+"Un departamento en Tandil rinde entre 4 y 5% de renta más apreciación. Lo ves, lo controlás, lo entendés."
+
+"Invertir afuera sin conocer el mercado, sin estar ahí, con intermediarios que te cobran por todo: es más riesgoso de lo que parece."
+
+"El pasto del vecino siempre es más verde. Hasta que ves la cuenta de mantenimiento."`,
+screen:"$300K: DIVERSIFICÁ AFUERA · $50-100K: INVERTÍ ACÁ · TANDIL: 4-5% + APRECIACIÓN · AFUERA SIN CONOCER = RIESGO",
+ig:"Invertir afuera con $50-100K? Acá rendís más: 4-5% renta + apreciación, lo ves, lo controlás. Afuera sin conocer = más riesgo del que pensás.\n#Inversiones #Argentina #RealEstate #Afuera",
+tk:"Invertir afuera es mejor? Depende de cuánto tengas. #Inversiones #Argentina",
+fuentes:"• Renta Tandil ~5% → Reporte Inmobiliario"},
+
+{id:"PO10",tema:"Polémicos",t:"'El crédito UVA es para boludos'",ang:"con",
+hook:"Me dicen 'el UVA es para boludos'. Dale, explicame cómo vas a comprar tu primer departamento sin crédito.",
+text:`"'El UVA es para boludos.' Dale, explicame cómo vas a comprar sin crédito."
+
+"Ahorrando 500 dólares por mes, tardás 13 años en juntar para un departamento de 80 mil. Y mientras juntás, el precio sube."
+
+"La cuota UVA se ajusta por inflación. Sí. Pero tu alquiler también. Y al final del crédito tenés un departamento. Al final del alquiler tenés nada."
+
+"En 2018 el UVA fue un problema porque la inflación se disparó. Hoy la inflación baja. El contexto importa."
+
+"Boludo es el que alquila 30 años y nunca tuvo nada propio. No el que se animó a usar una herramienta financiera."`,
+screen:"SIN CRÉDITO: 13 AÑOS AHORRANDO · UVA: AJUSTA POR INFLACIÓN · ALQUILER TAMBIÉN · 2018 ≠ 2026 · ANIMARSE ≠ SER BOLUDO",
+ig:"El UVA es para boludos? Sin crédito tardás 13 años en juntar. La cuota ajusta pero el alquiler también. Al final del crédito: depto. Del alquiler: nada.\n#UVA #Crédito #RealEstate #Argentina",
+tk:"El UVA es para boludos? O boludo es alquilar 30 años? #UVA #RealEstate",
+fuentes:"• Cálculo ahorro 13 años → Propio\n• UVA + inflación → BCRA"},
+
+{id:"PO11",tema:"Polémicos",t:"'El gobierno tiene la culpa de que todo está caro'",ang:"con",
+hook:"'El gobierno tiene la culpa de que las propiedades están caras.' Parcialmente sí. Pero no por lo que pensás.",
+text:`"'El gobierno tiene la culpa de que todo está caro.' Parcialmente sí. Pero no por lo que pensás."
+
+"Los impuestos sobre la construcción son altísimos. IIBB, sellos, tasas municipales. Todo eso se traslada al precio del departamento."
+
+"La burocracia para aprobar un proyecto tarda meses. Cada mes de demora es costo."
+
+"Pero también: el costo de la mano de obra sube por convenios. Los materiales suben por la macro. Y la demanda sube porque la gente sigue necesitando techo."
+
+"El gobierno puede hacer: bajar impuestos a la construcción, agilizar permisos, y sostener el crédito. Eso bajaría precios más que cualquier regulación."
+
+"Hay responsabilidad del gobierno, sí. Pero la solución no es menos mercado. Es mejor marco para que el mercado funcione."`,
+screen:"IMPUESTOS ALTOS · BUROCRACIA · MANO OBRA · MATERIALES · SOLUCIÓN: MENOS IMPUESTOS + MENOS BUROCRACIA + MÁS CRÉDITO",
+ig:"El gobierno tiene la culpa? Los impuestos y la burocracia pesan. Solución: menos impuestos, menos trabas, más crédito. No menos mercado.\n#Gobierno #RealEstate #Impuestos #Argentina",
+tk:"El gobierno tiene la culpa de que todo está caro? En parte. #RealEstate #Argentina",
+fuentes:"• Carga impositiva construcción → CAC\n• Burocracia permisos → Ref. mercado"},
+
+{id:"PO12",tema:"Polémicos",t:"'Yo prefiero los problemas de una ciudad que crece'",ang:"con",
+hook:"Tránsito, edificios, gente nueva, ruido. Sí, Tandil tiene problemas de crecimiento. Pero yo los prefiero.",
+text:`"Tránsito, edificios, gente nueva, ruido. Sí, Tandil tiene problemas de crecimiento."
+
+"Pero conocés ciudades que se vacían? Donde cierran comercios, se van los jóvenes, y cada vez hay menos laburo? Eso es peor."
+
+"Los problemas de una ciudad que crece se resuelven con inversión: mejor infraestructura, mejor transporte, mejores servicios."
+
+"Los problemas de una ciudad que decrece no se resuelven. Porque no hay plata ni gente para resolverlos."
+
+"Tandil crece. Y con el crecimiento vienen dolores. Pero también vienen oportunidades, empleo, desarrollo."
+
+"Yo elijo los problemas del crecimiento. Siempre."`,
+screen:"CRECIMIENTO: TRÁNSITO + EDIFICIOS + RUIDO · DECRECIMIENTO: CIERRE + ÉXODO + ABANDONO · SE RESUELVE CON INVERSIÓN · ELIJO CRECIMIENTO",
+ig:"Tandil tiene problemas de crecimiento. Tránsito, edificios, ruido. Pero conocés ciudades que se vacían? Yo prefiero los problemas del crecimiento.\n#Tandil #Crecimiento #RealEstate #Opinión",
+tk:"Yo prefiero los problemas de una ciudad que crece. #Tandil #Crecimiento",
+fuentes:"• Reflexión propia / posición pro-desarrollo"}
+];
+
+const temas = {
+    'Inversión': 'Inversión / Números',
+    'Crédito': 'Crédito / Financiamiento',
+    'Costos': 'Costos / Construcción',
+    'Fideicomiso': 'Fideicomiso / Pozo',
+    'Tandil': 'Tandil como Negocio',
+    'Alquileres': 'Alquileres / Acceso',
+    'Mercado': 'Mercado Argentina',
+    'PrimerDepto': 'Primer Departamento',
+    'Mudarse': 'Mudarse al Interior',
+    'Infra': 'Infraestructura / Servicios',
+    'Escena': 'Detrás de Escena',
+    'Polémicos': 'Polémicos / Opinión'
+};
+
+const angNames = { prob:"Problema", prod:"Producto", sol:"Solución", con:"Otro" };
+const angBadge = { prob:"b-prob", prod:"b-prod", sol:"b-sol", con:"b-con" };
+let currentGuion = null;
+let feedbackData = {};
+let curAng = 'todos';
+let curCat = 'todos';
+let curSearch = '';
+
+function toggle(id) { const e=document.getElementById(id); e.style.display=e.style.display==='none'?'block':'none'; }
+
+// JSONBlob IDs
+const BLOB_FEEDBACK = '019d53ed-735d-78e7-b2ba-6f8a70a202c4';
+const BLOB_IDEAS = '019d53ed-8645-7e68-ac41-7a436af655a1';
+const BLOB_API = 'https://jsonblob.com/api/jsonBlob';
+
+async function saveFeedback(data) {
+    localStorage.setItem('fb', JSON.stringify(data));
+    try { await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(data) }); } catch(e) {}
+}
+
+async function exportFeedback() {
+    try {
+        await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(feedbackData) });
+        alert('Feedback sincronizado en la nube. Claude lo puede leer.');
+    } catch(e) {
+        navigator.clipboard.writeText(JSON.stringify(feedbackData,null,2)).then(()=>alert('Copiado. Pegalo en Claude Code.')).catch(()=>prompt('Copiá esto:',JSON.stringify(feedbackData)));
+    }
+}
+
+async function loadFeedback() {
+    try {
+        const r = await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`, { headers:{'Accept':'application/json'} });
+        if (r.ok) { const cloud = await r.json(); const local = JSON.parse(localStorage.getItem('fb')||'{}'); feedbackData = {...cloud}; for(const[id,fb] of Object.entries(local)){if(!feedbackData[id]||(fb.notas&&fb.notas!==(feedbackData[id].notas||'')))feedbackData[id]=fb;} localStorage.setItem('fb',JSON.stringify(feedbackData)); render(); updateStats(); return; }
+    } catch(e){}
+    feedbackData = JSON.parse(localStorage.getItem('fb')||'{}');
+    render(); updateStats();
+}
+
+function getFiltered() {
+    return guiones.filter(g => {
+        if (curAng !== 'todos' && g.ang !== curAng) return false;
+        if (curCat !== 'todos' && g.tema !== curCat) return false;
+        if (curSearch) {
+            const s = curSearch.toLowerCase();
+            if (!g.t.toLowerCase().includes(s) && !g.hook.toLowerCase().includes(s) && !g.id.toLowerCase().includes(s)) return false;
+        }
+        return true;
+    });
+}
+
+function render() {
+    const c = document.getElementById('content');
+    c.innerHTML = '';
+    const filtered = getFiltered();
+    document.getElementById('counter').textContent = `Mostrando ${filtered.length} de ${guiones.length} guiones`;
+    const grouped = {};
+    filtered.forEach(g => {
+        const t = g.tema;
+        if (!grouped[t]) grouped[t] = [];
+        grouped[t].push(g);
+    });
+    for (const [tema, gs] of Object.entries(grouped)) {
+        c.innerHTML += `<div class="section-title">${temas[tema]||tema} (${gs.length})</div><div class="grid" id="t-${tema}"></div>`;
+        const grid = c.querySelector(`#t-${tema}`);
+        gs.forEach(g => {
+            const fb = feedbackData[g.id] || {};
+            const sc = fb.status==='publicado'?'publicado':fb.status==='filmado'?'filmado':'';
+            const st = fb.status==='publicado'?'Publicado':fb.status==='filmado'?'Filmado':'Listo';
+            const stars = fb.rating ? '★'.repeat(fb.rating)+'☆'.repeat(5-fb.rating) : '';
+            grid.innerHTML += `<div class="card"><div class="card-top"><span class="card-num">${g.id}</span><span class="badge ${angBadge[g.ang]}">${angNames[g.ang]}</span></div><div class="card-title">${g.t}</div><div class="card-hook">"${g.hook.substring(0,90)}${g.hook.length>90?'...':''}"</div><div class="card-meta">${stars}</div><div class="card-actions"><button class="btn btn-ver" onclick="abrirModal('${g.id}')">Ver</button><button class="btn btn-status ${sc}" onclick="event.stopPropagation();quickStatus('${g.id}')">${st}</button></div>${fb.notas?'<div class="has-fb">Tiene feedback</div>':''}</div>`;
+        });
+    }
+}
+
+function setAng(a, btn) { curAng=a; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function setCat(c, btn) { curCat=c; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function doSearch() { curSearch=document.getElementById('search').value; render(); }
+
+function abrirModal(id) {
+    const g = guiones.find(x=>x.id===id); if(!g) return; currentGuion = g;
+    document.getElementById('modal-num').textContent = g.id;
+    document.getElementById('modal-badge').innerHTML = `<span class="badge ${angBadge[g.ang]}" style="margin-bottom:6px;display:inline-block">${angNames[g.ang]}</span>`;
+    document.getElementById('modal-title').textContent = g.t;
+    document.getElementById('modal-text').textContent = g.text;
+    document.getElementById('modal-screen').textContent = g.screen;
+    document.getElementById('modal-ig').textContent = g.ig;
+    document.getElementById('modal-tk').textContent = g.tk;
+    document.getElementById('modal-fuentes').textContent = g.fuentes || '';
+    const fb = feedbackData[id] || {};
+    document.getElementById('modal-notas').value = fb.notas || '';
+    const rd = document.getElementById('modal-rating'); rd.innerHTML = '';
+    for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=(fb.rating||0)?' active':'');s.textContent='★';s.onclick=()=>setRating(i);rd.appendChild(s);}
+    const sb = document.getElementById('btn-status');
+    sb.textContent = fb.status==='publicado'?'Publicado ✓':fb.status==='filmado'?'→ Publicado':'→ Filmado';
+    document.getElementById('saved-msg').style.display='none';
+    document.getElementById('modal').classList.add('open');
+}
+
+function cerrarModal() { document.getElementById('modal').classList.remove('open'); }
+
+function setRating(n) { document.querySelectorAll('#modal-rating .star').forEach((s,i)=>s.classList.toggle('active',i<n)); if(!feedbackData[currentGuion.id])feedbackData[currentGuion.id]={}; feedbackData[currentGuion.id].rating=n; }
+
+async function guardarFeedback() {
+    if(!currentGuion)return; const id=currentGuion.id;
+    const notas=document.getElementById('modal-notas').value;
+    const rating=document.querySelectorAll('#modal-rating .star.active').length;
+    const status=(feedbackData[id]||{}).status||'listo';
+    feedbackData[id]={status,notas,rating};
+    await saveFeedback(feedbackData);
+    document.getElementById('saved-msg').style.display='block';
+    setTimeout(()=>document.getElementById('saved-msg').style.display='none',2000);
+    render(); updateStats();
+}
+
+function cambiarStatus() {
+    if(!currentGuion)return; const id=currentGuion.id;
+    const cur=(feedbackData[id]||{}).status||'listo';
+    const next=cur==='listo'?'filmado':cur==='filmado'?'publicado':'publicado';
+    if(!feedbackData[id])feedbackData[id]={};
+    feedbackData[id].status=next;
+    document.getElementById('btn-status').textContent=next==='publicado'?'Publicado ✓':'→ Publicado';
+    guardarFeedback();
+}
+
+function quickStatus(id) {
+    const cur=(feedbackData[id]||{}).status||'listo';
+    const next=cur==='listo'?'filmado':cur==='filmado'?'publicado':'listo';
+    if(!feedbackData[id])feedbackData[id]={};
+    feedbackData[id].status=next;
+    saveFeedback(feedbackData); render(); updateStats();
+}
+
+function resetFeedback() {
+    if(!currentGuion)return; const id=currentGuion.id;
+    const status=(feedbackData[id]||{}).status||'listo';
+    feedbackData[id]={status,notas:'',rating:0};
+    document.getElementById('modal-notas').value='';
+    document.querySelectorAll('#modal-rating .star').forEach(s=>s.classList.remove('active'));
+    saveFeedback(feedbackData);
+    document.getElementById('saved-msg').textContent='Reset.';
+    document.getElementById('saved-msg').style.display='block';
+    setTimeout(()=>{document.getElementById('saved-msg').style.display='none';document.getElementById('saved-msg').textContent='Guardado.';},2000);
+    render();
+}
+
+function updateStats() {
+    let l=0,f=0,p=0;
+    guiones.forEach(g=>{const s=(feedbackData[g.id]||{}).status||'listo';if(s==='publicado')p++;else if(s==='filmado')f++;else l++;});
+    document.getElementById('s-total').textContent=guiones.length;
+    document.getElementById('s-listos').textContent=l;
+    document.getElementById('s-filmados').textContent=f;
+    document.getElementById('s-publicados').textContent=p;
+}
+
+// IDEAS
+let ideasData=[];
+async function loadIdeas(){try{const r=await fetch(`${BLOB_API}/${BLOB_IDEAS}`,{headers:{'Accept':'application/json'}});if(r.ok)ideasData=await r.json();}catch(e){ideasData=JSON.parse(localStorage.getItem('ideas')||'[]');}renderIdeas();}
+function renderIdeas(){const l=document.getElementById('ideas-list');if(!ideasData.length){l.innerHTML='<div style="text-align:center;color:#bbb;font-size:11px;padding:14px;">No hay ideas pendientes</div>';return;}l.innerHTML=ideasData.map(i=>`<div style="background:#fff;border:1px solid #E8E4DD;border-radius:8px;padding:12px;margin-bottom:6px;"><div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:#8B6F3A;font-weight:600;">${i.autor||'Anónimo'}</span><span style="font-size:9px;color:#bbb;">${i.fecha||''}</span></div>${i.angulo?`<span style="font-size:8px;padding:2px 6px;border-radius:4px;background:#F5F5F3;color:#999;display:inline-block;margin:4px 0;">${i.angulo}</span>`:''}<div style="font-size:12px;font-weight:600;margin:4px 0;">${i.tema}</div><div style="font-size:11px;color:#777;">${i.detalle}</div></div>`).join('');}
+async function enviarIdea(){const idea={autor:document.getElementById('idea-autor').value||'Santiago',angulo:document.getElementById('idea-angulo').value,tema:document.getElementById('idea-tema').value,detalle:document.getElementById('idea-detalle').value,fecha:new Date().toLocaleDateString('es-AR'),estado:'pendiente'};if(!idea.tema){alert('Poné el tema');return;}ideasData.push(idea);localStorage.setItem('ideas',JSON.stringify(ideasData));try{await fetch(`${BLOB_API}/${BLOB_IDEAS}`,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(ideasData)});}catch(e){}document.getElementById('idea-tema').value='';document.getElementById('idea-detalle').value='';document.getElementById('idea-angulo').value='';document.getElementById('idea-msg').style.display='block';setTimeout(()=>document.getElementById('idea-msg').style.display='none',3000);renderIdeas();}
+
+setInterval(async()=>{try{const r=await fetch(`${BLOB_API}/${BLOB_FEEDBACK}`,{headers:{'Accept':'application/json'}});if(r.ok){const d=await r.json();if(JSON.stringify(d)!==JSON.stringify(feedbackData)){feedbackData=d;render();updateStats();}}}catch(e){}},60000);
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cerrarModal();});
+loadFeedback();
+loadIdeas();
+</script>
+</body>
+</html>
