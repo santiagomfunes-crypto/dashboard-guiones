@@ -2,3 +2,6 @@
 .env.local
 credentials.local
 node_modules/
+test.html
+supabase-migration.sql
+.DS_Store
