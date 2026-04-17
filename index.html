@@ -126,6 +126,25 @@
         #edit-fields{display:none}
         #read-view{display:block}
 
+        /* Variantes */
+        .var-section{margin-top:20px;padding-top:16px;border-top:2px solid #E8E4DD}
+        .var-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .var-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8B6F3A}
+        .var-gen-btn{background:#8B6F3A;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:10px;font-weight:600}
+        .var-gen-btn:disabled{opacity:0.5}
+        .var-list{display:flex;flex-direction:column;gap:8px}
+        .var-card{background:#F5F5F3;border:1px solid #E8E4DD;border-radius:8px;padding:12px;position:relative}
+        .var-card.ganador{background:#E8F5EE;border-color:#2D8C5A}
+        .var-hook{font-size:13px;line-height:1.5;color:#333;font-style:italic;margin-bottom:8px}
+        .var-meta{display:flex;gap:12px;align-items:center;font-size:10px;color:#999;flex-wrap:wrap}
+        .var-meta input{width:60px;padding:3px 6px;border:1px solid #E8E4DD;border-radius:4px;font-size:10px;text-align:center}
+        .var-badge{font-size:8px;padding:2px 6px;border-radius:4px;font-weight:600}
+        .var-badge-prueba{background:#FDF8E8;color:#A8862C}
+        .var-badge-ganador{background:#E8F5EE;color:#2D8C5A}
+        .var-actions button{padding:4px 10px;border:1px solid #E8E4DD;border-radius:4px;font-size:9px;background:#fff;color:#777;margin-left:4px}
+        .var-actions button:hover{border-color:#8B6F3A;color:#8B6F3A}
+        .var-winner-btn{background:#2D8C5A!important;color:#fff!important;border-color:#2D8C5A!important}
+
         /* Toast */
         .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none}
         .toast.show{opacity:1}.toast.err{background:#C8453A}
@@ -264,6 +283,15 @@
                 <div class="read-meta-item">Semana: <strong id="r-sem"></strong></div>
                 <div class="read-meta-item">Rating: <strong id="r-rat"></strong></div>
             </div>
+        </div>
+
+        <!-- VARIANTES (testing reels) -->
+        <div class="var-section" id="var-section">
+            <div class="var-head">
+                <span class="var-title">Variantes de Hook (Testing)</span>
+                <button class="var-gen-btn" id="var-gen-btn" onclick="genVariantes()">Generar 5 hooks</button>
+            </div>
+            <div class="var-list" id="var-list"></div>
         </div>
 
         <!-- EDIT MODE -->
@@ -579,6 +607,9 @@ function openModal(id){
 
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow='hidden';
+
+    // Load variantes
+    loadVariantes(id);
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';curId=null;}
 
@@ -636,6 +667,96 @@ function doSaveIdea(){
         msg.style.color='#2D8C5A';msg.textContent='Enviada!';toast('Idea enviada');
         setTimeout(function(){msg.textContent='';},3000);loadIdeas();
     });
+}
+
+// Variantes
+function loadVariantes(guionId){
+    var el=document.getElementById('var-list');
+    el.innerHTML='<div style="color:#ccc;font-size:11px;text-align:center;padding:8px">Cargando variantes...</div>';
+    sb.from('variantes').select('*').eq('guion_id',guionId).order('created_at').then(function(res){
+        var vars=res.data||[];
+        if(!vars.length){el.innerHTML='<div style="color:#ccc;font-size:11px;text-align:center;padding:12px">Sin variantes. Genera 5 hooks de prueba para testear.</div>';return;}
+        el.innerHTML=vars.map(function(v){
+            var isGanador=v.tipo==='ganador';
+            return '<div class="var-card'+(isGanador?' ganador':'')+'">'+
+                '<div class="var-hook">'+esc(v.hook_variante)+'</div>'+
+                '<div class="var-meta">'+
+                '<span class="var-badge '+(isGanador?'var-badge-ganador':'var-badge-prueba')+'">'+(isGanador?'GANADOR':'PRUEBA')+'</span>'+
+                '<span>Finalizacion: <input type="number" value="'+(v.tasa_finalizacion||0)+'" min="0" max="100" onchange="updateVar(\''+v.id+'\',\'tasa_finalizacion\',this.value)">%</span>'+
+                '<span>Views: <input type="number" value="'+(v.views||0)+'" min="0" onchange="updateVar(\''+v.id+'\',\'views\',this.value)"></span>'+
+                '<span class="var-actions">'+
+                (isGanador?'':'<button class="var-winner-btn" onclick="markGanador(\''+v.id+'\',\''+guionId+'\')">Ganador</button>')+
+                '<button onclick="deleteVar(\''+v.id+'\',\''+guionId+'\')">Borrar</button>'+
+                '</span>'+
+                '</div></div>';
+        }).join('');
+    });
+}
+
+function updateVar(varId,field,val){
+    var u={};u[field]=Number(val);
+    sb.from('variantes').update(u).eq('id',varId).then(function(res){
+        if(!res.error)toast('Actualizado');
+    });
+}
+
+function markGanador(varId,guionId){
+    // Reset all to prueba first, then mark winner
+    sb.from('variantes').update({tipo:'prueba'}).eq('guion_id',guionId).then(function(){
+        return sb.from('variantes').update({tipo:'ganador'}).eq('id',varId);
+    }).then(function(){
+        toast('Ganador marcado');
+        loadVariantes(guionId);
+    });
+}
+
+function deleteVar(varId,guionId){
+    if(!confirm('Borrar esta variante?'))return;
+    sb.from('variantes').delete().eq('id',varId).then(function(){
+        toast('Variante borrada');
+        loadVariantes(guionId);
+    });
+}
+
+function genVariantes(){
+    if(!curId)return;
+    var g=allG.find(function(x){return x.id===curId;});
+    if(!g)return;
+    var btn=document.getElementById('var-gen-btn');
+    btn.disabled=true;btn.textContent='Generando...';
+
+    // Generate 5 hook variations based on the original
+    var hookBase=g.hook||g.titulo||'';
+    var variations=[
+        {hook:'Dato directo: '+rewriteHook(hookBase,'dato'),titulo:'V1 - Dato'},
+        {hook:'Provocacion: '+rewriteHook(hookBase,'provocacion'),titulo:'V2 - Provocacion'},
+        {hook:'Pregunta fuerte: '+rewriteHook(hookBase,'pregunta'),titulo:'V3 - Pregunta'},
+        {hook:'Historia: '+rewriteHook(hookBase,'historia'),titulo:'V4 - Historia'},
+        {hook:'Contrario: '+rewriteHook(hookBase,'contrario'),titulo:'V5 - Contrario'}
+    ];
+
+    var inserts=variations.map(function(v){
+        return {guion_id:curId,hook_variante:v.hook,titulo_variante:v.titulo,tipo:'prueba'};
+    });
+
+    sb.from('variantes').insert(inserts).then(function(res){
+        if(res.error){toast('Error: '+res.error.message,true);return;}
+        toast('5 variantes generadas');
+        loadVariantes(curId);
+    }).finally(function(){btn.disabled=false;btn.textContent='Generar 5 hooks';});
+}
+
+function rewriteHook(base,style){
+    // Simple client-side variation — for real AI variations, use Paperclip Escritor agent
+    var clean=base.replace(/^["']/,'').replace(/["']$/,'').substring(0,120);
+    switch(style){
+        case 'dato': return clean;
+        case 'provocacion': return 'Nadie te va a decir esto: '+clean.toLowerCase();
+        case 'pregunta': return 'Pensa en esto: '+clean.toLowerCase();
+        case 'historia': return 'Te cuento lo que paso: '+clean.toLowerCase();
+        case 'contrario': return 'Todo el mundo piensa lo contrario, pero '+clean.toLowerCase();
+        default: return clean;
+    }
 }
 
 var toastTO;
