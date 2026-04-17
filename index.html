@@ -103,6 +103,24 @@
         .nl-card-link{font-size:10px;color:#8B6F3A;text-decoration:underline}
         .nl-empty{text-align:center;padding:60px 20px;color:#ccc;font-size:14px;line-height:1.8}
 
+        /* Calendario */
+        .cal{padding:20px;max-width:1100px;margin:0 auto}
+        .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+        .cal-title{font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px}
+        .cal-week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+        .cal-day{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:12px;min-height:120px}
+        .cal-day-head{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:8px;display:flex;justify-content:space-between}
+        .cal-day-date{color:#8B6F3A}
+        .cal-item{background:#F5F5F3;border-radius:6px;padding:8px;margin-bottom:6px;font-size:11px;cursor:pointer}
+        .cal-item:hover{background:#E8E4DD}
+        .cal-item-title{font-weight:600;font-size:11px;margin-bottom:2px}
+        .cal-item-meta{font-size:9px;color:#999}
+        .cal-item.prueba{border-left:3px solid #D48A2C}
+        .cal-item.oficial{border-left:3px solid #2D8C5A}
+        .cal-empty{color:#ccc;font-size:10px;text-align:center;padding:20px}
+        .sesion-btn{background:#8B6F3A;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600}
+        @media(max-width:640px){.cal-week{grid-template-columns:1fr}}
+
         /* Ideas view */
         .ideas-view{padding:16px 20px;max-width:900px;margin:0 auto}
         .idea-form{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:20px;margin-bottom:16px}
@@ -210,6 +228,7 @@
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
         <button class="tab" onclick="switchTab('mercado',this)">Mercado</button>
         <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
         <button class="tab" onclick="switchTab('guia',this)">Guia</button>
@@ -234,6 +253,24 @@
             <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
         </div>
         <div class="content" id="content"></div>
+    </div>
+
+    <!-- VIEW: CALENDARIO -->
+    <div class="view" id="v-calendario">
+        <div class="cal">
+            <div class="cal-header">
+                <div>
+                    <div class="cal-title">Calendario de Publicacion</div>
+                    <div style="font-size:11px;color:#999;margin-top:2px">1 guion/dia: 5 pruebas + ganador del anterior</div>
+                </div>
+                <button class="sesion-btn" onclick="crearSesion()">+ Nueva Sesion</button>
+            </div>
+            <div id="cal-grid"></div>
+            <div style="margin-top:20px">
+                <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:10px">Sesiones de filmacion</div>
+                <div id="sesiones-list"></div>
+            </div>
+        </div>
     </div>
 
     <!-- VIEW: MERCADO -->
@@ -719,6 +756,7 @@ function switchTab(name,btn){
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
     document.getElementById('v-'+name).classList.add('on');
     btn.classList.add('on');
+    if(name==='calendario')loadCalendario();
     if(name==='mercado')loadMercado();
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
 }
@@ -981,6 +1019,175 @@ function rewriteHook(base,style){
         case 'contrario': return 'Todo el mundo piensa lo contrario, pero '+clean.toLowerCase();
         default: return clean;
     }
+}
+
+// Calendario
+function loadCalendario(){
+    var grid=document.getElementById('cal-grid');
+    grid.innerHTML='<div style="color:#ccc;text-align:center;padding:20px">Cargando...</div>';
+
+    sb.from('publicaciones').select('*').order('fecha_programada').then(function(res){
+        var pubs=res.data||[];
+
+        // Get next 2 weeks of weekdays
+        var days=[];
+        var d=new Date();
+        while(days.length<10){
+            if(d.getDay()!==0&&d.getDay()!==6) days.push(new Date(d));
+            d.setDate(d.getDate()+1);
+        }
+
+        // Split into 2 weeks
+        var html='';
+        for(var w=0;w<2;w++){
+            html+='<div style="font-size:10px;font-weight:600;color:#999;letter-spacing:1px;margin:12px 0 6px">SEMANA '+(w+1)+'</div>';
+            html+='<div class="cal-week">';
+            for(var i=w*5;i<(w+1)*5&&i<days.length;i++){
+                var day=days[i];
+                var dateStr=day.toISOString().split('T')[0];
+                var dayName=['Dom','Lun','Mar','Mie','Jue','Vie','Sab'][day.getDay()];
+                var dayNum=day.getDate()+'/'+(day.getMonth()+1);
+
+                var dayPubs=pubs.filter(function(p){return p.fecha_programada===dateStr;});
+
+                html+='<div class="cal-day">';
+                html+='<div class="cal-day-head"><span>'+dayName+'</span><span class="cal-day-date">'+dayNum+'</span></div>';
+
+                if(dayPubs.length){
+                    dayPubs.forEach(function(p){
+                        var tipo=p.plataforma==='tiktok_prueba'?'prueba':'oficial';
+                        html+='<div class="cal-item '+tipo+'">';
+                        html+='<div class="cal-item-title">'+esc(p.caption.substring(0,40))+'</div>';
+                        html+='<div class="cal-item-meta">'+esc(p.plataforma)+' · '+esc(p.estado)+'</div>';
+                        html+='</div>';
+                    });
+                } else {
+                    html+='<div class="cal-empty">Sin contenido</div>';
+                }
+                html+='</div>';
+            }
+            html+='</div>';
+        }
+
+        grid.innerHTML=html||'<div class="cal-empty">No hay publicaciones programadas. Crea una sesion para empezar.</div>';
+    });
+
+    loadSesiones();
+}
+
+function loadSesiones(){
+    sb.from('sesiones').select('*').order('fecha',{ascending:false}).then(function(res){
+        var el=document.getElementById('sesiones-list');
+        var sesiones=res.data||[];
+        if(!sesiones.length){
+            el.innerHTML='<div style="color:#ccc;font-size:12px;text-align:center;padding:16px">No hay sesiones creadas. Cuando te juntes con Celina a filmar, crea una sesion aca.</div>';
+            return;
+        }
+        el.innerHTML=sesiones.map(function(s){
+            var numGuiones=(s.guiones_ids||[]).length;
+            return '<div style="background:#fff;border:1px solid #E8E4DD;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">'+
+                '<div><strong style="font-size:12px">Sesion '+esc(s.fecha)+'</strong> <span style="font-size:11px;color:#999">· '+numGuiones+' guiones · '+esc(s.estado)+'</span>'+(s.notas?'<div style="font-size:10px;color:#777;margin-top:2px">'+esc(s.notas)+'</div>':'')+'</div>'+
+                '<div style="display:flex;gap:6px">'+
+                (s.estado==='planificada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'filmada\')">Filmada</button>':'')+
+                (s.estado==='filmada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'editada\')">Editada</button>':'')+
+                (s.estado==='editada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px;background:#2D8C5A" onclick="programarSesion(\''+s.id+'\')">Programar</button>':'')+
+                '</div></div>';
+        }).join('');
+    });
+}
+
+function crearSesion(){
+    var guionesListos=allG.filter(function(g){return g.status==='listo'&&(g.tipo||'organico')==='organico';});
+    if(guionesListos.length<5){toast('Necesitas al menos 5 guiones en "Listo" para crear una sesion',true);return;}
+
+    // Take first 10 (or fewer) guiones listos
+    var seleccion=guionesListos.slice(0,10);
+    var ids=seleccion.map(function(g){return g.id;});
+    var hoy=new Date().toISOString().split('T')[0];
+
+    sb.from('sesiones').insert({
+        fecha:hoy,
+        guiones_ids:ids,
+        estado:'planificada',
+        notas:ids.length+' guiones: '+ids.join(', ')
+    }).then(function(res){
+        if(res.error){toast('Error: '+res.error.message,true);return;}
+        toast('Sesion creada con '+ids.length+' guiones');
+        loadSesiones();
+    });
+}
+
+function updateSesion(id,estado){
+    sb.from('sesiones').update({estado:estado}).eq('id',id).then(function(res){
+        if(res.error){toast('Error',true);return;}
+        toast('Sesion marcada como '+estado);
+        loadSesiones();
+    });
+}
+
+function programarSesion(sesionId){
+    // Get sesion, then create publicaciones for 2 weeks
+    sb.from('sesiones').select('*').eq('id',sesionId).single().then(function(res){
+        if(res.error||!res.data){toast('Error al leer sesion',true);return;}
+        var sesion=res.data;
+        var guionIds=sesion.guiones_ids||[];
+
+        // Get next weekdays
+        var days=[];
+        var d=new Date();
+        d.setDate(d.getDate()+1); // start tomorrow
+        while(days.length<guionIds.length){
+            if(d.getDay()!==0&&d.getDay()!==6) days.push(new Date(d));
+            d.setDate(d.getDate()+1);
+        }
+
+        // Create publications
+        var inserts=[];
+        guionIds.forEach(function(gid,idx){
+            if(idx>=days.length)return;
+            var fecha=days[idx].toISOString().split('T')[0];
+            var g=allG.find(function(x){return x.id===gid;});
+            var caption=g?g.hook||g.titulo:'Guion '+gid;
+
+            // 5 test reels on TikTok
+            for(var v=1;v<=5;v++){
+                inserts.push({
+                    guion_id:gid,
+                    plataforma:'tiktok_prueba',
+                    estado:'programado',
+                    fecha_programada:fecha,
+                    hora_programada:'12:00',
+                    caption:'V'+v+': '+caption.substring(0,120),
+                    hashtags:'#Tandil #RealEstate #Inversiones'
+                });
+            }
+
+            // Official winner next day (if not last)
+            if(idx>0){
+                var prevGid=guionIds[idx-1];
+                var prevG=allG.find(function(x){return x.id===prevGid;});
+                var prevCap=prevG?prevG.hook||prevG.titulo:'';
+                ['instagram','tiktok','youtube','facebook'].forEach(function(plat){
+                    inserts.push({
+                        guion_id:prevGid,
+                        plataforma:plat,
+                        estado:'programado',
+                        fecha_programada:fecha,
+                        hora_programada:plat==='youtube'?'15:00':plat==='facebook'?'20:00':'11:00',
+                        caption:prevCap.substring(0,200),
+                        hashtags:'#Tandil #RealEstate #SantiagoFunes'
+                    });
+                });
+            }
+        });
+
+        sb.from('publicaciones').insert(inserts).then(function(r){
+            if(r.error){toast('Error: '+r.error.message,true);return;}
+            sb.from('sesiones').update({estado:'publicando'}).eq('id',sesionId);
+            toast(inserts.length+' publicaciones programadas para '+guionIds.length+' dias');
+            loadCalendario();
+        });
+    });
 }
 
 var toastTO;
