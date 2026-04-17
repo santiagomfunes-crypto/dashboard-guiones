@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Guiones — Santiago Funes RE</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase.min.js"></script>
     <style>
         /* ── Reset & Base ── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -710,43 +710,71 @@ let searchQuery = '';
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', function() {
+    // ALWAYS show login first — never blank page
+    document.getElementById('login-screen').style.display = 'flex';
+
+    // Check Supabase config
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('setup-screen').style.display = 'flex';
+        return;
+    }
+
+    // Check if Supabase library loaded
+    if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient !== 'function') {
+        document.getElementById('login-error').textContent = 'Error: SDK de Supabase no cargo. Recarga la pagina.';
+        return;
+    }
+
+    // Initialize Supabase client
     try {
-        // Check Supabase config
-        if (!SUPABASE_URL || !SUPABASE_KEY) {
-            document.getElementById('setup-screen').style.display = 'flex';
-            return;
-        }
-
-        // Check if Supabase library loaded
-        if (!window.supabase || !window.supabase.createClient) {
-            document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#C8453A;"><h2>Error: Supabase SDK no cargo</h2><p>Verifica tu conexion a internet y recarga.</p></div>';
-            return;
-        }
-
-        // Initialize Supabase
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (err) {
+        document.getElementById('login-error').textContent = 'Error al conectar: ' + (err.message || err);
+        return;
+    }
 
-        // Build filter UI
+    // Build filter UI
+    try {
         buildFilters();
         buildAnguloSelect();
-
-        // Search listener (debounced)
-        let searchTimeout;
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                searchQuery = e.target.value.trim().toLowerCase();
-                applyFilters();
-            }, 200);
-        });
-
-        // Check session
-        await checkSession();
     } catch (err) {
-        console.error('Init error:', err);
-        document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#C8453A;"><h2>Error al inicializar</h2><p>' + (err.message || err) + '</p><p style="margin-top:12px;font-size:12px;color:#999;">Abri la consola del navegador (F12) para mas detalles.</p></div>';
+        console.error('Filter build error:', err);
     }
+
+    // Search listener
+    var searchTimeout;
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            searchQuery = e.target.value.trim().toLowerCase();
+            applyFilters();
+        }, 200);
+    });
+
+    // Check for existing session (non-blocking, with timeout)
+    var sessionDone = false;
+    var sessionTimer = setTimeout(function() {
+        if (!sessionDone) {
+            sessionDone = true;
+            console.log('Session check timed out — staying on login');
+        }
+    }, 5000);
+
+    supabase.auth.getSession().then(function(result) {
+        if (sessionDone) return;
+        sessionDone = true;
+        clearTimeout(sessionTimer);
+        if (result.data && result.data.session) {
+            showApp();
+        }
+    }).catch(function(err) {
+        if (sessionDone) return;
+        sessionDone = true;
+        clearTimeout(sessionTimer);
+        console.error('Session check error:', err);
+    });
 });
 
 // ══════════════════════════════════════════
