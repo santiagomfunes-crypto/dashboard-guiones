@@ -145,6 +145,19 @@
         .var-actions button:hover{border-color:#8B6F3A;color:#8B6F3A}
         .var-winner-btn{background:#2D8C5A!important;color:#fff!important;border-color:#2D8C5A!important}
 
+        /* Guia */
+        .guia{padding:20px;max-width:800px;margin:0 auto}
+        .guia h2{font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A;margin:28px 0 12px;letter-spacing:1px}
+        .guia h2:first-child{margin-top:0}
+        .guia p{font-size:13px;color:#444;line-height:1.8;margin-bottom:12px}
+        .guia-step{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:16px 20px;margin-bottom:10px;display:flex;gap:16px;align-items:flex-start}
+        .guia-num{font-family:'Cinzel',serif;font-size:22px;color:#8B6F3A;min-width:32px}
+        .guia-content{flex:1}
+        .guia-content strong{color:#1a1a2e;font-size:13px}
+        .guia-content p{font-size:12px;color:#666;margin:4px 0 0;line-height:1.6}
+        .guia-tip{background:#FDF8E8;border-left:3px solid #8B6F3A;border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0;font-size:12px;color:#666;line-height:1.6}
+        .guia-tip strong{color:#8B6F3A}
+
         /* Toast */
         .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none}
         .toast.show{opacity:1}.toast.err{background:#C8453A}
@@ -199,6 +212,7 @@
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
         <button class="tab" onclick="switchTab('mercado',this)">Mercado</button>
         <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
+        <button class="tab" onclick="switchTab('guia',this)">Guia</button>
     </div>
 
     <!-- VIEW: GUIONES -->
@@ -232,6 +246,173 @@
                 </div>
             </div>
             <div class="mercado-grid" id="mercado-grid"></div>
+        </div>
+    </div>
+
+    <!-- VIEW: GUIA -->
+    <div class="view" id="v-guia">
+        <div class="guia">
+            <h2>Bienvenida al Dashboard de Guiones</h2>
+            <p>Esta es tu herramienta central para organizar, filmar y publicar todo el contenido de Santiago Funes RE. Aca vas a encontrar todos los guiones listos, las tendencias del mercado y el sistema de testing de reels.</p>
+
+            <h2>Tu flujo de trabajo diario</h2>
+
+            <div class="guia-step">
+                <div class="guia-num">1</div>
+                <div class="guia-content">
+                    <strong>Elegir guiones para la semana</strong>
+                    <p>En la tab "Guiones", filtra por angulo o categoria. Busca los que tienen status "Listo". Abri cada uno, lee el texto completo en modo lectura y elegí los que van para esta semana.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">2</div>
+                <div class="guia-content">
+                    <strong>Generar las 5 variantes de hook</strong>
+                    <p>Dentro de cada guion, baja a la seccion "Variantes de Hook (Testing)" y toca "Generar 5 hooks". Esto crea 5 versiones del hook con estilos distintos: dato, provocacion, pregunta, historia, contrario.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">3</div>
+                <div class="guia-content">
+                    <strong>Filmar el guion</strong>
+                    <p>Filma el guion UNA sola vez. Santiago lee el texto completo del guion (esta en el modal, modo lectura). El texto en pantalla esta en "Textos en pantalla". Despues de filmar, cambia el status a "Filmado".</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">4</div>
+                <div class="guia-content">
+                    <strong>Editar 5 versiones</strong>
+                    <p>Con la misma filmacion, edita 5 versiones del reel cambiando solo el hook (titulo/texto inicial). Cada variante del dashboard tiene el hook que va en cada version. Subi las 5 como reels de prueba.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">5</div>
+                <div class="guia-content">
+                    <strong>Cargar metricas</strong>
+                    <p>Despues de 24h, entra al guion y carga la tasa de finalizacion (%) y las views de cada variante. La tasa de finalizacion es la metrica MAS importante: que porcentaje de la gente ve el video completo.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">6</div>
+                <div class="guia-content">
+                    <strong>Marcar el ganador y publicar</strong>
+                    <p>La variante con mejor tasa de finalizacion es la ganadora. Toca "Ganador" en esa variante. Subi esa version como reel oficial en la cuenta principal al dia siguiente. Cambia el status del guion a "Publicado".</p>
+                </div>
+            </div>
+
+            <div class="guia-tip">
+                <strong>Cadencia objetivo:</strong> 5 reels de prueba + 1 reel oficial por dia. Eso da ~42 reels por semana. La estadistica le gana a la creatividad: no adivinamos que hook funciona, lo medimos.
+            </div>
+
+            <h2>Como leer un guion</h2>
+            <p>Al tocar una card, el guion se abre en <strong>modo lectura</strong>. El hook aparece resaltado en dorado. El texto completo esta en letra grande para que Santiago lo lea mientras filma. Para editar, toca "Editar" arriba a la derecha.</p>
+
+            <h2>Secciones del dashboard</h2>
+
+            <div class="guia-step">
+                <div class="guia-num">G</div>
+                <div class="guia-content">
+                    <strong>Guiones</strong>
+                    <p>Todos los guiones organizados por categoria. Filtra por tipo (Organico/Meta Ads), angulo (Problema, Autoridad, Historia, etc.) o categoria (Credito, Tandil, Alquileres, etc.). Busca por palabra clave.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">M</div>
+                <div class="guia-content">
+                    <strong>Mercado</strong>
+                    <p>Datos frescos y tendencias del mercado inmobiliario argentino. Los agentes de IA buscan noticias automaticamente y proponen hooks para nuevos guiones. Aca encontras inspiracion para contenido nuevo.</p>
+                </div>
+            </div>
+
+            <div class="guia-step">
+                <div class="guia-num">I</div>
+                <div class="guia-content">
+                    <strong>Ideas</strong>
+                    <p>Propone ideas para guiones nuevos. Pone el tema, el angulo y un detalle. Santiago y los agentes de IA las revisan y las convierten en guiones completos.</p>
+                </div>
+            </div>
+
+            <h2>Los 8 angulos de contenido</h2>
+            <p>Cada guion tiene un angulo que define el enfoque. Los angulos que mas viralizan son Problema, Contrario e Historia (48% del mix ideal).</p>
+
+            <div class="guia-step">
+                <div class="guia-num" style="color:#C8453A">P</div>
+                <div class="guia-content">
+                    <strong>Problema</strong>
+                    <p>Mostrar un dolor real de la audiencia. Ej: "El 25% del sueldo se va en alquiler."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#D48A2C">O</div>
+                <div class="guia-content">
+                    <strong>Otro / Contrario</strong>
+                    <p>Desafiar lo que la mayoria piensa. Ej: "El pozo ya no cierra el numero."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#B4455F">H</div>
+                <div class="guia-content">
+                    <strong>Historia</strong>
+                    <p>Contar historia real de cliente/operacion. Ej: "El cliente que espero 3 anos y se arrepintio."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#7B4A9E">A</div>
+                <div class="guia-content">
+                    <strong>Autoridad</strong>
+                    <p>Posicionarse como insider. Ej: "128 leads en 6 meses. Lo que tienen en comun los que cerraron."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#4A90D9">S</div>
+                <div class="guia-content">
+                    <strong>Solucion</strong>
+                    <p>Presentar la respuesta a un problema. Ej: "Si ganas 1,4M, hoy calificas para un credito."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#1F8F7A">Pr</div>
+                <div class="guia-content">
+                    <strong>Prediccion</strong>
+                    <p>Proyectar con datos del presente. Ej: "En 6 meses la mitad de los desarrolladores chicos se retiran."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#A8862C">C</div>
+                <div class="guia-content">
+                    <strong>Comparacion</strong>
+                    <p>Comparar para resaltar valor. Ej: "Tandil vs CABA: 35% mas barata con mejor renta."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="color:#2D8C5A">Pd</div>
+                <div class="guia-content">
+                    <strong>Producto</strong>
+                    <p>Posicionar la oportunidad. Solo el 10% del contenido — el producto aparece por la puerta de atras.</p>
+                </div>
+            </div>
+
+            <div class="guia-tip">
+                <strong>Regla de oro:</strong> el 90% del contenido es educacion, opinion e historia. Solo el 10% habla directo del producto. Primero sos referente, despues vendes.
+            </div>
+
+            <h2>Tips para filmar</h2>
+            <p><strong>Formato:</strong> iPhone, vertical, sin produccion pesada. La gente quiere contenido crudo, no producido.</p>
+            <p><strong>Duracion:</strong> 45-90 segundos. Mas corto si el tema es simple.</p>
+            <p><strong>Iluminacion:</strong> luz natural o aro de luz. Nada mas.</p>
+            <p><strong>Audio:</strong> microfono corbatero o el del iPhone en ambiente tranquilo.</p>
+            <p><strong>Texto en pantalla:</strong> los textos que aparecen durante el reel estan en el campo "Textos en pantalla" de cada guion.</p>
+            <p><strong>Captions:</strong> cada guion tiene caption lista para Instagram y TikTok. Solo copiar y pegar.</p>
+
+            <div class="guia-tip">
+                <strong>La metrica que importa:</strong> tasa de finalizacion (que % ve el video completo). No likes, no comentarios, no shares. Si >40% lo ve completo, el hook funciona. Si <20%, hay que cambiar el hook.
+            </div>
         </div>
     </div>
 
