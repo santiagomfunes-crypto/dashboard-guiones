@@ -85,6 +85,47 @@
         .del-btn{background:#fff;color:#C8453A;border:1px solid #C8453A44;padding:11px 22px;border-radius:8px;font-weight:600;font-size:11px}
         .m-msg{font-size:11px;margin-top:6px;min-height:16px}
 
+        /* Tabs */
+        .tabs{display:flex;gap:0;background:#fff;border-bottom:1px solid #E8E4DD}
+        .tab{padding:12px 24px;font-size:12px;font-weight:600;letter-spacing:1px;color:#999;border:none;background:none;border-bottom:2px solid transparent;transition:all 0.2s}
+        .tab:hover{color:#1a1a2e}
+        .tab.on{color:#8B6F3A;border-bottom-color:#8B6F3A}
+        .view{display:none}.view.on{display:block}
+
+        /* Mercado */
+        .mercado{padding:16px 20px;max-width:1300px;margin:0 auto}
+        .mercado-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+        .nl-card{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:16px;box-shadow:0 1px 2px #0001}
+        .nl-card-title{font-weight:600;font-size:13px;margin-bottom:6px}
+        .nl-card-hook{font-size:12px;color:#8B6F3A;font-style:italic;line-height:1.5;margin-bottom:8px;padding:8px 12px;background:#FDF8E8;border-radius:6px}
+        .nl-card-dato{font-size:11px;color:#666;margin-bottom:6px;line-height:1.4}
+        .nl-card-why{font-size:10px;color:#999;margin-bottom:8px}
+        .nl-card-link{font-size:10px;color:#8B6F3A;text-decoration:underline}
+        .nl-empty{text-align:center;padding:60px 20px;color:#ccc;font-size:14px;line-height:1.8}
+
+        /* Ideas view */
+        .ideas-view{padding:16px 20px;max-width:900px;margin:0 auto}
+        .idea-form{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:20px;margin-bottom:16px}
+        .idea-card{background:#fff;border:1px solid #E8E4DD;border-radius:8px;padding:12px;margin-bottom:8px}
+        .idea-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .idea-card-tema{font-weight:600;font-size:13px}
+        .idea-card-det{font-size:11px;color:#777;margin-top:4px;line-height:1.4}
+
+        /* Modal read mode */
+        .read-mode{padding:4px 0}
+        .read-title{font-size:18px;font-weight:700;margin-bottom:12px;line-height:1.3}
+        .read-hook{font-size:14px;color:#8B6F3A;font-style:italic;line-height:1.6;margin-bottom:16px;padding:12px 16px;background:#FDF8E8;border-radius:8px;border-left:3px solid #8B6F3A}
+        .read-text{font-size:14px;color:#333;line-height:1.9;white-space:pre-wrap;margin-bottom:16px}
+        .read-section{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#8B6F3A;margin:16px 0 6px;font-weight:600}
+        .read-small{font-size:12px;color:#888;line-height:1.6;white-space:pre-wrap}
+        .read-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:12px;border-top:1px solid #E8E4DD}
+        .read-meta-item{font-size:10px;color:#999}
+        .read-meta-item strong{color:#1a1a2e}
+        .edit-toggle{background:#8B6F3A;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-weight:600;font-size:11px;letter-spacing:0.5px}
+        .read-toggle{background:#fff;color:#8B6F3A;border:1px solid #8B6F3A;padding:9px 18px;border-radius:8px;font-weight:600;font-size:11px}
+        #edit-fields{display:none}
+        #read-view{display:block}
+
         /* Toast */
         .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none}
         .toast.show{opacity:1}.toast.err{background:#C8453A}
@@ -134,26 +175,65 @@
         </div>
     </div>
 
-    <!-- Filter bar -->
-    <div class="filterbar">
-        <select id="f-tipo" onchange="doFilter()">
-            <option value="organico">Organico</option>
-            <option value="ads">Meta Ads</option>
-            <option value="todos">Todos</option>
-        </select>
-        <select id="f-ang" onchange="doFilter()">
-            <option value="todos">Todos los angulos</option>
-        </select>
-        <select id="f-cat" onchange="doFilter()">
-            <option value="todos">Todas las categorias</option>
-        </select>
-        <input type="text" id="q" placeholder="Buscar...">
-        <span class="filter-count" id="cnt"></span>
-        <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('mercado',this)">Mercado</button>
+        <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
     </div>
 
-    <!-- Content -->
-    <div class="content" id="content"></div>
+    <!-- VIEW: GUIONES -->
+    <div class="view on" id="v-guiones">
+        <div class="filterbar">
+            <select id="f-tipo" onchange="doFilter()">
+                <option value="organico">Organico</option>
+                <option value="ads">Meta Ads</option>
+                <option value="todos">Todos</option>
+            </select>
+            <select id="f-ang" onchange="doFilter()">
+                <option value="todos">Todos los angulos</option>
+            </select>
+            <select id="f-cat" onchange="doFilter()">
+                <option value="todos">Todas las categorias</option>
+            </select>
+            <input type="text" id="q" placeholder="Buscar...">
+            <span class="filter-count" id="cnt"></span>
+            <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
+        </div>
+        <div class="content" id="content"></div>
+    </div>
+
+    <!-- VIEW: MERCADO -->
+    <div class="view" id="v-mercado">
+        <div class="mercado">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                <div>
+                    <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Mercado / Tendencias</div>
+                    <div style="font-size:11px;color:#999;margin-top:2px">Datos frescos para inspirar guiones nuevos</div>
+                </div>
+            </div>
+            <div class="mercado-grid" id="mercado-grid"></div>
+        </div>
+    </div>
+
+    <!-- VIEW: IDEAS -->
+    <div class="view" id="v-ideas">
+        <div class="ideas-view">
+            <div class="idea-form">
+                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;margin-bottom:14px">Proponer Idea</div>
+                <div class="frow">
+                    <div class="fg"><label>Autor</label><input id="i-aut2" value="Santiago"></div>
+                    <div class="fg"><label>Angulo</label><select id="i-ang2"></select></div>
+                </div>
+                <div class="fg"><label>Tema</label><input id="i-tema2" placeholder="De que se trata?"></div>
+                <div class="fg"><label>Detalle</label><textarea id="i-det2" rows="3" placeholder="Describilo..."></textarea></div>
+                <button class="save-btn" style="width:100%" onclick="doSaveIdea2()">Enviar Idea</button>
+                <div class="m-msg" id="i-msg2"></div>
+            </div>
+            <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:12px">Ideas propuestas</div>
+            <div id="ideas-list2"></div>
+        </div>
+    </div>
 </div>
 
 <!-- MODAL GUION -->
@@ -163,32 +243,58 @@
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
             <span id="m-id" style="font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A"></span>
             <span class="badge" id="m-badge"></span>
+            <span style="flex:1"></span>
+            <button class="edit-toggle" id="m-edit-btn" onclick="toggleEdit()">Editar</button>
         </div>
-        <div class="fg"><label>Titulo</label><input id="m-tit"></div>
-        <div class="fg"><label>Hook</label><textarea id="m-hook" rows="2"></textarea></div>
-        <div class="fg"><label>Texto completo</label><textarea id="m-txt" rows="8" style="min-height:180px"></textarea></div>
-        <div class="fg"><label>Textos en pantalla</label><textarea id="m-scr" rows="2"></textarea></div>
-        <div class="frow">
-            <div class="fg"><label>Caption IG</label><textarea id="m-ig" rows="2"></textarea></div>
-            <div class="fg"><label>Caption TK</label><textarea id="m-tk" rows="2"></textarea></div>
-        </div>
-        <div class="fg"><label>Fuentes</label><textarea id="m-fue" rows="2"></textarea></div>
-        <div class="frow">
-            <div class="fg"><label>Angulo</label><select id="m-ang"></select></div>
-            <div class="fg"><label>Status</label>
-                <select id="m-st"><option value="listo">Listo</option><option value="filmado">Filmado</option><option value="publicado">Publicado</option><option value="descartado">Descartado</option></select>
+
+        <!-- READ MODE -->
+        <div id="read-view" class="read-mode">
+            <div class="read-title" id="r-tit"></div>
+            <div class="read-hook" id="r-hook"></div>
+            <div class="read-text" id="r-txt"></div>
+            <div class="read-section">Textos en pantalla</div>
+            <div class="read-small" id="r-scr"></div>
+            <div class="read-section">Captions</div>
+            <div class="read-small" id="r-cap"></div>
+            <div class="read-section">Fuentes</div>
+            <div class="read-small" id="r-fue"></div>
+            <div class="read-meta">
+                <div class="read-meta-item">Angulo: <strong id="r-ang"></strong></div>
+                <div class="read-meta-item">Status: <strong id="r-st"></strong></div>
+                <div class="read-meta-item">Semana: <strong id="r-sem"></strong></div>
+                <div class="read-meta-item">Rating: <strong id="r-rat"></strong></div>
             </div>
         </div>
-        <div class="frow">
-            <div class="fg"><label>Semana</label><input id="m-sem" placeholder="Ej: Sem 1, Lunes 21/4"></div>
-            <div class="fg"><label>Rating</label><div class="stars" id="m-stars"></div></div>
+
+        <!-- EDIT MODE -->
+        <div id="edit-fields" style="display:none">
+            <div class="fg"><label>Titulo</label><input id="m-tit"></div>
+            <div class="fg"><label>Hook</label><textarea id="m-hook" rows="2"></textarea></div>
+            <div class="fg"><label>Texto completo</label><textarea id="m-txt" rows="8" style="min-height:180px"></textarea></div>
+            <div class="fg"><label>Textos en pantalla</label><textarea id="m-scr" rows="2"></textarea></div>
+            <div class="frow">
+                <div class="fg"><label>Caption IG</label><textarea id="m-ig" rows="2"></textarea></div>
+                <div class="fg"><label>Caption TK</label><textarea id="m-tk" rows="2"></textarea></div>
+            </div>
+            <div class="fg"><label>Fuentes</label><textarea id="m-fue" rows="2"></textarea></div>
+            <div class="frow">
+                <div class="fg"><label>Angulo</label><select id="m-ang"></select></div>
+                <div class="fg"><label>Status</label>
+                    <select id="m-st"><option value="listo">Listo</option><option value="filmado">Filmado</option><option value="publicado">Publicado</option><option value="descartado">Descartado</option></select>
+                </div>
+            </div>
+            <div class="frow">
+                <div class="fg"><label>Semana</label><input id="m-sem" placeholder="Ej: Sem 1, Lunes 21/4"></div>
+                <div class="fg"><label>Rating</label><div class="stars" id="m-stars"></div></div>
+            </div>
+            <div class="fg"><label>Notas</label><textarea id="m-not" rows="2" placeholder="Notas internas..."></textarea></div>
+            <div class="modal-btns">
+                <button class="save-btn" id="m-save" onclick="doSave()">Guardar</button>
+                <button class="read-toggle" onclick="toggleEdit()">Cancelar</button>
+                <button class="del-btn" onclick="doDiscard()">Descartar</button>
+            </div>
+            <div class="m-msg" id="m-msg"></div>
         </div>
-        <div class="fg"><label>Notas</label><textarea id="m-not" rows="2" placeholder="Notas internas..."></textarea></div>
-        <div class="modal-btns">
-            <button class="save-btn" id="m-save" onclick="doSave()">Guardar</button>
-            <button class="del-btn" onclick="doDiscard()">Descartar</button>
-        </div>
-        <div class="m-msg" id="m-msg"></div>
     </div>
 </div>
 
@@ -355,13 +461,108 @@ function renderGrouped(gs){
     el.innerHTML=html;
 }
 
-// Modal
+// Tabs
+function switchTab(name,btn){
+    document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on');});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+    document.getElementById('v-'+name).classList.add('on');
+    btn.classList.add('on');
+    if(name==='mercado')loadMercado();
+    if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
+}
+
+// Mercado
+function loadMercado(){
+    var el=document.getElementById('mercado-grid');
+    el.innerHTML='<div class="nl-empty">Cargando...</div>';
+    sb.from('newsletter').select('*').order('created_at',{ascending:false}).then(function(res){
+        var items=res.data||[];
+        if(!items.length){el.innerHTML='<div class="nl-empty">No hay tendencias todavia.<br>Los agentes las cargan automaticamente.</div>';return;}
+        el.innerHTML=items.map(function(it){
+            var a=(it.angulo||'').toLowerCase();
+            var c=ANG_C[a]||['#F0EFED','#999'];
+            return '<div class="nl-card">'+
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
+                '<span class="badge" style="background:'+c[0]+';color:'+c[1]+'">'+esc(ANG[a]||it.angulo||'')+'</span>'+
+                (it.convertido?'<span style="font-size:9px;color:#2D8C5A">Convertido</span>':'')+
+                '</div>'+
+                '<div class="nl-card-title">'+esc(it.titulo)+'</div>'+
+                (it.hook_propuesto?'<div class="nl-card-hook">'+esc(it.hook_propuesto)+'</div>':'')+
+                (it.dato_duro?'<div class="nl-card-dato">'+esc(it.dato_duro)+'</div>':'')+
+                (it.por_que_pega?'<div class="nl-card-why">'+esc(it.por_que_pega)+'</div>':'')+
+                (it.fuente_url?'<div><a class="nl-card-link" href="'+esc(it.fuente_url)+'" target="_blank">Ver fuente</a></div>':'')+
+                '</div>';
+        }).join('');
+    });
+}
+
+// Ideas v2 (tab view)
+var ideasSelBuilt=false;
+function buildIdeasSelects(){
+    if(ideasSelBuilt)return;ideasSelBuilt=true;
+    var iA=document.getElementById('i-ang2');
+    iA.innerHTML='<option value="">--</option>';
+    for(var k in ANG)iA.innerHTML+='<option value="'+k+'">'+ANG[k]+'</option>';
+}
+function loadIdeas2(){
+    sb.from('ideas').select('*').order('created_at',{ascending:false}).then(function(res){
+        var el=document.getElementById('ideas-list2'),ideas=res.data||[];
+        if(!ideas.length){el.innerHTML='<p style="color:#ccc;font-size:12px;text-align:center;padding:20px">No hay ideas propuestas todavia.</p>';return;}
+        el.innerHTML=ideas.map(function(i){
+            var a=ANG[(i.angulo||'').toLowerCase()]||'';
+            return '<div class="idea-card"><div class="idea-card-head"><span class="idea-card-tema">'+esc(i.tema)+'</span><span style="font-size:10px;color:#999">'+esc(i.autor||'')+(a?' · '+a:'')+'</span></div>'+(i.detalle?'<div class="idea-card-det">'+esc(i.detalle)+'</div>':'')+'</div>';
+        }).join('');
+    });
+}
+function doSaveIdea2(){
+    var tema=document.getElementById('i-tema2').value.trim(),msg=document.getElementById('i-msg2');
+    if(!tema){msg.style.color='#C8453A';msg.textContent='Completa el tema.';return;}
+    msg.textContent='';
+    sb.from('ideas').insert({autor:document.getElementById('i-aut2').value.trim()||'Anonimo',angulo:document.getElementById('i-ang2').value,tema:tema,detalle:document.getElementById('i-det2').value.trim(),estado:'propuesta'}).then(function(res){
+        if(res.error){msg.style.color='#C8453A';msg.textContent='Error: '+res.error.message;return;}
+        document.getElementById('i-tema2').value='';document.getElementById('i-det2').value='';
+        msg.style.color='#2D8C5A';msg.textContent='Enviada!';toast('Idea enviada');
+        setTimeout(function(){msg.textContent='';},3000);loadIdeas2();
+    });
+}
+
+// Modal — read/edit toggle
+var editMode=false;
+function toggleEdit(){
+    editMode=!editMode;
+    document.getElementById('read-view').style.display=editMode?'none':'block';
+    document.getElementById('edit-fields').style.display=editMode?'block':'none';
+    document.getElementById('m-edit-btn').textContent=editMode?'Leer':'Editar';
+    document.getElementById('m-edit-btn').className=editMode?'read-toggle':'edit-toggle';
+}
+
 function openModal(id){
     var g=allG.find(function(x){return x.id===id;});if(!g)return;
     curId=id;
+    // Reset to read mode
+    editMode=false;
+    document.getElementById('read-view').style.display='block';
+    document.getElementById('edit-fields').style.display='none';
+    document.getElementById('m-edit-btn').textContent='Editar';
+    document.getElementById('m-edit-btn').className='edit-toggle';
+
     document.getElementById('m-id').textContent=g.id;
     var a=(g.angulo||'').toLowerCase(),c=ANG_C[a]||['#F0EFED','#999'];
-    var b=document.getElementById('m-badge');b.textContent=ANG[a]||a;b.style.background=c[0];b.style.color=c[1];
+    var badge=document.getElementById('m-badge');badge.textContent=ANG[a]||a;badge.style.background=c[0];badge.style.color=c[1];
+
+    // Read view
+    document.getElementById('r-tit').textContent=g.titulo||'';
+    document.getElementById('r-hook').textContent=g.hook||'';
+    document.getElementById('r-txt').textContent=g.texto||'';
+    document.getElementById('r-scr').textContent=g.screen||'';
+    document.getElementById('r-cap').textContent='IG: '+(g.caption_ig||'—')+'\n\nTK: '+(g.caption_tk||'—');
+    document.getElementById('r-fue').textContent=g.fuentes||'';
+    document.getElementById('r-ang').textContent=ANG[a]||a;
+    document.getElementById('r-st').textContent=(g.status||'listo').charAt(0).toUpperCase()+(g.status||'listo').slice(1);
+    document.getElementById('r-sem').textContent=g.semana||'—';
+    document.getElementById('r-rat').textContent=g.rating?'★'.repeat(g.rating)+'☆'.repeat(5-g.rating):'—';
+
+    // Edit fields
     document.getElementById('m-tit').value=g.titulo||'';
     document.getElementById('m-hook').value=g.hook||'';
     document.getElementById('m-txt').value=g.texto||'';
@@ -375,6 +576,7 @@ function openModal(id){
     document.getElementById('m-not').value=g.notas||'';
     document.getElementById('m-msg').textContent='';
     curRat=g.rating||0;renderStars();
+
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow='hidden';
 }
