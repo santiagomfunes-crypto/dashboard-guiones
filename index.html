@@ -1424,7 +1424,7 @@ var tinderQueue=[], tinderIdx=0, tinderSelected=[];
 
 function initTinder(){
     // Curated 50 for session 20/4 — 92% marca personal, 8% producto
-    var curated50=["LIFE1","LIFE2","LIFE3","LIFE4","LIFE5","LIFE6","PO1","PO2","PO3","PO4","PO5","PO6","PO7","PO9","PO12","DE1","DE3","DE4","DE5","DE9","HIST1","CO1","CO2","DE2","DE6","PD7","TN2","TN9","PD8","CR14","CR9","PD4","PD6","AL3","MU1","CR11","MK2","TN3","MU6","MK1","MK3","TN8","PD1","CR8","INV2","INV10","TN5","TN6","INV3","NL3"];
+    var curated50=["LIFE1","LIFE2","LIFE3","LIFE4","LIFE5","LIFE6","PO1","PO2","PO3","PO4","PO5","PO6","PO7","PO9","PO12","DE1","DE3","DE4","DE5","DE9","HIST1","CO1","CO2","DE2","DE6","PD7","TN2","TN9","PD8","CR14","CR9","PD4","PD6","AL3","MU1","CR11","MK2","TN3","MU6","MK1","MK3","TN8","PD1","CR8","INV2","INV10","TN5","TN6","INV3","NL3","VIR1","VIR2","VIR3","VIR4","VIR5","VIR6","VIR7","VIR8","VIR9","VIR10","VIR11","VIR12","VIR13","VIR14","VIR15","VIR16","VIR17","VIR18"];
     var curated50Set={};curated50.forEach(function(id){curated50Set[id]=true;});
     tinderQueue=allG.filter(function(g){return curated50Set[g.id];});
     // Shuffle
