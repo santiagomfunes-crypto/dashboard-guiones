@@ -1,0 +1,32 @@
+{
+  "source_id": "FA5PnVM77qM",
+  "source_url": "https://www.youtube.com/watch?v=FA5PnVM77qM",
+  "title": "Sistema completo de agentes de voz IA para inmobiliaria — vendido por USD 3.000",
+  "source_type": "video",
+  "summary": "Tutorial completo de cómo construir un sistema de agentes de voz IA para inmobiliarias usando Claude Code + Retell AI. El sistema: contesta llamadas, califica leads, hace llamadas outbound, se conecta al CRM (Notion), accede al inventario de propiedades, agenda citas, tiene dashboard para el cliente con métricas (ventas, citas, costos). Stack: Claude Code (backend + automatizaciones), Retell AI (agente de voz), Twilio (número telefónico), Notion (CRM), Modal (hosting de automatizaciones). NO usa N8N — Claude Code hace todo. Se construye en ~1 hora. El autor lo vendió a una inmobiliaria por USD 3.000. Aplicable directamente a SFRE: Santiago podría tener un agente de voz que conteste llamadas de leads, califique y agende visitas automáticamente.",
+  "key_concepts": [
+    "Agente de voz IA para inmobiliaria — contesta y hace llamadas",
+    "Stack: Claude Code + Retell AI + Twilio + Notion",
+    "Califica leads por teléfono automáticamente",
+    "Agenda citas sin intervención humana",
+    "Se conecta al inventario de propiedades",
+    "Dashboard para ver métricas del agente",
+    "Claude Code reemplaza a N8N para automatizaciones",
+    "Vendido a inmobiliaria por USD 3.000",
+    "Se construye en ~1 hora con Claude Code",
+    "Llamadas inbound + outbound",
+    "Aplicable directamente a Santiago Funes RE"
+  ],
+  "tags": [
+    "agente-voz",
+    "inmobiliaria",
+    "retell-ai",
+    "claude-code",
+    "leads",
+    "crm",
+    "automatizacion",
+    "llamadas"
+  ],
+  "credibility_score": 4,
+  "learned_at": "2026-04-19T00:00:00"
+}
