@@ -147,6 +147,26 @@
         .celina-drive-link{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:#4A90D9;text-decoration:none;font-weight:600}
         .celina-drive-link:hover{text-decoration:underline}
 
+        /* Tinder Phase 2 — editing */
+        .p2-header{font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A;letter-spacing:2px;margin-bottom:6px;text-align:center}
+        .p2-sub{font-size:11px;color:#999;text-align:center;margin-bottom:20px}
+        .p2-card{background:#fff;border:1px solid #E8E4DD;border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 1px 4px #0001}
+        .p2-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+        .p2-card-num{font-family:'Cinzel',serif;font-size:22px;color:#E8E4DD;font-weight:700;line-height:1;min-width:32px}
+        .p2-card-meta{flex:1}
+        .p2-card-id{font-family:'Cinzel',serif;font-size:12px;color:#8B6F3A}
+        .p2-card-title{font-size:13px;font-weight:700;line-height:1.3;color:#1a1a2e}
+        .p2-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#8B6F3A;font-weight:600;margin-bottom:4px}
+        .p2-textarea{width:100%;padding:10px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;font-family:'Montserrat',sans-serif;background:#F5F5F3;outline:none;resize:vertical;line-height:1.6;color:#1a1a2e}
+        .p2-textarea:focus{border-color:#8B6F3A;background:#fff}
+        .p2-nota{width:100%;padding:8px 12px;border:1px solid #E8D9B0;border-radius:8px;font-size:11px;font-family:'Montserrat',sans-serif;background:#FDF8E8;outline:none;color:#8B6F3A;margin-top:8px}
+        .p2-nota:focus{border-color:#8B6F3A;background:#FFF8E0}
+        .p2-nota::placeholder{color:#C9A96A}
+        .p2-confirm-btn{width:100%;padding:14px;background:#2D8C5A;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:1px;margin-top:8px;text-transform:uppercase}
+        .p2-confirm-btn:disabled{opacity:0.5}
+        .p2-back-btn{width:100%;padding:10px;background:#fff;color:#999;border:1px solid #E8E4DD;border-radius:10px;font-size:11px;font-weight:600;margin-top:8px}
+        .p2-changed-badge{font-size:8px;background:#E8F5EE;color:#2D8C5A;border-radius:4px;padding:2px 6px;margin-left:6px;font-weight:700;letter-spacing:0.5px}
+
         /* Tinder selector */
         .tinder{padding:20px;max-width:600px;margin:0 auto;text-align:center}
         .tinder-card{background:#fff;border:1px solid #E8E4DD;border-radius:16px;padding:28px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:16px;transition:transform 0.3s,opacity 0.3s}
@@ -308,7 +328,7 @@
 
     <!-- VIEW: SELECTOR (Tinder de guiones) -->
     <div class="view" id="v-selector">
-        <div class="tinder">
+        <div class="tinder" id="t-phase1">
             <div style="font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A;letter-spacing:2px;margin-bottom:4px">Selector de Guiones</div>
             <div style="font-size:11px;color:#999;margin-bottom:16px">Swipea: me gusta / no me gusta / ver despues</div>
             <div class="tinder-progress" id="t-progress"></div>
@@ -320,6 +340,8 @@
             </div>
             <div class="tinder-selected" id="t-selected"></div>
         </div>
+        <!-- Phase 2: edit proposals -->
+        <div id="t-phase2" style="display:none;padding:20px;max-width:700px;margin:0 auto"></div>
     </div>
 
     <!-- VIEW: CALENDARIO -->
@@ -1493,7 +1515,7 @@ function renderTinderSelected(){
                 '<button class="tinder-sel-remove" onclick="tinderRemove('+i+')">x</button>'+
                 '</div>';
         }).join('')+
-        (tinderSelected.length>=5?'<button class="tinder-done-btn" onclick="tinderCreateSession()">Crear sesion con '+tinderSelected.length+' guiones</button>':'');
+        (tinderSelected.length>=5?'<button class="tinder-done-btn" onclick="tinderCreateSession()">Continuar con '+tinderSelected.length+' guiones seleccionados →</button>':'');
 }
 
 function tinderRemove(idx){
@@ -1503,26 +1525,127 @@ function tinderRemove(idx){
 
 function tinderCreateSession(){
     if(!tinderSelected.length)return;
-    var ids=tinderSelected.map(function(g){return g.id;});
-    var hoy=new Date();
-    // Next Monday
-    var lunes=new Date(hoy);
-    lunes.setDate(lunes.getDate()+((8-lunes.getDay())%7||7));
-    var fecha=lunes.toISOString().split('T')[0];
+    // Go to Phase 2 — editing proposals
+    document.getElementById('t-phase1').style.display='none';
+    renderTinderPhase2();
+    document.getElementById('t-phase2').style.display='block';
+    window.scrollTo(0,0);
+}
 
-    sb.from('sesiones').insert({
-        fecha:fecha,
-        guiones_ids:ids,
-        estado:'planificada',
-        notas:ids.length+' guiones seleccionados via Selector'
-    }).then(function(res){
-        if(res.error){toast('Error: '+res.error.message,true);return;}
-        // Mark guiones with semana
+function renderTinderPhase2(){
+    var el=document.getElementById('t-phase2');
+    var n=tinderSelected.length;
+    var html='<div class="p2-header">Propuestas de Celina</div>'+
+        '<div class="p2-sub">'+n+' guiones seleccionados — Edita el hook o el texto de cada uno (o dejalo igual si esta bien)</div>';
+
+    tinderSelected.forEach(function(g,i){
+        html+='<div class="p2-card" id="p2c-'+i+'">'+
+            '<div class="p2-card-top">'+
+                '<div class="p2-card-num">'+(i+1)+'</div>'+
+                '<div class="p2-card-meta">'+
+                    '<div class="p2-card-id">'+esc(g.id)+'</div>'+
+                    '<div class="p2-card-title">'+esc(g.titulo)+'<span class="p2-changed-badge" id="p2badge-'+i+'" style="display:none">MODIFICADO</span></div>'+
+                '</div>'+
+            '</div>'+
+            '<div class="p2-label">Hook (primera frase)</div>'+
+            '<textarea class="p2-textarea" id="p2hook-'+i+'" rows="2" oninput="p2markChanged('+i+')">'+esc(g.hook||'')+'</textarea>'+
+            '<div class="p2-label" style="margin-top:10px">Guion completo</div>'+
+            '<textarea class="p2-textarea" id="p2texto-'+i+'" rows="6" oninput="p2markChanged('+i+')">'+esc(g.texto||'')+'</textarea>'+
+            '<textarea class="p2-nota" id="p2nota-'+i+'" rows="2" placeholder="Nota para Santiago (opcional): \'quiero que el hook sea mas directo\', \'cambia el final\', etc."></textarea>'+
+        '</div>';
+    });
+
+    html+='<button class="p2-confirm-btn" id="p2-submit-btn" onclick="tinderConfirmSession()">Guardar cambios y crear sesion</button>'+
+          '<button class="p2-back-btn" onclick="tinderBackToPhase1()">Volver a la seleccion</button>';
+
+    el.innerHTML=html;
+
+    // Store originals for diff detection
+    window._p2originals=tinderSelected.map(function(g){return {hook:g.hook||'',texto:g.texto||''};});
+}
+
+function p2markChanged(i){
+    var origHook=window._p2originals[i].hook;
+    var origTexto=window._p2originals[i].texto;
+    var newHook=document.getElementById('p2hook-'+i).value;
+    var newTexto=document.getElementById('p2texto-'+i).value;
+    var changed=(newHook.trim()!==origHook.trim())||(newTexto.trim()!==origTexto.trim());
+    var badge=document.getElementById('p2badge-'+i);
+    if(badge)badge.style.display=changed?'inline':'none';
+}
+
+function tinderBackToPhase1(){
+    document.getElementById('t-phase2').style.display='none';
+    document.getElementById('t-phase1').style.display='block';
+}
+
+function tinderConfirmSession(){
+    var btn=document.getElementById('p2-submit-btn');
+    btn.disabled=true;
+    btn.textContent='Guardando...';
+
+    var updates=[];
+    tinderSelected.forEach(function(g,i){
+        var newHook=document.getElementById('p2hook-'+i).value.trim();
+        var newTexto=document.getElementById('p2texto-'+i).value.trim();
+        var nota=document.getElementById('p2nota-'+i).value.trim();
+        var origHook=window._p2originals[i].hook;
+        var origTexto=window._p2originals[i].texto;
+        var changed=(newHook!==origHook.trim())||(newTexto!==origTexto.trim());
+        if(changed){
+            updates.push({id:g.id,hook:newHook,texto:newTexto,nota:nota});
+        } else if(nota){
+            updates.push({id:g.id,nota:nota}); // note only
+        }
+    });
+
+    // Apply all updates to guiones in Supabase, then create session
+    var promises=updates.map(function(u){
+        var patch={};
+        if(u.hook!==undefined)patch.hook=u.hook;
+        if(u.texto!==undefined)patch.texto=u.texto;
+        return sb.from('guiones').update(patch).eq('id',u.id).then(function(res){
+            // Save nota as idea if present
+            if(u.nota){
+                sb.from('ideas').insert({
+                    autor:'Celina',angulo:'sol',tema:'',
+                    detalle:u.nota,
+                    tipo:'mejora',guion_ref:u.id,
+                    estado:'aplicada'
+                });
+            }
+            return res;
+        });
+    });
+
+    Promise.all(promises).then(function(){
+        var ids=tinderSelected.map(function(g){return g.id;});
+        var hoy=new Date();
+        var lunes=new Date(hoy);
+        lunes.setDate(lunes.getDate()+((8-lunes.getDay())%7||7));
+        var fecha=lunes.toISOString().split('T')[0];
         var sem='Lun '+lunes.getDate()+'/'+(lunes.getMonth()+1);
-        sb.from('guiones').update({semana:sem}).in('id',ids).then(function(){
-            toast('Sesion creada con '+ids.length+' guiones para '+sem);
-            tinderSelected=[];
-            renderTinderSelected();
+
+        sb.from('sesiones').insert({
+            fecha:fecha,
+            guiones_ids:ids,
+            estado:'planificada',
+            notas:ids.length+' guiones seleccionados via Selector'+(updates.length?' — '+updates.length+' editados por Celina':'')
+        }).then(function(res){
+            if(res.error){toast('Error: '+res.error.message,true);btn.disabled=false;btn.textContent='Guardar cambios y crear sesion';return;}
+            sb.from('guiones').update({semana:sem}).in('id',ids).then(function(){
+                var msg='Sesion creada con '+ids.length+' guiones';
+                if(updates.length)msg+=' — '+updates.length+' editados por Celina';
+                toast(msg);
+                // Reset
+                tinderSelected=[];
+                window._p2originals=[];
+                document.getElementById('t-phase2').style.display='none';
+                document.getElementById('t-phase1').style.display='block';
+                // Reload allG so changes reflect
+                loadAll();
+                renderTinderSelected();
+            });
         });
     });
 }
