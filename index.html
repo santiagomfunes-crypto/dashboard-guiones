@@ -65,7 +65,35 @@
         .card-foot select{padding:3px 6px;border:1px solid #E8E4DD;border-radius:4px;font-size:9px;background:#F5F5F3;color:#777;outline:none}
         .card-sem{font-size:9px;color:#bbb;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .st{font-size:8px;padding:3px 8px;border-radius:4px;font-weight:600;letter-spacing:0.5px}
-        .st-listo{background:#F5F5F3;color:#999}.st-filmado{background:#E8F5EE;color:#2D8C5A}.st-publicado{background:#E8F0FD;color:#4A90D9}.st-descartado{background:#FDE8E8;color:#C8453A}
+        .st-listo{background:#F5F5F3;color:#999}.st-aprobado{background:#FDF8E8;color:#8B6F3A;border:1px solid #D4A83A44}.st-filmado{background:#E8F5EE;color:#2D8C5A}.st-publicado{background:#E8F0FD;color:#4A90D9}.st-descartado{background:#FDE8E8;color:#C8453A}
+
+        /* Para Filmar view */
+        .pf-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid #E8E4DD;flex-wrap:wrap;gap:10px}
+        .pf-count{font-size:12px;color:#8B6F3A;font-weight:600}
+        .pf-btn{background:#8B6F3A;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:1px}
+        .pf-card{background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.15s;box-shadow:0 1px 2px #0001;position:relative}
+        .pf-card:hover{border-color:#8B6F3A66;box-shadow:0 3px 12px #0002}
+        .pf-approve{background:#FDF8E8;color:#8B6F3A;border:1px solid #D4A83A55;padding:5px 11px;border-radius:6px;font-size:9px;font-weight:700;letter-spacing:0.5px}
+        .pf-approve:hover{background:#8B6F3A;color:#fff}
+        .pf-unapprove{background:#F5F5F3;color:#999;border:1px solid #E8E4DD;padding:5px 11px;border-radius:6px;font-size:9px;font-weight:600}
+
+        /* Session edit modal */
+        .ses-modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:200;overflow-y:auto;justify-content:center;padding:30px 16px}
+        .ses-modal-bg.open{display:flex}
+        .ses-modal{background:#fff;border-radius:14px;width:100%;max-width:560px;padding:24px;position:relative;height:fit-content}
+        .ses-glist{max-height:260px;overflow-y:auto;border:1px solid #E8E4DD;border-radius:8px;padding:8px;margin-bottom:10px}
+        .ses-gitem{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:6px;margin-bottom:3px;background:#F5F5F3}
+        .ses-gitem-info{font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .ses-gitem-id{font-family:'Cinzel',serif;font-size:11px;color:#8B6F3A;margin-right:6px}
+        .ses-rm-btn{background:none;border:none;color:#C8453A;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0}
+        .ses-add-row{display:flex;gap:8px;margin-bottom:12px}
+        .ses-add-input{flex:1;padding:8px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;outline:none}
+        .ses-add-input:focus{border-color:#8B6F3A}
+        .ses-add-btn{background:#8B6F3A;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:11px;font-weight:700}
+        .ses-action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+        .ses-save-btn{background:#8B6F3A;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:11px;font-weight:700}
+        .ses-del-btn{background:#fff;color:#C8453A;border:1px solid #C8453A44;padding:10px 20px;border-radius:8px;font-size:11px;font-weight:600}
+        .ses-merge-btn{background:#fff;color:#4A90D9;border:1px solid #4A90D944;padding:10px 14px;border-radius:8px;font-size:11px;font-weight:600}
 
         /* Modal */
         .modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:100;overflow-y:auto;justify-content:center;padding:30px 16px}
@@ -297,6 +325,7 @@
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
         <button class="tab" onclick="switchTab('selector',this)">Selector</button>
         <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
         <button class="tab" onclick="switchTab('mercado',this)">Mercado</button>
@@ -324,6 +353,21 @@
             <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
         </div>
         <div class="content" id="content"></div>
+    </div>
+
+    <!-- VIEW: PARA FILMAR -->
+    <div class="view" id="v-parafilmar">
+        <div class="pf-toolbar">
+            <div>
+                <div style="font-family:'Cinzel',serif;font-size:15px;color:#8B6F3A;letter-spacing:1px">Para Filmar</div>
+                <div style="font-size:10px;color:#999;margin-top:2px">Guiones aprobados y listos. Aprobar desde cada guion en el tab Guiones.</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+                <span class="pf-count" id="pf-count">0 aprobados</span>
+                <button class="pf-btn" onclick="pfCreateSession()">Crear sesion con todos</button>
+            </div>
+        </div>
+        <div class="content" id="pf-content"></div>
     </div>
 
     <!-- VIEW: SELECTOR (Tinder de guiones) -->
@@ -821,7 +865,7 @@
             <div class="frow">
                 <div class="fg"><label>Angulo</label><select id="m-ang"></select></div>
                 <div class="fg"><label>Status</label>
-                    <select id="m-st"><option value="listo">Listo</option><option value="filmado">Filmado</option><option value="publicado">Publicado</option><option value="descartado">Descartado</option></select>
+                    <select id="m-st"><option value="listo">Listo</option><option value="aprobado">Aprobado — Para Filmar</option><option value="filmado">Filmado</option><option value="publicado">Publicado</option><option value="descartado">Descartado</option></select>
                 </div>
             </div>
             <div class="frow">
@@ -832,6 +876,7 @@
             <div class="modal-btns">
                 <button class="save-btn" id="m-save" onclick="doSave()">Guardar</button>
                 <button class="read-toggle" onclick="toggleEdit()">Cancelar</button>
+                <button id="m-aprobar-btn" onclick="doAprobarGuion()" style="background:#FDF8E8;color:#8B6F3A;border:1px solid #D4A83A55;padding:11px 18px;border-radius:8px;font-weight:700;font-size:11px;letter-spacing:0.5px">Aprobar para filmar</button>
                 <button class="del-btn" onclick="doDiscard()">Descartar</button>
             </div>
             <div class="m-msg" id="m-msg"></div>
@@ -853,6 +898,37 @@
         <button class="save-btn" style="width:100%" onclick="doSaveIdea()">Enviar Idea</button>
         <div class="m-msg" id="i-msg"></div>
         <div id="ideas-list" style="margin-top:16px"></div>
+    </div>
+</div>
+
+<!-- Session Edit Modal -->
+<div class="ses-modal-bg" id="ses-edit-modal" onclick="if(event.target===this)closeSesEdit()">
+    <div class="ses-modal">
+        <button class="modal-x" onclick="closeSesEdit()">&times;</button>
+        <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;margin-bottom:16px">Editar Sesion</div>
+        <div class="fg" style="margin-bottom:12px">
+            <label>Nombre de la sesion</label>
+            <input id="ses-nombre" placeholder="Ej: Sesion 20/4 — Marca personal" style="width:100%;padding:9px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;outline:none">
+        </div>
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#8B6F3A;font-weight:600;margin-bottom:6px">Guiones en esta sesion</div>
+        <div class="ses-glist" id="ses-glist"></div>
+        <div class="ses-add-row">
+            <input class="ses-add-input" id="ses-add-q" placeholder="ID o titulo de guion para agregar..." oninput="sesSearchGuion()">
+            <button class="ses-add-btn" onclick="sesAddGuion()">Agregar</button>
+        </div>
+        <div id="ses-search-results" style="margin-bottom:10px"></div>
+        <div class="fg" style="margin-bottom:6px">
+            <label>Unir con otra sesion</label>
+            <select id="ses-merge-sel" style="width:100%;padding:8px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;outline:none">
+                <option value="">— No unir —</option>
+            </select>
+        </div>
+        <div class="ses-action-row">
+            <button class="ses-save-btn" onclick="saveSesEdit()">Guardar cambios</button>
+            <button class="ses-merge-btn" onclick="doMergeSesion()">Unir sesiones</button>
+            <button class="ses-del-btn" onclick="deleteSesion()">Eliminar sesion</button>
+        </div>
+        <div class="m-msg" id="ses-msg"></div>
     </div>
 </div>
 
@@ -1009,6 +1085,7 @@ function switchTab(name,btn){
     document.getElementById('v-'+name).classList.add('on');
     btn.classList.add('on');
     if(name==='selector')initTinder();
+    if(name==='parafilmar')loadParaFilmar();
     if(name==='reportes')loadReportes();
     if(name==='calendario')loadCalendario();
     if(name==='mercado')loadMercado();
@@ -1265,6 +1342,15 @@ function openModal(id){
     document.getElementById('m-not').value=g.notas||'';
     document.getElementById('m-msg').textContent='';
     curRat=g.rating||0;renderStars();
+
+    // Aprobar button label
+    var apBtn=document.getElementById('m-aprobar-btn');
+    if(apBtn){
+        var ap=g.status==='aprobado';
+        apBtn.textContent=ap?'Quitar aprobacion':'Aprobar para filmar';
+        apBtn.style.background=ap?'#8B6F3A':'#FDF8E8';
+        apBtn.style.color=ap?'#fff':'#8B6F3A';
+    }
 
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow='hidden';
@@ -1788,15 +1874,16 @@ function loadSesiones(){
             // Session status color
             var stColor=s.estado==='planificada'?'#D48A2C':s.estado==='filmada'?'#C8453A':s.estado==='editada'?'#4A90D9':'#2D8C5A';
 
+            var sesNombre=s.notas||('Sesion '+s.fecha);
             return '<div style="background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:14px;margin-bottom:10px">'+
                 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
-                '<div><strong style="font-size:13px">Sesion '+esc(s.fecha)+'</strong> <span style="font-size:11px;color:'+stColor+';font-weight:600"> · '+esc(s.estado.toUpperCase())+'</span> <span style="font-size:11px;color:#999">· '+numGuiones+' guiones</span></div>'+
-                '<div style="display:flex;gap:6px">'+
+                '<div><strong style="font-size:13px">'+esc(sesNombre)+'</strong> <span style="font-size:11px;color:'+stColor+';font-weight:600"> · '+esc(s.estado.toUpperCase())+'</span> <span style="font-size:11px;color:#999">· '+numGuiones+' guiones · '+esc(s.fecha)+'</span></div>'+
+                '<div style="display:flex;gap:6px;align-items:center">'+
+                '<button style="background:none;border:1px solid #E8E4DD;border-radius:6px;padding:4px 10px;font-size:10px;color:#8B6F3A;font-weight:600;cursor:pointer" onclick="openSesEdit(\''+s.id+'\')">Editar</button>'+
                 (s.estado==='planificada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'filmada\')">Filmada</button>':'')+
                 (s.estado==='filmada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'editada\')">Editada</button>':'')+
                 (s.estado==='editada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px;background:#2D8C5A" onclick="programarSesion(\''+s.id+'\')">Programar</button>':'')+
                 '</div></div>'+
-                (s.notas?'<div style="font-size:10px;color:#777;margin-bottom:6px">'+esc(s.notas)+'</div>':'')+
                 guionesHtml+
                 '</div>';
         }).join('');
@@ -1912,10 +1999,231 @@ function programarSesion(sesionId){
     });
 }
 
+// ── PARA FILMAR ─────────────────────────────────────────────────────
+function loadParaFilmar(){
+    var aprobados=allG.filter(function(g){return g.status==='aprobado';});
+    var el=document.getElementById('pf-content');
+    var cnt=document.getElementById('pf-count');
+    cnt.textContent=aprobados.length+' aprobado'+(aprobados.length!==1?'s':'');
+    if(!aprobados.length){
+        el.innerHTML='<div style="text-align:center;padding:48px;color:#ccc;font-size:13px">No hay guiones aprobados todavia.<br><span style="font-size:11px">Abri un guion desde el tab Guiones y hacele click a "Aprobar para filmar".</span></div>';
+        return;
+    }
+    var html='<div class="grid" style="padding:16px 20px">';
+    aprobados.forEach(function(g){
+        var a=(g.angulo||'').toLowerCase(),c=ANG_C[a]||['#F0EFED','#999'];
+        html+='<div class="pf-card">'+
+            '<div class="card-head"><span class="card-id">'+esc(g.id)+'</span>'+
+            '<span class="badge" style="background:'+c[0]+';color:'+c[1]+'">'+esc(ANG[a]||a)+'</span></div>'+
+            '<div class="card-title" onclick="openModal(\''+esc(g.id)+'\')" style="cursor:pointer;margin-bottom:6px">'+esc(g.titulo)+'</div>'+
+            '<div class="card-hook" style="margin-bottom:10px">'+esc(g.hook||'')+'</div>'+
+            '<div style="display:flex;gap:6px">'+
+            '<button class="pf-unapprove" onclick="pfUnapprove(\''+esc(g.id)+'\')">Quitar</button>'+
+            '</div>'+
+        '</div>';
+    });
+    html+='</div>';
+    el.innerHTML=html;
+}
+
+function doAprobarGuion(){
+    if(!curId)return;
+    var btn=document.getElementById('m-aprobar-btn');
+    var g=allG.find(function(x){return x.id===curId;});
+    if(!g)return;
+    var isAprobado=g.status==='aprobado';
+    var newStatus=isAprobado?'listo':'aprobado';
+    btn.disabled=true;
+    sb.from('guiones').update({status:newStatus,updated_at:new Date().toISOString()}).eq('id',curId).then(function(res){
+        if(res.error){toast('Error',true);btn.disabled=false;return;}
+        g.status=newStatus;
+        document.getElementById('m-st').value=newStatus;
+        document.getElementById('r-st').textContent=newStatus.charAt(0).toUpperCase()+newStatus.slice(1);
+        btn.textContent=newStatus==='aprobado'?'Quitar aprobacion':'Aprobar para filmar';
+        btn.style.background=newStatus==='aprobado'?'#8B6F3A':'#FDF8E8';
+        btn.style.color=newStatus==='aprobado'?'#fff':'#8B6F3A';
+        doFilter();
+        toast(newStatus==='aprobado'?'Aprobado para filmar':'Quitado de Para Filmar');
+        btn.disabled=false;
+    });
+}
+
+function openModal_orig_hook(id){
+    // Update aprobar button label after modal opens
+    setTimeout(function(){
+        var g=allG.find(function(x){return x.id===id;});
+        var btn=document.getElementById('m-aprobar-btn');
+        if(btn&&g){
+            var ap=g.status==='aprobado';
+            btn.textContent=ap?'Quitar aprobacion':'Aprobar para filmar';
+            btn.style.background=ap?'#8B6F3A':'#FDF8E8';
+            btn.style.color=ap?'#fff':'#8B6F3A';
+        }
+    },50);
+}
+
+function pfUnapprove(id){
+    sb.from('guiones').update({status:'listo',updated_at:new Date().toISOString()}).eq('id',id).then(function(res){
+        if(res.error){toast('Error',true);return;}
+        var g=allG.find(function(x){return x.id===id;});
+        if(g)g.status='listo';
+        loadParaFilmar();
+        toast('Quitado de Para Filmar');
+    });
+}
+
+function pfCreateSession(){
+    var aprobados=allG.filter(function(g){return g.status==='aprobado';});
+    if(!aprobados.length){toast('No hay guiones aprobados',true);return;}
+    var ids=aprobados.map(function(g){return g.id;});
+    var hoy=new Date().toISOString().split('T')[0];
+    sb.from('sesiones').insert({
+        fecha:hoy,guiones_ids:ids,estado:'planificada',
+        notas:ids.length+' guiones aprobados para filmar'
+    }).then(function(res){
+        if(res.error){toast('Error: '+res.error.message,true);return;}
+        toast('Sesion creada con '+ids.length+' guiones');
+        loadSesiones();
+    });
+}
+
+// ── SESSION EDIT ─────────────────────────────────────────────────────
+var curSes=null; // current session being edited
+
+function openSesEdit(sesId){
+    sb.from('sesiones').select('*').eq('id',sesId).single().then(function(res){
+        if(res.error||!res.data){toast('Error al cargar sesion',true);return;}
+        curSes=res.data;
+        var el=document.getElementById('ses-nombre');
+        el.value=curSes.notas||('Sesion '+curSes.fecha);
+        renderSesGlist();
+        // Populate merge dropdown
+        sb.from('sesiones').select('id,fecha,notas,estado').order('fecha',{ascending:false}).then(function(r){
+            var sel=document.getElementById('ses-merge-sel');
+            sel.innerHTML='<option value="">— No unir —</option>';
+            (r.data||[]).forEach(function(s){
+                if(s.id===sesId)return;
+                var opt=document.createElement('option');
+                opt.value=s.id;
+                opt.textContent=(s.notas||('Sesion '+s.fecha))+' ('+s.estado+')';
+                sel.appendChild(opt);
+            });
+        });
+        document.getElementById('ses-search-results').innerHTML='';
+        document.getElementById('ses-add-q').value='';
+        document.getElementById('ses-msg').textContent='';
+        document.getElementById('ses-edit-modal').classList.add('open');
+        document.body.style.overflow='hidden';
+    });
+}
+
+function closeSesEdit(){
+    document.getElementById('ses-edit-modal').classList.remove('open');
+    document.body.style.overflow='';
+    curSes=null;
+}
+
+function renderSesGlist(){
+    var el=document.getElementById('ses-glist');
+    var ids=curSes.guiones_ids||[];
+    if(!ids.length){el.innerHTML='<div style="color:#ccc;font-size:11px;text-align:center;padding:12px">Sin guiones</div>';return;}
+    el.innerHTML=ids.map(function(gid){
+        var g=allG.find(function(x){return x.id===gid;});
+        return '<div class="ses-gitem">'+
+            '<span class="ses-gitem-info"><span class="ses-gitem-id">'+esc(gid)+'</span>'+(g?esc(g.titulo.substring(0,45)):'(no encontrado)')+'</span>'+
+            '<button class="ses-rm-btn" onclick="sesRemoveGuion(\''+esc(gid)+'\')">×</button>'+
+        '</div>';
+    }).join('');
+}
+
+function sesRemoveGuion(gid){
+    if(!curSes)return;
+    curSes.guiones_ids=(curSes.guiones_ids||[]).filter(function(x){return x!==gid;});
+    renderSesGlist();
+}
+
+function sesSearchGuion(){
+    var q=document.getElementById('ses-add-q').value.toLowerCase().trim();
+    var res=document.getElementById('ses-search-results');
+    if(q.length<2){res.innerHTML='';return;}
+    var matches=allG.filter(function(g){
+        return g.id.toLowerCase().includes(q)||g.titulo.toLowerCase().includes(q);
+    }).slice(0,5);
+    if(!matches.length){res.innerHTML='<div style="font-size:10px;color:#bbb;padding:4px 8px">Sin resultados</div>';return;}
+    res.innerHTML='<div style="border:1px solid #E8E4DD;border-radius:8px;overflow:hidden;margin-bottom:4px">'+
+        matches.map(function(g){
+            return '<div style="padding:7px 10px;font-size:11px;cursor:pointer;border-bottom:1px solid #F5F5F3" onclick="sesPickGuion(\''+esc(g.id)+'\')">'+
+                '<strong style="color:#8B6F3A">'+esc(g.id)+'</strong> — '+esc(g.titulo.substring(0,50))+'</div>';
+        }).join('')+'</div>';
+}
+
+function sesPickGuion(gid){
+    if(!curSes)return;
+    if((curSes.guiones_ids||[]).includes(gid)){toast(gid+' ya esta en la sesion');return;}
+    curSes.guiones_ids=(curSes.guiones_ids||[]).concat([gid]);
+    renderSesGlist();
+    document.getElementById('ses-add-q').value='';
+    document.getElementById('ses-search-results').innerHTML='';
+}
+
+function sesAddGuion(){
+    var q=document.getElementById('ses-add-q').value.trim().toUpperCase();
+    if(!q)return;
+    var g=allG.find(function(x){return x.id===q;});
+    if(!g){toast('ID no encontrado: '+q,true);return;}
+    sesPickGuion(q);
+}
+
+function saveSesEdit(){
+    if(!curSes)return;
+    var nombre=document.getElementById('ses-nombre').value.trim();
+    var msg=document.getElementById('ses-msg');
+    msg.textContent='Guardando...';
+    sb.from('sesiones').update({
+        guiones_ids:curSes.guiones_ids||[],
+        notas:nombre||curSes.notas
+    }).eq('id',curSes.id).then(function(res){
+        if(res.error){msg.style.color='#C8453A';msg.textContent='Error: '+res.error.message;return;}
+        msg.style.color='#2D8C5A';msg.textContent='Guardado';
+        setTimeout(function(){closeSesEdit();loadSesiones();},600);
+    });
+}
+
+function doMergeSesion(){
+    if(!curSes)return;
+    var targetId=document.getElementById('ses-merge-sel').value;
+    if(!targetId){toast('Selecciona una sesion para unir',true);return;}
+    if(!confirm('Esto va a unir los guiones de las dos sesiones y eliminar la otra. Confirmar?'))return;
+    sb.from('sesiones').select('guiones_ids').eq('id',targetId).single().then(function(res){
+        if(res.error||!res.data){toast('Error',true);return;}
+        var combined=(curSes.guiones_ids||[]).concat(res.data.guiones_ids||[]);
+        // deduplicate
+        combined=combined.filter(function(v,i,a){return a.indexOf(v)===i;});
+        sb.from('sesiones').update({guiones_ids:combined}).eq('id',curSes.id).then(function(){
+            sb.from('sesiones').delete().eq('id',targetId).then(function(){
+                toast('Sesiones unidas — '+combined.length+' guiones');
+                closeSesEdit();
+                loadSesiones();
+            });
+        });
+    });
+}
+
+function deleteSesion(){
+    if(!curSes)return;
+    if(!confirm('Eliminar esta sesion? Los guiones no se borran, solo la sesion.'))return;
+    sb.from('sesiones').delete().eq('id',curSes.id).then(function(res){
+        if(res.error){toast('Error',true);return;}
+        toast('Sesion eliminada');
+        closeSesEdit();
+        loadSesiones();
+    });
+}
+
 var toastTO;
 function toast(msg,err){var el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(err?' err':'');clearTimeout(toastTO);toastTO=setTimeout(function(){el.className='toast';},2500);}
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeIdeas();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeIdeas();closeSesEdit();}});
 
 // Auto-login
 sb.auth.getSession().then(function(res){if(res.data&&res.data.session)enterApp();}).catch(function(){});
