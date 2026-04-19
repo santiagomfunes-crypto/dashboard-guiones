@@ -119,6 +119,28 @@
         .cal-item.oficial{border-left:3px solid #2D8C5A}
         .cal-empty{color:#ccc;font-size:10px;text-align:center;padding:20px}
         .sesion-btn{background:#8B6F3A;color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600}
+
+        /* Tinder selector */
+        .tinder{padding:20px;max-width:600px;margin:0 auto;text-align:center}
+        .tinder-card{background:#fff;border:1px solid #E8E4DD;border-radius:16px;padding:28px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.08);margin-bottom:16px;transition:transform 0.3s,opacity 0.3s}
+        .tinder-card.swipe-left{transform:translateX(-120%) rotate(-10deg);opacity:0}
+        .tinder-card.swipe-right{transform:translateX(120%) rotate(10deg);opacity:0}
+        .tinder-badge{margin-bottom:12px}
+        .tinder-id{font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:8px}
+        .tinder-title{font-size:18px;font-weight:700;line-height:1.3;margin-bottom:12px}
+        .tinder-hook{font-size:14px;color:#8B6F3A;font-style:italic;line-height:1.6;padding:14px 18px;background:#FDF8E8;border-radius:8px;border-left:3px solid #8B6F3A;text-align:left}
+        .tinder-btns{display:flex;gap:12px;justify-content:center;margin-top:20px}
+        .tinder-btn{width:64px;height:64px;border-radius:50%;border:2px solid #E8E4DD;font-size:24px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all 0.2s}
+        .tinder-btn:hover{transform:scale(1.1)}
+        .tinder-no{border-color:#C8453A;color:#C8453A}.tinder-no:hover{background:#FDE8E8}
+        .tinder-si{border-color:#2D8C5A;color:#2D8C5A}.tinder-si:hover{background:#E8F5EE}
+        .tinder-skip{border-color:#D48A2C;color:#D48A2C;width:48px;height:48px;font-size:16px}.tinder-skip:hover{background:#FDF8E8}
+        .tinder-progress{font-size:11px;color:#999;margin-bottom:16px}
+        .tinder-selected{margin-top:24px;text-align:left}
+        .tinder-selected-title{font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:10px}
+        .tinder-sel-item{background:#E8F5EE;border-radius:6px;padding:8px 12px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+        .tinder-sel-remove{background:none;border:none;color:#C8453A;font-size:14px;cursor:pointer}
+        .tinder-done-btn{background:#2D8C5A;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:13px;font-weight:700;margin-top:16px;width:100%}
         @media(max-width:640px){.cal-week{grid-template-columns:1fr}}
 
         /* Ideas view */
@@ -228,6 +250,7 @@
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('selector',this)">Selector</button>
         <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
         <button class="tab" onclick="switchTab('mercado',this)">Mercado</button>
         <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
@@ -253,6 +276,22 @@
             <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
         </div>
         <div class="content" id="content"></div>
+    </div>
+
+    <!-- VIEW: SELECTOR (Tinder de guiones) -->
+    <div class="view" id="v-selector">
+        <div class="tinder">
+            <div style="font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A;letter-spacing:2px;margin-bottom:4px">Selector de Guiones</div>
+            <div style="font-size:11px;color:#999;margin-bottom:16px">Swipea: me gusta / no me gusta / ver despues</div>
+            <div class="tinder-progress" id="t-progress"></div>
+            <div id="t-card"></div>
+            <div class="tinder-btns" id="t-btns" style="display:none">
+                <button class="tinder-btn tinder-no" onclick="tinderSwipe('no')" title="No me gusta">X</button>
+                <button class="tinder-btn tinder-skip" onclick="tinderSwipe('skip')" title="Ver despues">?</button>
+                <button class="tinder-btn tinder-si" onclick="tinderSwipe('si')" title="Me gusta">OK</button>
+            </div>
+            <div class="tinder-selected" id="t-selected"></div>
+        </div>
     </div>
 
     <!-- VIEW: CALENDARIO -->
@@ -756,6 +795,7 @@ function switchTab(name,btn){
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
     document.getElementById('v-'+name).classList.add('on');
     btn.classList.add('on');
+    if(name==='selector')initTinder();
     if(name==='calendario')loadCalendario();
     if(name==='mercado')loadMercado();
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
@@ -1020,6 +1060,121 @@ function rewriteHook(base,style){
         default: return clean;
     }
 }
+
+// Tinder selector
+var tinderQueue=[], tinderIdx=0, tinderSelected=[];
+
+function initTinder(){
+    // Get all guiones with status 'listo' and tipo 'organico', shuffle them
+    tinderQueue=allG.filter(function(g){return g.status==='listo'&&(g.tipo||'organico')==='organico';});
+    // Shuffle
+    for(var i=tinderQueue.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=tinderQueue[i];tinderQueue[i]=tinderQueue[j];tinderQueue[j]=t;}
+    tinderIdx=0;
+    tinderSelected=[];
+    renderTinderCard();
+    renderTinderSelected();
+}
+
+function renderTinderCard(){
+    var card=document.getElementById('t-card');
+    var btns=document.getElementById('t-btns');
+    var prog=document.getElementById('t-progress');
+
+    if(tinderIdx>=tinderQueue.length){
+        card.innerHTML='<div style="padding:40px;color:#999;font-size:14px">No quedan mas guiones. Tenes '+tinderSelected.length+' seleccionados.</div>';
+        btns.style.display='none';
+        prog.textContent='Listo — '+tinderSelected.length+' seleccionados';
+        return;
+    }
+
+    var g=tinderQueue[tinderIdx];
+    var a=(g.angulo||'').toLowerCase();
+    var c=ANG_C[a]||['#F0EFED','#999'];
+
+    prog.textContent=(tinderIdx+1)+' de '+tinderQueue.length+' · '+tinderSelected.length+' seleccionados';
+
+    card.innerHTML='<div class="tinder-card" id="t-active">'+
+        '<div class="tinder-badge"><span class="badge" style="background:'+c[0]+';color:'+c[1]+';font-size:10px;padding:4px 10px">'+esc(ANG[a]||a)+'</span></div>'+
+        '<div class="tinder-id">'+esc(g.id)+' · '+esc(TEMAS[g.tema]||g.tema||'')+'</div>'+
+        '<div class="tinder-title">'+esc(g.titulo)+'</div>'+
+        '<div class="tinder-hook">'+esc(g.hook)+'</div>'+
+        '</div>';
+    btns.style.display='flex';
+}
+
+function tinderSwipe(dir){
+    var cardEl=document.getElementById('t-active');
+    if(!cardEl)return;
+
+    if(dir==='si'){
+        tinderSelected.push(tinderQueue[tinderIdx]);
+        cardEl.classList.add('swipe-right');
+    } else if(dir==='no'){
+        cardEl.classList.add('swipe-left');
+    }
+    // skip = just move to next
+
+    setTimeout(function(){
+        tinderIdx++;
+        renderTinderCard();
+        renderTinderSelected();
+    }, dir==='skip'?0:250);
+}
+
+function renderTinderSelected(){
+    var el=document.getElementById('t-selected');
+    if(!tinderSelected.length){el.innerHTML='';return;}
+
+    el.innerHTML='<div class="tinder-selected-title">Seleccionados ('+tinderSelected.length+')</div>'+
+        tinderSelected.map(function(g,i){
+            var a=(g.angulo||'').toLowerCase();
+            return '<div class="tinder-sel-item">'+
+                '<span><strong>'+esc(g.id)+'</strong> '+esc(g.titulo.substring(0,45))+(g.titulo.length>45?'...':'')+'</span>'+
+                '<button class="tinder-sel-remove" onclick="tinderRemove('+i+')">x</button>'+
+                '</div>';
+        }).join('')+
+        (tinderSelected.length>=5?'<button class="tinder-done-btn" onclick="tinderCreateSession()">Crear sesion con '+tinderSelected.length+' guiones</button>':'');
+}
+
+function tinderRemove(idx){
+    tinderSelected.splice(idx,1);
+    renderTinderSelected();
+}
+
+function tinderCreateSession(){
+    if(!tinderSelected.length)return;
+    var ids=tinderSelected.map(function(g){return g.id;});
+    var hoy=new Date();
+    // Next Monday
+    var lunes=new Date(hoy);
+    lunes.setDate(lunes.getDate()+((8-lunes.getDay())%7||7));
+    var fecha=lunes.toISOString().split('T')[0];
+
+    sb.from('sesiones').insert({
+        fecha:fecha,
+        guiones_ids:ids,
+        estado:'planificada',
+        notas:ids.length+' guiones seleccionados via Selector'
+    }).then(function(res){
+        if(res.error){toast('Error: '+res.error.message,true);return;}
+        // Mark guiones with semana
+        var sem='Lun '+lunes.getDate()+'/'+(lunes.getMonth()+1);
+        sb.from('guiones').update({semana:sem}).in('id',ids).then(function(){
+            toast('Sesion creada con '+ids.length+' guiones para '+sem);
+            tinderSelected=[];
+            renderTinderSelected();
+        });
+    });
+}
+
+// Keyboard shortcuts for tinder
+document.addEventListener('keydown',function(e){
+    if(!document.getElementById('v-selector').classList.contains('on'))return;
+    if(document.getElementById('modal').classList.contains('open'))return;
+    if(e.key==='ArrowLeft')tinderSwipe('no');
+    if(e.key==='ArrowRight')tinderSwipe('si');
+    if(e.key==='ArrowDown'||e.key==='ArrowUp')tinderSwipe('skip');
+});
 
 // Calendario
 function loadCalendario(){
