@@ -1,0 +1,33 @@
+{
+  "source_id": "hDt-7qCiQ5A",
+  "source_url": "https://www.youtube.com/watch?v=hDt-7qCiQ5A",
+  "title": "15 trucos para optimizar tokens en Claude Code — Agustín Medina",
+  "source_type": "video",
+  "summary": "15 trucos prácticos para no quedarse sin tokens de Claude Code. Los más importantes: 1) Usar /clear entre temas distintos — el 98.5% de tokens se gastan en releer historial. 2) Desconectar MCPs y skills que no uses (consumen 10%+ del contexto cada mensaje). 3) Agrupar prompts en un solo mensaje, no mandar muchos chiquitos. 4) Usar Plan Mode antes de ejecutar para que Claude planifique primero. 5) Ejecutar /context y /cost para ver qué consume tokens. 6) Compactar al 50-60% de capacidad, no esperar al autocompact del 95%. 7) Mantener CLAUDE.md por debajo de 200 líneas (se recarga en cada mensaje). 8) Usar @ para referenciar archivos específicos, no decir \"buscá en todo el repo\". 9) No alejarse más de 5 minutos sin compactar (el caché expira y el siguiente mensaje reprocesa todo). 10) Elegir modelo según tarea: Haiku para subagentes/tareas simples, Sonnet para la mayoría, Opus solo para planificación profunda (<20% del uso). 11) No abusar de subagentes (consumen 7-10x más tokens). 12) Observar a Claude trabajar y detenerlo si entra en bucle.",
+  "key_concepts": [
+    "/clear entre temas — 98.5% tokens se gastan en releer historial",
+    "Desconectar MCPs/skills no usados — ahorran 10%+ por mensaje",
+    "Agrupar prompts en 1 mensaje, no muchos chiquitos",
+    "Plan Mode antes de ejecutar — regla 90% confianza",
+    "/context y /cost para ver consumo real",
+    "Compactar al 50-60%, no esperar al 95%",
+    "CLAUDE.md < 200 líneas — se recarga en cada mensaje",
+    "@ para referenciar archivos específicos",
+    "Caché expira a los 5 minutos — compactar antes de pausas",
+    "Haiku para subagentes, Sonnet para mayoría, Opus <20%",
+    "Subagentes consumen 7-10x más tokens",
+    "Observar y detener si entra en bucle",
+    "No pegar archivos enteros — solo la parte con el error",
+    "Fork conversation si Claude se equivoca, no iterar sobre el error",
+    "Status line para visibilidad constante de consumo"
+  ],
+  "tags": [
+    "tokens",
+    "optimizacion",
+    "claude-code",
+    "costos",
+    "agustin-medina"
+  ],
+  "credibility_score": 4,
+  "learned_at": "2026-04-19T00:00:00"
+}
