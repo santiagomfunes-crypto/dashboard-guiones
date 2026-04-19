@@ -694,7 +694,7 @@ function doFilter(){
         if(fTipo!=='todos'&&((fTipo==='organico'&&tp!=='organico')||(fTipo==='ads'&&tp!=='ads')))return false;
         if(fAng!=='todos'&&(g.angulo||'')!==fAng)return false;
         if(fCat!=='todos'&&(g.tema||'')!==fCat)return false;
-        if(fQ){var h=[g.id,g.titulo,g.hook,g.texto,g.tema].filter(Boolean).join(' ').toLowerCase();if(h.indexOf(fQ)<0)return false;}
+        if(fQ){var h=[g.id,g.titulo,g.hook,g.texto,g.tema,g.semana].filter(Boolean).join(' ').toLowerCase();if(h.indexOf(fQ)<0)return false;}
         return true;
     });
 
@@ -1084,14 +1084,36 @@ function loadSesiones(){
             return;
         }
         el.innerHTML=sesiones.map(function(s){
-            var numGuiones=(s.guiones_ids||[]).length;
-            return '<div style="background:#fff;border:1px solid #E8E4DD;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">'+
-                '<div><strong style="font-size:12px">Sesion '+esc(s.fecha)+'</strong> <span style="font-size:11px;color:#999">· '+numGuiones+' guiones · '+esc(s.estado)+'</span>'+(s.notas?'<div style="font-size:10px;color:#777;margin-top:2px">'+esc(s.notas)+'</div>':'')+'</div>'+
+            var gIds=s.guiones_ids||[];
+            var numGuiones=gIds.length;
+            var guionesHtml='';
+            if(gIds.length&&allG.length){
+                guionesHtml='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;margin-top:10px">'+
+                gIds.map(function(gid){
+                    var g=allG.find(function(x){return x.id===gid;});
+                    if(!g) return '';
+                    var a=(g.angulo||'').toLowerCase();
+                    var c=ANG_C[a]||['#F0EFED','#999'];
+                    return '<div style="background:#F5F5F3;border:1px solid #E8E4DD;border-radius:6px;padding:10px;cursor:pointer" onclick="openModal(\''+esc(g.id)+'\')">'+
+                        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+                        '<span style="font-family:Cinzel,serif;font-size:12px;color:#8B6F3A">'+esc(g.id)+'</span>'+
+                        '<span class="badge" style="background:'+c[0]+';color:'+c[1]+'">'+esc(ANG[a]||a)+'</span></div>'+
+                        '<div style="font-weight:600;font-size:11px;margin-bottom:3px">'+esc(g.titulo)+'</div>'+
+                        '<div style="font-size:10px;color:#888;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc((g.hook||'').substring(0,80))+'</div>'+
+                        '</div>';
+                }).join('')+'</div>';
+            }
+            return '<div style="background:#fff;border:1px solid #E8E4DD;border-radius:10px;padding:14px;margin-bottom:10px">'+
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+                '<div><strong style="font-size:13px">Sesion '+esc(s.fecha)+'</strong> <span style="font-size:11px;color:#999">· '+numGuiones+' guiones · '+esc(s.estado)+'</span></div>'+
                 '<div style="display:flex;gap:6px">'+
                 (s.estado==='planificada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'filmada\')">Filmada</button>':'')+
                 (s.estado==='filmada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px" onclick="updateSesion(\''+s.id+'\',\'editada\')">Editada</button>':'')+
                 (s.estado==='editada'?'<button class="sesion-btn" style="font-size:9px;padding:5px 10px;background:#2D8C5A" onclick="programarSesion(\''+s.id+'\')">Programar</button>':'')+
-                '</div></div>';
+                '</div></div>'+
+                (s.notas?'<div style="font-size:10px;color:#777;margin-bottom:6px">'+esc(s.notas)+'</div>':'')+
+                guionesHtml+
+                '</div>';
         }).join('');
     });
 }
