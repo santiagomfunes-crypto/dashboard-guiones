@@ -3,6 +3,8 @@
 credentials.local
 node_modules/
 test.html
-supabase-migration.sql
+*.sql
 .DS_Store
-paperclip-backup-latest.sql
+feedback.json
+ideas.json
+paperclip-backup*

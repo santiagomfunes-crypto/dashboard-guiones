@@ -1,19 +1,59 @@
 # Guiones SFRE
 
-Dashboard con **124 guiones** para reels y TikTok de Santiago Funes Real Estate, más el framework, voz y datos para generar nuevos.
+Sistema de contenido para Santiago Funes Real Estate. Dashboard + agentes IA + base de datos en la nube.
 
-## Dónde vive qué
+## Arquitectura
 
-- **Dashboard con los 124 guiones:** [index.html](index.html) — single-file HTML con todos los guiones embebidos como array JS. Deployado en https://santiagomfunes-crypto.github.io/dashboard-guiones/ (remote `origin` = `santiagomfunes-crypto/dashboard-guiones`).
-- **Feedback e ideas:** [feedback.json](feedback.json), [ideas.json](ideas.json) — capturados desde el dashboard (requiere token de GitHub en ⚙️ para sincronizar, ver memoria del proyecto).
-- **Framework para generar nuevos:** [referencia/](referencia/) (voz, ángulos, datos Tandil), [contexto/](contexto/) (info negocio y personal).
-- **Comando `/guion`:** [guion.md](guion.md) + [guion-command.md](guion-command.md). Al correrlo, genera un guion nuevo usando el framework y lo guarda en [salidas/](salidas/).
+- **Dashboard**: [index.html](index.html) — single-file HTML deployado en GitHub Pages (`santiagomfunes-crypto.github.io/dashboard-guiones/`)
+- **Base de datos**: Supabase (tablas: guiones, variantes, newsletter, ideas, publicaciones, sesiones)
+- **Agentes IA**: Paperclip con 10 agentes (soul files en `paperclip-agents/`)
+- **Conocimiento**: `referencia/` (playbook, voz, datos, framework) + `youtube_brain/` (fuentes aprendidas)
 
-## Para agregar un guion nuevo al dashboard
+## Credenciales
 
-El dashboard embebe los guiones como array en [index.html](index.html) (buscar `const guiones = [`). Agregar al final del array con el mismo formato (id, tema, t, ang, hook, text) y pushear al remote.
+Viven en `.env` (gitignored) y en backup fuera del repo (`../backups/.env-guiones`). Supabase URL: `https://pgnmpxqljxrpnvexcygh.supabase.co`
 
-## Relacionado
+## Usuarios del dashboard
 
-- Cerebro del negocio: `~/Desktop/Claude/sfre-gestion/`
-- Otras herramientas: `~/Desktop/Claude/{tasador,propiedades,sf-pdf-generator}/` (por ahora; empezando a organizar todo bajo `~/Desktop/herramientas/inmobiliaria/`)
+- Santiago: santiagomfunes@gmail.com
+- Celina: celina.colombo15@gmail.com
+- Marcos: huergomarcos@gmail.com
+- Password: santiago (todos)
+
+## Estructura de carpetas
+
+```
+guiones/
+├── index.html              ← dashboard (GitHub Pages)
+├── supabase.min.js         ← SDK de Supabase (local, no CDN)
+├── .gitignore
+├── CLAUDE.md               ← este archivo
+├── PARA-MARCOS.md          ← resumen para Marcos
+├── contexto/               ← info del negocio y personal
+├── referencia/             ← playbook, voz, datos, framework
+├── paperclip-agents/       ← soul + heartbeat de cada agente
+└── youtube_brain/          ← sistema de aprendizaje de fuentes
+```
+
+## Agentes Paperclip (10 activos)
+
+| Agente | Qué hace | Frecuencia |
+|---|---|---|
+| Investigador | Busca tendencias del mercado | Cada 48h |
+| Escritor | Escribe guiones + variantes de hook | Cada 72h |
+| Publisher | Prepara briefings de publicación | Diario |
+| Brain | Aprende de videos/web | On-demand |
+| Analista | Analiza mix de contenido | Semanal |
+| Price Tracker | Rastrea precios m² Tandil/CABA | Semanal |
+| ROI Calculator | Calcula retorno de propiedades | On-demand |
+| Macro Analyst | Resumen macro semanal | Semanal |
+| SEO Writer | Convierte guiones en artículos | Semanal |
+| UX Designer | Mejora el dashboard | On-demand |
+
+## Backups
+
+SQL y credenciales en `~/Desktop/herramientas/inmobiliaria/backups/` (fuera del repo).
+
+## Para agregar un guion nuevo
+
+Los guiones viven en Supabase, no en el HTML. Se agregan desde el dashboard o los genera el Escritor automáticamente.
