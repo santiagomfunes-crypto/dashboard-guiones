@@ -1,0 +1,22 @@
+{
+  "source_id": "YsdQE6juGXY",
+  "source_url": "https://www.youtube.com/watch?v=YsdQE6juGXY",
+  "title": "Claude Code limits + 1M context optimization",
+  "source_type": "video",
+  "summary": "Análisis de problemas con límites de Claude Code y optimización del context window de 1M tokens. Contenido: Claude Code has not been great recently. Our team uses it every day and over the past few weeks, we've been running out of limits way faster than we should be. The 1 million token context window was supposed to make things better, but it's actually made it worse. This is why we went and researched optimizations we could find to make Claude Code last longer. Before we [snorts] move forward to how we can actually make the most out of the limits, let us first discuss how the plans and limits system",
+  "key_concepts": [
+    "Claude Code limits",
+    "1M context window",
+    "Token optimization",
+    "Running out of limits"
+  ],
+  "tags": [
+    "claude-code",
+    "tokens",
+    "optimizacion",
+    "limites",
+    "context-window"
+  ],
+  "credibility_score": 4,
+  "learned_at": "2026-04-19T00:00:00"
+}
