@@ -446,9 +446,33 @@
             <div class="guia-step">
                 <div class="guia-num">I</div>
                 <div class="guia-content">
-                    <strong>Ideas</strong>
-                    <p>Propone ideas para guiones nuevos. Pone el tema, el angulo y un detalle. Santiago y los agentes de IA las revisan y las convierten en guiones completos.</p>
+                    <strong>Ideas y Propuestas</strong>
+                    <p>Propone ideas nuevas o mejoras a guiones existentes. Santiago revisa y aprueba cada propuesta antes de que se aplique.</p>
                 </div>
+            </div>
+
+            <h2>Como usar Ideas (importante para Celina)</h2>
+            <p>La tab Ideas tiene dos usos:</p>
+
+            <div class="guia-step">
+                <div class="guia-num" style="background:#E8F0FD;color:#4A90D9">N</div>
+                <div class="guia-content">
+                    <strong>Idea nueva = un tema que NO existe como guion</strong>
+                    <p>Elegis tipo "Idea nueva", escribis el tema y explicas de que se trata en 2-3 oraciones. NO escribas el guion completo — solo la idea. Santiago la revisa, la aprueba, y se convierte en guion.</p>
+                    <p><strong>Ejemplo:</strong> "Tema: Cuanto cuesta vivir solo en Tandil. Detalle: Sumar gastos reales (expensas, servicios, internet, comida) para mostrar que es mas barato que CABA."</p>
+                </div>
+            </div>
+            <div class="guia-step">
+                <div class="guia-num" style="background:#FDF3E8;color:#D48A2C">M</div>
+                <div class="guia-content">
+                    <strong>Mejora = un guion que YA existe y queres mejorar</strong>
+                    <p>Elegis tipo "Mejora de guion existente", seleccionas el guion del dropdown, y en el detalle explicas QUE cambias y POR QUE. Se claro: "Propongo cambiar el hook por X porque tiene dato mas fresco" o "Agregar el dato de Chile como comparacion".</p>
+                    <p><strong>Ejemplo:</strong> "Guion: CR14. Detalle: Cambiar el hook a algo mas directo: 'La verdadera trampa es pagar un alquiler sin techo'. Agregar dato de Chile (UF hace 50 anos, 80% propietarios)."</p>
+                </div>
+            </div>
+
+            <div class="guia-tip">
+                <strong>Regla:</strong> NO escribas guiones completos en Ideas. Si queres proponer un guion entero, hacelo como "Idea nueva" con un resumen corto. Santiago lo aprueba y despues lo completa o pide que lo completen. Si ya existe un guion parecido, el sistema te avisa automaticamente.
             </div>
 
             <h2>Los 8 angulos de contenido</h2>
@@ -691,17 +715,32 @@
     <div class="view" id="v-ideas">
         <div class="ideas-view">
             <div class="idea-form">
-                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;margin-bottom:14px">Proponer Idea</div>
+                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;margin-bottom:4px">Proponer Idea o Mejora</div>
+                <div style="font-size:10px;color:#999;margin-bottom:14px">Usa esto para proponer un tema nuevo O para mejorar un guion que ya existe (nuevo hook, datos frescos, mejor cierre).</div>
+                <div class="fg">
+                    <label>Tipo de propuesta</label>
+                    <select id="i-tipo2" onchange="toggleIdeaTipo()">
+                        <option value="idea">Idea nueva (tema que no existe)</option>
+                        <option value="mejora">Mejora de guion existente</option>
+                    </select>
+                </div>
+                <div class="fg" id="i-guion-ref-wrap" style="display:none">
+                    <label>Guion que queres mejorar</label>
+                    <select id="i-guion-ref"><option value="">-- Busca el guion --</option></select>
+                    <div id="i-guion-preview" style="font-size:10px;color:#888;margin-top:4px"></div>
+                </div>
                 <div class="frow">
                     <div class="fg"><label>Autor</label><input id="i-aut2" value="Santiago"></div>
                     <div class="fg"><label>Angulo</label><select id="i-ang2"></select></div>
                 </div>
-                <div class="fg"><label>Tema</label><input id="i-tema2" placeholder="De que se trata?"></div>
-                <div class="fg"><label>Detalle</label><textarea id="i-det2" rows="3" placeholder="Describilo..."></textarea></div>
-                <button class="save-btn" style="width:100%" onclick="doSaveIdea2()">Enviar Idea</button>
+                <div class="fg"><label>Tema / Titulo</label><input id="i-tema2" placeholder="De que se trata?" oninput="checkIdeaDuplicado()"></div>
+                <div id="i-dup-warn" style="display:none;font-size:10px;color:#D48A2C;background:#FDF8E8;padding:8px 12px;border-radius:6px;margin-bottom:10px"></div>
+                <div class="fg"><label>Que propones (se claro)</label><textarea id="i-det2" rows="4" placeholder="Si es idea nueva: describila en 2-3 oraciones.&#10;Si es mejora: explica QUE cambias y POR QUE (ej: 'nuevo hook con dato de Chile', 'mejor cierre con CTA')."></textarea></div>
+                <button class="save-btn" style="width:100%" onclick="doSaveIdea2()">Enviar Propuesta</button>
                 <div class="m-msg" id="i-msg2"></div>
             </div>
-            <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:12px">Ideas propuestas</div>
+            <div style="font-family:'Cinzel',serif;font-size:14px;color:#8B6F3A;margin-bottom:6px">Propuestas</div>
+            <div style="font-size:10px;color:#999;margin-bottom:12px">Santiago aprueba o rechaza cada propuesta. Las aprobadas se convierten en guion o se aplican al guion existente.</div>
             <div id="ideas-list2"></div>
         </div>
     </div>
@@ -986,25 +1025,170 @@ function buildIdeasSelects(){
     var iA=document.getElementById('i-ang2');
     iA.innerHTML='<option value="">--</option>';
     for(var k in ANG)iA.innerHTML+='<option value="'+k+'">'+ANG[k]+'</option>';
+    // Build guion reference select
+    var gSel=document.getElementById('i-guion-ref');
+    gSel.innerHTML='<option value="">-- Elegir guion --</option>';
+    allG.forEach(function(g){
+        gSel.innerHTML+='<option value="'+esc(g.id)+'">'+esc(g.id)+' — '+esc((g.titulo||'').substring(0,50))+'</option>';
+    });
 }
+
+function toggleIdeaTipo(){
+    var tipo=document.getElementById('i-tipo2').value;
+    document.getElementById('i-guion-ref-wrap').style.display=tipo==='mejora'?'block':'none';
+}
+
+function checkIdeaDuplicado(){
+    var tema=document.getElementById('i-tema2').value.trim().toLowerCase();
+    var warn=document.getElementById('i-dup-warn');
+    if(tema.length<5){warn.style.display='none';return;}
+    var words=tema.split(/\s+/).filter(function(w){return w.length>3;});
+    var matches=allG.filter(function(g){
+        var t=(g.titulo||'').toLowerCase();
+        var matchCount=0;
+        words.forEach(function(w){if(t.indexOf(w)>=0)matchCount++;});
+        return matchCount>=2||(tema.length>10&&t.indexOf(tema.substring(0,10))>=0);
+    });
+    if(matches.length>0){
+        warn.style.display='block';
+        warn.innerHTML='<strong>Ojo:</strong> ya existen guiones parecidos: '+matches.map(function(g){
+            return '<strong>'+esc(g.id)+'</strong> "'+esc(g.titulo)+'"';
+        }).join(', ')+'. Si queres mejorar uno existente, cambia el tipo a "Mejora de guion existente".';
+    } else {
+        warn.style.display='none';
+    }
+}
+
 function loadIdeas2(){
     sb.from('ideas').select('*').order('created_at',{ascending:false}).then(function(res){
         var el=document.getElementById('ideas-list2'),ideas=res.data||[];
-        if(!ideas.length){el.innerHTML='<p style="color:#ccc;font-size:12px;text-align:center;padding:20px">No hay ideas propuestas todavia.</p>';return;}
+        if(!ideas.length){el.innerHTML='<p style="color:#ccc;font-size:12px;text-align:center;padding:20px">No hay propuestas todavia.</p>';return;}
         el.innerHTML=ideas.map(function(i){
             var a=ANG[(i.angulo||'').toLowerCase()]||'';
-            return '<div class="idea-card"><div class="idea-card-head"><span class="idea-card-tema">'+esc(i.tema)+'</span><span style="font-size:10px;color:#999">'+esc(i.autor||'')+(a?' · '+a:'')+'</span></div>'+(i.detalle?'<div class="idea-card-det">'+esc(i.detalle)+'</div>':'')+'</div>';
+            var tipo=i.tipo||'idea';
+            var tipoLabel=tipo==='mejora'?'MEJORA':'IDEA NUEVA';
+            var tipoColor=tipo==='mejora'?'#D48A2C':'#4A90D9';
+            var estadoLabel=(i.estado||'propuesta').toUpperCase();
+            var estadoColor=i.estado==='aprobada'?'#2D8C5A':i.estado==='rechazada'?'#C8453A':'#999';
+            var fecha=i.created_at?new Date(i.created_at).toLocaleDateString('es-AR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+
+            // If it's a mejora, show the original guion for comparison
+            var diffHtml='';
+            if(tipo==='mejora'&&i.guion_ref){
+                var orig=allG.find(function(g){return g.id===i.guion_ref;});
+                if(orig){
+                    diffHtml='<div style="background:#F5F5F3;border:1px solid #E8E4DD;border-radius:6px;padding:10px;margin:8px 0;font-size:10px">'+
+                        '<div style="font-weight:700;color:#8B6F3A;margin-bottom:4px">GUION ORIGINAL: '+esc(orig.id)+' — '+esc(orig.titulo)+'</div>'+
+                        '<div style="color:#888;font-style:italic;margin-bottom:6px">Hook: "'+esc((orig.hook||'').substring(0,120))+'..."</div>'+
+                        '<div style="border-top:1px dashed #E8E4DD;padding-top:6px;margin-top:6px;font-weight:700;color:#D48A2C">CAMBIOS PROPUESTOS POR '+esc(i.autor||'').toUpperCase()+':</div>'+
+                    '</div>';
+                }
+            }
+
+            // Auto-detect if detalle matches an existing guion (for old ideas without tipo)
+            var autoMatchHtml='';
+            if(tipo==='idea'&&!i.guion_ref){
+                var temaLow=(i.tema||'').toLowerCase();
+                var words=temaLow.split(/\s+/).filter(function(w){return w.length>3;});
+                var autoMatch=allG.filter(function(g){
+                    var t=(g.titulo||'').toLowerCase();
+                    var mc=0;words.forEach(function(w){if(t.indexOf(w)>=0)mc++;});
+                    return mc>=2;
+                });
+                if(autoMatch.length>0){
+                    autoMatchHtml='<div style="background:#FDE8E8;border:1px solid #C8453A44;border-radius:6px;padding:8px 10px;margin:6px 0;font-size:10px;color:#C8453A">'+
+                        '<strong>POSIBLE DUPLICADO</strong> — Ya existe: '+autoMatch.map(function(g){
+                            return '<strong>'+esc(g.id)+'</strong> "'+esc(g.titulo)+'"';
+                        }).join(', ')+
+                    '</div>';
+                }
+            }
+
+            // Approval buttons (only for propuesta status)
+            var btnHtml='';
+            if(i.estado==='propuesta'){
+                btnHtml='<div style="display:flex;gap:6px;margin-top:8px">'+
+                    '<button onclick="approveIdea(\''+i.id+'\',\'aprobada\')" style="padding:5px 12px;border-radius:6px;font-size:9px;font-weight:700;background:#E8F5EE;color:#2D8C5A;border:1px solid #2D8C5A44;cursor:pointer">Aprobar</button>'+
+                    '<button onclick="approveIdea(\''+i.id+'\',\'rechazada\')" style="padding:5px 12px;border-radius:6px;font-size:9px;font-weight:700;background:#FDE8E8;color:#C8453A;border:1px solid #C8453A44;cursor:pointer">Rechazar</button>'+
+                    (tipo!=='mejora'&&!i.guion_ref?'<button onclick="convertIdeaToGuion(\''+i.id+'\')" style="padding:5px 12px;border-radius:6px;font-size:9px;font-weight:700;background:#E8F0FD;color:#4A90D9;border:1px solid #4A90D944;cursor:pointer">Convertir en Guion</button>':'')+
+                '</div>';
+            }
+
+            return '<div class="idea-card" style="border-left:3px solid '+tipoColor+'">'+
+                '<div class="idea-card-head">'+
+                    '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+
+                        '<span style="font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:4px;background:'+tipoColor+'22;color:'+tipoColor+'">'+tipoLabel+'</span>'+
+                        '<span class="idea-card-tema">'+esc(i.tema)+'</span>'+
+                        (i.guion_ref?'<span style="font-size:9px;color:#8B6F3A;font-weight:600">ref: '+esc(i.guion_ref)+'</span>':'')+
+                    '</div>'+
+                    '<div style="display:flex;align-items:center;gap:8px">'+
+                        '<span style="font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:4px;color:'+estadoColor+';border:1px solid '+estadoColor+'44">'+estadoLabel+'</span>'+
+                        '<span style="font-size:10px;color:#999">'+esc(i.autor||'')+' · '+fecha+(a?' · '+a:'')+'</span>'+
+                    '</div>'+
+                '</div>'+
+                autoMatchHtml+
+                diffHtml+
+                (i.detalle?'<div class="idea-card-det" style="white-space:pre-wrap;max-height:200px;overflow-y:auto">'+esc(i.detalle)+'</div>':'')+
+                btnHtml+
+            '</div>';
         }).join('');
     });
 }
+
+function approveIdea(ideaId,estado){
+    sb.from('ideas').update({estado:estado}).eq('id',ideaId).then(function(res){
+        if(res.error){toast('Error',true);return;}
+        toast('Propuesta '+estado);
+        loadIdeas2();
+    });
+}
+
+function convertIdeaToGuion(ideaId){
+    sb.from('ideas').select('*').eq('id',ideaId).single().then(function(res){
+        if(res.error||!res.data){toast('Error',true);return;}
+        var idea=res.data;
+        var newId='IDEA-'+Date.now().toString(36).toUpperCase().substring(0,4);
+        sb.from('guiones').insert({
+            id:newId,
+            titulo:idea.tema||'Sin titulo',
+            angulo:idea.angulo||'prob',
+            tema:'Ideas',
+            hook:idea.detalle?(idea.detalle.split('\n')[0]||''):'',
+            texto:idea.detalle||'',
+            tipo:'organico',
+            status:'listo',
+            screen:'',caption_ig:'',caption_tk:'',fuentes:'',notas:'Convertido desde idea de '+idea.autor
+        }).then(function(r){
+            if(r.error){toast('Error: '+r.error.message,true);return;}
+            sb.from('ideas').update({estado:'aprobada'}).eq('id',ideaId);
+            toast('Guion '+newId+' creado desde idea');
+            loadGuiones();loadIdeas2();
+        });
+    });
+}
+
 function doSaveIdea2(){
     var tema=document.getElementById('i-tema2').value.trim(),msg=document.getElementById('i-msg2');
     if(!tema){msg.style.color='#C8453A';msg.textContent='Completa el tema.';return;}
+    var tipo=document.getElementById('i-tipo2').value;
+    var guionRef=tipo==='mejora'?document.getElementById('i-guion-ref').value:'';
+    if(tipo==='mejora'&&!guionRef){msg.style.color='#C8453A';msg.textContent='Selecciona el guion que queres mejorar.';return;}
+    var detalle=document.getElementById('i-det2').value.trim();
+    if(!detalle){msg.style.color='#C8453A';msg.textContent='Explica tu propuesta en el detalle.';return;}
     msg.textContent='';
-    sb.from('ideas').insert({autor:document.getElementById('i-aut2').value.trim()||'Anonimo',angulo:document.getElementById('i-ang2').value,tema:tema,detalle:document.getElementById('i-det2').value.trim(),estado:'propuesta'}).then(function(res){
+    sb.from('ideas').insert({
+        autor:document.getElementById('i-aut2').value.trim()||'Anonimo',
+        angulo:document.getElementById('i-ang2').value,
+        tema:tema,
+        detalle:detalle,
+        estado:'propuesta',
+        tipo:tipo,
+        guion_ref:guionRef
+    }).then(function(res){
         if(res.error){msg.style.color='#C8453A';msg.textContent='Error: '+res.error.message;return;}
         document.getElementById('i-tema2').value='';document.getElementById('i-det2').value='';
-        msg.style.color='#2D8C5A';msg.textContent='Enviada!';toast('Idea enviada');
+        document.getElementById('i-tipo2').value='idea';toggleIdeaTipo();
+        msg.style.color='#2D8C5A';msg.textContent='Propuesta enviada! Santiago la va a revisar.';toast('Propuesta enviada');
         setTimeout(function(){msg.textContent='';},3000);loadIdeas2();
     });
 }
