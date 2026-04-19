@@ -1,0 +1,35 @@
+{
+  "source_id": "I6-yIpzVWH0",
+  "source_url": "https://www.youtube.com/watch?v=I6-yIpzVWH0",
+  "title": "Claude Design + Claude Code: Crea aplicaciones completas con IA - Benja Cordero",
+  "source_type": "video",
+  "summary": "Benja Cordero presenta Claude Design, la nueva herramienta de Anthropic que integra en una sola plataforma lo que antes requerían seis herramientas separadas (Figma, Lovable, Bolt, Stitch, V0 y Canva). Funciona con el modelo Opus 4.7 y permite crear interfaces visuales completas de forma conversacional e interactiva. El flujo de trabajo recomendado es: 1) Disenar en Claude Design usando conversacion natural, donde la IA hace preguntas de clarificacion sobre estetica, paletas de colores y estructura; 2) Exportar el proyecto como ZIP o hacer un handoff directo a Claude Code; 3) En Claude Code, implementar la funcionalidad backend (APIs, autenticacion, pagos); 4) Deploy en Vercel o Netlify. Un feature clave es el Design System: se pueden subir brand assets (logos, fonts, guidelines) por empresa, y Claude Design respeta ese branding en todo lo que genera, util para disenadores que manejan multiples marcas. Benja demuestra el flujo completo creando una app de meditacion con una rana como mascota, conectandola a Eleven Labs para audio y Open Router para LLM, todo en minutos. Para produccion recomienda agregar autenticacion con Supabase y pagos con Stripe. Advierte que Claude Design genera frontend principalmente, y que el verdadero valor esta en aprender Claude Code para levantar aplicaciones funcionales completas. Tambien senala que al pasar de Design a Code, es importante que el README se genere correctamente para dar contexto al agente.",
+  "key_concepts": [
+    "Claude Design como reemplazo de Figma/Lovable/Bolt/Stitch/V0/Canva",
+    "Flujo: Claude Design (UI) -> Export/Handoff -> Claude Code (backend) -> Deploy",
+    "Design System para mantener branding consistente por empresa",
+    "Conversacion interactiva con preguntas de clarificacion de la IA",
+    "Edicion visual directa sobre el prototipo (draw/edit mode)",
+    "Handoff a Claude Code via comando con ID unico del proyecto",
+    "README auto-generado como puente de contexto entre Design y Code",
+    "Stack de produccion: Supabase (auth) + Stripe (pagos) + Vercel/Netlify (deploy)",
+    "Modelo Opus 4.7 como motor de ambas herramientas",
+    "One-shot implementation: prompt unico para generar apps completas"
+  ],
+  "tags": [
+    "claude-design",
+    "claude-code",
+    "prototipado-ia",
+    "diseno-ui",
+    "fullstack-ia",
+    "design-system",
+    "branding",
+    "eleven-labs",
+    "supabase",
+    "deploy",
+    "no-code",
+    "benja-cordero"
+  ],
+  "credibility_score": 5,
+  "learned_at": "2026-04-19T00:00:00"
+}
