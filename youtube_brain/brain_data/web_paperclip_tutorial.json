@@ -1,0 +1,24 @@
+{
+  "source_id": "HJ-dwefABss",
+  "source_url": "https://www.youtube.com/watch?v=HJ-dwefABss",
+  "title": "Paperclip + Claude Code: Setup completo de empresa con agentes IA",
+  "source_type": "video",
+  "summary": "Tutorial completo de cómo usar Paperclip para orquestar agentes IA como una empresa. Puntos clave: 1) Paperclip corre local en localhost:3100, se instala con npx paperclipai onboard. 2) Se crean 'empresas' con agentes que tienen roles (CEO, engineer, QA, marketer). 3) Cada agente tiene: instructions (soul=personalidad, heartbeat=checklist de wake-up, tools=herramientas). 4) Heartbeats: los agentes se despiertan cada 4/8/12h, leen tareas y trabajan autónomamente. 5) Issues/Tasks: el humano actúa como 'board' dando metas de alto nivel, no micromanageando. 6) Skills: se instalan desde skills.sh marketplace o GitHub repos. 7) Routines (beta): workflows recurrentes con schedule (ej: security check diario). 8) Secrets: variables de entorno para API keys. 9) Se pueden importar company templates pre-hechas desde el repo. 10) Recomendación del autor: crear un proyecto de Claude Code que entienda Paperclip (con el GitHub repo como contexto) para ayudar a configurar y optimizar. Esto es exactamente lo que necesitamos para SFRE.",
+  "key_concepts": [
+    "Board mindset: dar metas de alto nivel, no operar",
+    "Heartbeats: agentes se despiertan en schedule con contexto fresco",
+    "Soul file: personalidad y comportamiento del agente",
+    "Heartbeat file: checklist de ejecución al despertar",
+    "Tools file: herramientas disponibles para el agente",
+    "Skills marketplace (skills.sh) para instalar capacidades",
+    "Routines para workflows recurrentes (beta)",
+    "Secrets manager para API keys",
+    "Company templates pre-hechas importables",
+    "Claude Code project como partner para configurar Paperclip",
+    "Presupuesto por agente para controlar costos",
+    "Approval workflow: agentes piden permiso para contratar"
+  ],
+  "tags": ["paperclip", "agentes-ia", "orquestacion", "claude-code", "heartbeat", "skills", "automatizacion"],
+  "credibility_score": 4,
+  "learned_at": "2026-04-17T00:00:00"
+}

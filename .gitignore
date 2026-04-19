@@ -5,3 +5,4 @@ node_modules/
 test.html
 supabase-migration.sql
 .DS_Store
+paperclip-backup-latest.sql

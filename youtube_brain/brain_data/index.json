@@ -1,0 +1,32 @@
+{
+  "videos": [],
+  "web_sources": [
+    {
+      "source_id": "empre_ar_ivan",
+      "title": "Iván Briones: De la banca global al real estate argentino (EmpreAR)",
+      "type": "web",
+      "source_type": "podcast",
+      "tags": ["ivan-briones", "grupo-briones", "liderazgo", "banca", "real-estate", "cultura-equipo", "marca-personal"],
+      "credibility_score": 4,
+      "learned_at": "2026-04-17T00:00:00"
+    },
+    {
+      "source_id": "detras_puesto_metodo",
+      "title": "El Método Briones para testear contenido en TikTok (Detrás del Puesto)",
+      "type": "web",
+      "source_type": "artículo",
+      "tags": ["metodo-briones", "tiktok", "contenido", "leads", "tasa-finalizacion", "organico", "real-estate"],
+      "credibility_score": 4,
+      "learned_at": "2026-04-17T00:00:00"
+    },
+    {
+      "source_id": "infobae_beltran_mar2026",
+      "title": "Beltrán Briones: contactos, contenido y mercado 2026 (Infobae marzo 2026)",
+      "type": "web",
+      "source_type": "entrevista",
+      "tags": ["beltran-briones", "grupo-briones", "conversion", "marca-personal", "mercado-2026", "caba", "entrevista"],
+      "credibility_score": 5,
+      "learned_at": "2026-04-17T00:00:00"
+    }
+  ]
+}
