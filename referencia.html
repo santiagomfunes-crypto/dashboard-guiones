@@ -725,6 +725,194 @@
     }
     .pregunta-section-title:first-of-type { margin-top: 0; }
 
+    /* ===== MERCADO ===== */
+    .mercado-filters {
+      background: #fff;
+      border: 1px solid #E8E4DD;
+      border-radius: 8px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.8rem;
+    }
+    .mercado-filters .mf-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      color: var(--gold2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(139,111,58,0.2);
+    }
+    .mercado-filters .mf-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
+    }
+    .mercado-filters .mf-row:last-of-type { margin-bottom: 0; }
+    .mercado-filters label {
+      display: block;
+      font-size: 0.66rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+    .mercado-filters input,
+    .mercado-filters select {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #E8E4DD;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      background: #F5F5F3;
+      color: #1a1a2e;
+      outline: none;
+      font-family: inherit;
+    }
+    .mercado-filters input:focus,
+    .mercado-filters select:focus {
+      border-color: var(--gold);
+      background: #fff;
+    }
+    .mf-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .mf-count {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    /* Propiedad card */
+    .prop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .prop-card {
+      background: #fff;
+      border: 1px solid #E8E4DD;
+      border-radius: 8px;
+      padding: 1.2rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: border-color 0.2s;
+    }
+    .prop-card:hover { border-color: rgba(139,111,58,0.4); }
+    .prop-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .prop-precio {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--gold2);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .prop-precio.sin-precio {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .prop-badges {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .prop-badge {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.18em 0.6em;
+      border-radius: 4px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-tipo {
+      background: rgba(139,111,58,0.12);
+      color: var(--gold2);
+      border: 1px solid rgba(139,111,58,0.3);
+    }
+    .badge-fuente-ml {
+      background: rgba(255,186,0,0.12);
+      color: #b08000;
+      border: 1px solid rgba(255,186,0,0.3);
+    }
+    .badge-fuente-cdh {
+      background: rgba(74,144,217,0.12);
+      color: #3a7cbf;
+      border: 1px solid rgba(74,144,217,0.3);
+    }
+    .badge-op-venta { background: rgba(45,140,90,0.12); color: #2D8C5A; border: 1px solid rgba(45,140,90,0.3); }
+    .badge-op-alquiler { background: rgba(100,100,220,0.12); color: #5555cc; border: 1px solid rgba(100,100,220,0.3); }
+    .prop-titulo {
+      font-size: 0.88rem;
+      color: #1a1a2e;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .prop-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .prop-meta-item {
+      font-size: 0.75rem;
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 4px;
+      padding: 0.15em 0.5em;
+      color: #555;
+    }
+    .prop-zona {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .prop-link {
+      font-size: 0.72rem;
+      color: var(--gold2);
+      text-decoration: none;
+      margin-top: auto;
+      padding-top: 0.4rem;
+      border-top: 1px solid #E8E4DD;
+    }
+    .prop-link:hover { text-decoration: underline; }
+    .btn-load-more {
+      display: block;
+      width: 100%;
+      padding: 0.85rem;
+      background: transparent;
+      border: 1px solid rgba(139,111,58,0.4);
+      border-radius: 6px;
+      color: var(--gold2);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      margin-bottom: 2rem;
+    }
+    .btn-load-more:hover { background: rgba(139,111,58,0.08); }
+    .btn-load-more:disabled { opacity: 0.4; cursor: default; }
+
     /* ===== FOOTER ===== */
     footer {
       border-top: 1px solid #E8E4DD;
@@ -760,6 +948,7 @@
 <div class="tabs-bar">
   <ul>
     <li><button class="active" onclick="switchTab('demanda', this)">Demanda</button></li>
+    <li><button onclick="switchTab('mercado', this)">Mercado</button></li>
     <li><button onclick="switchTab('referencia', this)">Referencia</button></li>
   </ul>
 </div>
@@ -845,6 +1034,63 @@
     <div id="list-loading" class="loading-text">Cargando busquedas...</div>
     <div id="list-error" style="display:none; color:#e07060; font-size:0.85rem; margin-bottom:1rem;"></div>
     <div id="list-container"></div>
+
+  </div>
+</div>
+
+<!-- ===================== TAB: MERCADO ===================== -->
+<div id="view-mercado" class="view">
+  <div class="main-content">
+
+    <div class="mercado-filters">
+      <div class="mf-title">Buscar propiedades en mercado</div>
+      <div class="mf-row">
+        <div>
+          <label>Operacion</label>
+          <select id="mf-operacion">
+            <option value="venta" selected>Venta</option>
+            <option value="alquiler">Alquiler</option>
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipologia</label>
+          <select id="mf-tipologia">
+            <option value="">Todas</option>
+            <option value="departamento">Departamento</option>
+            <option value="casa">Casa</option>
+            <option value="ph">PH</option>
+            <option value="terreno">Terreno</option>
+            <option value="lote">Lote</option>
+            <option value="local">Local</option>
+            <option value="oficina">Oficina</option>
+          </select>
+        </div>
+        <div>
+          <label>Precio max (USD)</label>
+          <input type="number" id="mf-precio-max" placeholder="Ej: 100000" min="0" />
+        </div>
+        <div>
+          <label>Dormitorios min</label>
+          <input type="number" id="mf-dorms-min" placeholder="Ej: 2" min="0" max="10" />
+        </div>
+      </div>
+      <div class="mf-row" style="grid-template-columns: 1fr;">
+        <div>
+          <label>Buscar en zona / direccion</label>
+          <input type="text" id="mf-zona" placeholder="Ej: centro, sierras, pringles..." />
+        </div>
+      </div>
+      <div class="mf-actions">
+        <button class="btn-primary" id="btn-buscar-mercado" onclick="buscarMercado()">Buscar</button>
+        <span class="mf-count" id="mf-count"></span>
+      </div>
+    </div>
+
+    <div id="mf-loading" class="loading-text" style="display:none;">Consultando Supabase...</div>
+    <div id="mf-error" style="display:none; color:#e07060; font-size:0.85rem; margin-bottom:1rem;"></div>
+    <div id="mf-grid" class="prop-grid"></div>
+    <button class="btn-load-more" id="btn-load-more" style="display:none;" onclick="cargarMasMercado()">Cargar mas resultados</button>
 
   </div>
 </div>
@@ -1171,6 +1417,7 @@ function switchTab(tab, btn) {
   document.querySelectorAll('.tabs-bar button').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + tab).classList.add('active');
   btn.classList.add('active');
+  if (tab === 'mercado' && !mercadoCargado) buscarMercado();
 }
 
 // ===== FECHA =====
@@ -1500,6 +1747,152 @@ document.getElementById('modal-busqueda').addEventListener('click', function(e) 
     errorEl.textContent = 'Error al cargar reportes: ' + err.message;
   }
 })();
+
+// ===== MERCADO =====
+const MERCADO_PAGE_SIZE = 50;
+let mercadoOffset = 0;
+let mercadoTotal = 0;
+let mercadoCargado = false;
+
+function buildMercadoUrl(offset) {
+  const operacion = document.getElementById('mf-operacion').value;
+  const tipologia = document.getElementById('mf-tipologia').value;
+  const precioMax = document.getElementById('mf-precio-max').value;
+  const dormsMin = document.getElementById('mf-dorms-min').value;
+  const zonaText = document.getElementById('mf-zona').value.trim();
+
+  let params = 'select=titulo,precio_usd,tipologia,operacion,zona,dormitorios,metros_totales,url,fuente';
+  params += '&order=precio_usd.asc.nullslast';
+  params += '&limit=' + MERCADO_PAGE_SIZE;
+  params += '&offset=' + offset;
+
+  if (operacion) params += '&operacion=eq.' + encodeURIComponent(operacion);
+  if (tipologia) params += '&tipologia=eq.' + encodeURIComponent(tipologia);
+  if (precioMax) params += '&precio_usd=lte.' + parseInt(precioMax);
+  if (dormsMin) params += '&dormitorios=gte.' + parseInt(dormsMin);
+  if (zonaText) params += '&zona=ilike.*' + encodeURIComponent(zonaText) + '*';
+
+  return SUPABASE_URL + '/rest/v1/propiedades_mercado?' + params;
+}
+
+async function fetchMercado(offset, append) {
+  const loading = document.getElementById('mf-loading');
+  const errEl = document.getElementById('mf-error');
+  const grid = document.getElementById('mf-grid');
+  const btn = document.getElementById('btn-buscar-mercado');
+  const btnMore = document.getElementById('btn-load-more');
+  const countEl = document.getElementById('mf-count');
+
+  loading.style.display = 'block';
+  errEl.style.display = 'none';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(buildMercadoUrl(offset), {
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY,
+        'Prefer': 'count=exact'
+      }
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.statusText);
+
+    const total = parseInt(res.headers.get('content-range').split('/')[1]) || 0;
+    mercadoTotal = total;
+    const data = await res.json();
+
+    if (!append) grid.innerHTML = '';
+
+    if (data.length === 0 && !append) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9632;</div><p>No se encontraron propiedades con los filtros seleccionados.</p></div>';
+      countEl.textContent = '0 resultados';
+      btnMore.style.display = 'none';
+    } else {
+      data.forEach(function(p) { grid.appendChild(buildPropCard(p)); });
+      const cargados = offset + data.length;
+      countEl.textContent = cargados + ' de ' + total.toLocaleString('es-AR') + ' propiedad' + (total !== 1 ? 'es' : '');
+      if (cargados < total) {
+        btnMore.style.display = 'block';
+        btnMore.disabled = false;
+        btnMore.textContent = 'Cargar mas (' + (total - cargados).toLocaleString('es-AR') + ' restantes)';
+      } else {
+        btnMore.style.display = 'none';
+      }
+    }
+
+    mercadoOffset = offset + data.length;
+    mercadoCargado = true;
+
+  } catch(err) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Error al consultar el mercado: ' + err.message;
+  } finally {
+    loading.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
+function buscarMercado() {
+  mercadoOffset = 0;
+  fetchMercado(0, false);
+}
+
+function cargarMasMercado() {
+  document.getElementById('btn-load-more').disabled = true;
+  fetchMercado(mercadoOffset, true);
+}
+
+function buildPropCard(p) {
+  const card = document.createElement('div');
+  card.className = 'prop-card';
+
+  // Precio
+  let precioHtml;
+  if (p.precio_usd) {
+    precioHtml = '<div class="prop-precio">USD ' + Math.round(p.precio_usd).toLocaleString('es-AR') + '</div>';
+  } else {
+    precioHtml = '<div class="prop-precio sin-precio">Precio a consultar</div>';
+  }
+
+  // Badges
+  const fuenteClass = p.fuente === 'mercadolibre' ? 'badge-fuente-ml' : 'badge-fuente-cdh';
+  const fuenteLabel = p.fuente === 'mercadolibre' ? 'ML' : 'CDH';
+  const opClass = p.operacion === 'venta' ? 'badge-op-venta' : 'badge-op-alquiler';
+  const opLabel = p.operacion || '';
+  const tipoLabel = p.tipologia || '';
+
+  let badgesHtml = '<div class="prop-badges">';
+  if (tipoLabel) badgesHtml += '<span class="prop-badge badge-tipo">' + esc(tipoLabel) + '</span>';
+  if (opLabel)   badgesHtml += '<span class="prop-badge ' + opClass + '">' + esc(opLabel) + '</span>';
+  badgesHtml    += '<span class="prop-badge ' + fuenteClass + '">' + fuenteLabel + '</span>';
+  badgesHtml    += '</div>';
+
+  // Meta tags
+  let metaHtml = '<div class="prop-meta">';
+  if (p.metros_totales) metaHtml += '<span class="prop-meta-item">' + p.metros_totales + ' m²</span>';
+  if (p.dormitorios !== null && p.dormitorios !== undefined) {
+    metaHtml += '<span class="prop-meta-item">' + p.dormitorios + ' dorm.</span>';
+  }
+  metaHtml += '</div>';
+
+  // Zona
+  const zonaHtml = p.zona ? '<div class="prop-zona">' + esc(p.zona) + '</div>' : '';
+
+  // Link
+  const linkHtml = p.url
+    ? '<a class="prop-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">Ver en ' + fuenteLabel + ' &rarr;</a>'
+    : '';
+
+  card.innerHTML =
+    '<div class="prop-card-top">' + precioHtml + badgesHtml + '</div>' +
+    '<div class="prop-titulo">' + esc(p.titulo || 'Sin titulo') + '</div>' +
+    metaHtml +
+    zonaHtml +
+    linkHtml;
+
+  return card;
+}
 
 // ===== INIT =====
 cargarBusquedas();
