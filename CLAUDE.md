@@ -2,6 +2,25 @@
 
 Sistema de contenido para Santiago Funes Real Estate. Dashboard + agentes IA + base de datos en la nube.
 
+## REGLAS CRÍTICAS — LEER ANTES DE HACER CUALQUIER COSA
+
+### 1. TODO pasa por Paperclip. Sin excepción.
+- **NUNCA** lanzar Claude Code subagents directamente (Agent tool) para trabajo del negocio
+- El flujo es: Santiago habla → dispatcher (Claude) crea issue en Paperclip → CEO decide → agentes ejecutan
+- Paperclip corre en **http://localhost:3100** — verificar que esté corriendo antes de cualquier acción
+- Si no está corriendo: `cd /Users/santiagofunes/Desktop/herramientas/inmobiliaria/paperclip && pnpm dev`
+
+### 2. Crear issues en Paperclip así:
+```
+POST http://localhost:3100/api/companies/31b28a68-67c6-4c2a-bb17-c92474870551/issues
+{ "title": "...", "description": "...", "assigneeAgentId": "CEO_ID" }
+```
+CEO ID: `c0543ed4-2f1b-4f48-9014-422b6ebe911e`
+Despertar agente: `POST http://localhost:3100/api/agents/{id}/wake`
+
+### 3. IDs de agentes Paperclip
+CEO `c0543ed4` · Investigador `33ccac15` · Escritor `cc38b20a` · Analista `0128b9ab` · UX Designer `e38f08d1` · Macro Analyst `10936ff6` · Price Tracker `92b41890` · ROI Calculator `5a79f9aa` · SEO Writer `c40d6d8b` · Brain `1d118a87` · Auditor `1cac5dbe` · CMO `272499de`
+
 ## Arquitectura
 
 - **Dashboard**: [index.html](index.html) — single-file HTML deployado en GitHub Pages (`santiagomfunes-crypto.github.io/dashboard-guiones/`)
