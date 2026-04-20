@@ -1399,6 +1399,66 @@
   </div>
 </div>
 
+<!-- ===================== TAB: MERCADO ===================== -->
+<div id="view-mercado" class="view">
+  <div class="main-content">
+    <div class="form-panel">
+      <div class="form-panel-title">Buscar propiedades en el mercado</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Operacion</label>
+          <select id="m-op">
+            <option value="">Todas</option>
+            <option value="venta">Venta</option>
+            <option value="alquiler">Alquiler</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipologia</label>
+          <select id="m-tipo">
+            <option value="">Todas</option>
+            <option value="departamento">Departamento</option>
+            <option value="casa">Casa</option>
+            <option value="lote">Lote / Terreno</option>
+            <option value="ph">PH</option>
+            <option value="local">Local</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Precio max (USD)</label>
+          <input type="number" id="m-precio" placeholder="Ej: 100000" min="0" step="5000" />
+        </div>
+        <div class="form-group">
+          <label>Dormitorios min</label>
+          <select id="m-dorm">
+            <option value="">Cualquiera</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Fuente</label>
+          <select id="m-fuente">
+            <option value="">Todas</option>
+            <option value="casasdehoy">CasasDeHoy</option>
+            <option value="mercadolibre">MercadoLibre</option>
+          </select>
+        </div>
+        <div class="form-group" style="align-self:flex-end">
+          <button class="save-btn" onclick="buscarMercado()">Buscar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="m-stats" style="font-size:0.85rem;color:var(--muted);margin-bottom:0.75rem;"></div>
+    <div id="m-results"></div>
+    <div style="text-align:center;margin-top:1rem;">
+      <button id="m-mas" class="save-btn" style="display:none;background:var(--navy2)" onclick="cargarMas()">Cargar mas</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   Herramientas SFRE — CRM Demanda + Referencia — uso interno — Arquitecto SFRE
 </footer>
@@ -1896,6 +1956,88 @@ function buildPropCard(p) {
 
 // ===== INIT =====
 cargarBusquedas();
+
+// ===== MERCADO =====
+let mercadoOffset = 0;
+let mercadoTotal = 0;
+const MERCADO_PAGE = 50;
+
+async function buscarMercado() {
+  mercadoOffset = 0;
+  document.getElementById('m-results').innerHTML = '<p style="color:var(--muted);font-size:0.88rem;">Cargando...</p>';
+  document.getElementById('m-mas').style.display = 'none';
+  await _fetchMercado(true);
+}
+
+async function cargarMas() {
+  mercadoOffset += MERCADO_PAGE;
+  await _fetchMercado(false);
+}
+
+async function _fetchMercado(reset) {
+  const op = document.getElementById('m-op').value;
+  const tipo = document.getElementById('m-tipo').value;
+  const precio = document.getElementById('m-precio').value;
+  const dorm = document.getElementById('m-dorm').value;
+  const fuente = document.getElementById('m-fuente').value;
+
+  let url = SUPABASE_URL + '/rest/v1/propiedades_mercado?select=*&order=precio_usd.asc.nullslast';
+  if (op) url += '&operacion=eq.' + encodeURIComponent(op);
+  if (tipo) url += '&tipologia=eq.' + encodeURIComponent(tipo);
+  if (precio) url += '&precio_usd=lte.' + precio;
+  if (dorm) url += '&dormitorios=gte.' + dorm;
+  if (fuente) url += '&fuente=eq.' + encodeURIComponent(fuente);
+  url += '&limit=' + MERCADO_PAGE + '&offset=' + mercadoOffset;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY,
+        'Prefer': 'count=exact'
+      }
+    });
+    const total = parseInt((res.headers.get('content-range') || '0/0').split('/')[1]) || 0;
+    mercadoTotal = total;
+    const data = await res.json();
+
+    const statsEl = document.getElementById('m-stats');
+    statsEl.textContent = total + ' propiedades encontradas' + (fuente ? ' en ' + fuente : ' (ML + CasasDeHoy)');
+
+    const container = document.getElementById('m-results');
+    if (reset) container.innerHTML = '';
+
+    if (!data.length && reset) {
+      container.innerHTML = '<p style="color:var(--muted);font-size:0.88rem;">Sin resultados para esos filtros.</p>';
+      return;
+    }
+
+    data.forEach(p => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#fff;border-radius:8px;padding:1rem;margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;border:1px solid var(--cream2)';
+      const fuenteTag = p.fuente === 'casasdehoy' ? '<span style="background:#e8f0fd;color:#4A90D9;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600">CDH</span>'
+                                                   : '<span style="background:#fff8e8;color:#D48A2C;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600">ML</span>';
+      const precio_txt = p.precio_usd ? 'USD ' + p.precio_usd.toLocaleString('es-AR') : 'Consultar';
+      const detalles = [p.tipologia, p.m2 ? p.m2 + 'm²' : null, p.dormitorios ? p.dormitorios + 'd' : null, p.zona ? p.zona.substring(0,25) : null].filter(Boolean).join(' · ');
+      card.innerHTML =
+        '<div style="flex:1;min-width:0">' +
+          '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem">' + fuenteTag +
+            '<span style="font-weight:600;color:var(--gold)">' + precio_txt + '</span>' +
+          '</div>' +
+          '<div style="font-size:0.82rem;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(p.titulo || detalles) + '</div>' +
+          '<div style="font-size:0.78rem;color:var(--muted);margin-top:0.1rem">' + detalles + '</div>' +
+        '</div>' +
+        (p.url ? '<a href="' + p.url + '" target="_blank" style="white-space:nowrap;font-size:0.8rem;color:var(--gold);text-decoration:none;border:1px solid var(--gold);padding:4px 10px;border-radius:4px">Ver</a>' : '');
+      container.appendChild(card);
+    });
+
+    const masbtn = document.getElementById('m-mas');
+    masbtn.style.display = (mercadoOffset + MERCADO_PAGE < total) ? 'inline-block' : 'none';
+
+  } catch(e) {
+    document.getElementById('m-results').innerHTML = '<p style="color:red;font-size:0.88rem;">Error: ' + e.message + '</p>';
+  }
+}
 </script>
 
 </body>
