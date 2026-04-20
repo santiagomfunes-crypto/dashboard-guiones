@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web de Referencia — Santiago Funes RE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #1a1a2e;
+      --navy2: #16213e;
+      --navy3: #0f3460;
+      --gold:  #8B6F3A;
+      --gold2: #b08d4e;
+      --cream: #F5F5F3;
+      --cream2: #e8e8e4;
+      --muted: #9a9a96;
+      --red:   #c0392b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3, h4 {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+    h1 { font-size: clamp(1.6rem, 5vw, 2.6rem); color: var(--gold2); }
+    h2 { font-size: clamp(1.1rem, 3.5vw, 1.6rem); color: var(--gold2); margin-bottom: 1.2rem; }
+    h3 { font-size: clamp(0.95rem, 2.8vw, 1.15rem); color: var(--cream); margin-bottom: 0.6rem; }
+    h4 { font-size: 0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.4rem; }
+    p { margin-bottom: 0.9rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--cream); font-weight: 600; }
+    em { color: var(--gold2); font-style: italic; }
+
+    /* ===== LAYOUT ===== */
+    .site-header {
+      background: var(--navy2);
+      border-bottom: 1px solid rgba(139, 111, 58, 0.25);
+      padding: 1.2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .header-brand { display: flex; align-items: center; gap: 0.8rem; }
+    .header-brand span.label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .header-brand span.name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      color: var(--gold2);
+    }
+    .header-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* NAV */
+    nav {
+      background: var(--navy2);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow-x: auto;
+    }
+    nav ul {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      list-style: none;
+      gap: 0;
+      padding: 0 1rem;
+    }
+    nav ul li a {
+      display: block;
+      padding: 0.75rem 1rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    nav ul li a:hover {
+      color: var(--gold2);
+      border-bottom-color: var(--gold);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.2rem 4rem;
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      margin-bottom: 4rem;
+    }
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139,111,58,0.35), transparent);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--navy2);
+      border: 1px solid rgba(139,111,58,0.18);
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+    }
+    .card + .card { margin-top: 1rem; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ===== PILL / TAG ===== */
+    .tag {
+      display: inline-block;
+      background: rgba(139,111,58,0.15);
+      color: var(--gold2);
+      border: 1px solid rgba(139,111,58,0.3);
+      border-radius: 3px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.2em 0.6em;
+      margin: 0.2rem 0.2rem 0.2rem 0;
+    }
+
+    /* ===== TENSION BOX ===== */
+    .tension-box {
+      background: linear-gradient(135deg, rgba(139,111,58,0.12), rgba(15,52,96,0.5));
+      border: 1px solid rgba(139,111,58,0.4);
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .tension-box .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .tension-box p {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      color: var(--cream);
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    /* ===== PILLAR CARDS ===== */
+    .pillar-card {
+      background: var(--navy2);
+      border: 1px solid rgba(139,111,58,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 6px 6px 0;
+      padding: 1.2rem 1.4rem;
+    }
+    .pillar-card .pillar-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .pillar-card h3 { margin-bottom: 0.4rem; }
+    .pillar-card p { font-size: 0.88rem; color: var(--cream2); }
+
+    /* ===== NOs LIST ===== */
+    .no-item {
+      background: var(--navy2);
+      border: 1px solid rgba(192,57,43,0.25);
+      border-left: 3px solid var(--red);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.3rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .no-item + .no-item { margin-top: 0.75rem; }
+    .no-item .no-num {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: rgba(192,57,43,0.7);
+      min-width: 28px;
+      font-weight: 700;
+    }
+    .no-item .no-text { font-size: 0.92rem; color: var(--cream2); }
+    .no-item .no-text strong { color: var(--cream); }
+
+    /* ===== STAT BOXES ===== */
+    .stat-box {
+      background: var(--navy2);
+      border: 1px solid rgba(139,111,58,0.2);
+      border-radius: 6px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .stat-box .stat-value {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      color: var(--gold2);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .stat-box .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ===== DATA TABLE ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      display: block;
+    }
+    .data-table th {
+      background: rgba(139,111,58,0.15);
+      color: var(--gold2);
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(139,111,58,0.25);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--cream2);
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .highlight-row td { color: var(--gold2); font-weight: 500; }
+
+    /* ===== REPORTES ===== */
+    .reporte-card {
+      background: var(--navy2);
+      border: 1px solid rgba(139,111,58,0.18);
+      border-radius: 6px;
+      padding: 1.3rem 1.5rem;
+      margin-bottom: 0.9rem;
+    }
+    .reporte-card .reporte-meta {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+    }
+    .reporte-card .reporte-agente {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(139,111,58,0.15);
+      color: var(--gold2);
+      border: 1px solid rgba(139,111,58,0.3);
+      border-radius: 3px;
+      padding: 0.2em 0.6em;
+    }
+    .reporte-card .reporte-fecha {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .reporte-card .reporte-titulo {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+    .reporte-card .reporte-contenido {
+      font-size: 0.85rem;
+      color: var(--cream2);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #reportes-loading { color: var(--muted); font-size: 0.9rem; padding: 1rem 0; }
+    #reportes-error { color: var(--red); font-size: 0.85rem; padding: 0.5rem 0; }
+
+    /* ===== PREGUNTAS ===== */
+    .pregunta-item {
+      background: var(--navy2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 1rem 1.3rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .pregunta-item .q-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      color: var(--gold);
+      min-width: 36px;
+      padding-top: 0.1rem;
+    }
+    .pregunta-item .q-body { flex: 1; }
+    .pregunta-item .q-text {
+      font-size: 0.9rem;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+    .pregunta-item .q-why {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .pregunta-item .badge-sin {
+      display: inline-block;
+      background: rgba(192,57,43,0.15);
+      color: #e07060;
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 3px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.15em 0.5em;
+      margin-bottom: 0.4rem;
+    }
+
+    .pregunta-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      padding: 0.8rem 0 0.4rem;
+      border-bottom: 1px solid rgba(139,111,58,0.2);
+      margin-bottom: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .pregunta-section-title:first-of-type { margin-top: 0; }
+
+    /* ===== REFERENTES ===== */
+    .referente-card {
+      background: var(--navy2);
+      border: 1px solid rgba(139,111,58,0.18);
+      border-radius: 6px;
+      padding: 1.3rem 1.5rem;
+    }
+    .referente-card .referente-nombre {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--gold2);
+      margin-bottom: 0.3rem;
+    }
+    .referente-card .referente-handle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .referente-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    .referente-card ul li {
+      font-size: 0.86rem;
+      color: var(--cream2);
+      padding: 0.25rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .referente-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65rem;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* ===== ALERT BOX ===== */
+    .alert {
+      background: rgba(192,57,43,0.1);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 6px;
+      padding: 1rem 1.3rem;
+      font-size: 0.88rem;
+      color: #e07060;
+      margin-bottom: 1.2rem;
+    }
+    .alert strong { color: #e07060; }
+
+    /* ===== INFO BOX ===== */
+    .info-box {
+      background: rgba(139,111,58,0.08);
+      border: 1px solid rgba(139,111,58,0.25);
+      border-radius: 6px;
+      padding: 1rem 1.3rem;
+      font-size: 0.86rem;
+      color: var(--cream2);
+      margin-bottom: 1.5rem;
+    }
+    .info-box strong { color: var(--gold2); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid rgba(139,111,58,0.15);
+      padding: 1.5rem 1.2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      nav ul li a { padding: 0.6rem 0.7rem; font-size: 0.68rem; }
+      .card { padding: 1rem 1.1rem; }
+      .no-item { flex-direction: row; gap: 0.7rem; }
+      .pregunta-item { flex-direction: column; gap: 0.3rem; }
+      .pregunta-item .q-num { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="label">SFRE</span>
+      <span class="name">Web de Referencia</span>
+    </div>
+    <span class="header-date" id="js-fecha">Cargando...</span>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#avatar">Avatar</a></li>
+    <li><a href="#nos">NOs</a></li>
+    <li><a href="#mercado">Mercado</a></li>
+    <li><a href="#reportes">Reportes</a></li>
+    <li><a href="#preguntas">Preguntas</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ========== SECCIÓN 1: AVATAR ========== -->
+  <section id="avatar">
+    <h2>Avatar y Posicionamiento</h2>
+    <div class="section-divider"></div>
+
+    <div class="tension-box">
+      <div class="label">Tension creativa central</div>
+      <p>"22 anos y sabe mas que el agente de 50 que lleva decadas en el sector."</p>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <h3>El personaje: el agente que no actua como agente</h3>
+      <p>Santiago Funes en camara no es un vendedor, no es un motivador, no es un guru de inversiones. Es <strong>el tipo que sabe mas de lo que aparenta</strong> y que te lo dice aunque no le convenga.</p>
+      <p>Tiene 22 anos pero habla como alguien que lleva 10 anos mirando datos. No vende el sueno de "hacete millonario". Te dice: <em>"aca los numeros, vos decis"</em>. Eso es exactamente lo que nadie en el sector hace — y por eso funciona.</p>
+      <p style="margin-bottom:0;"><strong>El arquetipo:</strong> el experto local que no necesita impresionarte. Tiene datos de Tandil que nadie mas tiene, y los comparte sin agenda comercial aparente.</p>
+    </div>
+
+    <div class="info-box">
+      <strong>Diferencia clave:</strong> Los demas agentes muestran propiedades, hablan de "el mercado en general" sin datos propios, o comparten frases motivacionales. Santiago hace lo contrario: habla de conceptos y datos, habla de Tandil con datos que el mismo recopila, y habla de errores, contexto economico real y decisiones con consecuencias.
+    </div>
+
+    <h3 style="margin-bottom:1rem; margin-top:1.5rem;">Los 5 Pilares de Contenido</h3>
+    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+
+      <div class="pillar-card">
+        <div class="pillar-number">Pilar 01</div>
+        <h3>Real Estate en Tandil — datos locales</h3>
+        <p>El analisis de mercado que nadie hace: precio del m² por zona, rentabilidad de alquiler, proyeccion de precios, comparacion con otras ciudades. Nucleo del diferencial — nadie mas puede hacerlo.</p>
+        <div style="margin-top:0.5rem;">
+          <span class="tag">Educativo</span><span class="tag">Diferencial maximo</span><span class="tag">Datos propios</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">Pilar 02</div>
+        <h3>Finanzas personales para los 20-30 anos</h3>
+        <p>Como pensar el dinero cuando sos joven en Argentina: que hacer con el primer sueldo, como ahorrar en pesos que se destruyen, cuando tiene sentido apuntar a una propiedad. Construye audiencia masiva — no todos van a comprar en Tandil, pero todos tienen la misma angustia financiera.</p>
+        <div style="margin-top:0.5rem;">
+          <span class="tag">Top of funnel</span><span class="tag">Alcance masivo</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">Pilar 03</div>
+        <h3>El proceso real de comprar una propiedad</h3>
+        <p>La educacion de proceso que el sector oculta: que pasa en una escritura, que es un boleto de compraventa, que preguntas hacerle al agente que nadie hace, como detectar si te estan vendiendo humo. Construye la autoridad de "aliado del comprador".</p>
+        <div style="margin-top:0.5rem;">
+          <span class="tag">Autoridad</span><span class="tag">Confianza</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">Pilar 04</div>
+        <h3>Mentalidad e historia personal</h3>
+        <p>Los momentos reales: errores, clientes dificiles, lo que aprendio a los 21 que la mayoria aprende a los 40. Humaniza y conecta — transforma al experto en persona. Es el contrapeso necesario para los pilares tecnicos.</p>
+        <div style="margin-top:0.5rem;">
+          <span class="tag">Humanizacion</span><span class="tag">Conexion</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">Pilar 05</div>
+        <h3>Argentina y el contexto macro</h3>
+        <p>Como afecta la economia argentina al que quiere invertir: dolar, cepo, inflacion, tasas, credito hipotecario. Puente entre finanzas generales y real estate especifico. Flujo infinito de temas en Argentina convulsionada.</p>
+        <div style="margin-top:0.5rem;">
+          <span class="tag">Actualidad</span><span class="tag">Contexto</span>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 style="margin-bottom:1rem; margin-top:2rem;">Referentes del Ecosistema</h3>
+    <div class="grid-2" style="gap:1rem;">
+
+      <div class="referente-card">
+        <div class="referente-nombre">Beltran Briones</div>
+        <div class="referente-handle">Director Financiero Grupo Briones — 700K+ seguidores</div>
+        <ul>
+          <li>90% contenido educativo, 10% comercial</li>
+          <li>3.000-4.000 consultas/semana organico</li>
+          <li>Formula de los 200 videos: publicar mucho, identificar los 13 que funcionan</li>
+          <li>Analisis obsesivo de metricas — "las redes son estadistica"</li>
+          <li>Provocacion estrategica para generar debate y alcance</li>
+        </ul>
+      </div>
+
+      <div class="referente-card">
+        <div class="referente-nombre">Fran Castro</div>
+        <div class="referente-handle">@fraancastro_ — Co-fundador ROMS — "Rey del Algoritmo"</div>
+        <ul>
+          <li>Sistema de Omnipresencia: todas las plataformas desde el dia 1</li>
+          <li>Testing sistematico: variaciones de hooks antes de apostar todo</li>
+          <li>Cuentas satelite para probar sin arriesgar cuenta principal</li>
+          <li>Trial Reels: publicar en modo prueba antes de distribuir</li>
+          <li>Organico primero — no pagar ads hasta que el organico demuestre que convierte</li>
+        </ul>
+      </div>
+
+      <div class="referente-card">
+        <div class="referente-nombre">Luciano Fornero</div>
+        <div class="referente-handle">@el.inversor.ab — Interior Argentina — 250K+ seguidores</div>
+        <ul>
+          <li>Construyo audiencia nacional desde ciudad de 20.000 hab (San Jorge, Santa Fe)</li>
+          <li>La geografía del interior como activo, no como limitacion</li>
+          <li>100% educativo — credibilidad tecnica como eje</li>
+          <li>Prueba de que no necesitas estar en CABA para ser referente</li>
+        </ul>
+      </div>
+
+      <div class="referente-card">
+        <div class="referente-nombre">Lara Lopez Calvo</div>
+        <div class="referente-handle">@laralopezcalvo — 871K IG / 358K TikTok — Economista UBA</div>
+        <ul>
+          <li>Actualidad economica + herramientas practicas + tono directo</li>
+          <li>Traduce lo difícil en lenguaje cotidiano</li>
+          <li>Modelo: redes primero, medios despues</li>
+          <li>Podcast como extension para comunidad comprometida</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <h4>La mentalidad clave</h4>
+      <p style="font-size:1rem; color:var(--cream); font-weight:500; margin-bottom:0;"><em>"No sos un agente que hace contenido. Sos un creador que vende propiedades."</em></p>
+    </div>
+
+  </section>
+
+  <!-- ========== SECCIÓN 2: NOs DE COMUNICACIÓN ========== -->
+  <section id="nos">
+    <h2>NOs de Comunicacion</h2>
+    <div class="section-divider"></div>
+
+    <div class="info-box">
+      <strong>8 reglas validadas — aplicar en todo el contenido.</strong> Lo que no haces define tu posicionamiento tanto como lo que si haces.
+    </div>
+
+    <div class="no-item">
+      <div class="no-num">1</div>
+      <div class="no-text"><strong>No "miren lo que logre"</strong> — cero pibe rico, cero flex innecesario. Mostrar resultados esta bien; lucirlos sin proposito educativo, no.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">2</div>
+      <div class="no-text"><strong>No "vos podes"</strong> — cero motivacion vacia sin sustento real. El buen contenido da herramientas concretas, no frases de almanaque.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">3</div>
+      <div class="no-text"><strong>No corregir publicamente</strong> a colegas ni a clientes. La critica directa a personas cierra puertas y genera drama innecesario.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">4</div>
+      <div class="no-text"><strong>No tips genericos</strong> que cualquiera encuentra en Google. Solo contenido que requiere conocer Tandil o conocer a Santiago personalmente.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">5</div>
+      <div class="no-text"><strong>No pedir engagement</strong> ("comentá", "comparti", "guarda") — el buen contenido lo genera solo. Pedirlo lo hace parecer debil.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">6</div>
+      <div class="no-text"><strong>No traje en camara</strong> — cercania sobre formalidad. El sector ya tiene suficientes agentes con traje. Esa no es la diferencia.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">7</div>
+      <div class="no-text"><strong>No exagerar numeros propios</strong> — si el dato es chico, es chico y es honesto. La credibilidad a largo plazo vale mas que la impresion de corto plazo.</div>
+    </div>
+    <div class="no-item">
+      <div class="no-num">8</div>
+      <div class="no-text"><strong>No hablar de temas que no dominas como si los dominaras</strong> — la honestidad sobre los limites genera mas confianza que pretender saber todo.</div>
+    </div>
+
+  </section>
+
+  <!-- ========== SECCIÓN 3: MERCADO ========== -->
+  <section id="mercado">
+    <h2>Datos de Mercado</h2>
+    <div class="section-divider"></div>
+
+    <div class="alert">
+      ALERTA: El costo de construccion subio +118% en USD desde oct 2023. NO decir que los materiales estan mas baratos — es falso.
+    </div>
+
+    <!-- TANDIL -->
+    <h3 style="color:var(--gold2); margin-bottom:1.2rem;">Tandil — Datos Actualizados</h3>
+
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="stat-box">
+        <span class="stat-value">150.162</span>
+        <span class="stat-label">Habitantes (Censo 2022)</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">+20,5%</span>
+        <span class="stat-label">Crecimiento intercensal (vs 14,8% nacional)</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">5,8</span>
+        <span class="stat-label">Personas nuevas por dia</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">1.000</span>
+        <span class="stat-label">Portenos/año que eligen Tandil</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">90%</span>
+        <span class="stat-label">Ocupacion hotelera Semana Santa 2026</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">6</span>
+        <span class="stat-label">Edificios Estudio Pascua en construccion</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.2rem;">
+      <h4>Precios por tipologia — Tandil (Marzo 2026)</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Tipologia</th>
+            <th>Precio (USD)</th>
+            <th>Referencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td>M² promedio portales (todo tipo)</td>
+            <td>~USD 1.200</td>
+            <td>Zonaprop / Enfoque de Negocios</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>M² rango real mercado activo</td>
+            <td>USD 2.000–2.600</td>
+            <td>Dato Santiago, mar 2026</td>
+          </tr>
+          <tr>
+            <td>M² zona centro / Cuatro Avenidas (premium)</td>
+            <td>+USD 3.000</td>
+            <td>Enfoque de Negocios</td>
+          </tr>
+          <tr>
+            <td>M² edificios Estudio Pascua (promedio)</td>
+            <td>~USD 2.200</td>
+            <td>Dato Santiago</td>
+          </tr>
+          <tr>
+            <td>M² casas zona sierras</td>
+            <td>USD 2.000–3.700</td>
+            <td>lu22.com.ar</td>
+          </tr>
+          <tr>
+            <td>Depto 2 amb funcional 45m²</td>
+            <td>~USD 50.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Depto 2 amb gama media</td>
+            <td>USD 60.000–80.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Depto 2 amb gama alta</td>
+            <td>USD 100.000–130.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Depto 3 amb gama media</td>
+            <td>USD 120.000–150.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Casa 3 amb 80m² semicentrica</td>
+            <td>~USD 100.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Lotes</td>
+            <td>USD 17.000–200.000</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Alquiler 2 amb</td>
+            <td>desde $400.000/mes</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Alquiler 3 amb</td>
+            <td>desde $600.000/mes</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <h4>Por que Tandil crece — Fundamentals</h4>
+      <div class="grid-2">
+        <div>
+          <p style="font-size:0.88rem;"><strong>Universidad:</strong> UNICEN — motor de demanda de alquiler permanente.</p>
+          <p style="font-size:0.88rem;"><strong>Tecnologia:</strong> Cluster Tecnologico Tandil (ex CEPIT, jul 2024) + Globant + 72 empresas en Parque Industrial.</p>
+          <p style="font-size:0.88rem;"><strong>Turismo:</strong> destino mas elegido de Buenos Aires en Semana Santa 2026. 30.000 visitantes en 4 dias (2025). Gasto promedio $271.529 por turista.</p>
+        </div>
+        <div>
+          <p style="font-size:0.88rem;"><strong>Calidad de vida:</strong> CONICET la ubica entre las mejores ciudades intermedias del pais (junto a Bariloche, Ushuaia, Carlos Paz).</p>
+          <p style="font-size:0.88rem;"><strong>Demanda extralocal:</strong> los que compran no son tanto los locales — son de Olavarria, Azul, Rauch y Buenos Aires.</p>
+          <p style="font-size:0.88rem;"><strong>Construccion activa:</strong> 37 proyectos solo en Av. Avellaneda. +10.000 viviendas en 5 años y no alcanzan la demanda.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARACION CIUDADES -->
+    <h3 style="color:var(--gold2); margin-bottom:1rem; margin-top:2rem;">Comparacion con Otras Ciudades</h3>
+    <div class="card" style="margin-bottom:1.5rem;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ciudad</th>
+            <th>USD/m² promedio</th>
+            <th>Var. interanual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CABA</td>
+            <td>USD 2.450–2.455</td>
+            <td>+5,4%</td>
+          </tr>
+          <tr>
+            <td>GBA Norte</td>
+            <td>USD 2.369</td>
+            <td>+6,6%</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Tandil (rango real)</td>
+            <td>USD 2.000–2.600</td>
+            <td>s/d</td>
+          </tr>
+          <tr>
+            <td>Rosario (centro)</td>
+            <td>USD 1.755–1.949</td>
+            <td>+8,6–14,1%</td>
+          </tr>
+          <tr>
+            <td>GBA Oeste/Sur</td>
+            <td>USD 1.638</td>
+            <td>+2,1%</td>
+          </tr>
+          <tr>
+            <td>Cordoba Capital</td>
+            <td>USD 1.443</td>
+            <td>+12,4%</td>
+          </tr>
+          <tr>
+            <td>Mendoza</td>
+            <td>~USD 1.600</td>
+            <td>+18% (est 2025)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem; color:var(--muted); margin-top:0.8rem; margin-bottom:0;">Tandil opera a precios similares o superiores a Rosario en segmentos nuevos. Muy por encima de Cordoba y Mendoza. Fuentes: Ambito ene 2026 / Benoit Properties 2026.</p>
+    </div>
+
+    <!-- MACRO ARGENTINA -->
+    <h3 style="color:var(--gold2); margin-bottom:1rem; margin-top:2rem;">Argentina Macro — Estado del Mercado</h3>
+
+    <div class="grid-2" style="margin-bottom:1.2rem;">
+      <div class="card">
+        <h4>2025 — Año de Consolidacion</h4>
+        <p style="font-size:0.88rem;">Escrituras CABA 2025: <strong>record historico ~68.000-69.000</strong> (mejor desde ~2007). Precios usados: <strong>+5–11% interanual</strong> en dolares. Viviendas en pozo: <strong>+10–15%</strong> segun barrio. 20% de escrituras con financiamiento bancario — nivel mas alto desde 2018.</p>
+      </div>
+      <div class="card">
+        <h4>2026 — Moderacion Post-Boom</h4>
+        <p style="font-size:0.88rem;">CABA ene 2026: -6,1% vs ene 2025 (pero 2025 fue excepcional). Feb 2026: -16,9%. Sin embargo, febrero 2026 fue el <strong>mejor febrero desde 2008</strong> sacando 2025. Precios estables: +0,4% Q1 2026.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.2rem;">
+      <h4>Rentabilidad — Comparacion de Activos 2025 (en USD)</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Activo</th>
+            <th>Rendimiento 2025</th>
+            <th>Notas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td>Propiedades CABA — apreciacion capital</td>
+            <td>+5–11% anual</td>
+            <td>En USD</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Alquiler tradicional CABA</td>
+            <td>5,47–5,62% bruto</td>
+            <td>Renta corriente</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>Alquiler temporario (Recoleta)</td>
+            <td>8,4% bruto / 6,8% neto</td>
+            <td>Gestion activa</td>
+          </tr>
+          <tr>
+            <td>Dolar blue</td>
+            <td>-10,3% real</td>
+            <td>Perdio vs inflacion</td>
+          </tr>
+          <tr>
+            <td>Plazo fijo UVA</td>
+            <td>≈ inflacion</td>
+            <td>Cubrió poder adquisitivo</td>
+          </tr>
+          <tr>
+            <td>S&amp;P Merval</td>
+            <td>-6,8% en USD</td>
+            <td>Cayo en dolares</td>
+          </tr>
+          <tr>
+            <td>Bonos soberanos</td>
+            <td>+11–13% en USD</td>
+            <td>Riesgo soberano alto</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.78rem; color:var(--muted); margin-top:0.8rem; margin-bottom:0;"><strong>Conclusion:</strong> Propiedades ofrecen doble ganancia: renta corriente (5–8% bruto) + apreciacion de capital (+5–11% en USD). Combinadas, pueden superar 13–20% anual en dolares en escenario de recuperacion.</p>
+    </div>
+
+    <!-- CREDITO UVA -->
+    <h3 style="color:var(--gold2); margin-bottom:1rem; margin-top:2rem;">Credito Hipotecario UVA (Tasas Abril 2026)</h3>
+    <div class="card" style="margin-bottom:1rem;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Banco</th>
+            <th>Tasa con cuenta sueldo</th>
+            <th>Sin cuenta sueldo</th>
+            <th>Max. financiacion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td>Banco Nacion</td>
+            <td>4,5–6% + UVA</td>
+            <td>8%</td>
+            <td>75%</td>
+          </tr>
+          <tr>
+            <td>Banco Ciudad</td>
+            <td>7,5% + UVA</td>
+            <td>12,5%</td>
+            <td>75%</td>
+          </tr>
+          <tr>
+            <td>BBVA</td>
+            <td>7,5% + UVA</td>
+            <td>17%</td>
+            <td>80%</td>
+          </tr>
+          <tr>
+            <td>Santander</td>
+            <td>12%</td>
+            <td>—</td>
+            <td>variable</td>
+          </tr>
+          <tr>
+            <td>Banco Hipotecario</td>
+            <td>12,5% + UVA</td>
+            <td>—</td>
+            <td>80%</td>
+          </tr>
+          <tr>
+            <td>Banco Macro</td>
+            <td>11,5% en USD</td>
+            <td>—</td>
+            <td>5 años, max USD 1M</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>Cuotas ejemplo — Depto USD 100.000 / 20 años</h4>
+        <p style="font-size:0.88rem;">Banco Nacion (6%): <strong>~$716.431/mes</strong></p>
+        <p style="font-size:0.88rem;">Banco privado (9,5%): <strong>~$933.054/mes</strong></p>
+        <p style="font-size:0.88rem; margin-bottom:0;">Alquiler 2 amb (referencia): <strong>~$814.660/mes</strong></p>
+      </div>
+      <div class="card">
+        <h4>Requisitos minimos</h4>
+        <p style="font-size:0.88rem;">Anticipo: <strong>20–30%</strong> del valor en USD</p>
+        <p style="font-size:0.88rem;">Ingreso minimo Banco Nacion: <strong>$2.036.589/mes</strong> netos</p>
+        <p style="font-size:0.88rem;">Cuota max: <strong>25%</strong> del ingreso neto familiar</p>
+        <p style="font-size:0.88rem; margin-bottom:0;">Monotributistas: <strong>2 años</strong> de antigüedad</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ========== SECCIÓN 4: REPORTES ========== -->
+  <section id="reportes">
+    <h2>Reportes de Agentes</h2>
+    <div class="section-divider"></div>
+
+    <div class="info-box">
+      Ultimas 5 entradas de la tabla <strong>reportes</strong> en Supabase — lectura en vivo.
+    </div>
+
+    <div id="reportes-loading">Cargando reportes...</div>
+    <div id="reportes-error" style="display:none;"></div>
+    <div id="reportes-container"></div>
+
+  </section>
+
+  <!-- ========== SECCIÓN 5: PREGUNTAS ========== -->
+  <section id="preguntas">
+    <h2>Preguntas de Posicionamiento — Sin Responder</h2>
+    <div class="section-divider"></div>
+
+    <div class="alert">
+      <strong>Estado critico:</strong> 52 preguntas en el banco. Ninguna tiene respuesta todavia. El Escritor no puede trabajar con voz autentica hasta que Santiago responda al menos 10-15.
+    </div>
+
+    <!-- ORIGEN -->
+    <div class="pregunta-section-title">Origen (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">01</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que estaba pasando en tu vida exactamente cuando decidiste meterte en el real estate? ¿Que momento fue?</div>
+        <div class="q-why">El origen real (no la version pulida) es el gancho emocional mas fuerte para la audiencia en su misma encrucijada.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">02</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Por que Tandil y no Buenos Aires, donde esta el volumen, los precios mas altos, los clientes mas grandes?</div>
+        <div class="q-why">Defender una decision "contraintuitiva" construye autoridad y diferencia.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">03</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que te dijeron tus amigos, tu familia, o las personas cercanas cuando les contaste que ibas a ser agente inmobiliario a los 20 años?</div>
+        <div class="q-why">Las reacciones ajenas reflejan los prejuicios del mercado — crea contenido de contraste muy potente.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">04</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cual fue la primera operacion que cerraste? ¿Que sentiste cuando firmaste ese boleto?</div>
+        <div class="q-why">Las primeras victorias son el espejo para audiencias que todavia no empezaron.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">05</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Si pudieras hablar con vos mismo el dia antes de arrancar, ¿que te dirias y que NO te dirias?</div>
+        <div class="q-why">Retroalimentacion honesta con el pasado = credibilidad y sabiduria sin sonar condescendiente.</div>
+      </div>
+    </div>
+
+    <!-- DINERO -->
+    <div class="pregunta-section-title">Dinero y Creencias Financieras (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">06</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Como era la relacion con el dinero en tu casa cuando eras chico? ¿Se hablaba de plata, se escondia, se peleaba por eso?</div>
+        <div class="q-why">La programacion financiera de infancia genera identificacion profunda.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">07</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cuanto ganaste en tu primer mes trabajando en real estate? ¿Que hiciste con esa plata?</div>
+        <div class="q-why">Numeros reales (aunque sean chicos) rompen el glamour artificial del sector y generan confianza brutal.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">08</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que pensas de la gente que dice "el dinero no da la felicidad"? ¿Lo crees, lo rechazas, o es mas complejo?</div>
+        <div class="q-why">Una postura clara sobre dinero define el perfil ideologico de la marca — filtra a la audiencia correcta.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">09</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Si hoy tuvieras un millon de dolares en la mano, ¿que harias con ellos exactamente? ¿En que orden?</div>
+        <div class="q-why">Revela el modelo mental de inversion real de Santiago — su postura sobre propiedades, liquidez y riesgo.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">10</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cual fue el momento en que entendiste que el dinero es una herramienta y no un fin? ¿O todavia no lo crees del todo?</div>
+        <div class="q-why">La honestidad sobre la ambicion hace al referente humano, no un guru de autoayuda.</div>
+      </div>
+    </div>
+
+    <!-- LO QUE LE ENOJA -->
+    <div class="pregunta-section-title">Lo que le Enoja (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">11</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que cosa del mercado inmobiliario argentino te parece inaceptable, injusta o directamente ridicula?</div>
+        <div class="q-why">La indignacion autentica es el mejor fuel para contenido que genera debate.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">12</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que consejo tipico sobre propiedades escuchas todo el tiempo que crees que esta completamente equivocado?</div>
+        <div class="q-why">Refutar el sentido comun establecido = liderazgo de pensamiento. Es la base de la autoridad.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">13</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que hace tu generacion (los de 20 a 25) con el dinero que te parece que los esta hundiendo a largo plazo?</div>
+        <div class="q-why">Hablarle a los pares con honestidad genera seguidores fieles.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">14</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que cosas del sistema financiero argentino — el cepo, la inflacion, los bancos, el Estado — te generan mas rabia o frustracion?</div>
+        <div class="q-why">Nombrar el elefante en la habitacion conecta emocionalmente con audiencia que siente lo mismo pero no lo articula.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">15</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hubo algun momento en que un cliente, un colega, o alguien del sector te trato mal o te subestimo por tu edad? ¿Que paso?</div>
+        <div class="q-why">Las historias de subestimacion + revancha son virales y construyen la narrativa del underdog que triunfa.</div>
+      </div>
+    </div>
+
+    <!-- CREENCIAS FUERTES -->
+    <div class="pregunta-section-title">Creencias Fuertes (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">16</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que dirias en camara sobre el mercado inmobiliario que sabes que va a molestar a colegas o clientes, pero lo pensas igual?</div>
+        <div class="q-why">El contenido que incomoda a algunos y valida a otros es el que mas circula.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">17</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que crees que esta haciendo la mayoria de la gente joven MAL cuando piensa en construir patrimonio en Argentina?</div>
+        <div class="q-why">Señalar el error comun sin condescendencia es la formula del contenido educativo que se comparte.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">18</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cual es tu opinion mas impopular sobre comprar propiedades? Algo que la mayoria rechazaria pero vos defendarias.</div>
+        <div class="q-why">Las opiniones impopulares bien fundadas son el nucleo del posicionamiento.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">19</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Alquilar o comprar? Tu respuesta real, no la respuesta correcta para no perder un cliente.</div>
+        <div class="q-why">Responder sin agenda comercial es una declaracion de valores que genera confianza a largo plazo.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">20</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que crees que le falta al mercado inmobiliario de ciudades del interior para ser tomado en serio como opcion de inversion?</div>
+        <div class="q-why">Defender el interior frente a CABA es su ventaja competitiva mas obvia.</div>
+      </div>
+    </div>
+
+    <!-- HISTORIA PERSONAL -->
+    <div class="pregunta-section-title">Historia Personal (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">21</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cual fue tu mayor error en una operacion? No el mas pequeño — el que mas dolio.</div>
+        <div class="q-why">Los errores reales con consecuencias reales son la prueba de que el referente vivio lo que predica.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">22</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hubo algun momento con un cliente que te genero verguenza, incomodidad extrema, o que querias que se abriera la tierra?</div>
+        <div class="q-why">Vulnerabilidad especifica = humanidad genuina.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">23</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que cosa sabes ahora sobre el negocio que ojala hubieras sabido en el primer año y que te hubiera ahorrado dinero, tiempo, o clientes?</div>
+        <div class="q-why">El conocimiento costoso transmitido gratis es el formato mas poderoso para construir audiencia leal.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">24</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hubo un momento en que casi abandonas — en que dijiste "esto no es para mi"? ¿Que paso y que te hizo quedarte?</div>
+        <div class="q-why">Los puntos de quiebre son los mas humanos y los que mas conectan con audiencias en sus propias encrucijadas.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">25</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que cosa de tu forma de trabajar te avergonzaba antes y ahora reconoces que te enseno algo importante?</div>
+        <div class="q-why">La autocritica honesta sin victimizacion es la marca de un adulto maduro — exactamente el posicionamiento buscado.</div>
+      </div>
+    </div>
+
+    <!-- VIDA FUERA -->
+    <div class="pregunta-section-title">Vida Fuera del Trabajo (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">26</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Describe un sabado ideal sin agenda, sin obligaciones, sin que nadie te pida nada. ¿Que haces desde que te levantas?</div>
+        <div class="q-why">La vida real fuera del trabajo hace al referente tridimensional.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">27</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que estas leyendo, escuchando o mirando ahora mismo que te esta cambiando la cabeza?</div>
+        <div class="q-why">Las recomendaciones genuinas construyen identidad intelectual y atraen audiencias con intereses similares.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">28</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que es Tandil para vos realmente? No la postal, no el pitch de venta — la version sin filtro.</div>
+        <div class="q-why">La relacion emocional con el lugar donde opera es el diferencial geografico mas autentico de su marca.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">29</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Quienes son las personas en tu vida (fuera del trabajo) que mas te influyen en como pensas el dinero, el futuro, y las decisiones importantes?</div>
+        <div class="q-why">Los referentes personales revelan la red de influencia real.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">30</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hay algo que haces fuera del trabajo — un hobby, un deporte, una costumbre — que no tiene nada que ver con el negocio pero en realidad te hizo mejor en lo que haces?</div>
+        <div class="q-why">Los paralelismos entre disciplinas distintas son el material de los contenidos mas memorables.</div>
+      </div>
+    </div>
+
+    <!-- FUTURO -->
+    <div class="pregunta-section-title">Futuro y Ambicion (5 preguntas)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">31</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Como te ves en 5 años, siendo concreto? No "exitoso" — ¿que tenes, con quien trabajas, donde vives, cuanto facturas?</div>
+        <div class="q-why">La vision especifica inspira mas que la vaga — y compromete publicamente al referente.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">32</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que queres construir que no sea solo dinero? ¿Que legado, que impacto, que empresa, que comunidad?</div>
+        <div class="q-why">El "por que" mas profundo detras de la ambicion transforma al vendedor en lider con causa.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">33</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que te daria miedo lograr? ¿Hay algo en el exito que te genera ansiedad o incertidumbre?</div>
+        <div class="q-why">El miedo al exito es el tema mas honesto y menos hablado en contenido financiero.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">34</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hay algo que sentes que tenes que demostrarle a alguien — una persona, un grupo, vos mismo — con lo que estas construyendo?</div>
+        <div class="q-why">La motivacion oculta (orgullo, revancha, validacion) es el motor emocional que hace los contenidos autenticos.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">35</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Si dentro de 10 años un pibe de 22 años en Tandil te googlea antes de arrancar su carrera en real estate, ¿que queres que encuentre?</div>
+        <div class="q-why">La pregunta del legado ancla toda la estrategia de marca personal en un proposito de largo plazo.</div>
+      </div>
+    </div>
+
+    <!-- BONUS -->
+    <div class="pregunta-section-title">Preguntas Bonus</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">36</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que le dirias a tus padres sobre el dinero y las propiedades que ellos nunca te dijeron pero deberian haberlo hecho?</div>
+        <div class="q-why">El dialogo intergeneracional sobre finanzas es uno de los temas mas compartidos en redes.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">37</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Alguna vez pensaste en irte de Argentina? ¿Que te haria irte y que te hace quedarte?</div>
+        <div class="q-why">La tension Argentina/exterior es un tema caliente para toda audiencia local.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">38</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cual es la pregunta que mas miedo te daria que te hicieran en camara?</div>
+        <div class="q-why">Saber donde estan los limites reales es fundamental para no cruzarlos involuntariamente.</div>
+      </div>
+    </div>
+
+    <!-- IDENTIDAD EN CAMARA -->
+    <div class="pregunta-section-title">Identidad en Camara (5 preguntas — sesion 2)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">39</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Cuando estas delante de una camara, ¿que version de vos aparece? ¿Es la misma que cuando estas con amigos, o actuas de otra manera?</div>
+        <div class="q-why">La brecha entre la persona real y la persona en camara es donde se pierde la autenticidad.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">40</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que tema de los que dominas te produce mas incomodidad explicar en camara? ¿Por que?</div>
+        <div class="q-why">El contenido incomodo para el creador suele ser el mas valioso para la audiencia.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">41</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Si le preguntaras a alguien que te conoce bien "¿como describirias a Santiago en tres palabras?", ¿que crees que diria?</div>
+        <div class="q-why">El gap entre como te ven y como queres que te vean es el mapa de trabajo de la marca personal.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">42</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hay alguna persona cuya manera de hablar o de explicar las cosas te parece que se parece a la tuya? ¿Quien es y por que?</div>
+        <div class="q-why">Identificar los referentes naturales de comunicacion revela el tono autentico que no hay que construir, sino liberar.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">43</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que es lo que mas te molesta de como otros agentes o creadores de real estate se presentan en redes? ¿Que no harias nunca?</div>
+        <div class="q-why">La definicion negativa (lo que no soy) es tan importante como la positiva para fijar el posicionamiento.</div>
+      </div>
+    </div>
+
+    <!-- TANDIL LOCAL -->
+    <div class="pregunta-section-title">Tandil y el Mercado Local (5 preguntas — sesion 2)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">44</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cuales son las 3 zonas de Tandil donde mas recomendarias invertir hoy y por que? ¿Y cual es la zona que la gente sobrevalora?</div>
+        <div class="q-why">Respuestas concretas con argumentos = material directo para guiones de alto valor.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">45</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que tipo de comprador/inversor llega mas a vos? ¿Como es esa persona — edad, situacion, que busca, que miedos tiene?</div>
+        <div class="q-why">El cliente real define a quien le habla el contenido. Si habla para el cliente promedio de Santiago, convierte.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">46</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">En los ultimos 12 meses, ¿cual fue la operacion mas interesante que viste o cerraste? ¿Que la hizo particular?</div>
+        <div class="q-why">Casos reales anonimizados son el material narrativo mas poderoso del sector.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">47</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Como es el mercado de alquiler en Tandil hoy comparado con hace 2 años? ¿Que cambio con las nuevas leyes y que oportunidades abrio?</div>
+        <div class="q-why">El contexto regulatorio argentino genera contenido evergreen y oportuno — y Santiago tiene el dato local que ningun analista de CABA puede tener.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">48</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Hay algo que pase en el mercado de Tandil que sorprenderia a alguien que solo conoce el mercado de Buenos Aires?</div>
+        <div class="q-why">Las especificidades del mercado local son el anzuelo para audiencias de otras ciudades del interior.</div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO Y REDES -->
+    <div class="pregunta-section-title">Creencias sobre el Contenido y las Redes (4 preguntas — sesion 2)</div>
+
+    <div class="pregunta-item">
+      <div class="q-num">49</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Cuando ves un video de Beltran Briones o de cualquier referente que admiras, ¿que pensas? ¿"Quiero hacer eso", "yo lo haria diferente", o algo mas complejo?</div>
+        <div class="q-why">La relacion emocional con los referentes revela el tipo de creador que Santiago quiere ser.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">50</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Que te genera mas ansiedad de arrancar a hacer contenido en serio: la camara, la constancia, que te juzguen los colegas, que te juzguen los clientes, o algo diferente?</div>
+        <div class="q-why">Los bloqueos reales del creador son los primeros que hay que trabajar.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">51</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">Si publicaras un video diciendo algo que va en contra de lo que piensa la mayoria del sector inmobiliario de Tandil, ¿que consecuencias reales esperarias? ¿Te frena eso?</div>
+        <div class="q-why">La tolerancia real al "hate" determina hasta donde puede ir Santiago con el contenido provocador.</div>
+      </div>
+    </div>
+    <div class="pregunta-item">
+      <div class="q-num">52</div>
+      <div class="q-body">
+        <div class="badge-sin">Sin responder</div>
+        <div class="q-text">¿Cuanto tiempo por semana podrias dedicarle al contenido sin que eso afecte tu trabajo de agente? ¿Cual es el limite real?</div>
+        <div class="q-why">La estrategia tiene que ser ejecutable con los recursos reales de Santiago.</div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  Web de Referencia — Santiago Funes Real Estate — uso interno — Arquitecto SFRE
+</footer>
+
+<script>
+  // ===== FECHA =====
+  (function() {
+    const d = new Date();
+    const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    document.getElementById('js-fecha').textContent =
+      dias[d.getDay()] + ' ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' ' + d.getFullYear();
+  })();
+
+  // ===== REPORTES SUPABASE =====
+  (async function() {
+    const SUPABASE_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+    const ANON_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+
+    const container = document.getElementById('reportes-container');
+    const loading = document.getElementById('reportes-loading');
+    const errorEl = document.getElementById('reportes-error');
+
+    try {
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/reportes?select=*&order=created_at.desc&limit=5',
+        {
+          headers: {
+            'apikey': ANON_KEY,
+            'Authorization': 'Bearer ' + ANON_KEY,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error('HTTP ' + res.status + ' — ' + res.statusText);
+      }
+
+      const data = await res.json();
+      loading.style.display = 'none';
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted); font-size:0.88rem;">No hay reportes todavia.</p>';
+        return;
+      }
+
+      data.forEach(function(r) {
+        const fecha = r.created_at
+          ? new Date(r.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '';
+
+        const card = document.createElement('div');
+        card.className = 'reporte-card';
+        card.innerHTML =
+          '<div class="reporte-meta">' +
+            (r.agente ? '<span class="reporte-agente">' + escHtml(r.agente) + '</span>' : '') +
+            (fecha ? '<span class="reporte-fecha">' + fecha + '</span>' : '') +
+          '</div>' +
+          (r.titulo ? '<div class="reporte-titulo">' + escHtml(r.titulo) + '</div>' : '') +
+          (r.contenido ? '<div class="reporte-contenido">' + escHtml(r.contenido) + '</div>' : '');
+
+        container.appendChild(card);
+      });
+
+    } catch (err) {
+      loading.style.display = 'none';
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Error al cargar reportes: ' + err.message;
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  })();
+</script>
+
+</body>
+</html>
