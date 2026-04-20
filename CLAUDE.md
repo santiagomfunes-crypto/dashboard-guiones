@@ -6,7 +6,7 @@ Sistema de contenido para Santiago Funes Real Estate. Dashboard + agentes IA + b
 
 - **Dashboard**: [index.html](index.html) — single-file HTML deployado en GitHub Pages (`santiagomfunes-crypto.github.io/dashboard-guiones/`)
 - **Base de datos**: Supabase (tablas: guiones, variantes, newsletter, ideas, publicaciones, sesiones)
-- **Agentes IA**: Paperclip con 10 agentes (soul files en `paperclip-agents/`)
+- **Agentes IA**: Paperclip con 14 agentes (soul files en `paperclip-agents/`)
 - **Conocimiento**: `referencia/` (playbook, voz, datos, framework) + `youtube_brain/` (fuentes aprendidas)
 
 ## Credenciales
@@ -35,20 +35,24 @@ guiones/
 └── youtube_brain/          ← sistema de aprendizaje de fuentes
 ```
 
-## Agentes Paperclip (10 activos)
+## Agentes Paperclip (14 activos)
 
 | Agente | Qué hace | Frecuencia |
 |---|---|---|
+| CEO | Dirección estratégica del sistema | On-demand |
+| Arquitecto | Diseña y revisa arquitectura del sistema | On-demand |
 | Investigador | Busca tendencias del mercado | Cada 48h |
 | Escritor | Escribe guiones + variantes de hook | Cada 72h |
 | Publisher | Prepara briefings de publicación | Diario |
 | Brain | Aprende de videos/web | On-demand |
 | Analista | Analiza mix de contenido | Semanal |
+| Estratega | Define estrategia de contenido | On-demand |
 | Price Tracker | Rastrea precios m² Tandil/CABA | Semanal |
 | ROI Calculator | Calcula retorno de propiedades | On-demand |
 | Macro Analyst | Resumen macro semanal | Semanal |
 | SEO Writer | Convierte guiones en artículos | Semanal |
 | UX Designer | Mejora el dashboard | On-demand |
+| Auditor | Verifica estado del sistema completo | Semanal (viernes) |
 
 ## Backups
 

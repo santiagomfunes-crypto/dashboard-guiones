@@ -5,7 +5,7 @@
 - [ ] Leer tabla `newsletter` de Supabase: cuántas entradas hay, cuándo fue la última
 - [ ] Si la última entrada fue hace menos de 2 días, evaluar si hay noticias urgentes que justifiquen buscar antes
 - [ ] Revisar si hay issues asignados con pedidos específicos de investigación
-- [ ] Consultar al Analista (o su último reporte) para saber qué ángulos están sub-representados
+- [ ] **Leer el último reporte del Analista en tabla `reportes`** (agente='Analista'): ¿qué ángulos están sub-representados? ¿qué temas recomienda reforzar? Priorizar búsquedas en base a eso.
 
 ## 2. Decidir qué hacer
 
@@ -56,11 +56,33 @@ Antes de insertar, para CADA propuesta:
 
 Insertar cada propuesta en tabla `newsletter` con todos los campos completos.
 
-## 6. Reportar
+## 6. Reportar en Supabase (tabla `reportes`)
 
-Dejar reporte (comentario en issue o log) con:
-- Cuántas propuestas insertadas
-- Temas principales encontrados
-- Qué busqué y no encontré (para no repetir búsquedas inútiles)
-- Si detecté algún tema caliente que merece seguimiento en próximos días
-- Distribución de ángulos de las propuestas nuevas
+Al terminar, insertar un registro en la tabla `reportes` de Supabase con:
+
+| Campo | Qué poner |
+|---|---|
+| `titulo` | "Investigador: X propuestas nuevas — [dd/mm/aaaa]" |
+| `agente` | "Investigador" |
+| `contenido` | Texto completo del reporte (ver formato abajo) |
+
+### Formato del campo `contenido`
+
+```
+PROPUESTAS INSERTADAS: X
+
+1. [título] — ángulo: [ángulo] — dato: [dato_duro]
+2. [título] — ángulo: [ángulo] — dato: [dato_duro]
+...
+
+TEMAS QUE BUSQUÉ Y NO ENCONTRÉ:
+- [tema]: [razón por la que no avancé]
+
+SEGUIMIENTO SUGERIDO:
+- [tema caliente que merece vigilancia en próximos días]
+
+ACCIÓN REQUERIDA:
+Revisar propuestas en tab Newsletter del dashboard y aprobar las que procedan para que el Escritor las convierta en guiones.
+```
+
+Este reporte aparece automáticamente en el tab **Reportes** del dashboard. Santiago lo ve ahí sin necesidad de preguntar.

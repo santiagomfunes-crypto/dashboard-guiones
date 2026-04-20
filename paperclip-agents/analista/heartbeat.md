@@ -53,29 +53,37 @@ Del pool con status="listo":
 - [ ] ¿Los guiones recomendados para filmar están realmente en status "listo"?
 - [ ] ¿El reporte cabe en una pantalla? (si no, recortar)
 
-## 5. Reportar
+## 5. Reportar en Supabase (tabla `reportes`)
 
-Formato del reporte semanal:
+Insertar al terminar:
+
+| Campo | Qué poner |
+|---|---|
+| `titulo` | "Analista: distribución semanal — [dd/mm/aaaa]" |
+| `agente` | "Analista" |
+| `contenido` | El reporte completo con formato abajo |
+
+Formato del campo `contenido`:
 
 ```
-## Distribución actual vs. objetivo
-| Ángulo | Actual | Target | Delta |
-|--------|--------|--------|-------|
-| ...    | ...    | ...    | ...   |
+DISTRIBUCIÓN ACTUAL VS. OBJETIVO
+| Ángulo | Actual | Target | Delta | Status |
+|--------|--------|--------|-------|--------|
+| ...    | ...    | ...    | ...   | ...    |
 
-## Huecos a llenar (top 3)
+HUECOS A LLENAR (top 3)
 1. ...
 2. ...
 3. ...
 
-## Para filmar esta semana (top 3)
+PARA FILMAR ESTA SEMANA (top 3)
 1. [título] — ángulo X, formato Y — justificación
 2. ...
 3. ...
 
-## Recomendaciones
+RECOMENDACIONES
 - Investigador: buscar temas de [ángulo] sobre [tema]
 - Escritor: priorizar [formato] con ángulo [X]
 ```
 
-Dejar como comentario en el issue o como reporte standalone.
+Este reporte queda visible en el tab Reportes del dashboard y el Investigador lo lee en su próximo wake-up.
