@@ -1,0 +1,373 @@
+#!/usr/bin/env python3
+"""
+Scraper diario CasasDeHoy → Supabase
+Extrae propiedades en Tandil desde casasdehoy.com.ar
+y hace upsert en la tabla propiedades_mercado.
+
+Uso: python3 scraper_casasdehoy.py
+     python3 scraper_casasdehoy.py --dry-run
+     python3 scraper_casasdehoy.py --max-pages 3
+"""
+
+import sys
+import re
+import json
+import time
+import argparse
+import urllib.request
+import urllib.error
+from datetime import datetime, timezone
+from pathlib import Path
+
+# ── Configuración ─────────────────────────────────────────────────────────────
+
+SCRIPT_DIR = Path(__file__).parent
+ENV_FILE = SCRIPT_DIR / ".env"
+
+BASE_URL = "https://www.casasdehoy.com.ar/2022/resultados.php"
+PROP_BASE_URL = "https://www.casasdehoy.com.ar/2022/"
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "es-AR,es;q=0.9",
+}
+
+# Combinaciones a scrapear: (tipo_cdh, tipologia_db, operacion)
+SEARCH_CONFIGS = [
+    ("Casas",          "casa",          "venta"),
+    ("Casas",          "casa",          "alquiler"),
+    ("Departamentos",  "departamento",  "venta"),
+    ("Departamentos",  "departamento",  "alquiler"),
+    ("Lotes",          "terreno",       "venta"),
+    ("Locales",        "local",         "alquiler"),
+    ("PH",             "ph",            "venta"),
+]
+
+MAX_PAGES_DEFAULT = 5    # páginas por combinación (~24 items/página)
+DELAY_BETWEEN_REQUESTS = 2  # segundos entre requests
+
+
+# ── Carga de credenciales ──────────────────────────────────────────────────────
+
+def load_env():
+    env = {}
+    if ENV_FILE.exists():
+        with open(ENV_FILE) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    env[k.strip()] = v.strip()
+    return env
+
+
+# ── Scraping ──────────────────────────────────────────────────────────────────
+
+def fetch_html(url):
+    req = urllib.request.Request(url, headers=HEADERS)
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        print(f"  HTTP {e.code} para {url}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"  Error fetching {url}: {e}", file=sys.stderr)
+        return None
+
+
+def parse_card(card_html, tipologia_default, operacion_default):
+    """Convierte una card HTML de CasasDeHoy en un dict listo para Supabase."""
+
+    # ── ID de la propiedad ──
+    id_m = re.search(r'<div id="(\d+)" class="carousel', card_html)
+    if not id_m:
+        return None
+    prop_id = id_m.group(1)
+
+    # ── URL ──
+    url_m = re.search(r'href="([^"]+\.html)"', card_html)
+    relative_url = url_m.group(1) if url_m else None
+    url = PROP_BASE_URL + relative_url if relative_url else None
+
+    # ── Operación (venta/alquiler) ──
+    if re.search(r'class="sale-tag\s+alquiler', card_html, re.IGNORECASE):
+        operacion = "alquiler"
+    elif re.search(r'class="sale-tag\s+venta', card_html, re.IGNORECASE):
+        operacion = "venta"
+    else:
+        operacion = operacion_default
+
+    # ── Título / Zona ──
+    h2_m = re.search(r'<h2[^>]*>.*?<a[^>]*>(.*?)</a>', card_html, re.DOTALL)
+    titulo = ""
+    if h2_m:
+        titulo = re.sub(r'<[^>]+>', '', h2_m.group(1)).strip()
+
+    zona = titulo if titulo else "Tandil"
+
+    # ── Tipología (del <p class="tipo">) ──
+    tipo_m = re.search(r'<p class="tipo"[^>]*>(.*?)</p>', card_html, re.DOTALL)
+    tipologia = tipologia_default
+    if tipo_m:
+        tipo_text = re.sub(r'<[^>]+>', '', tipo_m.group(1)).strip().lower()
+        for t in ["departamento", "casa", "lote", "terreno", "local", "ph", "quinta", "campo", "galpón", "cochera"]:
+            if t in tipo_text:
+                tipologia = t
+                break
+
+    # ── Precio USD ──
+    precio_m = re.search(r'<span[^>]*class="precio"[^>]*>\s*U\$S\s*([\d.]+)', card_html)
+    precio_usd = None
+    if precio_m:
+        try:
+            precio_usd = int(precio_m.group(1).replace(".", ""))
+        except ValueError:
+            pass
+
+    # ── Atributos de la propiedad (comodidades) ──
+    metros_totales = None
+    dormitorios = None
+    cochera = False
+
+    # Metros cuadrados: icono fa-arrows-alt + "m²: XXX"
+    m2_m = re.search(r'fa-arrows-alt[^>]*>.*?m²:\s*([\d.,]+)', card_html, re.DOTALL)
+    if m2_m:
+        try:
+            metros_totales = float(m2_m.group(1).replace(",", "."))
+            if metros_totales == 0:
+                metros_totales = None  # 0 significa "no informado"
+        except ValueError:
+            pass
+
+    # Dormitorios: icono fa-bed + número
+    bed_m = re.search(r'fa-bed[^>]*>.*?</i>[^<]*\n?\s*(\d+)', card_html, re.DOTALL)
+    if bed_m:
+        try:
+            dormitorios = int(bed_m.group(1).strip())
+        except ValueError:
+            pass
+
+    # Cocheras: icono fa-car + número > 0
+    car_m = re.search(r'fa-car[^>]*>.*?</i>[^<]*\n?\s*(\d+)', card_html, re.DOTALL)
+    if car_m:
+        try:
+            cochera = int(car_m.group(1).strip()) > 0
+        except ValueError:
+            pass
+
+    return {
+        "fuente": "casasdehoy",
+        "fuente_id": prop_id,
+        "url": url,
+        "tipologia": tipologia,
+        "operacion": operacion,
+        "zona": zona,
+        "precio_usd": precio_usd,
+        "dormitorios": dormitorios,
+        "metros_totales": metros_totales,
+        "cochera": cochera,
+        "titulo": titulo,
+    }
+
+
+def scrape_search(tipo_cdh, tipologia_db, operacion, max_pages):
+    """Scrapea todas las páginas de una búsqueda específica."""
+    opcion_str = "Venta" if operacion == "venta" else "Alquiler"
+    results = {}  # fuente_id → prop
+
+    for page in range(1, max_pages + 1):
+        url = (
+            f"{BASE_URL}?pagina={page}&desde=1"
+            f"&opcion={urllib.parse.quote(opcion_str)}"
+            f"&tipo={urllib.parse.quote(tipo_cdh)}"
+        )
+        print(f"  Página {page}: {url}")
+
+        html = fetch_html(url)
+        if not html:
+            break
+
+        # Encontrar todas las cards
+        card_starts = [m.start() for m in re.finditer(
+            r'<div class="div-articulo propiedades clearfix">', html
+        )]
+
+        if not card_starts:
+            print(f"  → Sin cards en página {page}, fin.")
+            break
+
+        page_results = 0
+        for i, start in enumerate(card_starts):
+            end = card_starts[i + 1] if i + 1 < len(card_starts) else start + 5000
+            card_html = html[start:end]
+
+            prop = parse_card(card_html, tipologia_db, operacion)
+            if prop and prop["fuente_id"] not in results:
+                results[prop["fuente_id"]] = prop
+                page_results += 1
+
+        print(f"  → {page_results} propiedades nuevas ({len(results)} total)")
+
+        # Verificar si hay página siguiente
+        if f"pagina={page + 1}" not in html:
+            print(f"  → Sin página {page + 1}, fin.")
+            break
+
+        if page < max_pages:
+            time.sleep(DELAY_BETWEEN_REQUESTS)
+
+    return results
+
+
+def scrape_all(max_pages):
+    """Scrapea todas las combinaciones configuradas."""
+    # importar aquí para compatibilidad
+    import urllib.parse
+
+    all_props = {}  # fuente_id → prop
+
+    for tipo_cdh, tipologia_db, operacion in SEARCH_CONFIGS:
+        print(f"\n→ Scrapeando {tipo_cdh}/{operacion}...")
+        results = scrape_search(tipo_cdh, tipologia_db, operacion, max_pages)
+        all_props.update(results)
+
+    return list(all_props.values())
+
+
+# ── Supabase Upsert ────────────────────────────────────────────────────────────
+
+def upsert_supabase(props, supabase_url, service_key, dry_run=False):
+    """Hace upsert de las propiedades en Supabase."""
+    if not props:
+        print("\nNo hay propiedades para insertar.")
+        return 0, 0
+
+    now = datetime.now(timezone.utc).isoformat()
+
+    for p in props:
+        p["ultima_vez_visto"] = now
+
+    api_url = f"{supabase_url}/rest/v1/propiedades_mercado"
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "apikey": service_key,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates,return=minimal",
+    }
+
+    if dry_run:
+        print(f"\n[DRY RUN] Se insertarían/actualizarían {len(props)} propiedades")
+        print("Muestra (primeras 5):")
+        for p in props[:5]:
+            print(f"  ID={p['fuente_id']} | {p['tipologia']}/{p['operacion']} | "
+                  f"${p.get('precio_usd','?')} USD | {p['zona'][:40]}")
+        return len(props), 0
+
+    batch_size = 50
+    inserted = 0
+    errors = 0
+
+    for i in range(0, len(props), batch_size):
+        batch = props[i: i + batch_size]
+        body = json.dumps(batch).encode("utf-8")
+        req = urllib.request.Request(api_url, data=body, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                inserted += len(batch)
+                print(f"  Lote {i // batch_size + 1}: {len(batch)} propiedades upsertadas ✓")
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode("utf-8")
+            print(f"  Error HTTP {e.code}: {error_body[:200]}", file=sys.stderr)
+            errors += len(batch)
+        except Exception as e:
+            print(f"  Error lote {i // batch_size + 1}: {e}", file=sys.stderr)
+            errors += len(batch)
+
+    return inserted, errors
+
+
+def report_to_supabase(supabase_url, service_key, inserted, errors, dry_run):
+    """Guarda un reporte del scraping en la tabla reportes."""
+    if dry_run:
+        return
+
+    report = {
+        "tipo": "scraping",
+        "fuente": "casasdehoy",
+        "fecha": datetime.now(timezone.utc).isoformat(),
+        "resultado": {
+            "insertadas": inserted,
+            "errores": errors,
+            "estado": "ok" if errors == 0 else "parcial"
+        }
+    }
+
+    api_url = f"{supabase_url}/rest/v1/reportes"
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "apikey": service_key,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+
+    # Buscar el schema de la tabla reportes primero
+    try:
+        req = urllib.request.Request(
+            f"{api_url}?limit=1",
+            headers={"Authorization": f"Bearer {service_key}", "apikey": service_key}
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            sample = json.loads(resp.read())
+    except Exception:
+        sample = []
+
+    if sample:
+        # Adaptar al schema existente
+        cols = list(sample[0].keys()) if sample else []
+        print(f"  Schema reportes: {cols}")
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+def main():
+    import urllib.parse
+
+    parser = argparse.ArgumentParser(description="Scraper CasasDeHoy Inmuebles → Supabase")
+    parser.add_argument("--dry-run", action="store_true", help="No escribir en Supabase")
+    parser.add_argument("--max-pages", type=int, default=MAX_PAGES_DEFAULT,
+                        help=f"Páginas por búsqueda (default: {MAX_PAGES_DEFAULT})")
+    args = parser.parse_args()
+
+    print(f"=== Scraper CasasDeHoy Inmuebles ===")
+    print(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Max páginas por categoría: {args.max_pages}")
+
+    env = load_env()
+    supabase_url = env.get("SUPABASE_URL")
+    service_key = env.get("SUPABASE_SERVICE_KEY")
+
+    if not supabase_url or not service_key:
+        print("ERROR: Faltan SUPABASE_URL o SUPABASE_SERVICE_KEY en .env", file=sys.stderr)
+        sys.exit(1)
+
+    props = scrape_all(args.max_pages)
+    print(f"\nTotal propiedades únicas scraped: {len(props)}")
+
+    inserted, errors = upsert_supabase(props, supabase_url, service_key, dry_run=args.dry_run)
+
+    print(f"\n=== Resultado ===")
+    print(f"Upsertadas: {inserted}")
+    print(f"Errores:    {errors}")
+
+    if errors > 0:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
