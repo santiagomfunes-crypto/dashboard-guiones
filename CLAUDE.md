@@ -16,7 +16,7 @@ POST http://localhost:3100/api/companies/31b28a68-67c6-4c2a-bb17-c92474870551/is
 { "title": "...", "description": "...", "assigneeAgentId": "CEO_ID" }
 ```
 CEO ID: `c0543ed4-2f1b-4f48-9014-422b6ebe911e`
-Despertar agente: `POST http://localhost:3100/api/agents/{id}/wake`
+Despertar agente: `POST http://localhost:3100/api/agents/{id}/wakeup` con body `{"issueId": "uuid"}`
 
 ### 3. IDs de agentes Paperclip
 CEO `c0543ed4` · Investigador `33ccac15` · Escritor `cc38b20a` · Analista `0128b9ab` · UX Designer `e38f08d1` · Macro Analyst `10936ff6` · Price Tracker `92b41890` · ROI Calculator `5a79f9aa` · SEO Writer `c40d6d8b` · Brain `1d118a87` · Auditor `1cac5dbe` · CMO `272499de`
