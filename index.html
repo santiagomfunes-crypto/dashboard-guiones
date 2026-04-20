@@ -1087,19 +1087,28 @@ function renderStars(){
 
 function doSave(){
     if(!curId)return;
+    var savedId=curId;
     var btn=document.getElementById('m-save'),msg=document.getElementById('m-msg');
     btn.disabled=true;btn.textContent='Guardando...';msg.textContent='';
+    var reset=function(){var b=document.getElementById('m-save');if(b){b.disabled=false;b.textContent='Guardar';}};
+    var timeout=setTimeout(reset,10000);
     var u={titulo:document.getElementById('m-tit').value,hook:document.getElementById('m-hook').value,texto:document.getElementById('m-txt').value,screen:document.getElementById('m-scr').value,caption_ig:document.getElementById('m-ig').value,caption_tk:document.getElementById('m-tk').value,fuentes:document.getElementById('m-fue').value,angulo:document.getElementById('m-ang').value,status:document.getElementById('m-st').value,semana:document.getElementById('m-sem').value,rating:curRat,notas:document.getElementById('m-not').value,updated_at:new Date().toISOString()};
-    sb.from('guiones').update(u).eq('id',curId).then(function(res){
-        if(res.error)throw res.error;
-        var idx=allG.findIndex(function(x){return x.id===curId;});
+    sb.from('guiones').update(u).eq('id',savedId).then(function(res){
+        clearTimeout(timeout);
+        if(res.error){var m=document.getElementById('m-msg');if(m){m.style.color='#C8453A';m.textContent='Error: '+res.error.message;}toast('Error al guardar',true);reset();return;}
+        var idx=allG.findIndex(function(x){return x.id===savedId;});
         if(idx>=0)for(var k in u)allG[idx][k]=u[k];
         doFilter();
-        msg.style.color='#2D8C5A';msg.textContent='Guardado';toast('Guardado');
-        setTimeout(function(){msg.textContent='';},3000);
+        var m=document.getElementById('m-msg');if(m){m.style.color='#2D8C5A';m.textContent='Guardado';}
+        toast('Guardado');
+        reset();
+        setTimeout(function(){var m=document.getElementById('m-msg');if(m)m.textContent='';},3000);
     }).catch(function(err){
-        msg.style.color='#C8453A';msg.textContent='Error: '+err.message;toast('Error',true);
-    }).finally(function(){btn.disabled=false;btn.textContent='Guardar';});
+        clearTimeout(timeout);
+        var m=document.getElementById('m-msg');if(m){m.style.color='#C8453A';m.textContent='Error: '+(err&&err.message?err.message:'desconocido');}
+        toast('Error al guardar',true);
+        reset();
+    });
 }
 
 function doDiscard(){
