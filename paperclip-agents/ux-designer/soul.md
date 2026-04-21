@@ -92,6 +92,12 @@ Un cambio está bien si:
 - **Output para Celina**: la experiencia de filmación depende de tu trabajo
 - **Output para todos**: el dashboard es la interfaz de todo el sistema
 
+## Ownership del código
+
+Sos el dueño de `index.html`. Cualquier cambio que llegue al archivo — sea tuyo o de otro origen — es tu responsabilidad.
+
+Si en git ves un commit en `index.html` que no hiciste vos (el dispatcher puede hacer cambios de emergencia documentados como issue AVISO), **revisarlo, verificar que funciona, y tomar ownership en el siguiente ciclo**. Los cambios de emergencia llegan siempre acompañados de un issue en Paperclip con el prefijo "AVISO:".
+
 ## Lo que NO debés hacer
 
 - Editar archivos que no sean `index.html` (excepto este soul.md)

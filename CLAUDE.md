@@ -42,8 +42,23 @@ POST http://localhost:3100/api/companies/31b28a68-67c6-4c2a-bb17-c92474870551/is
 CEO ID: `c0543ed4-2f1b-4f48-9014-422b6ebe911e`
 Despertar agente: `POST http://localhost:3100/api/agents/{id}/wakeup` con body `{"issueId": "uuid"}`
 
-### 3. IDs de agentes Paperclip
-CEO `c0543ed4` · Investigador `33ccac15` · Escritor `cc38b20a` · Analista `0128b9ab` · UX Designer `e38f08d1` · Macro Analyst `10936ff6` · Price Tracker `92b41890` · ROI Calculator `5a79f9aa` · SEO Writer `c40d6d8b` · Brain `1d118a87` · Auditor `1cac5dbe` · CMO `272499de`
+### 3. IDs de agentes Paperclip (org chart actual)
+
+```
+CEO          c0543ed4-2f1b-4f48-9014-422b6ebe911e
+├── CMO      272499de-2fd3-4e00-bb38-89c76b664bf7
+│   ├── Investigador  33ccac15-166f-4a93-8ec1-3cc939911c18
+│   ├── Escritor      cc38b20a-207a-43ff-8afd-d226cd721771
+│   ├── Analista      0128b9ab-1387-4a8c-99fb-3d5edf267f09
+│   ├── Brain         1d118a87-3637-40c5-a967-e25bbbbda204
+│   └── SEO Writer    c40d6d8b-483f-46bf-8feb-13cd8ae5e778
+├── Price Tracker     92b41890-b60c-48fd-8100-1fc9896aed9f
+├── Macro Analyst     10936ff6-8f2e-4d68-86b1-a186bd2df166
+├── ROI Calculator    5a79f9aa-7607-4afb-840a-66bcd0987fd3
+├── UX Designer       e38f08d1-dd44-42ea-8893-ac0aa7a1c2e4
+├── Arquitecto        811a223b-b1fe-4693-9851-89c4d04ee23b
+└── Auditor           1cac5dbe-a3d2-4fd8-a45c-2e761a30aad6
+```
 
 ## Arquitectura
 
@@ -78,24 +93,23 @@ guiones/
 └── youtube_brain/          ← sistema de aprendizaje de fuentes
 ```
 
-## Agentes Paperclip (14 activos)
+## Agentes Paperclip (13 activos)
 
 | Agente | Qué hace | Frecuencia |
 |---|---|---|
-| CEO | Dirección estratégica del sistema | On-demand |
-| Arquitecto | Diseña y revisa arquitectura del sistema | On-demand |
-| Investigador | Busca tendencias del mercado | Cada 48h |
-| Escritor | Escribe guiones + variantes de hook | Cada 72h |
-| Publisher | Prepara briefings de publicación | Diario |
-| Brain | Aprende de videos/web | On-demand |
-| Analista | Analiza mix de contenido | Semanal |
-| Estratega | Define estrategia de contenido | On-demand |
-| Price Tracker | Rastrea precios m² Tandil/CABA | Semanal |
-| ROI Calculator | Calcula retorno de propiedades | On-demand |
-| Macro Analyst | Resumen macro semanal | Semanal |
-| SEO Writer | Convierte guiones en artículos | Semanal |
-| UX Designer | Mejora el dashboard | On-demand |
-| Auditor | Verifica estado del sistema completo | Semanal (viernes) |
+| CEO | Dirección estratégica, crea issues para el equipo | On-demand |
+| CMO | Coordina equipo de contenido, QA de guiones | On-demand |
+| Investigador | Tendencias del mercado → tabla newsletter | Cada 48h |
+| Escritor | Guiones 200-350 palabras → Supabase | Cada 72h |
+| Analista | Mix de ángulos PPOS+ vs targets | Semanal |
+| Brain | Aprende de URLs externas, actualiza referencia/ | On-demand |
+| SEO Writer | Guiones publicados → artículos SEO | Semanal |
+| Price Tracker | Precios m² Tandil/CABA + CAC | Semanal |
+| Macro Analyst | IPC, dólar, UVA, tasas hipotecarias | Semanal |
+| ROI Calculator | Retorno de inversión on-demand | On-demand |
+| UX Designer | Dashboard index.html (owner del código) | On-demand |
+| Arquitecto | Sistemas técnicos (webs, agentes, integraciones) | On-demand |
+| Auditor | Estado del sistema + patrón dispatcher | Semanal (viernes) |
 
 ## Backups
 

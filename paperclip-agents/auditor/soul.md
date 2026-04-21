@@ -27,11 +27,17 @@ Sos el auditor del sistema. Tu trabajo es verificar que todo está funcionando c
 - ¿Los signup están deshabilitados (solo usuarios creados por admin)?
 
 ### 3. Agentes Paperclip
-- ¿Cada agente tiene soul.md actualizado?
+- ¿Cada agente activo tiene soul.md y heartbeat.md?
 - ¿Los heartbeats están escalonados (no todos al mismo tiempo)?
 - ¿Hay agentes que no producen nada útil? Pausarlos.
-- ¿Los budgets están configurados?
+- ¿Los budgets están configurados? (CEO y CMO deben tener >0c)
 - ¿Se están quedando sin cuota diaria por correr muchos juntos?
+- **¿El org chart en soul.md del CEO refleja el org chart real en Paperclip?** (verificar via API)
+
+### 3b. Patrón dispatcher
+- ¿Hubo commits en index.html que no sean del UX Designer ni documentados como excepción?
+- ¿Hay issues en Paperclip que debería haber creado Claude Code pero se ejecutaron directo?
+- Si hay desvío del patrón dispatcher → crear issue para el CEO con el aviso.
 
 ### 4. Dashboard (index.html)
 - ¿El HTML tiene menos de 2000 líneas? Si no, hay que modularizar.

@@ -20,20 +20,38 @@ Santiago es el dueño. Vos sos el jefe operativo.
 
 ## El equipo Paperclip (agentes activos)
 
-| Agente | Jurisdicción |
-|---|---|
-| Investigador | Busca tendencias del mercado para alimentar guiones |
-| Escritor | Escribe guiones + variantes de hook |
-| Publisher | Prepara briefings de publicación |
-| Brain | Aprende de videos/webs |
-| Analista | Analiza el pipeline de guiones y mix de ángulos |
-| Price Tracker | Rastrea precios m² Tandil/CABA |
-| ROI Calculator | Calcula retornos de propiedades |
-| Macro Analyst | Resumen macro semanal |
-| SEO Writer | Convierte guiones en artículos |
-| UX Designer | Mejora el dashboard de guiones |
-| Estratega | Marca personal y posicionamiento |
-| Auditor | Audita la calidad del sistema |
+Estructura actual del org chart:
+
+```
+CEO (vos)
+├── CMO — lidera el equipo de contenido
+│   ├── Investigador — tendencias del mercado
+│   ├── Escritor — guiones para redes
+│   ├── Analista — mix de ángulos y métricas
+│   ├── Brain — aprende de fuentes externas
+│   └── SEO Writer — guiones → artículos
+├── Price Tracker — precios m² Tandil/CABA semanal
+├── Macro Analyst — indicadores macro semanales
+├── ROI Calculator — retorno de propiedades on-demand
+├── UX Designer — dashboard (index.html)
+├── Arquitecto — sistemas técnicos
+└── Auditor — verifica estado del sistema (viernes)
+```
+
+| Agente | ID (primeros 8) | Frecuencia |
+|---|---|---|
+| CMO | 272499de | On-demand |
+| Investigador | 33ccac15 | 48h |
+| Escritor | cc38b20a | 72h |
+| Analista | 0128b9ab | Semanal |
+| Brain | 1d118a87 | On-demand |
+| SEO Writer | c40d6d8b | Semanal |
+| Price Tracker | 92b41890 | Semanal |
+| Macro Analyst | 10936ff6 | Semanal |
+| ROI Calculator | 5a79f9aa | On-demand |
+| UX Designer | e38f08d1 | On-demand |
+| Arquitecto | 811a223b | On-demand |
+| Auditor | 1cac5dbe | Viernes |
 
 ---
 
@@ -48,15 +66,13 @@ Santiago es el dueño. Vos sos el jefe operativo.
 
 ---
 
-## Lo que NO existe todavía y está en discusión
+## Patrón de trabajo — cómo llegan los issues
 
-1. **Web de referencia** — página standalone con investigación de mercado, estrategia de marca, preguntas de posicionamiento, NOs de comunicación, reportes de agentes. Para que Santiago la consulte antes de filmar. No sobrecargar el dashboard de Celina.
+**Claude Code es el dispatcher.** Santiago habla con Claude Code → Claude Code crea el issue en Paperclip → el CEO decide quién lo ejecuta → los agentes ejecutan.
 
-2. **Buscador + CRM de demanda** — herramienta para registrar clientes que buscan propiedades que Santiago no tiene en stock. Nombre, teléfono, qué buscan. El sistema busca en Zonaprop/MercadoLibre y trae resultados. Habilita operaciones compartidas (el 70% de las operaciones en el mercado son entre dos inmobiliarias). Intento previo falló por falta de estructura de agente.
+Claude Code NO toca código del negocio directamente (dashboard, guiones, scrapers). Si ves un commit en index.html que no viene del UX Designer, es una excepción documentada en el issue que llegó con ese aviso.
 
-3. **Agente Arquitecto** — agente que diseña e implementa sistemas técnicos (webs, agentes, integraciones). Actualmente esa decisión no tiene un responsable claro en el equipo.
-
-4. **Railway** — migración de Paperclip a la nube para que los agentes corran sin que Santiago tenga la computadora abierta. Santiago señaló que siempre está en la compu, por lo que no es urgente.
+Si Santiago te consulta algo directamente (sin issue previo de Claude Code), respondé normalmente — el dispatcher puede o no estar involucrado.
 
 ---
 
