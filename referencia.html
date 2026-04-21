@@ -1808,158 +1808,13 @@ document.getElementById('modal-busqueda').addEventListener('click', function(e) 
   }
 })();
 
-// ===== MERCADO =====
-const MERCADO_PAGE_SIZE = 50;
-let mercadoOffset = 0;
-let mercadoTotal = 0;
-let mercadoCargado = false;
-
-function buildMercadoUrl(offset) {
-  const operacion = document.getElementById('mf-operacion').value;
-  const tipologia = document.getElementById('mf-tipologia').value;
-  const precioMax = document.getElementById('mf-precio-max').value;
-  const dormsMin = document.getElementById('mf-dorms-min').value;
-  const zonaText = document.getElementById('mf-zona').value.trim();
-
-  let params = 'select=titulo,precio_usd,tipologia,operacion,zona,dormitorios,metros_totales,url,fuente';
-  params += '&order=precio_usd.asc.nullslast';
-  params += '&limit=' + MERCADO_PAGE_SIZE;
-  params += '&offset=' + offset;
-
-  if (operacion) params += '&operacion=eq.' + encodeURIComponent(operacion);
-  if (tipologia) params += '&tipologia=eq.' + encodeURIComponent(tipologia);
-  if (precioMax) params += '&precio_usd=lte.' + parseInt(precioMax);
-  if (dormsMin) params += '&dormitorios=gte.' + parseInt(dormsMin);
-  if (zonaText) params += '&zona=ilike.*' + encodeURIComponent(zonaText) + '*';
-
-  return SUPABASE_URL + '/rest/v1/propiedades_mercado?' + params;
-}
-
-async function fetchMercado(offset, append) {
-  const loading = document.getElementById('mf-loading');
-  const errEl = document.getElementById('mf-error');
-  const grid = document.getElementById('mf-grid');
-  const btn = document.getElementById('btn-buscar-mercado');
-  const btnMore = document.getElementById('btn-load-more');
-  const countEl = document.getElementById('mf-count');
-
-  loading.style.display = 'block';
-  errEl.style.display = 'none';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(buildMercadoUrl(offset), {
-      headers: {
-        'apikey': ANON_KEY,
-        'Authorization': 'Bearer ' + ANON_KEY,
-        'Prefer': 'count=exact'
-      }
-    });
-
-    if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.statusText);
-
-    const total = parseInt(res.headers.get('content-range').split('/')[1]) || 0;
-    mercadoTotal = total;
-    const data = await res.json();
-
-    if (!append) grid.innerHTML = '';
-
-    if (data.length === 0 && !append) {
-      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9632;</div><p>No se encontraron propiedades con los filtros seleccionados.</p></div>';
-      countEl.textContent = '0 resultados';
-      btnMore.style.display = 'none';
-    } else {
-      data.forEach(function(p) { grid.appendChild(buildPropCard(p)); });
-      const cargados = offset + data.length;
-      countEl.textContent = cargados + ' de ' + total.toLocaleString('es-AR') + ' propiedad' + (total !== 1 ? 'es' : '');
-      if (cargados < total) {
-        btnMore.style.display = 'block';
-        btnMore.disabled = false;
-        btnMore.textContent = 'Cargar mas (' + (total - cargados).toLocaleString('es-AR') + ' restantes)';
-      } else {
-        btnMore.style.display = 'none';
-      }
-    }
-
-    mercadoOffset = offset + data.length;
-    mercadoCargado = true;
-
-  } catch(err) {
-    errEl.style.display = 'block';
-    errEl.textContent = 'Error al consultar el mercado: ' + err.message;
-  } finally {
-    loading.style.display = 'none';
-    btn.disabled = false;
-  }
-}
-
-function buscarMercado() {
-  mercadoOffset = 0;
-  fetchMercado(0, false);
-}
-
-function cargarMasMercado() {
-  document.getElementById('btn-load-more').disabled = true;
-  fetchMercado(mercadoOffset, true);
-}
-
-function buildPropCard(p) {
-  const card = document.createElement('div');
-  card.className = 'prop-card';
-
-  // Precio
-  let precioHtml;
-  if (p.precio_usd) {
-    precioHtml = '<div class="prop-precio">USD ' + Math.round(p.precio_usd).toLocaleString('es-AR') + '</div>';
-  } else {
-    precioHtml = '<div class="prop-precio sin-precio">Precio a consultar</div>';
-  }
-
-  // Badges
-  const fuenteClass = p.fuente === 'mercadolibre' ? 'badge-fuente-ml' : 'badge-fuente-cdh';
-  const fuenteLabel = p.fuente === 'mercadolibre' ? 'ML' : 'CDH';
-  const opClass = p.operacion === 'venta' ? 'badge-op-venta' : 'badge-op-alquiler';
-  const opLabel = p.operacion || '';
-  const tipoLabel = p.tipologia || '';
-
-  let badgesHtml = '<div class="prop-badges">';
-  if (tipoLabel) badgesHtml += '<span class="prop-badge badge-tipo">' + esc(tipoLabel) + '</span>';
-  if (opLabel)   badgesHtml += '<span class="prop-badge ' + opClass + '">' + esc(opLabel) + '</span>';
-  badgesHtml    += '<span class="prop-badge ' + fuenteClass + '">' + fuenteLabel + '</span>';
-  badgesHtml    += '</div>';
-
-  // Meta tags
-  let metaHtml = '<div class="prop-meta">';
-  if (p.metros_totales) metaHtml += '<span class="prop-meta-item">' + p.metros_totales + ' m²</span>';
-  if (p.dormitorios !== null && p.dormitorios !== undefined) {
-    metaHtml += '<span class="prop-meta-item">' + p.dormitorios + ' dorm.</span>';
-  }
-  metaHtml += '</div>';
-
-  // Zona
-  const zonaHtml = p.zona ? '<div class="prop-zona">' + esc(p.zona) + '</div>' : '';
-
-  // Link
-  const linkHtml = p.url
-    ? '<a class="prop-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">Ver en ' + fuenteLabel + ' &rarr;</a>'
-    : '';
-
-  card.innerHTML =
-    '<div class="prop-card-top">' + precioHtml + badgesHtml + '</div>' +
-    '<div class="prop-titulo">' + esc(p.titulo || 'Sin titulo') + '</div>' +
-    metaHtml +
-    zonaHtml +
-    linkHtml;
-
-  return card;
-}
-
 // ===== INIT =====
 cargarBusquedas();
 
 // ===== MERCADO =====
 let mercadoOffset = 0;
 let mercadoTotal = 0;
+let mercadoCargado = false;
 const MERCADO_PAGE = 50;
 
 async function buscarMercado() {
@@ -2033,6 +1888,7 @@ async function _fetchMercado(reset) {
 
     const masbtn = document.getElementById('m-mas');
     masbtn.style.display = (mercadoOffset + MERCADO_PAGE < total) ? 'inline-block' : 'none';
+    mercadoCargado = true;
 
   } catch(e) {
     document.getElementById('m-results').innerHTML = '<p style="color:red;font-size:0.88rem;">Error: ' + e.message + '</p>';
