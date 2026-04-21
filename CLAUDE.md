@@ -4,11 +4,35 @@ Sistema de contenido para Santiago Funes Real Estate. Dashboard + agentes IA + b
 
 ## REGLAS CRÍTICAS — LEER ANTES DE HACER CUALQUIER COSA
 
-### 1. TODO pasa por Paperclip. Sin excepción.
-- **NUNCA** lanzar Claude Code subagents directamente (Agent tool) para trabajo del negocio
-- El flujo es: Santiago habla → dispatcher (Claude) crea issue en Paperclip → CEO decide → agentes ejecutan
-- Paperclip corre en **http://localhost:3100** — verificar que esté corriendo antes de cualquier acción
-- Si no está corriendo: `cd /Users/santiagofunes/Desktop/herramientas/inmobiliaria/paperclip && pnpm dev`
+### 1. Patrón de trabajo — dispatcher único
+
+**Claude Code es dispatcher, no ejecutor.**
+
+```
+Santiago habla con Claude Code
+        ↓
+Claude Code crea issue en Paperclip (con descripción precisa)
+        ↓
+CEO de Paperclip decide y asigna
+        ↓
+Agentes ejecutan
+        ↓
+Claude Code verifica resultado si Santiago lo pide
+```
+
+**Claude Code PUEDE hacer directamente:**
+- Configurar agentes, routines, skills, budgets en Paperclip via API (infraestructura del orquestador)
+- Crear/despertar issues en Paperclip (rol de dispatcher)
+- Discutir, diagnosticar, priorizar con Santiago
+
+**Claude Code NO toca directamente:**
+- `index.html` ni cualquier código del dashboard → UX Designer
+- Guiones, variantes, hooks → Escritor
+- Scrapers, scripts de datos → Arquitecto
+- Soul files de agentes → CEO (los agentes se autoeditan)
+- Cualquier artefacto del negocio en Supabase
+
+**Si hay una urgencia real bloqueante** (Paperclip caído, bug crítico que impide trabajar): documentar el cambio como SAN-XXX en Paperclip con el commit, dejar constancia, y el agente responsable toma ownership en el próximo ciclo.
 
 ### 2. Crear issues en Paperclip así:
 ```
