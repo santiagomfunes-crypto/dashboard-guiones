@@ -1,86 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercado — Santiago Funes RE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
-    <script src="supabase.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado Inmobiliario — Tandil</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh}
+
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0b1437}
+.login-box{background:#fff;border-radius:16px;padding:40px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-box h1{font-size:22px;font-weight:800;color:#0b1437;margin-bottom:4px}
+.login-box .sub{font-size:13px;color:#888;margin-bottom:24px}
+.login-box label{font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px;margin-top:12px}
+.login-box input{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;font-family:inherit}
+.login-box input:focus{border-color:#3b82f6}
+.login-btn{width:100%;margin-top:20px;padding:12px;background:#0b1437;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.login-btn:hover{background:#1e2d5a}
+.login-err{font-size:12px;color:#ef4444;margin-top:8px;text-align:center}
+
+/* NAV */
+#app{display:none}
+nav{background:#0b1437;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{color:#fff;font-size:18px;font-weight:800;letter-spacing:-.5px;text-decoration:none}
+.nav-logo span{color:#3b82f6}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:#cbd5e1;font-size:13px;font-weight:500;text-decoration:none}
+.nav-links a:hover{color:#fff}
+.nav-links a.active{color:#fff}
+.nav-btn{background:#3b82f6;color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none}
+.nav-btn:hover{background:#2563eb;color:#fff}
+
+/* FILTROS */
+.filters-wrap{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 32px;position:sticky;top:60px;z-index:99}
+.filters-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}
+.f-select{padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:#1a1a2e;cursor:pointer;outline:none;font-weight:500}
+.f-select:focus{border-color:#3b82f6}
+.f-input{padding:8px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;outline:none;min-width:220px;color:#1a1a2e}
+.f-input:focus{border-color:#3b82f6}
+.f-input::placeholder{color:#9ca3af}
+.f-check-wrap{display:flex;align-items:center;gap:6px;padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:8px;cursor:pointer;background:#fff;font-size:13px;font-weight:500;white-space:nowrap}
+.f-check-wrap:has(input:checked){border-color:#3b82f6;background:#eff6ff;color:#2563eb}
+.f-check-wrap input{cursor:pointer;accent-color:#3b82f6}
+.btn-clear{padding:8px 14px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:#6b7280;cursor:pointer;font-weight:500}
+.btn-clear:hover{border-color:#9ca3af;color:#374151}
+.filters-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.total-badge{font-size:13px;color:#6b7280;white-space:nowrap}
+.total-badge strong{color:#0b1437;font-weight:700}
+
+/* CONTENT */
+.content{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section-title{font-size:20px;font-weight:800;color:#0b1437;margin-bottom:20px}
+
+/* GRID */
+.prop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1100px){.prop-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:750px){.prop-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.prop-grid{grid-template-columns:1fr}}
+
+/* CARD */
+.prop-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .2s,transform .2s;cursor:pointer;text-decoration:none;display:block;color:inherit}
+.prop-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.12);transform:translateY(-2px)}
+.card-img{height:160px;background:#e8edf5;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-img-icon{font-size:40px;opacity:.25}
+.card-img-bg{position:absolute;inset:0;background:linear-gradient(135deg,#dde3f0 0%,#c8d1e8 100%)}
+.card-img-pattern{position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(45deg,#0b1437 0,#0b1437 1px,transparent 0,transparent 50%);background-size:8px 8px}
+.badge-op{position:absolute;top:10px;left:10px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-venta{background:#0b1437;color:#fff}
+.badge-alquiler{background:#059669;color:#fff}
+.badge-fuente{position:absolute;top:10px;right:10px;padding:3px 8px;border-radius:6px;font-size:9px;font-weight:700}
+.badge-cdh{background:#dbeafe;color:#1d4ed8}
+.badge-ml{background:#fef3c7;color:#b45309}
+.card-price-overlay{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(transparent,rgba(11,20,55,.8));color:#fff;font-size:15px;font-weight:800}
+.card-price-overlay .pm2{font-size:10px;font-weight:400;opacity:.8;margin-left:4px}
+.card-body{padding:12px}
+.card-title{font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{display:flex;gap:10px;flex-wrap:wrap}
+.card-tag{font-size:11px;color:#6b7280;display:flex;align-items:center;gap:3px}
+.card-tag svg{width:11px;height:11px;opacity:.6}
+.card-zona{font-size:11px;color:#9ca3af;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* EMPTY / LOADING */
+.state-msg{text-align:center;padding:60px 20px;color:#9ca3af;font-size:14px;grid-column:1/-1}
+.state-msg strong{display:block;font-size:18px;color:#6b7280;margin-bottom:6px}
+
+/* LOAD MORE */
+.load-more-wrap{text-align:center;margin-top:32px}
+.btn-load-more{padding:12px 32px;background:#fff;border:1.5px solid #0b1437;border-radius:8px;font-size:14px;font-weight:600;color:#0b1437;cursor:pointer;font-family:inherit}
+.btn-load-more:hover{background:#0b1437;color:#fff}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:#1e293b;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999}
+.toast.show{opacity:1}
+</style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="login">
-    <div class="login-box">
-        <h1>Santiago Funes</h1>
-        <div class="login-sub">Mercado Inmobiliario</div>
-        <form id="login-form">
-            <label>Email</label>
-            <input type="email" id="in-email" placeholder="tu@email.com" required>
-            <label>Contrasena</label>
-            <input type="password" id="in-pass" required>
-            <button type="submit" class="login-btn" id="login-btn">Ingresar</button>
-        </form>
-        <div class="login-error" id="login-err"></div>
-    </div>
+  <div class="login-box">
+    <h1>SFRE Mercado</h1>
+    <div class="sub">Inteligencia de mercado inmobiliario · Tandil</div>
+    <form id="login-form">
+      <label>Email</label>
+      <input type="email" id="in-email" placeholder="tu@email.com" required>
+      <label>Contraseña</label>
+      <input type="password" id="in-pass" required>
+      <button type="submit" class="login-btn" id="login-btn">Ingresar</button>
+    </form>
+    <div class="login-err" id="login-err"></div>
+  </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-    <div class="topbar">
-        <div class="topbar-brand">Mercado Inmobiliario</div>
-        <div class="topbar-stats">
-            <span><strong id="m-total-stat">-</strong> propiedades</span>
-        </div>
-        <div class="topbar-actions">
-            <a href="index.html" class="btn-outline" style="text-decoration:none">← Guiones</a>
-            <button class="btn-danger" onclick="doSignOut()">Salir</button>
-        </div>
+  <nav>
+    <a href="#" class="nav-logo">SFRE <span>Mercado</span></a>
+    <div class="nav-links">
+      <a href="index.html">Guiones</a>
+      <a href="mercado.html" class="active">Mercado</a>
     </div>
+    <a href="#" class="nav-btn" onclick="doSignOut();return false">Salir</a>
+  </nav>
 
-    <div style="padding:16px 20px;max-width:1100px;margin:0 auto">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div>
-                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Propiedades en venta</div>
-                <div style="font-size:11px;color:#999;margin-top:2px">Tandil · CasasDeHoy + MercadoLibre · actualizado diario</div>
-            </div>
-            <div id="mercado-stats" style="font-size:11px;color:#999;text-align:right"></div>
-        </div>
-
-        <!-- Filtros -->
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
-            <select id="m-op" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
-                <option value="">Operación</option>
-                <option value="venta">Venta</option>
-                <option value="alquiler">Alquiler</option>
-            </select>
-            <select id="m-tipo" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
-                <option value="">Tipología</option>
-                <option value="departamento">Departamento</option>
-                <option value="casa">Casa</option>
-                <option value="lote">Lote</option>
-                <option value="local">Local</option>
-            </select>
-            <select id="m-fuente" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
-                <option value="">Todas las fuentes</option>
-                <option value="casasdehoy">CasasDeHoy</option>
-                <option value="mercadolibre">MercadoLibre</option>
-            </select>
-            <input id="m-min-precio" type="number" placeholder="Precio mín USD" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;width:130px">
-            <input id="m-max-precio" type="number" placeholder="Precio máx USD" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;width:130px">
-            <input id="m-buscar" type="text" placeholder="Buscar (barrio, calle...)" oninput="debounce()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;width:180px">
-            <label style="font-size:12px;color:#8B6F3A;display:flex;align-items:center;gap:4px;cursor:pointer">
-                <input type="checkbox" id="m-pozo" onchange="buscarMercadoIdx()" style="cursor:pointer"> En pozo
-            </label>
-            <button onclick="limpiarFiltros()" style="font-size:11px;padding:4px 10px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;color:#666">Limpiar</button>
-        </div>
-
-        <div id="mercado-grid"></div>
-        <div style="text-align:center;margin-top:12px">
-            <button id="m-mas" onclick="cargarMasIdx()" style="display:none;font-size:12px;padding:6px 18px;border:1px solid #8B6F3A;border-radius:6px;background:#fff;color:#8B6F3A;cursor:pointer">Cargar más</button>
-        </div>
+  <!-- FILTROS -->
+  <div class="filters-wrap">
+    <div class="filters-row">
+      <select id="f-op" class="f-select" onchange="buscar()">
+        <option value="">Operación</option>
+        <option value="venta">Venta</option>
+        <option value="alquiler">Alquiler</option>
+      </select>
+      <select id="f-tipo" class="f-select" onchange="buscar()">
+        <option value="">Tipo</option>
+        <option value="departamento">Departamento</option>
+        <option value="casa">Casa</option>
+        <option value="lote">Lote</option>
+        <option value="local">Local</option>
+        <option value="oficina">Oficina</option>
+      </select>
+      <input id="f-q" class="f-input" type="text" placeholder="Buscar por barrio, calle, zona..." oninput="debounce()">
+      <select id="f-dorm" class="f-select" onchange="buscar()">
+        <option value="">Dormitorios</option>
+        <option value="1">1 dorm.</option>
+        <option value="2">2 dorm.</option>
+        <option value="3">3 dorm.</option>
+        <option value="4">4+ dorm.</option>
+      </select>
+      <select id="f-precio" class="f-select" onchange="buscar()">
+        <option value="">Precio</option>
+        <option value="0-50000">Hasta USD 50.000</option>
+        <option value="50000-100000">USD 50k – 100k</option>
+        <option value="100000-200000">USD 100k – 200k</option>
+        <option value="200000-999999999">Más de USD 200k</option>
+      </select>
+      <label class="f-check-wrap">
+        <input type="checkbox" id="f-pozo" onchange="buscar()"> En pozo
+      </label>
+      <button class="btn-clear" onclick="limpiar()">Limpiar</button>
+      <div class="filters-right">
+        <div class="total-badge" id="total-badge"></div>
+      </div>
     </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="section-title" id="section-title">Todas las propiedades</div>
+    <div class="prop-grid" id="grid"></div>
+    <div class="load-more-wrap">
+      <button class="btn-load-more" id="btn-mas" style="display:none" onclick="cargarMas()">Cargar más propiedades</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -90,136 +184,145 @@ var SB_URL='https://pgnmpxqljxrpnvexcygh.supabase.co';
 var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
 var sb=window.supabase.createClient(SB_URL,SB_KEY);
 
+var PAGE=40,offset=0,total=0,loaded=false;
+var debTO;function debounce(){clearTimeout(debTO);debTO=setTimeout(buscar,280);}
+
 function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+function fmt(n){return n?'USD '+Number(n).toLocaleString('es-AR'):'Consultar';}
+function pm2(p,m){return(p&&m)?'<span class="pm2">'+Math.round(p/m).toLocaleString('es-AR')+'/m²</span>':'';}
 
 // Auth
 document.getElementById('login-form').addEventListener('submit',function(e){
-    e.preventDefault();
-    var email=document.getElementById('in-email').value.trim();
-    var pass=document.getElementById('in-pass').value;
-    var btn=document.getElementById('login-btn');
-    var err=document.getElementById('login-err');
-    btn.disabled=true;btn.textContent='Ingresando...';err.textContent='';
-    sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
-        if(res.error)throw res.error;
-        enterApp();
-    }).catch(function(ex){
-        err.textContent=ex.message==='Invalid login credentials'?'Email o contrasena incorrectos.':(ex.message||'Error');
-    }).finally(function(){btn.disabled=false;btn.textContent='Ingresar';});
+  e.preventDefault();
+  var btn=document.getElementById('login-btn'),err=document.getElementById('login-err');
+  btn.disabled=true;btn.textContent='Ingresando...';err.textContent='';
+  sb.auth.signInWithPassword({
+    email:document.getElementById('in-email').value.trim(),
+    password:document.getElementById('in-pass').value
+  }).then(function(r){if(r.error)throw r.error;enterApp();})
+  .catch(function(ex){err.textContent=ex.message==='Invalid login credentials'?'Email o contraseña incorrectos.':(ex.message||'Error');})
+  .finally(function(){btn.disabled=false;btn.textContent='Ingresar';});
 });
 
-function doSignOut(){
-    sb.auth.signOut().then(function(){
-        document.getElementById('app').style.display='none';
-        document.getElementById('login').style.display='flex';
-    });
-}
+function doSignOut(){sb.auth.signOut().then(function(){document.getElementById('app').style.display='none';document.getElementById('login').style.display='flex';});}
 
 function enterApp(){
-    document.getElementById('login').style.display='none';
-    document.getElementById('app').style.display='block';
-    buscarMercadoIdx();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  buscar();
 }
 
-// Mercado
-var mercadoIdxOffset=0;var mercadoIdxTotal=0;var mercadoIdxCargado=false;
-var MERCADO_PAGE_IDX=40;
-
-var debTO;
-function debounce(){clearTimeout(debTO);debTO=setTimeout(buscarMercadoIdx,300);}
-
-function limpiarFiltros(){
-    document.getElementById('m-op').value='';
-    document.getElementById('m-tipo').value='';
-    document.getElementById('m-fuente').value='';
-    document.getElementById('m-max-precio').value='';
-    document.getElementById('m-min-precio').value='';
-    document.getElementById('m-buscar').value='';
-    document.getElementById('m-pozo').checked=false;
-    buscarMercadoIdx();
+// Filtros
+function limpiar(){
+  ['f-op','f-tipo','f-dorm','f-precio'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('f-q').value='';
+  document.getElementById('f-pozo').checked=false;
+  buscar();
 }
 
-function buscarMercadoIdx(){
-    mercadoIdxOffset=0;mercadoIdxCargado=false;
-    document.getElementById('mercado-grid').innerHTML='<div class="nl-empty">Cargando...</div>';
-    document.getElementById('m-mas').style.display='none';
-    _fetchMercadoIdx(true);
+function getFilters(){
+  var precio=document.getElementById('f-precio').value.split('-');
+  return{
+    op:document.getElementById('f-op').value,
+    tipo:document.getElementById('f-tipo').value,
+    q:document.getElementById('f-q').value.trim(),
+    dorm:document.getElementById('f-dorm').value,
+    minP:precio[0]||'',
+    maxP:precio[1]||'',
+    pozo:document.getElementById('f-pozo').checked
+  };
 }
 
-function cargarMasIdx(){
-    mercadoIdxOffset+=MERCADO_PAGE_IDX;
-    _fetchMercadoIdx(false);
+function buscar(){
+  offset=0;loaded=false;
+  document.getElementById('grid').innerHTML='<div class="state-msg"><strong>Cargando...</strong></div>';
+  document.getElementById('btn-mas').style.display='none';
+  fetch(true);
 }
 
-function _fetchMercadoIdx(reset){
-    var op=document.getElementById('m-op').value;
-    var tipo=document.getElementById('m-tipo').value;
-    var fuente=document.getElementById('m-fuente').value;
-    var maxPrecio=document.getElementById('m-max-precio').value;
-    var minPrecio=document.getElementById('m-min-precio').value;
-    var buscar=document.getElementById('m-buscar').value.trim();
-    var pozo=document.getElementById('m-pozo').checked;
+function cargarMas(){offset+=PAGE;fetch(false);}
 
-    var q=sb.from('propiedades_mercado')
-        .select('id,titulo,tipologia,operacion,precio_usd,metros_totales,dormitorios,zona,url,fuente',{count:'exact'})
-        .order('precio_usd',{ascending:true,nullsFirst:false})
-        .range(mercadoIdxOffset,mercadoIdxOffset+MERCADO_PAGE_IDX-1);
+function fetch(reset){
+  var f=getFilters();
+  var q=sb.from('propiedades_mercado')
+    .select('id,titulo,tipologia,operacion,precio_usd,metros_totales,dormitorios,zona,url,fuente',{count:'exact'})
+    .order('precio_usd',{ascending:true,nullsFirst:false})
+    .range(offset,offset+PAGE-1);
 
-    if(op)q=q.eq('operacion',op);
-    if(tipo)q=q.eq('tipologia',tipo);
-    if(fuente)q=q.eq('fuente',fuente);
-    if(maxPrecio)q=q.lte('precio_usd',parseInt(maxPrecio));
-    if(minPrecio)q=q.gte('precio_usd',parseInt(minPrecio));
-    if(buscar)q=q.or('titulo.ilike.%'+buscar+'%,zona.ilike.%'+buscar+'%');
-    if(pozo)q=q.or('titulo.ilike.%pozo%,titulo.ilike.%construccion%,titulo.ilike.%emprendimiento%');
+  if(f.op)q=q.eq('operacion',f.op);
+  if(f.tipo)q=q.eq('tipologia',f.tipo);
+  if(f.q)q=q.or('titulo.ilike.%'+f.q+'%,zona.ilike.%'+f.q+'%');
+  if(f.dorm){if(f.dorm==='4')q=q.gte('dormitorios',4);else q=q.eq('dormitorios',parseInt(f.dorm));}
+  if(f.minP)q=q.gte('precio_usd',parseInt(f.minP));
+  if(f.maxP)q=q.lte('precio_usd',parseInt(f.maxP));
+  if(f.pozo)q=q.or('titulo.ilike.%pozo%,titulo.ilike.%construccion%,titulo.ilike.%emprendimiento%,titulo.ilike.%obra%');
 
-    q.then(function(res){
-        var items=res.data||[];
-        var total=res.count||0;
-        mercadoIdxTotal=total;
-        var el=document.getElementById('mercado-grid');
-        var statsEl=document.getElementById('mercado-stats');
-        statsEl.textContent=total.toLocaleString('es-AR')+' propiedades';
-        document.getElementById('m-total-stat').textContent=total.toLocaleString('es-AR');
+  q.then(function(res){
+    var items=res.data||[];
+    total=res.count||0;
+    var grid=document.getElementById('grid');
+    var badge=document.getElementById('total-badge');
+    var title=document.getElementById('section-title');
 
-        if(reset)el.innerHTML='';
-        if(!items.length&&reset){el.innerHTML='<div class="nl-empty">Sin resultados para esos filtros.</div>';return;}
+    badge.innerHTML='<strong>'+total.toLocaleString('es-AR')+'</strong> propiedades';
 
-        var frag=document.createDocumentFragment();
-        items.forEach(function(p){
-            var fuenteTag=p.fuente==='casasdehoy'
-                ?'<span style="background:#e8f0fd;color:#4A90D9;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600">CDH</span>'
-                :'<span style="background:#fff8e8;color:#D48A2C;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600">ML</span>';
-            var precio=p.precio_usd?'USD '+Number(p.precio_usd).toLocaleString('es-AR'):'Consultar';
-            var detalles=[p.tipologia,p.metros_totales?Math.round(p.metros_totales)+'m²':null,p.dormitorios?p.dormitorios+'d':null,p.zona?p.zona.substring(0,30):null].filter(Boolean).join(' · ');
-            var d=document.createElement('div');
-            d.style.cssText='background:#fff;border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #E8E0D4';
-            d.innerHTML='<div style="flex:1;min-width:0">'+
-                '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'+fuenteTag+
-                '<span style="font-weight:600;color:#8B6F3A;font-size:13px">'+precio+'</span>'+
-                (p.metros_totales&&p.precio_usd?'<span style="font-size:10px;color:#aaa">USD '+Math.round(p.precio_usd/p.metros_totales).toLocaleString('es-AR')+'/m²</span>':'')+
-                '</div>'+
-                '<div style="font-size:12px;color:#2C3350;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(p.titulo||detalles)+'</div>'+
-                (detalles?'<div style="font-size:11px;color:#999;margin-top:2px">'+esc(detalles)+'</div>':'')+
-                '</div>'+
-                (p.url?'<a href="'+esc(p.url)+'" target="_blank" style="white-space:nowrap;font-size:11px;color:#8B6F3A;text-decoration:none;border:1px solid #8B6F3A;padding:4px 10px;border-radius:5px;flex-shrink:0">Ver</a>':'');
-            frag.appendChild(d);
-        });
-        el.appendChild(frag);
+    var activeFilters=Object.values(getFilters()).some(function(v){return v&&v!==false;});
+    title.textContent=activeFilters?'Propiedades filtradas':'Todas las propiedades';
 
-        mercadoIdxCargado=true;
-        var masbtn=document.getElementById('m-mas');
-        masbtn.style.display=(mercadoIdxOffset+MERCADO_PAGE_IDX<mercadoIdxTotal)?'inline-block':'none';
-    }).catch(function(e){
-        document.getElementById('mercado-grid').innerHTML='<div class="nl-empty">Error: '+esc(String(e))+'</div>';
+    if(reset)grid.innerHTML='';
+    if(!items.length&&reset){
+      grid.innerHTML='<div class="state-msg"><strong>Sin resultados</strong>Probá con otros filtros</div>';
+      return;
+    }
+
+    var frag=document.createDocumentFragment();
+    items.forEach(function(p){
+      var a=document.createElement('a');
+      a.className='prop-card';
+      a.href=p.url||'#';
+      if(p.url)a.target='_blank';
+      var badgeOp=p.operacion==='alquiler'
+        ?'<span class="badge-op badge-alquiler">Alquiler</span>'
+        :'<span class="badge-op badge-venta">Venta</span>';
+      var badgeFuente=p.fuente==='casasdehoy'
+        ?'<span class="badge-fuente badge-cdh">CDH</span>'
+        :'<span class="badge-fuente badge-ml">ML</span>';
+      var precio=fmt(p.precio_usd);
+      var m2txt=p.metros_totales?Math.round(p.metros_totales)+'m²':null;
+      var dormtxt=p.dormitorios?p.dormitorios+(p.dormitorios===1?' dorm':' dorm'):null;
+      var tags=[p.tipologia,m2txt,dormtxt].filter(Boolean);
+      var zona=p.zona?(p.zona.length>35?p.zona.substring(0,35)+'...':p.zona):'';
+
+      a.innerHTML=
+        '<div class="card-img">'+
+          '<div class="card-img-bg"></div>'+
+          '<div class="card-img-pattern"></div>'+
+          '<svg class="card-img-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'+
+          badgeOp+badgeFuente+
+          '<div class="card-price-overlay">'+precio+pm2(p.precio_usd,p.metros_totales)+'</div>'+
+        '</div>'+
+        '<div class="card-body">'+
+          '<div class="card-title">'+esc(p.titulo||tags.join(' · '))+'</div>'+
+          '<div class="card-meta">'+
+            tags.map(function(t){return '<span class="card-tag">'+esc(t)+'</span>';}).join('')+
+          '</div>'+
+          (zona?'<div class="card-zona">'+esc(zona)+'</div>':'')+
+        '</div>';
+      frag.appendChild(a);
     });
+    grid.appendChild(frag);
+
+    loaded=true;
+    document.getElementById('btn-mas').style.display=(offset+PAGE<total)?'block':'none';
+  }).catch(function(e){
+    document.getElementById('grid').innerHTML='<div class="state-msg"><strong>Error</strong>'+esc(String(e))+'</div>';
+  });
 }
 
 var toastTO;
 function toast(msg,err){var el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(err?' err':'');clearTimeout(toastTO);toastTO=setTimeout(function(){el.className='toast';},2500);}
 
-// Auto-login
-sb.auth.getSession().then(function(res){if(res.data&&res.data.session)enterApp();}).catch(function(){});
+sb.auth.getSession().then(function(r){if(r.data&&r.data.session)enterApp();}).catch(function(){});
 </script>
 </body>
 </html>
