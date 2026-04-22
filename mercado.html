@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado — Santiago Funes RE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <script src="supabase.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+    <div class="login-box">
+        <h1>Santiago Funes</h1>
+        <div class="login-sub">Mercado Inmobiliario</div>
+        <form id="login-form">
+            <label>Email</label>
+            <input type="email" id="in-email" placeholder="tu@email.com" required>
+            <label>Contrasena</label>
+            <input type="password" id="in-pass" required>
+            <button type="submit" class="login-btn" id="login-btn">Ingresar</button>
+        </form>
+        <div class="login-error" id="login-err"></div>
+    </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+    <div class="topbar">
+        <div class="topbar-brand">Mercado Inmobiliario</div>
+        <div class="topbar-stats">
+            <span><strong id="m-total-stat">-</strong> propiedades</span>
+        </div>
+        <div class="topbar-actions">
+            <a href="index.html" class="btn-outline" style="text-decoration:none">← Guiones</a>
+            <button class="btn-danger" onclick="doSignOut()">Salir</button>
+        </div>
+    </div>
+
+    <div style="padding:16px 20px;max-width:1100px;margin:0 auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Propiedades en venta</div>
+                <div style="font-size:11px;color:#999;margin-top:2px">Tandil · CasasDeHoy + MercadoLibre · actualizado diario</div>
+            </div>
+            <div id="mercado-stats" style="font-size:11px;color:#999;text-align:right"></div>
+        </div>
+
+        <!-- Filtros -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+            <select id="m-op" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
+                <option value="">Operación</option>
+                <option value="venta">Venta</option>
+                <option value="alquiler">Alquiler</option>
+            </select>
+            <select id="m-tipo" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
+                <option value="">Tipología</option>
+                <option value="departamento">Departamento</option>
+                <option value="casa">Casa</option>
+                <option value="lote">Lote</option>
+                <option value="local">Local</option>
+            </select>
+            <select id="m-fuente" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
+                <option value="">Todas las fuentes</option>
+                <option value="casasdehoy">CasasDeHoy</option>
+                <option value="mercadolibre">MercadoLibre</option>
+            </select>
+            <input id="m-max-precio" type="number" placeholder="Precio máx USD" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;width:130px">
+            <input id="m-min-precio" type="number" placeholder="Precio mín USD" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;width:130px">
+            <select id="m-zona" onchange="buscarMercadoIdx()" style="font-size:12px;padding:4px 8px;border:1px solid #E8E0D4;border-radius:6px;background:#fff">
+                <option value="">Zona</option>
+                <option value="centro">Centro</option>
+                <option value="norte">Norte</option>
+                <option value="sur">Sur</option>
+                <option value="este">Este</option>
+                <option value="oeste">Oeste</option>
+            </select>
+            <button onclick="limpiarFiltros()" style="font-size:11px;padding:4px 10px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;color:#666">Limpiar</button>
+        </div>
+
+        <div id="mercado-grid"></div>
+        <div style="text-align:center;margin-top:12px">
+            <button id="m-mas" onclick="cargarMasIdx()" style="display:none;font-size:12px;padding:6px 18px;border:1px solid #8B6F3A;border-radius:6px;background:#fff;color:#8B6F3A;cursor:pointer">Cargar más</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SB_URL='https://pgnmpxqljxrpnvexcygh.supabase.co';
+var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+var sb=window.supabase.createClient(SB_URL,SB_KEY);
+
+function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+
+// Auth
+document.getElementById('login-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=document.getElementById('in-email').value.trim();
+    var pass=document.getElementById('in-pass').value;
+    var btn=document.getElementById('login-btn');
+    var err=document.getElementById('login-err');
+    btn.disabled=true;btn.textContent='Ingresando...';err.textContent='';
+    sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
+        if(res.error)throw res.error;
+        enterApp();
+    }).catch(function(ex){
+        err.textContent=ex.message==='Invalid login credentials'?'Email o contrasena incorrectos.':(ex.message||'Error');
+    }).finally(function(){btn.disabled=false;btn.textContent='Ingresar';});
+});
+
+function doSignOut(){
+    sb.auth.signOut().then(function(){
+        document.getElementById('app').style.display='none';
+        document.getElementById('login').style.display='flex';
+    });
+}
+
+function enterApp(){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    buscarMercadoIdx();
+}
+
+// Mercado
+var mercadoIdxOffset=0;var mercadoIdxTotal=0;var mercadoIdxCargado=false;
+var MERCADO_PAGE_IDX=40;
+
+function limpiarFiltros(){
+    document.getElementById('m-op').value='';
+    document.getElementById('m-tipo').value='';
+    document.getElementById('m-fuente').value='';
+    document.getElementById('m-max-precio').value='';
+    document.getElementById('m-min-precio').value='';
+    document.getElementById('m-zona').value='';
+    buscarMercadoIdx();
+}
+
+function buscarMercadoIdx(){
+    mercadoIdxOffset=0;mercadoIdxCargado=false;
+    document.getElementById('mercado-grid').innerHTML='<div class="nl-empty">Cargando...</div>';
+    document.getElementById('m-mas').style.display='none';
+    _fetchMercadoIdx(true);
+}
+
+function cargarMasIdx(){
+    mercadoIdxOffset+=MERCADO_PAGE_IDX;
+    _fetchMercadoIdx(false);
+}
+
+function _fetchMercadoIdx(reset){
+    var op=document.getElementById('m-op').value;
+    var tipo=document.getElementById('m-tipo').value;
+    var fuente=document.getElementById('m-fuente').value;
+    var maxPrecio=document.getElementById('m-max-precio').value;
+    var minPrecio=document.getElementById('m-min-precio').value;
+    var zona=document.getElementById('m-zona').value;
+
+    var q=sb.from('propiedades_mercado').select('id,titulo,tipologia,operacion,precio_usd,m2,dormitorios,zona,url,fuente',{count:'exact'})
+        .order('precio_usd',{ascending:true,nullsFirst:false})
+        .range(mercadoIdxOffset,mercadoIdxOffset+MERCADO_PAGE_IDX-1);
+
+    if(op)q=q.eq('operacion',op);
+    if(tipo)q=q.eq('tipologia',tipo);
+    if(fuente)q=q.eq('fuente',fuente);
+    if(maxPrecio)q=q.lte('precio_usd',parseInt(maxPrecio));
+    if(minPrecio)q=q.gte('precio_usd',parseInt(minPrecio));
+    if(zona)q=q.ilike('zona','%'+zona+'%');
+
+    q.then(function(res){
+        var items=res.data||[];
+        var total=res.count||0;
+        mercadoIdxTotal=total;
+        var el=document.getElementById('mercado-grid');
+        var statsEl=document.getElementById('mercado-stats');
+        statsEl.textContent=total.toLocaleString('es-AR')+' propiedades';
+        document.getElementById('m-total-stat').textContent=total.toLocaleString('es-AR');
+
+        if(reset)el.innerHTML='';
+        if(!items.length&&reset){el.innerHTML='<div class="nl-empty">Sin resultados para esos filtros.</div>';return;}
+
+        var frag=document.createDocumentFragment();
+        items.forEach(function(p){
+            var fuenteTag=p.fuente==='casasdehoy'
+                ?'<span style="background:#e8f0fd;color:#4A90D9;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600">CDH</span>'
+                :'<span style="background:#fff8e8;color:#D48A2C;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600">ML</span>';
+            var precio=p.precio_usd?'USD '+Number(p.precio_usd).toLocaleString('es-AR'):'Consultar';
+            var detalles=[p.tipologia,p.m2?p.m2+'m²':null,p.dormitorios?p.dormitorios+'d':null,p.zona?p.zona.substring(0,25):null].filter(Boolean).join(' · ');
+            var d=document.createElement('div');
+            d.style.cssText='background:#fff;border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #E8E0D4';
+            d.innerHTML='<div style="flex:1;min-width:0">'+
+                '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'+fuenteTag+
+                '<span style="font-weight:600;color:#8B6F3A;font-size:13px">'+precio+'</span>'+
+                '</div>'+
+                '<div style="font-size:12px;color:#2C3350;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(p.titulo||detalles)+'</div>'+
+                (detalles?'<div style="font-size:11px;color:#999;margin-top:2px">'+esc(detalles)+'</div>':'')+
+                '</div>'+
+                (p.url?'<a href="'+esc(p.url)+'" target="_blank" style="white-space:nowrap;font-size:11px;color:#8B6F3A;text-decoration:none;border:1px solid #8B6F3A;padding:4px 10px;border-radius:5px;flex-shrink:0">Ver</a>':'');
+            frag.appendChild(d);
+        });
+        el.appendChild(frag);
+
+        mercadoIdxCargado=true;
+        var masbtn=document.getElementById('m-mas');
+        masbtn.style.display=(mercadoIdxOffset+MERCADO_PAGE_IDX<mercadoIdxTotal)?'inline-block':'none';
+    }).catch(function(e){
+        document.getElementById('mercado-grid').innerHTML='<div class="nl-empty">Error cargando datos: '+esc(String(e))+'</div>';
+    });
+}
+
+var toastTO;
+function toast(msg,err){var el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(err?' err':'');clearTimeout(toastTO);toastTO=setTimeout(function(){el.className='toast';},2500);}
+
+// Auto-login
+sb.auth.getSession().then(function(res){if(res.data&&res.data.session)enterApp();}).catch(function(){});
+</script>
+</body>
+</html>
