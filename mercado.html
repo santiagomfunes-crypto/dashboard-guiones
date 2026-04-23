@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mercado Inmobiliario — Tandil</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="supabase.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';document.head.appendChild(s)"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh}
@@ -153,7 +152,7 @@ nav{background:#0b1437;padding:0 32px;height:60px;display:flex;align-items:cente
 <script>
 var SB_URL='https://pgnmpxqljxrpnvexcygh.supabase.co';
 var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
-var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+var SB_HEADERS={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
 
 var PAGE=40,offset=0,total=0,loaded=false;
 var debTO;function debounce(){clearTimeout(debTO);debTO=setTimeout(buscar,280);}
@@ -162,9 +161,6 @@ function esc(s){var d=document.createElement('div');d.textContent=s||'';return d
 function fmt(n){return n?'USD '+Number(n).toLocaleString('es-AR'):'Consultar';}
 function pm2(p,m){return(p&&m)?'<span class="pm2">'+Math.round(p/m).toLocaleString('es-AR')+'/m²</span>':'';}
 
-function enterApp(){buscar();}
-
-// Filtros
 function limpiar(){
   ['f-op','f-tipo','f-dorm','f-precio'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('f-q').value='';
@@ -189,29 +185,38 @@ function buscar(){
   offset=0;loaded=false;
   document.getElementById('grid').innerHTML='<div class="state-msg"><strong>Cargando...</strong></div>';
   document.getElementById('btn-mas').style.display='none';
-  fetch(true);
+  cargar(true);
 }
 
-function cargarMas(){offset+=PAGE;fetch(false);}
+function cargarMas(){offset+=PAGE;cargar(false);}
 
-function fetch(reset){
+function buildUrl(){
   var f=getFilters();
-  var q=sb.from('propiedades_mercado')
-    .select('id,titulo,tipologia,operacion,precio_usd,metros_totales,dormitorios,zona,url,fuente',{count:'exact'})
-    .order('precio_usd',{ascending:true,nullsFirst:false})
-    .range(offset,offset+PAGE-1);
+  var filters=[];
+  var select='id,titulo,tipologia,operacion,precio_usd,metros_totales,dormitorios,zona,url,fuente';
+  var base=SB_URL+'/rest/v1/propiedades_mercado?select='+select+'&order=precio_usd.asc.nullslast';
+  base+='&offset='+offset+'&limit='+PAGE;
 
-  if(f.op)q=q.eq('operacion',f.op);
-  if(f.tipo)q=q.eq('tipologia',f.tipo);
-  if(f.q)q=q.or('titulo.ilike.%'+f.q+'%,zona.ilike.%'+f.q+'%');
-  if(f.dorm){if(f.dorm==='4')q=q.gte('dormitorios',4);else q=q.eq('dormitorios',parseInt(f.dorm));}
-  if(f.minP)q=q.gte('precio_usd',parseInt(f.minP));
-  if(f.maxP)q=q.lte('precio_usd',parseInt(f.maxP));
-  if(f.pozo)q=q.or('titulo.ilike.%pozo%,titulo.ilike.%construccion%,titulo.ilike.%emprendimiento%,titulo.ilike.%obra%');
+  if(f.op)filters.push('operacion=eq.'+f.op);
+  if(f.tipo)filters.push('tipologia=eq.'+f.tipo);
+  if(f.q){var qq=encodeURIComponent(f.q);filters.push('or=(titulo.ilike.*'+qq+'*,zona.ilike.*'+qq+'*)');}
+  if(f.dorm){if(f.dorm==='4')filters.push('dormitorios=gte.4');else filters.push('dormitorios=eq.'+f.dorm);}
+  if(f.minP)filters.push('precio_usd=gte.'+f.minP);
+  if(f.maxP)filters.push('precio_usd=lte.'+f.maxP);
+  if(f.pozo)filters.push('or=(titulo.ilike.*pozo*,titulo.ilike.*construccion*,titulo.ilike.*emprendimiento*,titulo.ilike.*obra*)');
 
-  q.then(function(res){
-    var items=res.data||[];
-    total=res.count||0;
+  return base+(filters.length?'&'+filters.join('&'):'');
+}
+
+function cargar(reset){
+  var url=buildUrl();
+  var hdrs=Object.assign({'Prefer':'count=exact','Range':offset+'-'+(offset+PAGE-1),'Range-Unit':'items'},SB_HEADERS);
+  window.fetch(url,{headers:hdrs}).then(function(r){
+    var cr=r.headers.get('Content-Range');
+    if(cr&&cr.indexOf('/')>-1)total=parseInt(cr.split('/')[1])||0;
+    return r.json();
+  }).then(function(items){
+    items=items||[];
     var grid=document.getElementById('grid');
     var badge=document.getElementById('total-badge');
     var title=document.getElementById('section-title');
@@ -274,7 +279,7 @@ function fetch(reset){
 var toastTO;
 function toast(msg,err){var el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(err?' err':'');clearTimeout(toastTO);toastTO=setTimeout(function(){el.className='toast';},2500);}
 
-enterApp();
+buscar();
 </script>
 </body>
 </html>
