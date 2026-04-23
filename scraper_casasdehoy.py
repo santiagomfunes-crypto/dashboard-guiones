@@ -95,6 +95,10 @@ def parse_card(card_html, tipologia_default, operacion_default):
     relative_url = url_m.group(1) if url_m else None
     url = PROP_BASE_URL + relative_url if relative_url else None
 
+    # ── Imagen (background-image del primer item del carousel) ──
+    img_m = re.search(r'background-image:\s*url\([\'"]?\.\./(fotos_nuevas/[^\'")]+)[\'"]?\)', card_html)
+    imagen_url = f"https://www.casasdehoy.com.ar/2022/{img_m.group(1)}" if img_m else None
+
     # ── Operación (venta/alquiler) ──
     if re.search(r'class="sale-tag\s+alquiler', card_html, re.IGNORECASE):
         operacion = "alquiler"
@@ -173,6 +177,7 @@ def parse_card(card_html, tipologia_default, operacion_default):
         "metros_totales": metros_totales,
         "cochera": cochera,
         "titulo": titulo,
+        "imagen_url": imagen_url,
     }
 
 
