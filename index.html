@@ -45,6 +45,8 @@
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('filmados',this)">Filmados</button>
+        <button class="tab" onclick="switchTab('reestructurar',this)">A reestructurar</button>
         <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
         <button class="tab" onclick="switchTab('selector',this)">Selector</button>
         <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
@@ -54,13 +56,8 @@
         <button class="tab" onclick="switchTab('guia',this)">Guia</button>
     </div>
 
-    <!-- VIEW: GUIONES -->
+    <!-- VIEW: GUIONES (activos) -->
     <div class="view on" id="v-guiones">
-        <div class="vista-bar">
-            <button class="vista-btn on" id="vb-activos" onclick="setVista('activos',this)">Activos</button>
-            <button class="vista-btn" id="vb-filmados" onclick="setVista('filmados',this)">Filmados</button>
-            <button class="vista-btn" id="vb-reestructurar" onclick="setVista('reestructurar',this)">A reestructurar</button>
-        </div>
         <div class="filterbar">
             <select id="f-tipo" onchange="doFilter()">
                 <option value="organico">Organico</option>
@@ -69,9 +66,8 @@
             </select>
             <select id="f-status" onchange="doFilter()">
                 <option value="todos">Todos los status</option>
-                <option value="filmado">Filmado</option>
                 <option value="listo">Listo</option>
-                <option value="publicado">Publicado</option>
+                <option value="aprobado">Aprobado</option>
             </select>
             <select id="f-ang" onchange="doFilter()">
                 <option value="todos">Todos los angulos</option>
@@ -84,6 +80,24 @@
             <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
         </div>
         <div class="content" id="content"></div>
+
+    <!-- VIEW: FILMADOS -->
+    </div>
+    <div class="view" id="v-filmados">
+        <div class="filterbar">
+            <input type="text" id="q-fil" placeholder="Buscar filmados..." oninput="renderVista('filmados')">
+            <span class="filter-count" id="cnt-fil"></span>
+        </div>
+        <div class="content" id="content-filmados"></div>
+
+    <!-- VIEW: A REESTRUCTURAR -->
+    </div>
+    <div class="view" id="v-reestructurar">
+        <div class="filterbar">
+            <input type="text" id="q-ree" placeholder="Buscar..." oninput="renderVista('reestructurar')">
+            <span class="filter-count" id="cnt-ree"></span>
+        </div>
+        <div class="content" id="content-reestructurar"></div>
     </div>
 
     <!-- VIEW: PARA FILMAR -->
@@ -749,12 +763,22 @@ function yoVote(guionId){
     return allVotos.some(function(v){return v.guion_id===guionId&&v.user_email===curUserEmail;});
 }
 
-var currentVista='activos';
-function setVista(v,btn){
-    currentVista=v;
-    document.querySelectorAll('.vista-btn').forEach(function(b){b.classList.remove('on');});
-    btn.classList.add('on');
-    doFilter();
+function isFilmado(g){var st=g.status||'listo';return st==='filmado'||st==='publicado';}
+function tieneVotos(g){return allVotos.some(function(v){return v.guion_id===g.id;});}
+
+function renderVista(vista){
+    var qEl=document.getElementById(vista==='filmados'?'q-fil':'q-ree');
+    var fQ=qEl?(qEl.value||'').trim().toLowerCase():'';
+    var cntEl=document.getElementById(vista==='filmados'?'cnt-fil':'cnt-ree');
+    var contentEl=document.getElementById('content-'+vista);
+    var r=allG.filter(function(g){
+        if(vista==='filmados'&&!isFilmado(g))return false;
+        if(vista==='reestructurar'&&(isFilmado(g)||tieneVotos(g)))return false;
+        if(fQ){var h=[g.id,g.titulo,g.hook,g.texto,g.tema].filter(Boolean).join(' ').toLowerCase();if(h.indexOf(fQ)<0)return false;}
+        return true;
+    });
+    if(cntEl)cntEl.textContent=r.length+' guiones';
+    if(contentEl)renderGroupedInto(r,contentEl);
 }
 
 function doFilter(){
@@ -765,13 +789,9 @@ function doFilter(){
     var fStatus=(document.getElementById('f-status')||{}).value||'todos';
 
     var r=allG.filter(function(g){
+        if(isFilmado(g))return false;
+        if(!tieneVotos(g))return false;
         var st=g.status||'listo';
-        var filmado=st==='filmado'||st==='publicado';
-        var tieneVotos=allVotos.some(function(v){return v.guion_id===g.id;});
-        if(currentVista==='activos'&&filmado)return false;
-        if(currentVista==='activos'&&!tieneVotos)return false;
-        if(currentVista==='filmados'&&!filmado)return false;
-        if(currentVista==='reestructurar'&&(filmado||tieneVotos))return false;
         var tp=(g.tipo||'organico').toLowerCase();
         if(fTipo!=='todos'&&((fTipo==='organico'&&tp!=='organico')||(fTipo==='ads'&&tp!=='ads')))return false;
         if(fAng!=='todos'&&(g.angulo||'')!==fAng)return false;
@@ -794,6 +814,30 @@ function doFilter(){
 }
 
 function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+
+function renderGroupedInto(gs,el){
+    if(!gs.length){el.innerHTML='<div style="text-align:center;padding:60px;color:#ccc;font-size:14px">No se encontraron guiones.</div>';return;}
+    var groups={};
+    gs.forEach(function(g){var t=g.tema||'Sin categoria';if(!groups[t])groups[t]=[];groups[t].push(g);});
+    var html='';
+    for(var tema in groups){
+        var items=groups[tema];
+        html+='<div class="section"><div class="section-head"><span>'+(TEMAS[tema]||tema)+'</span><span class="section-count">'+items.length+' guiones</span></div><div class="grid">';
+        items.forEach(function(g){
+            var a=(g.angulo||'').toLowerCase();var c=ANG_C[a]||['#F0EFED','#999'];var st=g.status||'listo';var hk=g.hook||'';
+            html+='<div class="card" onclick="openModal(\''+esc(g.id)+'\')">';
+            html+='<div class="card-head"><span class="card-id">'+esc(g.id)+'</span><span class="badge" style="background:'+c[0]+';color:'+c[1]+'">'+esc(ANG[a]||a)+'</span></div>';
+            html+='<div class="card-title">'+esc(g.titulo)+'</div><div class="card-hook">'+esc(hk)+'</div>';
+            var gVotos=getVotosPorGuion(g.id);
+            html+='<div class="card-foot"><span class="st st-'+st+'">'+(st.charAt(0).toUpperCase()+st.slice(1))+'</span>';
+            if(g.semana)html+='<span class="card-sem">'+esc(g.semana)+'</span>';
+            if(gVotos.length){html+='<span style="margin-left:auto;display:flex;gap:3px">'+gVotos.map(function(v){var b=BADGE_MAP[v.user_email]||'?';var col=BADGE_COLOR[b]||'#999';return '<span style="background:'+col+';color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">'+b+'</span>';}).join('')+'</span>';}
+            html+='</div></div>';
+        });
+        html+='</div></div>';
+    }
+    el.innerHTML=html;
+}
 
 function renderGrouped(gs){
     var el=document.getElementById('content');
@@ -846,6 +890,8 @@ function switchTab(name,btn){
     if(name==='reportes')loadReportes();
     if(name==='calendario')loadCalendario();
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
+    if(name==='filmados')renderVista('filmados');
+    if(name==='reestructurar')renderVista('reestructurar');
 }
 
 // Ideas v2 (tab view)
