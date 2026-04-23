@@ -253,7 +253,7 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
     for p in props:
         p["ultima_vez_visto"] = now
 
-    api_url = f"{supabase_url}/rest/v1/propiedades_mercado"
+    api_url = f"{supabase_url}/rest/v1/propiedades_mercado?on_conflict=fuente,fuente_id"
     headers = {
         "Authorization": f"Bearer {service_key}",
         "apikey": service_key,
