@@ -51,6 +51,7 @@
         <button class="tab" onclick="switchTab('selector',this)">Selector</button>
         <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
         <a href="referencia.html" class="tab" style="text-decoration:none">Mercado ↗</a>
+        <button class="tab" onclick="switchTab('briefing',this)">Briefing</button>
         <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
         <button class="tab" onclick="switchTab('reportes',this)">Reportes</button>
         <button class="tab" onclick="switchTab('guia',this)">Guia</button>
@@ -509,6 +510,27 @@
         </div>
     </div>
 
+    <!-- VIEW: BRIEFING -->
+    <div class="view" id="v-briefing">
+        <div style="padding:20px;max-width:900px;margin:0 auto">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Briefing de Mercado</div>
+                    <div style="font-size:11px;color:#999;margin-top:2px">Inteligencia generada por los agentes — datos, angulos y hooks para nuevos guiones</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <select id="bf-filtro" onchange="filterBriefing()" style="padding:7px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:11px;background:#F5F5F3;color:#1a1a2e;outline:none">
+                        <option value="todos">Todos</option>
+                        <option value="false">Sin convertir</option>
+                        <option value="true">Convertidos</option>
+                    </select>
+                    <span id="bf-count" style="font-size:11px;color:#999"></span>
+                </div>
+            </div>
+            <div id="briefing-list" style="margin-top:16px"></div>
+        </div>
+    </div>
+
     <!-- VIEW: IDEAS -->
     <div class="view" id="v-ideas">
         <div class="ideas-view">
@@ -887,6 +909,7 @@ function switchTab(name,btn){
     btn.classList.add('on');
     if(name==='selector')initTinder();
     if(name==='parafilmar')loadParaFilmar();
+    if(name==='briefing')loadBriefing();
     if(name==='reportes')loadReportes();
     if(name==='calendario')loadCalendario();
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
@@ -1293,6 +1316,47 @@ function rewriteHook(base,style){
         case 'contrario': return 'Todo el mundo piensa lo contrario, pero '+clean.toLowerCase();
         default: return clean;
     }
+}
+
+// Briefing
+var allBriefing=[];
+function loadBriefing(){
+    var el=document.getElementById('briefing-list');
+    el.innerHTML='<div style="color:#ccc;text-align:center;padding:20px">Cargando...</div>';
+    sb.from('newsletter').select('*').order('id',{ascending:false}).then(function(res){
+        allBriefing=res.data||[];
+        renderBriefing();
+    });
+}
+function filterBriefing(){renderBriefing();}
+function renderBriefing(){
+    var el=document.getElementById('briefing-list');
+    var filtro=document.getElementById('bf-filtro').value;
+    var items=allBriefing.filter(function(n){
+        if(filtro==='true')return n.convertido===true||n.convertido==='true';
+        if(filtro==='false')return !n.convertido;
+        return true;
+    });
+    document.getElementById('bf-count').textContent=items.length+' entradas';
+    if(!items.length){el.innerHTML='<div style="color:#ccc;text-align:center;padding:40px;font-size:13px">No hay entradas todavia. El Investigador genera el primer briefing los lunes y jueves.</div>';return;}
+    el.innerHTML=items.map(function(n){
+        var ang=ANG[n.angulo]||n.angulo||'';
+        var angC=ANG_C[n.angulo]||['#F0EFED','#999'];
+        var conv=n.convertido===true||n.convertido==='true';
+        return '<div style="background:#fff;border:1px solid #E8E4DD;border-radius:12px;padding:16px 18px;margin-bottom:12px">'+
+            '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">'+
+            '<div style="flex:1">'+
+            '<div style="font-size:13px;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:4px">'+esc(n.titulo)+'</div>'+
+            (ang?'<span style="display:inline-block;background:'+angC[0]+';color:'+angC[1]+';font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.5px">'+esc(ang)+'</span>':'')+'</div>'+
+            (conv?'<span style="font-size:10px;font-weight:600;color:#2D8C5A;background:#E8F5EE;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0">Convertido</span>':
+                  '<span style="font-size:10px;font-weight:600;color:#8B6F3A;background:#FDF8E8;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0">Sin convertir</span>')+
+            '</div>'+
+            (n.hook_propuesto?'<div style="background:#FDF8E8;border-left:3px solid #8B6F3A;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:12px;color:#5C4A28;font-style:italic;line-height:1.5">'+esc(n.hook_propuesto)+'</div>':'')+
+            (n.dato_duro?'<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px"><span style="font-size:10px;letter-spacing:1px;font-weight:700;color:#8B6F3A;white-space:nowrap;padding-top:1px">DATO</span><span style="font-size:12px;color:#1a1a2e;line-height:1.5">'+esc(n.dato_duro)+'</span></div>':'')+
+            (n.por_que_pega?'<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:8px"><span style="font-size:10px;letter-spacing:1px;font-weight:700;color:#999;white-space:nowrap;padding-top:1px">POR QUE</span><span style="font-size:12px;color:#555;line-height:1.5">'+esc(n.por_que_pega)+'</span></div>':'')+
+            (n.fuente_url?'<div style="font-size:11px;margin-top:4px"><a href="'+esc(n.fuente_url)+'" target="_blank" rel="noopener" style="color:#8B6F3A;text-decoration:none;word-break:break-all">'+esc(n.fuente_url)+'</a></div>':'')+
+            '</div>';
+    }).join('');
 }
 
 // Reportes
