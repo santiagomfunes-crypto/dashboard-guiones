@@ -89,11 +89,7 @@ nav{background:#0b1437;padding:0 32px;height:60px;display:flex;align-items:cente
 <div id="app" style="display:block">
   <nav>
     <a href="#" class="nav-logo">SFRE <span>Mercado</span></a>
-    <div class="nav-links">
-      <a href="index.html">Guiones</a>
-      <a href="mercado.html" class="active">Mercado</a>
-    </div>
-    <a href="index.html" class="nav-btn">Guiones ↗</a>
+    <div class="nav-links"></div>
   </nav>
 
   <!-- FILTROS -->
@@ -210,7 +206,7 @@ function buildUrl(){
 
 function cargar(reset){
   var url=buildUrl();
-  var hdrs=Object.assign({'Prefer':'count=exact','Range':offset+'-'+(offset+PAGE-1),'Range-Unit':'items'},SB_HEADERS);
+  var hdrs=Object.assign({'Prefer':'count=exact'},SB_HEADERS);
   window.fetch(url,{headers:hdrs}).then(function(r){
     var cr=r.headers.get('Content-Range');
     if(cr&&cr.indexOf('/')>-1)total=parseInt(cr.split('/')[1])||0;
