@@ -26,6 +26,12 @@ button{cursor:pointer;font-family:inherit}input,textarea,select{font-family:inhe
 .topbar-actions{display:flex;gap:8px;align-items:center}
 .topbar-actions button{padding:7px 14px;border-radius:8px;font-size:10px;font-weight:600;letter-spacing:0.5px}
 
+/* Vista bar */
+.vista-bar{background:#F5F5F3;border-bottom:1px solid #E8E4DD;padding:8px 20px;display:flex;gap:6px}
+.vista-btn{padding:6px 16px;border:1.5px solid #E8E4DD;border-radius:20px;font-size:12px;font-weight:600;background:#fff;color:#888;cursor:pointer;font-family:inherit;transition:all .15s}
+.vista-btn:hover{border-color:#8B6F3A;color:#8B6F3A}
+.vista-btn.on{background:#8B6F3A;border-color:#8B6F3A;color:#fff}
+
 /* Filter bar */
 .filterbar{background:#fff;border-bottom:1px solid #E8E4DD;padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .filterbar select{padding:8px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;color:#1a1a2e;outline:none;min-width:130px}
