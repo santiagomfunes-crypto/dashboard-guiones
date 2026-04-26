@@ -45,17 +45,25 @@
     <!-- Tabs -->
     <div class="tabs">
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
         <button class="tab" onclick="switchTab('filmados',this)">Filmados</button>
         <button class="tab" onclick="switchTab('reestructurar',this)">A reestructurar</button>
-        <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
-        <button class="tab" onclick="switchTab('selector',this)">Selector</button>
-        <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
-        <a href="referencia.html" class="tab" style="text-decoration:none">Mercado ↗</a>
-        <a href="newsletter.html" class="tab" style="text-decoration:none">Newsletter ↗</a>
-        <button class="tab" onclick="switchTab('briefing',this)">Briefing</button>
-        <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
-        <button class="tab" onclick="switchTab('reportes',this)">Reportes</button>
-        <button class="tab" onclick="switchTab('guia',this)">Guia</button>
+        <div class="tab-sep"></div>
+        <div class="tab-more-wrap">
+            <button class="tab tab-more" onclick="toggleMore(this)">Más ▾</button>
+            <div class="tab-more-menu" id="tab-more-menu">
+                <button onclick="switchTabMenu('selector')">Selector</button>
+                <button onclick="switchTabMenu('calendario')">Calendario</button>
+                <button onclick="switchTabMenu('ideas')">Ideas</button>
+                <button onclick="switchTabMenu('reportes')">Reportes</button>
+                <button onclick="switchTabMenu('briefing')">Briefing</button>
+                <button onclick="switchTabMenu('guia')">Guía</button>
+            </div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:4px;align-items:center">
+            <a href="newsletter.html" class="tab-ext">Newsletter ↗</a>
+            <a href="https://santiagomfunes-crypto.github.io/mercado/" target="_blank" class="tab-ext">Mercado ↗</a>
+        </div>
     </div>
 
     <!-- VIEW: GUIONES (activos) -->
@@ -697,7 +705,10 @@ var SB_URL='https://pgnmpxqljxrpnvexcygh.supabase.co';
 var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
 var ANG={prob:'Problema',prod:'Producto',sol:'Solucion',con:'Otro',aut:'Autoridad',pred:'Prediccion',comp:'Comparacion',hist:'Historia'};
 var ANG_C={prob:['#FDE8E8','#C8453A'],prod:['#E8F5EE','#2D8C5A'],sol:['#E8F0FD','#4A90D9'],con:['#FDF3E8','#D48A2C'],aut:['#F5E8FD','#7B4A9E'],pred:['#E8FDF8','#1F8F7A'],comp:['#FDF8E8','#A8862C'],hist:['#FDE8F0','#B4455F']};
-var TEMAS={'Inversion':'Inversion / Numeros','Credito':'Credito / Financiamiento','Costos':'Costos / Construccion','Fideicomiso':'Fideicomiso / Pozo','Tandil':'Tandil como Negocio','Alquileres':'Alquileres / Acceso','Mercado':'Mercado Argentina','PrimerDepto':'Primer Departamento','Mudarse':'Mudarse al Interior','Infra':'Infraestructura','Escena':'Detras de Escena','Polemicos':'Polemicos / Opinion','Meta':'Meta Ads','Captacion':'Captacion'};
+var TEMAS={'Inversion':'Inversión / Números','Credito':'Crédito / Financiamiento','Costos':'Costos / Construcción','Fideicomiso':'Fideicomiso / Pozo','Tandil':'Tandil como Negocio','Alquileres':'Alquileres / Acceso','Mercado':'Mercado Argentina','PrimerDepto':'Primer Departamento','Mudarse':'Mudarse al Interior','Infra':'Infraestructura','Escena':'Detrás de Escena','Polemicos':'Polémicos / Opinión','Meta':'Meta Ads','Captacion':'Captación','marca_personal':'Marca Personal','Historia Personal':'Historia Personal','Finanzas':'Finanzas Personales','Comparacion':'Comparaciones'};
+// Normaliza variantes de tema a la clave canónica
+var TEMA_NORM={'Inversión':'Inversion','inversión':'Inversion','inversion':'Inversion','Crédito':'Credito','crédito':'Credito','credito hipotecario':'Credito','Crédito hipotecario':'Credito','Crédito hipotecario':'Credito','costo de construccion':'Costos','Costos':'Costos','Inflación y Alquileres':'Alquileres','Inflación y economía':'Mercado','Comparación':'Comparacion','Comparación':'Comparacion'};
+function normTema(t){return TEMA_NORM[t]||t;}
 
 var sb=window.supabase.createClient(SB_URL,SB_KEY);
 var allG=[],curId=null,curRat=0,allVotos=[],curUserEmail='';
@@ -841,7 +852,7 @@ function esc(s){var d=document.createElement('div');d.textContent=s||'';return d
 function renderGroupedInto(gs,el){
     if(!gs.length){el.innerHTML='<div style="text-align:center;padding:60px;color:#ccc;font-size:14px">No se encontraron guiones.</div>';return;}
     var groups={};
-    gs.forEach(function(g){var t=g.tema||'Sin categoria';if(!groups[t])groups[t]=[];groups[t].push(g);});
+    gs.forEach(function(g){var t=normTema(g.tema||'Sin categoria');if(!groups[t])groups[t]=[];groups[t].push(g);});
     var html='';
     for(var tema in groups){
         var items=groups[tema];
@@ -866,10 +877,10 @@ function renderGrouped(gs){
     var el=document.getElementById('content');
     if(!gs.length){el.innerHTML='<div style="text-align:center;padding:60px;color:#ccc;font-size:14px">No se encontraron guiones.</div>';return;}
 
-    // Group by tema
+    // Group by tema (normalizado)
     var groups={};
     gs.forEach(function(g){
-        var t=g.tema||'Sin categoria';
+        var t=normTema(g.tema||'Sin categoria');
         if(!groups[t])groups[t]=[];
         groups[t].push(g);
     });
@@ -905,9 +916,9 @@ function renderGrouped(gs){
 // Tabs
 function switchTab(name,btn){
     document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on');});
-    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+    document.querySelectorAll('.tab,.tab-more').forEach(function(t){t.classList.remove('on');});
     document.getElementById('v-'+name).classList.add('on');
-    btn.classList.add('on');
+    if(btn)btn.classList.add('on');
     if(name==='selector')initTinder();
     if(name==='parafilmar')loadParaFilmar();
     if(name==='briefing')loadBriefing();
@@ -916,7 +927,27 @@ function switchTab(name,btn){
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
     if(name==='filmados')renderVista('filmados');
     if(name==='reestructurar')renderVista('reestructurar');
+    closeMore();
 }
+
+function switchTabMenu(name){
+    switchTab(name,null);
+    document.querySelector('.tab-more').classList.add('on');
+}
+
+function toggleMore(btn){
+    var menu=document.getElementById('tab-more-menu');
+    menu.classList.toggle('open');
+}
+
+function closeMore(){
+    var menu=document.getElementById('tab-more-menu');
+    if(menu)menu.classList.remove('open');
+}
+
+document.addEventListener('click',function(e){
+    if(!e.target.closest('.tab-more-wrap'))closeMore();
+});
 
 // Ideas v2 (tab view)
 var ideasSelBuilt=false;
