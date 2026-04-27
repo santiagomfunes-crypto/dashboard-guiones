@@ -637,12 +637,13 @@
                     <div class="fichas-section-label">Vista previa</div>
                     <div class="fichas-preview-card" id="fichas-preview-card">
                         <div class="fp-header">
-                            <div class="fp-brand">GRUPO OTERO</div>
-                            <div class="fp-sub">Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>
+                            <div class="fp-brand">SANTIAGO FUNES REAL ESTATE</div>
+                            <div class="fp-sub2">by Grupo Otero</div>
+                            <div class="fp-sub">Martillero responsable: Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>
                         </div>
                         <div class="fp-img-placeholder">Sin imagen principal</div>
                         <div class="fp-price">—</div>
-                        <div class="fp-footer">Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>
+                        <div class="fp-footer">Santiago Funes Real Estate &nbsp;·&nbsp; by Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>
                     </div>
                     <div style="font-size:9px;color:#bbb;text-align:center;margin-top:8px">Previa orientativa — el PDF puede diferir levemente</div>
                 </div>
@@ -2384,8 +2385,9 @@ function fichasUpdatePreview(){
     if(d.supCubierta)dataItems.push({l:'Cubierta',v:d.supCubierta+' m²'});
     if(d.supTotal)dataItems.push({l:'Total',v:d.supTotal+' m²'});
     var html='<div class="fp-header">'+
-        '<div class="fp-brand">GRUPO OTERO</div>'+
-        '<div class="fp-sub">Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>'+
+        '<div class="fp-brand">SANTIAGO FUNES REAL ESTATE</div>'+
+        '<div class="fp-sub2">by Grupo Otero</div>'+
+        '<div class="fp-sub">Martillero responsable: Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>'+
         (d.barrio?'<div class="fp-barrio">'+esc(d.barrio.toUpperCase())+(tipoCap?' &nbsp;·&nbsp; '+esc(tipoCap):'')+'</div>':'')+
     '</div>';
     html+=mainImg?'<img src="'+mainImg+'" class="fp-main-img" alt="">':'<div class="fp-img-placeholder">Sin imagen principal</div>';
@@ -2401,7 +2403,7 @@ function fichasUpdatePreview(){
         extraImgs.forEach(function(img){html+='<img src="'+img.dataUrl+'" class="fp-gallery-img" alt="">';});
         html+='</div>';
     }
-    html+='<div class="fp-footer">Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>';
+    html+='<div class="fp-footer">Santiago Funes Real Estate &nbsp;·&nbsp; by Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>';
     el.innerHTML=html;
 }
 
@@ -2416,18 +2418,20 @@ function fichasGeneratePDF(){
         var doc=new window.jspdf.jsPDF('p','mm','a4');
         var W=210,H=297,mg=12,y=0;
         // Header
-        doc.setFillColor(26,26,46);doc.rect(0,0,W,36,'F');
-        doc.setDrawColor(139,111,58);doc.setLineWidth(0.4);doc.line(mg,31,W-mg,31);
-        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(22);
-        doc.text('GRUPO OTERO',mg,16);
-        doc.setTextColor(245,245,243);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-        doc.text('Juan Otero  |  Martillero Público  |  Mat. N° 1966  |  C.M.C.P. Azul',mg,23);
+        doc.setFillColor(26,26,46);doc.rect(0,0,W,40,'F');
+        doc.setDrawColor(139,111,58);doc.setLineWidth(0.4);doc.line(mg,35,W-mg,35);
+        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(18);
+        doc.text('SANTIAGO FUNES REAL ESTATE',mg,13);
+        doc.setTextColor(180,160,120);doc.setFont('helvetica','normal');doc.setFontSize(9);
+        doc.text('by Grupo Otero',mg,20);
+        doc.setTextColor(170,170,195);doc.setFontSize(6.8);
+        doc.text('Martillero responsable: Juan Otero  |  Mat. N° 1966  |  C.M.C.P. Azul',mg,27);
         if(d.barrio){
             var barrioTxt=d.barrio.toUpperCase()+(d.tipo?' — '+(d.tipo.charAt(0).toUpperCase()+d.tipo.slice(1)):'');
             doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(200,200,220);
-            doc.text(barrioTxt,mg,29);
+            doc.text(barrioTxt,mg,33);
         }
-        y=40;
+        y=44;
         // Imagen principal
         var imgW=W-mg*2,mainImgH=85;
         if(fichasImages.length>0){
@@ -2486,9 +2490,9 @@ function fichasGeneratePDF(){
         // Footer
         doc.setFillColor(26,26,46);doc.rect(0,H-15,W,15,'F');
         doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('GRUPO OTERO',mg,H-8);
+        doc.text('SANTIAGO FUNES REAL ESTATE',mg,H-8);
         doc.setTextColor(160,160,190);doc.setFont('helvetica','normal');doc.setFontSize(7);
-        doc.text('Tandil, Buenos Aires  ·  Juan Otero  ·  Martillero Público Mat. N° 1966  ·  C.M.C.P. Azul',W/2,H-8,{align:'center'});
+        doc.text('by Grupo Otero  ·  Tandil, Buenos Aires  ·  Juan Otero Mat. N° 1966 C.M.C.P. Azul',W/2,H-8,{align:'center'});
         // Guardar
         var tipo=d.tipo||'propiedad';
         var barrio=(d.barrio||'tandil').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
