@@ -6,6 +6,7 @@
     <title>Guiones — Santiago Funes RE</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
     <script src="supabase.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -58,6 +59,7 @@
                 <button onclick="switchTabMenu('reportes')">Reportes</button>
                 <button onclick="switchTabMenu('briefing')">Briefing</button>
                 <button onclick="switchTabMenu('guia')">Guía</button>
+                <button onclick="switchTabMenu('fichas')">Fichas</button>
             </div>
         </div>
         <div style="margin-left:auto;display:flex;gap:4px;align-items:center">
@@ -540,6 +542,114 @@
         </div>
     </div>
 
+    <!-- VIEW: FICHAS -->
+    <div class="view" id="v-fichas">
+        <div class="fichas-wrap">
+            <div class="fichas-head">
+                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Fichas Grupo Otero</div>
+                <div style="font-size:11px;color:#999;margin-top:2px">Genera fichas con branding profesional para enviar a clientes por WhatsApp o email</div>
+            </div>
+            <div class="fichas-layout">
+                <!-- FORMULARIO -->
+                <div class="fichas-form-col">
+                    <div class="fichas-section">
+                        <div class="fichas-section-label">Datos de la propiedad</div>
+                        <div class="frow">
+                            <div class="fg">
+                                <label>Tipo</label>
+                                <select id="fi-tipo" onchange="fichasUpdatePreview()">
+                                    <option value="casa">Casa</option>
+                                    <option value="departamento">Departamento</option>
+                                    <option value="PH">PH</option>
+                                    <option value="local">Local</option>
+                                    <option value="terreno">Terreno</option>
+                                </select>
+                            </div>
+                            <div class="fg">
+                                <label>Barrio / Zona</label>
+                                <input id="fi-barrio" placeholder="Ej: Centro, Movediza..." oninput="fichasUpdatePreview()">
+                            </div>
+                        </div>
+                        <div class="fichas-data-grid">
+                            <div class="fg">
+                                <label>Ambientes</label>
+                                <select id="fi-amb" onchange="fichasUpdatePreview()">
+                                    <option value="">—</option>
+                                    <option>1</option><option>2</option><option>3</option><option>4</option><option value="5+">5+</option>
+                                </select>
+                            </div>
+                            <div class="fg">
+                                <label>Dormitorios</label>
+                                <input type="number" id="fi-dorm" min="0" max="10" placeholder="0" oninput="fichasUpdatePreview()">
+                            </div>
+                            <div class="fg">
+                                <label>Baños</label>
+                                <input type="number" id="fi-ban" min="0" max="10" placeholder="0" oninput="fichasUpdatePreview()">
+                            </div>
+                            <div class="fg">
+                                <label>Sup. cubierta (m²)</label>
+                                <input type="number" id="fi-sup-c" min="0" placeholder="0" oninput="fichasUpdatePreview()">
+                            </div>
+                        </div>
+                        <div class="frow">
+                            <div class="fg">
+                                <label>Sup. total (m²)</label>
+                                <input type="number" id="fi-sup-t" min="0" placeholder="0" oninput="fichasUpdatePreview()">
+                            </div>
+                            <div class="fg">
+                                <label>Precio</label>
+                                <div style="display:flex;gap:6px">
+                                    <select id="fi-moneda" class="fichas-moneda-sel" onchange="fichasUpdatePreview()">
+                                        <option value="USD">USD</option>
+                                        <option value="ARS">ARS</option>
+                                    </select>
+                                    <input type="number" id="fi-precio" placeholder="0" style="flex:1" oninput="fichasUpdatePreview()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fg">
+                            <label>Descripción</label>
+                            <textarea id="fi-desc" rows="4" placeholder="Detalles de la propiedad, estado, características destacadas..." oninput="fichasUpdatePreview()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="fichas-section">
+                        <div class="fichas-section-label">Imágenes <span style="color:#bbb;font-size:9px;font-weight:400;letter-spacing:0;text-transform:none">— mín. 1, máx. 10</span></div>
+                        <div id="fichas-img-previews" class="fichas-img-grid">
+                            <div class="fichas-img-empty">Sin imágenes. Subí al menos una foto.</div>
+                        </div>
+                        <button class="fichas-btn-secondary" onclick="document.getElementById('fi-imgs').click()">+ Agregar imágenes</button>
+                        <input type="file" id="fi-imgs" accept="image/*" multiple style="display:none" onchange="fichasHandleFiles(this)">
+                    </div>
+
+                    <div class="fichas-section">
+                        <div class="fg" style="margin-bottom:0">
+                            <label>Notas internas <span style="font-size:9px;color:#bbb;font-weight:400;letter-spacing:0;text-transform:none">(no aparece en el PDF)</span></label>
+                            <textarea id="fi-notas" rows="2" placeholder="Ej: de Zonaprop, verificar precio final antes de enviar..."></textarea>
+                        </div>
+                    </div>
+
+                    <button id="fichas-pdf-btn" class="fichas-btn-primary" onclick="fichasGeneratePDF()">Descargar PDF</button>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="fichas-preview-col">
+                    <div class="fichas-section-label">Vista previa</div>
+                    <div class="fichas-preview-card" id="fichas-preview-card">
+                        <div class="fp-header">
+                            <div class="fp-brand">GRUPO OTERO</div>
+                            <div class="fp-sub">Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>
+                        </div>
+                        <div class="fp-img-placeholder">Sin imagen principal</div>
+                        <div class="fp-price">—</div>
+                        <div class="fp-footer">Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>
+                    </div>
+                    <div style="font-size:9px;color:#bbb;text-align:center;margin-top:8px">Previa orientativa — el PDF puede diferir levemente</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- VIEW: IDEAS -->
     <div class="view" id="v-ideas">
         <div class="ideas-view">
@@ -924,6 +1034,7 @@ function switchTab(name,btn){
     if(name==='briefing')loadBriefing();
     if(name==='reportes')loadReportes();
     if(name==='calendario')loadCalendario();
+    if(name==='fichas')fichasUpdatePreview();
     if(name==='ideas'){loadIdeas2();buildIdeasSelects();}
     if(name==='filmados')renderVista('filmados');
     if(name==='reestructurar')renderVista('reestructurar');
@@ -2178,6 +2289,215 @@ function deleteSesion(){
         closeSesEdit();
         loadSesiones();
     });
+}
+
+// ---- FICHAS ----
+var fichasImages=[];
+
+function fichasHandleFiles(input){
+    var files=Array.from(input.files);
+    files.forEach(function(file){
+        if(fichasImages.length>=10){toast('Máximo 10 imágenes',true);return;}
+        var reader=new FileReader();
+        reader.onload=function(e){
+            var img=new Image();
+            img.onload=function(){
+                var canvas=document.createElement('canvas');
+                var maxDim=1400;
+                var w=img.naturalWidth,h=img.naturalHeight;
+                if(w>maxDim||h>maxDim){
+                    if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}
+                    else{w=Math.round(w*maxDim/h);h=maxDim;}
+                }
+                canvas.width=w;canvas.height=h;
+                var ctx=canvas.getContext('2d');
+                ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+                ctx.drawImage(img,0,0,w,h);
+                fichasImages.push({dataUrl:canvas.toDataURL('image/jpeg',0.88)});
+                fichasRenderImagePreviews();
+                fichasUpdatePreview();
+            };
+            img.src=e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+    input.value='';
+}
+
+function fichasRenderImagePreviews(){
+    var container=document.getElementById('fichas-img-previews');
+    if(!fichasImages.length){
+        container.innerHTML='<div class="fichas-img-empty">Sin imágenes. Subí al menos una foto.</div>';
+        return;
+    }
+    container.innerHTML=fichasImages.map(function(img,idx){
+        return '<div class="fichas-img-item">'+
+            '<img src="'+img.dataUrl+'" style="width:100%;height:70px;object-fit:cover;border-radius:4px 4px 0 0;display:block">'+
+            '<div style="display:flex;gap:2px;padding:3px;background:#F5F5F3;border-top:1px solid #E8E4DD">'+
+                (idx>0?'<button onclick="fichasMoveImage('+idx+',-1)" class="fichas-img-btn" title="Subir">&#8593;</button>':'<span class="fichas-img-btn" style="background:none;color:#8B6F3A;font-size:7px;font-weight:700;letter-spacing:0.5px">PPAL</span>')+
+                (idx<fichasImages.length-1?'<button onclick="fichasMoveImage('+idx+',1)" class="fichas-img-btn" title="Bajar">&#8595;</button>':'<span style="flex:1"></span>')+
+                '<button onclick="fichasRemoveImage('+idx+')" class="fichas-img-btn" style="margin-left:auto;color:#C8453A" title="Eliminar">&#x2715;</button>'+
+            '</div>'+
+        '</div>';
+    }).join('');
+}
+
+function fichasMoveImage(idx,dir){
+    var newIdx=idx+dir;
+    if(newIdx<0||newIdx>=fichasImages.length)return;
+    var tmp=fichasImages[idx];fichasImages[idx]=fichasImages[newIdx];fichasImages[newIdx]=tmp;
+    fichasRenderImagePreviews();fichasUpdatePreview();
+}
+
+function fichasRemoveImage(idx){
+    fichasImages.splice(idx,1);
+    fichasRenderImagePreviews();fichasUpdatePreview();
+}
+
+function fichasGetData(){
+    return{
+        tipo:document.getElementById('fi-tipo').value,
+        ambientes:document.getElementById('fi-amb').value,
+        dormitorios:document.getElementById('fi-dorm').value,
+        banos:document.getElementById('fi-ban').value,
+        supCubierta:document.getElementById('fi-sup-c').value,
+        supTotal:document.getElementById('fi-sup-t').value,
+        barrio:document.getElementById('fi-barrio').value,
+        precio:document.getElementById('fi-precio').value,
+        moneda:document.getElementById('fi-moneda').value,
+        descripcion:document.getElementById('fi-desc').value
+    };
+}
+
+function fichasUpdatePreview(){
+    var d=fichasGetData();
+    var el=document.getElementById('fichas-preview-card');
+    if(!el)return;
+    var mainImg=fichasImages.length>0?fichasImages[0].dataUrl:null;
+    var extraImgs=fichasImages.slice(1,5);
+    var precioStr=d.precio?((d.moneda||'USD')+' '+Number(d.precio).toLocaleString('es-AR')):'—';
+    var tipoCap=d.tipo?(d.tipo.charAt(0).toUpperCase()+d.tipo.slice(1)):'';
+    var dataItems=[];
+    if(d.ambientes)dataItems.push({l:'Amb.',v:d.ambientes});
+    if(d.dormitorios)dataItems.push({l:'Dorm.',v:d.dormitorios});
+    if(d.banos)dataItems.push({l:'Baños',v:d.banos});
+    if(d.supCubierta)dataItems.push({l:'Cubierta',v:d.supCubierta+' m²'});
+    if(d.supTotal)dataItems.push({l:'Total',v:d.supTotal+' m²'});
+    var html='<div class="fp-header">'+
+        '<div class="fp-brand">GRUPO OTERO</div>'+
+        '<div class="fp-sub">Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>'+
+        (d.barrio?'<div class="fp-barrio">'+esc(d.barrio.toUpperCase())+(tipoCap?' &nbsp;·&nbsp; '+esc(tipoCap):'')+'</div>':'')+
+    '</div>';
+    html+=mainImg?'<img src="'+mainImg+'" class="fp-main-img" alt="">':'<div class="fp-img-placeholder">Sin imagen principal</div>';
+    if(dataItems.length){
+        html+='<div class="fp-data-row">';
+        dataItems.forEach(function(item){html+='<div class="fp-data-item"><div class="fp-data-val">'+esc(String(item.v))+'</div><div class="fp-data-label">'+esc(item.l)+'</div></div>';});
+        html+='</div>';
+    }
+    html+='<div class="fp-price">'+esc(precioStr)+'</div>';
+    if(d.descripcion)html+='<div class="fp-desc">'+esc(d.descripcion.substring(0,220))+(d.descripcion.length>220?'...':'')+'</div>';
+    if(extraImgs.length){
+        html+='<div class="fp-gallery">';
+        extraImgs.forEach(function(img){html+='<img src="'+img.dataUrl+'" class="fp-gallery-img" alt="">';});
+        html+='</div>';
+    }
+    html+='<div class="fp-footer">Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>';
+    el.innerHTML=html;
+}
+
+function fichasGeneratePDF(){
+    if(!fichasImages.length){toast('Necesitás al menos una imagen',true);return;}
+    var d=fichasGetData();
+    if(!d.barrio||!d.precio){toast('Completá barrio y precio',true);return;}
+    if(!window.jspdf){toast('Cargando generador de PDF, esperá un momento...',true);return;}
+    var btn=document.getElementById('fichas-pdf-btn');
+    btn.disabled=true;btn.textContent='Generando...';
+    try{
+        var doc=new window.jspdf.jsPDF('p','mm','a4');
+        var W=210,H=297,mg=12,y=0;
+        // Header
+        doc.setFillColor(26,26,46);doc.rect(0,0,W,36,'F');
+        doc.setDrawColor(139,111,58);doc.setLineWidth(0.4);doc.line(mg,31,W-mg,31);
+        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(22);
+        doc.text('GRUPO OTERO',mg,16);
+        doc.setTextColor(245,245,243);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        doc.text('Juan Otero  |  Martillero Público  |  Mat. N° 1966  |  C.M.C.P. Azul',mg,23);
+        if(d.barrio){
+            var barrioTxt=d.barrio.toUpperCase()+(d.tipo?' — '+(d.tipo.charAt(0).toUpperCase()+d.tipo.slice(1)):'');
+            doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(200,200,220);
+            doc.text(barrioTxt,mg,29);
+        }
+        y=40;
+        // Imagen principal
+        var imgW=W-mg*2,mainImgH=85;
+        if(fichasImages.length>0){
+            try{doc.addImage(fichasImages[0].dataUrl,'JPEG',mg,y,imgW,mainImgH,'','FAST');}catch(e){}
+        }
+        y+=mainImgH+5;
+        // Datos clave
+        var dataItems=[];
+        if(d.ambientes)dataItems.push({l:'Ambientes',v:d.ambientes});
+        if(d.dormitorios)dataItems.push({l:'Dormitorios',v:d.dormitorios});
+        if(d.banos)dataItems.push({l:'Baños',v:d.banos});
+        if(d.supCubierta)dataItems.push({l:'Sup. Cubierta',v:d.supCubierta+' m²'});
+        if(d.supTotal)dataItems.push({l:'Sup. Total',v:d.supTotal+' m²'});
+        if(dataItems.length){
+            doc.setFillColor(253,248,232);doc.setDrawColor(212,168,58);doc.setLineWidth(0.3);
+            doc.roundedRect(mg,y,imgW,26,2,2,'FD');
+            var cw=imgW/dataItems.length;
+            dataItems.forEach(function(item,i){
+                var cx=mg+cw*i+cw/2;
+                doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(26,26,46);
+                doc.text(String(item.v),cx,y+12,{align:'center'});
+                doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(139,111,58);
+                doc.text(item.l.toUpperCase(),cx,y+20,{align:'center'});
+            });
+            y+=30;
+        }
+        // Precio
+        var precioStr=(d.moneda==='USD'?'USD ':'ARS ')+Number(d.precio).toLocaleString('es-AR');
+        doc.setFillColor(26,26,46);doc.roundedRect(mg,y,imgW,15,2,2,'F');
+        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(16);
+        doc.text(precioStr,W/2,y+10.5,{align:'center'});
+        y+=20;
+        // Descripcion
+        if(d.descripcion){
+            doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(60,60,80);
+            var lines=doc.splitTextToSize(d.descripcion,imgW);
+            var maxL=Math.floor((H-20-y)/4.2);
+            if(lines.length>maxL)lines=lines.slice(0,maxL);
+            doc.text(lines,mg,y+6);
+            y+=lines.length*4.2+12;
+        }
+        // Galeria de fotos adicionales
+        var extras=fichasImages.slice(1);
+        if(extras.length&&y<H-40){
+            doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(139,111,58);
+            doc.text('GALERÍA DE FOTOS',mg,y);y+=5;
+            var photoW=(imgW-4)/2,photoH=44;
+            for(var i=0;i<extras.length;i++){
+                if(y+photoH>H-18)break;
+                var col=i%2;
+                var px=mg+col*(photoW+4);
+                try{doc.addImage(extras[i].dataUrl,'JPEG',px,y,photoW,photoH,'','FAST');}catch(e){}
+                if(col===1||i===extras.length-1)y+=photoH+4;
+            }
+        }
+        // Footer
+        doc.setFillColor(26,26,46);doc.rect(0,H-15,W,15,'F');
+        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(8);
+        doc.text('GRUPO OTERO',mg,H-8);
+        doc.setTextColor(160,160,190);doc.setFont('helvetica','normal');doc.setFontSize(7);
+        doc.text('Tandil, Buenos Aires  ·  Juan Otero  ·  Martillero Público Mat. N° 1966  ·  C.M.C.P. Azul',W/2,H-8,{align:'center'});
+        // Guardar
+        var tipo=d.tipo||'propiedad';
+        var barrio=(d.barrio||'tandil').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+        var fecha=new Date().toISOString().slice(0,10);
+        doc.save('ficha-'+tipo+'-'+barrio+'-'+fecha+'.pdf');
+        toast('PDF generado correctamente');
+    }catch(err){
+        console.error(err);toast('Error al generar PDF: '+err.message,true);
+    }finally{btn.disabled=false;btn.textContent='Descargar PDF';}
 }
 
 var toastTO;
