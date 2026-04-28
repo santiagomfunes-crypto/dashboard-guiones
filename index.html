@@ -540,12 +540,22 @@
     <div class="view" id="v-fichas">
         <div class="fichas-wrap">
             <div class="fichas-head">
-                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Fichas Grupo Otero</div>
+                <div style="font-family:'Cinzel',serif;font-size:16px;color:#8B6F3A;letter-spacing:2px">Fichas de Propiedad</div>
                 <div style="font-size:11px;color:#999;margin-top:2px">Genera fichas con branding profesional para enviar a clientes por WhatsApp o email</div>
             </div>
             <div class="fichas-layout">
                 <!-- FORMULARIO -->
                 <div class="fichas-form-col">
+                    <div class="fichas-section" style="background:#1e2045;border:1px solid #2e3068">
+                        <div class="fichas-section-label">Importar desde URL</div>
+                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de Zonaprop, Argenprop, CasasDeHoy o MercadoLibre para completar el formulario automáticamente.</div>
+                        <div style="display:flex;gap:8px">
+                            <input id="fi-url" type="url" placeholder="https://zonaprop.com.ar/..." style="flex:1">
+                            <button class="fichas-btn-secondary" onclick="fichasImportURL()" id="fi-url-btn" style="white-space:nowrap">Importar</button>
+                        </div>
+                        <div id="fi-url-status" style="font-size:10px;margin-top:6px;min-height:14px"></div>
+                    </div>
+
                     <div class="fichas-section">
                         <div class="fichas-section-label">Datos de la propiedad</div>
                         <div class="frow">
@@ -631,9 +641,8 @@
                     <div class="fichas-section-label">Vista previa</div>
                     <div class="fichas-preview-card" id="fichas-preview-card">
                         <div class="fp-header">
-                            <div class="fp-brand">SANTIAGO FUNES REAL ESTATE</div>
-                            <div class="fp-sub2">by Grupo Otero</div>
-                            <div class="fp-sub">Martillero responsable: Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>
+                            <div class="fp-brand">SANTIAGO FUNES</div>
+                            <div class="fp-sub2">Real Estate</div>
                         </div>
                         <div class="fp-img-placeholder">Sin imagen principal</div>
                         <div class="fp-price">—</div>
@@ -2364,6 +2373,41 @@ function fichasGetData(){
     };
 }
 
+async function fichasImportURL(){
+    var url=document.getElementById('fi-url').value.trim();
+    if(!url){toast('Pegá una URL primero',true);return;}
+    var btn=document.getElementById('fi-url-btn');
+    var status=document.getElementById('fi-url-status');
+    btn.disabled=true;btn.textContent='Importando...';
+    status.textContent='Buscando datos...';status.style.color='#8B6F3A';
+    try{
+        var res=await fetch(SB_URL+'/functions/v1/scrape-property',{
+            method:'POST',
+            headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
+            body:JSON.stringify({url:url})
+        });
+        if(!res.ok){var e=await res.json().catch(function(){return {};});throw new Error(e.error||'HTTP '+res.status);}
+        var data=await res.json();
+        if(data.tipo){var tipoSel=document.getElementById('fi-tipo');for(var o of tipoSel.options){if(o.value.toLowerCase()===data.tipo.toLowerCase()){tipoSel.value=o.value;break;}}}
+        if(data.barrio)document.getElementById('fi-barrio').value=data.barrio;
+        if(data.ambientes){var ambSel=document.getElementById('fi-amb');for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;break;}}}
+        if(data.dormitorios)document.getElementById('fi-dorm').value=data.dormitorios;
+        if(data.banos)document.getElementById('fi-ban').value=data.banos;
+        if(data.supCubierta)document.getElementById('fi-sup-c').value=data.supCubierta;
+        if(data.supTotal)document.getElementById('fi-sup-t').value=data.supTotal;
+        if(data.precio)document.getElementById('fi-precio').value=data.precio;
+        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';}
+        if(data.descripcion)document.getElementById('fi-desc').value=data.descripcion;
+        fichasUpdatePreview();
+        status.textContent='Datos importados. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
+        toast('Datos importados correctamente');
+    }catch(err){
+        console.error(err);
+        status.textContent='No se pudo importar. Completá el formulario manualmente.';status.style.color='#C8453A';
+        toast('Error al importar: '+err.message,true);
+    }finally{btn.disabled=false;btn.textContent='Importar';}
+}
+
 function fichasUpdatePreview(){
     var d=fichasGetData();
     var el=document.getElementById('fichas-preview-card');
@@ -2379,9 +2423,8 @@ function fichasUpdatePreview(){
     if(d.supCubierta)dataItems.push({l:'Cubierta',v:d.supCubierta+' m²'});
     if(d.supTotal)dataItems.push({l:'Total',v:d.supTotal+' m²'});
     var html='<div class="fp-header">'+
-        '<div class="fp-brand">SANTIAGO FUNES REAL ESTATE</div>'+
-        '<div class="fp-sub2">by Grupo Otero</div>'+
-        '<div class="fp-sub">Martillero responsable: Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>'+
+        '<div class="fp-brand">SANTIAGO FUNES</div>'+
+        '<div class="fp-sub2">Real Estate</div>'+
         (d.barrio?'<div class="fp-barrio">'+esc(d.barrio.toUpperCase())+(tipoCap?' &nbsp;·&nbsp; '+esc(tipoCap):'')+'</div>':'')+
     '</div>';
     html+=mainImg?'<img src="'+mainImg+'" class="fp-main-img" alt="">':'<div class="fp-img-placeholder">Sin imagen principal</div>';
@@ -2397,7 +2440,7 @@ function fichasUpdatePreview(){
         extraImgs.forEach(function(img){html+='<img src="'+img.dataUrl+'" class="fp-gallery-img" alt="">';});
         html+='</div>';
     }
-    html+='<div class="fp-footer">Santiago Funes Real Estate &nbsp;·&nbsp; by Grupo Otero &nbsp;·&nbsp; Tandil, Buenos Aires</div>';
+    html+='<div class="fp-footer">Martillero responsable: Juan Otero &nbsp;|&nbsp; Mat. N° 1966 &nbsp;|&nbsp; C.M.C.P. Azul</div>';
     el.innerHTML=html;
 }
 
@@ -2412,20 +2455,18 @@ function fichasGeneratePDF(){
         var doc=new window.jspdf.jsPDF('p','mm','a4');
         var W=210,H=297,mg=12,y=0;
         // Header
-        doc.setFillColor(26,26,46);doc.rect(0,0,W,40,'F');
-        doc.setDrawColor(139,111,58);doc.setLineWidth(0.4);doc.line(mg,35,W-mg,35);
-        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(18);
-        doc.text('SANTIAGO FUNES REAL ESTATE',mg,13);
+        doc.setFillColor(26,26,46);doc.rect(0,0,W,36,'F');
+        doc.setDrawColor(139,111,58);doc.setLineWidth(0.4);doc.line(mg,31,W-mg,31);
+        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(20);
+        doc.text('SANTIAGO FUNES',mg,14);
         doc.setTextColor(180,160,120);doc.setFont('helvetica','normal');doc.setFontSize(9);
-        doc.text('by Grupo Otero',mg,20);
-        doc.setTextColor(170,170,195);doc.setFontSize(6.8);
-        doc.text('Martillero responsable: Juan Otero  |  Mat. N° 1966  |  C.M.C.P. Azul',mg,27);
+        doc.text('Real Estate',mg,21);
         if(d.barrio){
             var barrioTxt=d.barrio.toUpperCase()+(d.tipo?' — '+(d.tipo.charAt(0).toUpperCase()+d.tipo.slice(1)):'');
             doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(200,200,220);
-            doc.text(barrioTxt,mg,33);
+            doc.text(barrioTxt,mg,28);
         }
-        y=44;
+        y=40;
         // Imagen principal
         var imgW=W-mg*2,mainImgH=85;
         if(fichasImages.length>0){
@@ -2483,10 +2524,8 @@ function fichasGeneratePDF(){
         }
         // Footer
         doc.setFillColor(26,26,46);doc.rect(0,H-15,W,15,'F');
-        doc.setTextColor(139,111,58);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('SANTIAGO FUNES REAL ESTATE',mg,H-8);
-        doc.setTextColor(160,160,190);doc.setFont('helvetica','normal');doc.setFontSize(7);
-        doc.text('by Grupo Otero  ·  Tandil, Buenos Aires  ·  Juan Otero Mat. N° 1966 C.M.C.P. Azul',W/2,H-8,{align:'center'});
+        doc.setTextColor(180,160,120);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        doc.text('Martillero responsable: Juan Otero  |  Mat. N° 1966  |  C.M.C.P. Azul',W/2,H-8,{align:'center'});
         // Guardar
         var tipo=d.tipo||'propiedad';
         var barrio=(d.barrio||'tandil').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
