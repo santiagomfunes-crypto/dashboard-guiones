@@ -548,7 +548,7 @@
                 <div class="fichas-form-col">
                     <div class="fichas-section" style="background:#1e2045;border:1px solid #2e3068">
                         <div class="fichas-section-label">Importar desde URL</div>
-                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de Zonaprop, Argenprop, CasasDeHoy o MercadoLibre para completar el formulario automáticamente.</div>
+                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de MercadoLibre o CasasDeHoy para completar el formulario automáticamente. Zonaprop y Argenprop pueden bloquear el acceso.</div>
                         <div style="display:flex;gap:8px">
                             <input id="fi-url" type="url" placeholder="https://zonaprop.com.ar/..." style="flex:1">
                             <button class="fichas-btn-secondary" onclick="fichasImportURL()" id="fi-url-btn" style="white-space:nowrap">Importar</button>
@@ -2379,32 +2379,45 @@ async function fichasImportURL(){
     var btn=document.getElementById('fi-url-btn');
     var status=document.getElementById('fi-url-status');
     btn.disabled=true;btn.textContent='Importando...';
-    status.textContent='Buscando datos...';status.style.color='#8B6F3A';
+    status.textContent='Consultando el portal...';status.style.color='#8B6F3A';
     try{
         var res=await fetch(SB_URL+'/functions/v1/scrape-property',{
             method:'POST',
             headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
             body:JSON.stringify({url:url})
         });
-        if(!res.ok){var e=await res.json().catch(function(){return {};});throw new Error(e.error||'HTTP '+res.status);}
-        var data=await res.json();
-        if(data.tipo){var tipoSel=document.getElementById('fi-tipo');for(var o of tipoSel.options){if(o.value.toLowerCase()===data.tipo.toLowerCase()){tipoSel.value=o.value;break;}}}
-        if(data.barrio)document.getElementById('fi-barrio').value=data.barrio;
-        if(data.ambientes){var ambSel=document.getElementById('fi-amb');for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;break;}}}
-        if(data.dormitorios)document.getElementById('fi-dorm').value=data.dormitorios;
-        if(data.banos)document.getElementById('fi-ban').value=data.banos;
-        if(data.supCubierta)document.getElementById('fi-sup-c').value=data.supCubierta;
-        if(data.supTotal)document.getElementById('fi-sup-t').value=data.supTotal;
-        if(data.precio)document.getElementById('fi-precio').value=data.precio;
-        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';}
-        if(data.descripcion)document.getElementById('fi-desc').value=data.descripcion;
+        var body=await res.json().catch(function(){return {};});
+        if(!res.ok){
+            var msg=body.error||'HTTP '+res.status;
+            if(msg.indexOf('403')!==-1||msg.toLowerCase().indexOf('bloqueó')!==-1||msg.toLowerCase().indexOf('bloqueo')!==-1){
+                throw new Error('El portal bloqueó el acceso. Probá con MercadoLibre o completá el formulario manualmente.');
+            }
+            throw new Error(msg);
+        }
+        var data=body;
+        var filled=0;
+        if(data.tipo){var tipoSel=document.getElementById('fi-tipo');for(var o of tipoSel.options){if(o.value.toLowerCase()===data.tipo.toLowerCase()){tipoSel.value=o.value;filled++;break;}}}
+        if(data.barrio){document.getElementById('fi-barrio').value=data.barrio;filled++;}
+        if(data.ambientes){var ambSel=document.getElementById('fi-amb');for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;filled++;break;}}}
+        if(data.dormitorios){document.getElementById('fi-dorm').value=data.dormitorios;filled++;}
+        if(data.banos){document.getElementById('fi-ban').value=data.banos;filled++;}
+        if(data.supCubierta){document.getElementById('fi-sup-c').value=data.supCubierta;filled++;}
+        if(data.supTotal){document.getElementById('fi-sup-t').value=data.supTotal;filled++;}
+        if(data.precio){document.getElementById('fi-precio').value=data.precio;filled++;}
+        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';filled++;}
+        if(data.descripcion){document.getElementById('fi-desc').value=data.descripcion;filled++;}
         fichasUpdatePreview();
-        status.textContent='Datos importados. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
-        toast('Datos importados correctamente');
+        if(filled===0){
+            status.textContent='El portal no devolvio datos utilizables. Completá el formulario manualmente.';status.style.color='#C8453A';
+            toast('No se extrajeron datos del portal',true);
+        }else{
+            status.textContent=''+filled+' campos importados. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
+            toast('Datos importados correctamente');
+        }
     }catch(err){
         console.error(err);
-        status.textContent='No se pudo importar. Completá el formulario manualmente.';status.style.color='#C8453A';
-        toast('Error al importar: '+err.message,true);
+        status.textContent=err.message||'No se pudo importar. Completá el formulario manualmente.';status.style.color='#C8453A';
+        toast('Error: '+err.message,true);
     }finally{btn.disabled=false;btn.textContent='Importar';}
 }
 
