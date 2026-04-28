@@ -548,9 +548,9 @@
                 <div class="fichas-form-col">
                     <div class="fichas-section" style="background:#1e2045;border:1px solid #2e3068">
                         <div class="fichas-section-label">Importar desde URL</div>
-                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de MercadoLibre o CasasDeHoy para completar el formulario automáticamente. Zonaprop y Argenprop pueden bloquear el acceso.</div>
+                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de MercadoLibre o CasasDeHoy. Si ya la tenemos en nuestra base, los datos se completan automáticamente.</div>
                         <div style="display:flex;gap:8px">
-                            <input id="fi-url" type="url" placeholder="https://zonaprop.com.ar/..." style="flex:1">
+                            <input id="fi-url" type="url" placeholder="https://casasdehoy.com/propiedad/..." style="flex:1">
                             <button class="fichas-btn-secondary" onclick="fichasImportURL()" id="fi-url-btn" style="white-space:nowrap">Importar</button>
                         </div>
                         <div id="fi-url-status" style="font-size:10px;margin-top:6px;min-height:14px"></div>
@@ -2378,46 +2378,47 @@ async function fichasImportURL(){
     if(!url){toast('Pegá una URL primero',true);return;}
     var btn=document.getElementById('fi-url-btn');
     var status=document.getElementById('fi-url-status');
-    btn.disabled=true;btn.textContent='Importando...';
-    status.textContent='Consultando el portal...';status.style.color='#8B6F3A';
+    btn.disabled=true;btn.textContent='Buscando...';
+    status.textContent='Buscando en la base de datos...';status.style.color='#8B6F3A';
     try{
-        var res=await fetch(SB_URL+'/functions/v1/scrape-property',{
-            method:'POST',
-            headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
-            body:JSON.stringify({url:url})
-        });
-        var body=await res.json().catch(function(){return {};});
-        if(!res.ok){
-            var msg=body.error||'HTTP '+res.status;
-            if(msg.indexOf('403')!==-1||msg.toLowerCase().indexOf('bloqueó')!==-1||msg.toLowerCase().indexOf('bloqueo')!==-1){
-                throw new Error('El portal bloqueó el acceso. Probá con MercadoLibre o completá el formulario manualmente.');
-            }
-            throw new Error(msg);
+        // Normalizar URL para búsqueda: sacar parámetros y trailing slashes
+        var urlBusqueda=url.split('?')[0].replace(/\/+$/,'');
+        var res=await sb.from('propiedades_mercado')
+            .select('*')
+            .ilike('fuente_url','%'+urlBusqueda+'%')
+            .limit(1)
+            .single();
+        if(res.error||!res.data){
+            status.textContent='Esta propiedad no está en nuestra base. Completá el formulario manualmente.';status.style.color='#C8453A';
+            toast('Propiedad no encontrada en la base',true);
+            return;
         }
-        var data=body;
+        var data=res.data;
         var filled=0;
-        if(data.tipo){var tipoSel=document.getElementById('fi-tipo');for(var o of tipoSel.options){if(o.value.toLowerCase()===data.tipo.toLowerCase()){tipoSel.value=o.value;filled++;break;}}}
+        if(data.tipo_propiedad||data.tipo){
+            var tipoVal=(data.tipo_propiedad||data.tipo||'').toLowerCase();
+            var tipoSel=document.getElementById('fi-tipo');
+            for(var o of tipoSel.options){if(o.value.toLowerCase()===tipoVal){tipoSel.value=o.value;filled++;break;}}
+        }
         if(data.barrio){document.getElementById('fi-barrio').value=data.barrio;filled++;}
-        if(data.ambientes){var ambSel=document.getElementById('fi-amb');for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;filled++;break;}}}
+        if(data.ambientes){
+            var ambSel=document.getElementById('fi-amb');
+            for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;filled++;break;}}
+        }
         if(data.dormitorios){document.getElementById('fi-dorm').value=data.dormitorios;filled++;}
         if(data.banos){document.getElementById('fi-ban').value=data.banos;filled++;}
-        if(data.supCubierta){document.getElementById('fi-sup-c').value=data.supCubierta;filled++;}
-        if(data.supTotal){document.getElementById('fi-sup-t').value=data.supTotal;filled++;}
+        if(data.sup_cubierta){document.getElementById('fi-sup-c').value=data.sup_cubierta;filled++;}
+        if(data.sup_total){document.getElementById('fi-sup-t').value=data.sup_total;filled++;}
         if(data.precio){document.getElementById('fi-precio').value=data.precio;filled++;}
         if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';filled++;}
         if(data.descripcion){document.getElementById('fi-desc').value=data.descripcion;filled++;}
         fichasUpdatePreview();
-        if(filled===0){
-            status.textContent='El portal no devolvio datos utilizables. Completá el formulario manualmente.';status.style.color='#C8453A';
-            toast('No se extrajeron datos del portal',true);
-        }else{
-            status.textContent=''+filled+' campos importados. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
-            toast('Datos importados correctamente');
-        }
+        status.textContent=filled+' campos importados desde la base. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
+        toast('Datos importados correctamente');
     }catch(err){
         console.error(err);
-        status.textContent=err.message||'No se pudo importar. Completá el formulario manualmente.';status.style.color='#C8453A';
-        toast('Error: '+err.message,true);
+        status.textContent='Esta propiedad no está en nuestra base. Completá el formulario manualmente.';status.style.color='#C8453A';
+        toast('Propiedad no encontrada',true);
     }finally{btn.disabled=false;btn.textContent='Importar';}
 }
 
