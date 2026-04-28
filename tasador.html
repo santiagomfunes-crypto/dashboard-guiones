@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasador — Santiago Funes RE</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',sans-serif;background:#F5F5F3;color:#1a1a2e;min-height:100vh}
+button{cursor:pointer;font-family:inherit}
+input,textarea,select{font-family:inherit}
+
+/* NAV */
+.nav{background:#fff;border-bottom:1px solid #E8E4DD;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px #0001}
+.nav-brand{font-family:'Cinzel',serif;font-size:15px;letter-spacing:2px;color:#1a1a2e;text-decoration:none}
+.nav-brand span{color:#8B6F3A}
+.nav-links{display:flex;gap:12px;align-items:center}
+.nav-back{font-size:11px;color:#999;text-decoration:none;padding:6px 12px;border:1px solid #E8E4DD;border-radius:7px;transition:all .15s;font-weight:600}
+.nav-back:hover{color:#8B6F3A;border-color:#8B6F3A}
+.nav-subtitle{font-size:10px;color:#8B6F3A;letter-spacing:3px;text-transform:uppercase}
+
+/* HERO */
+.hero{padding:24px 20px 0;max-width:1100px;margin:0 auto}
+.hero-title{font-family:'Cinzel',serif;font-size:22px;color:#1a1a2e;letter-spacing:1px;margin-bottom:4px}
+.hero-sub{font-size:12px;color:#999;line-height:1.6}
+
+/* LAYOUT */
+.layout{max-width:1100px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:900px){.layout{grid-template-columns:420px 1fr}}
+
+/* FORM */
+.form-card{background:#fff;border:1px solid #E8E4DD;border-radius:14px;padding:24px;height:fit-content}
+.form-section-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#8B6F3A;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #F0EDE7}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:5px;font-weight:600}
+.fg input,.fg textarea,.fg select{width:100%;padding:10px 13px;border:1px solid #E8E4DD;border-radius:9px;font-size:13px;background:#F5F5F3;outline:none;color:#1a1a2e;transition:border-color .2s}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:#8B6F3A;background:#fff}
+.fg textarea{resize:vertical;min-height:72px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* Cochera checkbox */
+.check-wrap{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid #E8E4DD;border-radius:9px;background:#F5F5F3;cursor:pointer;transition:all .15s;font-size:13px;color:#1a1a2e}
+.check-wrap:has(input:checked){border-color:#8B6F3A;background:#FDF8E8;color:#8B6F3A}
+.check-wrap input{width:16px;height:16px;accent-color:#8B6F3A;cursor:pointer;flex-shrink:0}
+.check-wrap span{font-weight:600;font-size:12px}
+
+/* Submit btn */
+.calc-btn{width:100%;padding:15px;background:#1a1a2e;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;transition:background .2s}
+.calc-btn:hover{background:#2d2d50}
+.calc-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* RESULTS */
+.results{display:flex;flex-direction:column;gap:16px}
+@media(min-width:900px){.results-sticky{position:sticky;top:76px;align-self:start}}
+
+/* Placeholder state */
+.results-placeholder{background:#fff;border:1px solid #E8E4DD;border-radius:14px;padding:40px 24px;text-align:center}
+.results-placeholder-icon{font-size:40px;margin-bottom:12px;opacity:.15;color:#8B6F3A}
+.results-placeholder-title{font-family:'Cinzel',serif;font-size:15px;color:#ccc;margin-bottom:6px}
+.results-placeholder-sub{font-size:12px;color:#ddd;line-height:1.6}
+
+/* RESULT CARD — Valor estimado */
+.result-card{background:#fff;border:1px solid #E8E4DD;border-radius:14px;overflow:hidden}
+.rc-header{background:#1a1a2e;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.rc-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:1.5px;color:#8B6F3A}
+.rc-badge{font-size:9px;padding:3px 10px;border-radius:5px;background:#8B6F3A;color:#fff;font-weight:700;letter-spacing:1px}
+.rc-body{padding:20px}
+
+/* Valor range */
+.valor-range{display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 0;border-bottom:1px solid #F0EDE7;margin-bottom:16px}
+.valor-num{text-align:center}
+.valor-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:4px}
+.valor-price{font-family:'Cinzel',serif;font-size:22px;color:#1a1a2e;font-weight:600;letter-spacing:.5px}
+.valor-sep{font-size:32px;color:#E8E4DD;font-weight:300}
+.valor-mid{text-align:center;padding:12px 20px;background:#FDF8E8;border-radius:10px}
+.valor-mid-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#8B6F3A;font-weight:700;margin-bottom:4px}
+.valor-mid-price{font-family:'Cinzel',serif;font-size:28px;color:#8B6F3A;font-weight:600}
+
+/* Breakdown */
+.breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.bk-item{background:#F5F5F3;border-radius:9px;padding:12px}
+.bk-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:4px}
+.bk-val{font-size:15px;font-weight:700;color:#1a1a2e}
+.bk-sub{font-size:10px;color:#aaa;margin-top:2px}
+
+/* Ajuste badge */
+.ajuste-row{display:flex;align-items:center;justify-content:space-between;background:#F0EDE7;border-radius:8px;padding:10px 13px;margin-bottom:6px}
+.ajuste-label{font-size:10px;color:#777;font-weight:600}
+.ajuste-val{font-size:12px;font-weight:700}
+.ajuste-pos{color:#2D8C5A}
+.ajuste-neg{color:#C8453A}
+.ajuste-neu{color:#999}
+
+/* Comparables */
+.comp-list{display:flex;flex-direction:column;gap:8px}
+.comp-item{display:flex;align-items:center;gap:12px;padding:12px;background:#F5F5F3;border-radius:9px;border:1px solid #E8E4DD;text-decoration:none;color:inherit;transition:all .15s}
+.comp-item:hover{border-color:#8B6F3A55;background:#FDF8E8}
+.comp-item-info{flex:1;min-width:0}
+.comp-item-titulo{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
+.comp-item-zona{font-size:10px;color:#999}
+.comp-item-data{text-align:right;flex-shrink:0}
+.comp-item-precio{font-size:13px;font-weight:700;color:#1a1a2e}
+.comp-item-m2{font-size:10px;color:#8B6F3A;font-weight:600}
+.comp-outlier{opacity:.5}
+
+/* Context panel */
+.ctx-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #F0EDE7;font-size:12px}
+.ctx-row:last-child{border-bottom:none}
+.ctx-key{color:#888}
+.ctx-val{font-weight:700;color:#1a1a2e}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.stat-box{background:#F5F5F3;border-radius:9px;padding:12px;text-align:center}
+.stat-box-val{font-family:'Cinzel',serif;font-size:18px;color:#8B6F3A;font-weight:600}
+.stat-box-label{font-size:9px;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+
+/* Empty comparables */
+.comp-empty{text-align:center;padding:28px 20px;color:#bbb}
+.comp-empty strong{display:block;font-size:14px;margin-bottom:6px;color:#ccc}
+.comp-empty p{font-size:12px;line-height:1.7}
+
+/* Warning */
+.warn-box{background:#FDF8E8;border:1px solid #E8D9B0;border-radius:9px;padding:12px 14px;font-size:11px;color:#A8862C;line-height:1.5;margin-top:12px}
+
+/* Print btn */
+.print-btn{width:100%;padding:11px;background:#fff;color:#8B6F3A;border:1px solid #8B6F3A55;border-radius:9px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:4px;transition:all .15s}
+.print-btn:hover{background:#FDF8E8;border-color:#8B6F3A}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 22px;border-radius:10px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}.toast.err{background:#C8453A}
+
+/* Loading spinner */
+.loading-box{text-align:center;padding:40px 20px;color:#bbb}
+.spinner{width:36px;height:36px;border:3px solid #E8E4DD;border-top-color:#8B6F3A;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Divider */
+.divider{height:1px;background:#F0EDE7;margin:14px 0}
+
+/* Section head */
+.sec-head{font-family:'Cinzel',serif;font-size:12px;color:#8B6F3A;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.sec-count{font-size:10px;color:#bbb;font-family:'Montserrat',sans-serif;font-weight:600}
+
+@media print{
+  .nav,.calc-btn,.print-btn,.nav-back,.toast{display:none!important}
+  body{background:#fff}
+  .layout{display:block;padding:0;max-width:100%}
+  .form-card{display:none}
+  .results{gap:12px}
+  .result-card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+
+@media(max-width:640px){
+  .frow,.frow3{grid-template-columns:1fr}
+  .breakdown{grid-template-columns:1fr}
+  .valor-range{flex-direction:column;gap:8px}
+  .valor-sep{display:none}
+  .stats-row{grid-template-columns:1fr 1fr 1fr}
+  .nav-subtitle{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div style="display:flex;align-items:center;gap:14px">
+    <a href="index.html" class="nav-brand">SF<span>RE</span></a>
+    <span class="nav-subtitle">Tasador</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-back">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-title">Tasador de Propiedades</div>
+  <div class="hero-sub">Ingresa los datos de la propiedad y el sistema busca comparables en la base de datos del mercado para calcular un rango de valor.</div>
+</div>
+
+<div class="layout">
+
+  <!-- FORMULARIO -->
+  <div>
+    <div class="form-card">
+      <div class="form-section-label">Datos de la propiedad</div>
+
+      <div class="frow">
+        <div class="fg">
+          <label>Tipo</label>
+          <select id="f-tipo">
+            <option value="departamento">Departamento</option>
+            <option value="casa">Casa</option>
+            <option value="lote">Lote / Terreno</option>
+            <option value="local">Local / Comercial</option>
+            <option value="oficina">Oficina</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Operacion</label>
+          <select id="f-op">
+            <option value="venta">Venta</option>
+            <option value="alquiler">Alquiler</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Barrio / Zona</label>
+        <input type="text" id="f-zona" placeholder="Ej: Centro, Cerro Leones, Villa Gaucho...">
+      </div>
+
+      <div class="frow">
+        <div class="fg">
+          <label>Superficie total (m²)</label>
+          <input type="number" id="f-m2total" placeholder="Ej: 75" min="1">
+        </div>
+        <div class="fg">
+          <label>Superficie cubierta (m²)</label>
+          <input type="number" id="f-m2cub" placeholder="Ej: 60" min="1">
+        </div>
+      </div>
+
+      <div class="frow3">
+        <div class="fg">
+          <label>Dormitorios</label>
+          <select id="f-dorm">
+            <option value="">Monoamb.</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Banos</label>
+          <select id="f-banos">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3+</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Piso</label>
+          <select id="f-piso">
+            <option value="">PB/N/A</option>
+            <option value="1">1°–3°</option>
+            <option value="4">4°–7°</option>
+            <option value="8">8°+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="form-section-label" style="margin-bottom:14px">Caracteristicas y estado</div>
+
+      <div class="frow">
+        <div class="fg">
+          <label>Antiguedad</label>
+          <select id="f-antig">
+            <option value="nuevo">A estrenar / Pozo</option>
+            <option value="1-5">1–5 anos</option>
+            <option value="6-15" selected>6–15 anos</option>
+            <option value="16-30">16–30 anos</option>
+            <option value="30+">30+ anos</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Condicion</label>
+          <select id="f-cond">
+            <option value="estrenar">A estrenar</option>
+            <option value="excelente">Excelente</option>
+            <option value="muy_bueno" selected>Muy bueno</option>
+            <option value="bueno">Bueno</option>
+            <option value="reformar">A reformar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="check-wrap" style="display:flex">
+          <input type="checkbox" id="f-cochera">
+          <span>Con cochera</span>
+        </label>
+      </div>
+
+      <div class="fg">
+        <label>Notas / Amenities</label>
+        <textarea id="f-notas" placeholder="Ej: balcon, parrilla, pileta, orientacion norte, vista sierra..."></textarea>
+      </div>
+
+      <button class="calc-btn" id="calc-btn" onclick="calcular()">Calcular Tasacion</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results results-sticky" id="results">
+    <div class="result-card results-placeholder" id="placeholder">
+      <div class="results-placeholder-icon">◇</div>
+      <div class="results-placeholder-title">Tasacion pendiente</div>
+      <div class="results-placeholder-sub">Completa los datos de la propiedad<br>y hace clic en "Calcular Tasacion"</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SB_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+var SB_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+var SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+
+var toastTO;
+function toast(msg, err) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(toastTO);
+  toastTO = setTimeout(function() { el.className = 'toast'; }, 3000);
+}
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function fmtUSD(n) {
+  if (!n && n !== 0) return '—';
+  return 'USD ' + Math.round(n).toLocaleString('es-AR');
+}
+
+function fmtARS(n) {
+  if (!n && n !== 0) return '—';
+  return '$' + Math.round(n).toLocaleString('es-AR');
+}
+
+// Ajuste factors
+function getAjustes() {
+  var adj = 0;
+  var items = [];
+
+  // Condicion
+  var cond = document.getElementById('f-cond').value;
+  var condMap = { estrenar: 15, excelente: 8, muy_bueno: 3, bueno: 0, reformar: -15 };
+  var condLabel = { estrenar: 'A estrenar', excelente: 'Excelente', muy_bueno: 'Muy bueno', bueno: 'Bueno', reformar: 'A reformar' };
+  if (condMap[cond] !== 0) {
+    adj += condMap[cond];
+    items.push({ label: 'Condicion: ' + condLabel[cond], val: condMap[cond] });
+  }
+
+  // Antiguedad
+  var antig = document.getElementById('f-antig').value;
+  var antigMap = { 'nuevo': 8, '1-5': 5, '6-15': 0, '16-30': -5, '30+': -10 };
+  var antigLabel = { 'nuevo': 'A estrenar/Pozo', '1-5': '1–5 anos', '6-15': '6–15 anos', '16-30': '16–30 anos', '30+': '30+ anos' };
+  if (antigMap[antig] !== 0) {
+    adj += antigMap[antig];
+    items.push({ label: 'Antiguedad: ' + antigLabel[antig], val: antigMap[antig] });
+  }
+
+  // Piso
+  var piso = document.getElementById('f-piso').value;
+  if (piso === '4') { adj += 3; items.push({ label: 'Piso 4°–7°', val: 3 }); }
+  if (piso === '8') { adj += 6; items.push({ label: 'Piso 8°+', val: 6 }); }
+
+  // Cochera
+  if (document.getElementById('f-cochera').checked) {
+    adj += 5;
+    items.push({ label: 'Con cochera', val: 5 });
+  }
+
+  return { total: adj, items: items };
+}
+
+function median(arr) {
+  if (!arr.length) return 0;
+  var sorted = arr.slice().sort(function(a, b) { return a - b; });
+  var mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+function calcular() {
+  var tipo = document.getElementById('f-tipo').value;
+  var op   = document.getElementById('f-op').value;
+  var zona = document.getElementById('f-zona').value.trim();
+  var m2t  = parseFloat(document.getElementById('f-m2total').value) || 0;
+  var m2c  = parseFloat(document.getElementById('f-m2cub').value) || 0;
+  var dorm = document.getElementById('f-dorm').value;
+
+  if (!m2t && !m2c) {
+    toast('Ingresa al menos la superficie total o cubierta', true);
+    return;
+  }
+
+  var m2ref = m2c || m2t; // usar cubiertos como referencia, o total si no hay
+
+  var btn = document.getElementById('calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Buscando comparables...';
+
+  var res = document.getElementById('results');
+  res.innerHTML = '<div class="result-card"><div class="rc-body"><div class="loading-box"><div class="spinner"></div><div style="font-size:13px;color:#bbb">Buscando comparables en el mercado...</div></div></div></div>';
+
+  // Build query
+  var select = 'id,titulo,tipologia,operacion,precio_usd,metros_totales,dormitorios,zona,url,fuente,fecha_scraping';
+  var url = SB_URL + '/rest/v1/propiedades_mercado?select=' + select;
+  url += '&operacion=eq.' + op;
+  url += '&tipologia=eq.' + tipo;
+  url += '&precio_usd=not.is.null';
+  url += '&metros_totales=gt.0';
+  url += '&order=precio_usd.asc';
+  url += '&limit=200';
+
+  // Zone filter
+  if (zona) {
+    var zonaEnc = encodeURIComponent(zona);
+    url += '&or=(zona.ilike.*' + zonaEnc + '*,titulo.ilike.*' + zonaEnc + '*)';
+  }
+
+  // Dorm filter (±1 for more results)
+  if (dorm) {
+    var dormNum = parseInt(dorm);
+    if (dormNum >= 4) {
+      url += '&dormitorios=gte.3';
+    } else if (dormNum === 1) {
+      url += '&or=(dormitorios.eq.0,dormitorios.eq.1,dormitorios.eq.2)';
+    } else {
+      var dormMin = Math.max(0, dormNum - 1);
+      var dormMax = dormNum + 1;
+      url += '&dormitorios=gte.' + dormMin + '&dormitorios=lte.' + dormMax;
+    }
+  }
+
+  fetch(url, { headers: SB_H }).then(function(r) {
+    return r.json();
+  }).then(function(items) {
+    items = (items || []).filter(function(p) {
+      return p.precio_usd > 0 && p.metros_totales > 0;
+    });
+
+    // Calculate price per m² for each
+    var withPm2 = items.map(function(p) {
+      var pm2 = p.precio_usd / p.metros_totales;
+      return Object.assign({}, p, { pm2: pm2 });
+    });
+
+    // Remove outliers (IQR method)
+    var allPm2 = withPm2.map(function(p) { return p.pm2; });
+    var sorted = allPm2.slice().sort(function(a, b) { return a - b; });
+    var q1 = sorted[Math.floor(sorted.length * 0.25)];
+    var q3 = sorted[Math.floor(sorted.length * 0.75)];
+    var iqr = q3 - q1;
+    var lo = q1 - 1.5 * iqr;
+    var hi = q3 + 1.5 * iqr;
+
+    var clean = withPm2.filter(function(p) { return p.pm2 >= lo && p.pm2 <= hi; });
+    var outliers = withPm2.filter(function(p) { return p.pm2 < lo || p.pm2 > hi; });
+
+    var cleanPm2 = clean.map(function(p) { return p.pm2; });
+
+    renderResultados(clean, outliers, cleanPm2, m2ref, m2t, zona, op);
+  }).catch(function(e) {
+    document.getElementById('results').innerHTML = '<div class="result-card"><div class="rc-body"><div class="comp-empty"><strong>Error de conexion</strong><p>' + esc(String(e)) + '</p></div></div></div>';
+    toast('Error al buscar comparables', true);
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Calcular Tasacion';
+  });
+}
+
+function renderResultados(comparables, outliers, pm2Values, m2ref, m2total, zonaInput, op) {
+  var ajustes = getAjustes();
+  var medianPm2 = median(pm2Values);
+  var minPm2    = pm2Values.length ? Math.min.apply(null, pm2Values) : 0;
+  var maxPm2    = pm2Values.length ? Math.max.apply(null, pm2Values) : 0;
+  var avgPm2    = pm2Values.length ? pm2Values.reduce(function(a, b) { return a + b; }, 0) / pm2Values.length : 0;
+
+  var tieneComparables = pm2Values.length > 0;
+
+  // Apply adjustments to median
+  var adjFactor = 1 + (ajustes.total / 100);
+  var adjPm2    = medianPm2 * adjFactor;
+
+  // Price range ±10%
+  var valorMid  = adjPm2 * m2ref;
+  var valorLo   = valorMid * 0.90;
+  var valorHi   = valorMid * 1.10;
+
+  var fechaHoy = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  // ---- PANEL 1: Valor estimado ----
+  var panelValor = '';
+  if (tieneComparables) {
+    var ajusteRows = ajustes.items.map(function(a) {
+      var cls = a.val > 0 ? 'ajuste-pos' : (a.val < 0 ? 'ajuste-neg' : 'ajuste-neu');
+      var signo = a.val > 0 ? '+' : '';
+      return '<div class="ajuste-row"><span class="ajuste-label">' + esc(a.label) + '</span><span class="ajuste-val ' + cls + '">' + signo + a.val + '%</span></div>';
+    }).join('');
+
+    if (ajustes.items.length === 0) {
+      ajusteRows = '<div class="ajuste-row"><span class="ajuste-label">Sin ajustes aplicados</span><span class="ajuste-val ajuste-neu">0%</span></div>';
+    }
+
+    panelValor = '<div class="result-card">' +
+      '<div class="rc-header"><span class="rc-title">Valor Estimado</span><span class="rc-badge">' + pm2Values.length + ' comparables</span></div>' +
+      '<div class="rc-body">' +
+
+      // Rango
+      '<div class="valor-range">' +
+        '<div class="valor-num"><div class="valor-label">Minimo</div><div class="valor-price">' + fmtUSD(valorLo) + '</div></div>' +
+        '<span class="valor-sep">–</span>' +
+        '<div class="valor-num"><div class="valor-label">Maximo</div><div class="valor-price">' + fmtUSD(valorHi) + '</div></div>' +
+      '</div>' +
+      '<div class="valor-mid"><div class="valor-mid-label">Valor de referencia</div><div class="valor-mid-price">' + fmtUSD(valorMid) + '</div></div>' +
+
+      // Breakdown
+      '<div class="breakdown" style="margin-top:16px">' +
+        '<div class="bk-item"><div class="bk-label">Precio/m² base</div><div class="bk-val">' + fmtUSD(Math.round(medianPm2)) + '</div><div class="bk-sub">mediana de comparables</div></div>' +
+        '<div class="bk-item"><div class="bk-label">Precio/m² ajustado</div><div class="bk-val">' + fmtUSD(Math.round(adjPm2)) + '</div><div class="bk-sub">con factores de la propiedad</div></div>' +
+        '<div class="bk-item"><div class="bk-label">Superficie usada</div><div class="bk-val">' + m2ref + ' m²</div><div class="bk-sub">' + (m2total !== m2ref ? 'cubiertos (total: ' + m2total + ' m²)' : 'total') + '</div></div>' +
+        '<div class="bk-item"><div class="bk-label">Ajuste total</div><div class="bk-val ' + (ajustes.total > 0 ? 'ajuste-pos' : ajustes.total < 0 ? 'ajuste-neg' : '') + '">' + (ajustes.total > 0 ? '+' : '') + ajustes.total + '%</div><div class="bk-sub">sobre el precio base</div></div>' +
+      '</div>' +
+
+      // Ajuste detail
+      '<div class="divider"></div>' +
+      '<div class="sec-head" style="margin-bottom:10px">Ajustes aplicados</div>' +
+      ajusteRows +
+
+      '<div class="warn-box">Esta tasacion es referencial y se basa en comparables publicados en portales. Los precios de cierre pueden diferir significativamente de los precios de publicacion. Emitido el ' + fechaHoy + '.</div>' +
+      '<button class="print-btn" onclick="window.print()">Imprimir / Exportar</button>' +
+      '</div></div>';
+  } else {
+    panelValor = '<div class="result-card">' +
+      '<div class="rc-header"><span class="rc-title">Sin comparables directos</span></div>' +
+      '<div class="rc-body">' +
+      '<div class="comp-empty">' +
+        '<strong>No hay datos suficientes</strong>' +
+        '<p>No se encontraron propiedades comparables' + (zonaInput ? ' en la zona "' + esc(zonaInput) + '"' : '') + '.<br>Proba ampliar la zona o cambiar el tipo de propiedad.</p>' +
+      '</div>' +
+      '<div class="warn-box">Podes usar los datos de mercado en la parte derecha como referencia manual. Precio/m² en Tandil: USD 2.000–2.600 (dato de Santiago, marzo 2026).</div>' +
+      '</div></div>';
+  }
+
+  // ---- PANEL 2: Stats del mercado ----
+  var panelStats = '';
+  if (tieneComparables) {
+    panelStats = '<div class="result-card">' +
+      '<div class="rc-header"><span class="rc-title">Mercado — Precio por m²</span></div>' +
+      '<div class="rc-body">' +
+      '<div class="stats-row">' +
+        '<div class="stat-box"><div class="stat-box-val">' + fmtUSD(Math.round(minPm2)) + '</div><div class="stat-box-label">Minimo</div></div>' +
+        '<div class="stat-box"><div class="stat-box-val">' + fmtUSD(Math.round(medianPm2)) + '</div><div class="stat-box-label">Mediana</div></div>' +
+        '<div class="stat-box"><div class="stat-box-val">' + fmtUSD(Math.round(maxPm2)) + '</div><div class="stat-box-label">Maximo</div></div>' +
+      '</div>' +
+      '<div style="font-size:10px;color:#bbb;text-align:center">Basado en ' + pm2Values.length + ' comparables (outliers excluidos)' + (outliers.length ? ', ' + outliers.length + ' removidos' : '') + '</div>' +
+      '</div></div>';
+  }
+
+  // ---- PANEL 3: Comparables list ----
+  var panelComp = '';
+  var allForList = comparables.concat(outliers.map(function(p) { return Object.assign({}, p, { isOutlier: true }); }));
+  var listItems = allForList.slice(0, 20).map(function(p) {
+    var pm2 = Math.round(p.pm2);
+    var precio = op === 'alquiler' ? fmtARS(p.precio_usd) : fmtUSD(p.precio_usd);
+    var metaInfo = [
+      p.dormitorios ? p.dormitorios + ' dorm.' : null,
+      p.metros_totales ? Math.round(p.metros_totales) + ' m²' : null,
+      p.zona ? (p.zona.length > 25 ? p.zona.substring(0, 25) + '…' : p.zona) : null,
+      p.fuente === 'casasdehoy' ? 'CDH' : 'ML'
+    ].filter(Boolean).join(' · ');
+    var cls = 'comp-item' + (p.isOutlier ? ' comp-outlier' : '');
+    var tag = p.url ? 'a' : 'div';
+    var attrs = p.url ? 'href="' + esc(p.url) + '" target="_blank"' : '';
+    return '<' + tag + ' class="' + cls + '" ' + attrs + '>' +
+      '<div class="comp-item-info">' +
+        '<div class="comp-item-titulo">' + esc(p.titulo || p.tipologia || '') + '</div>' +
+        '<div class="comp-item-zona">' + esc(metaInfo) + (p.isOutlier ? ' · outlier' : '') + '</div>' +
+      '</div>' +
+      '<div class="comp-item-data">' +
+        '<div class="comp-item-precio">' + precio + '</div>' +
+        '<div class="comp-item-m2">' + fmtUSD(pm2) + '/m²</div>' +
+      '</div>' +
+    '</' + tag + '>';
+  }).join('');
+
+  if (allForList.length > 0) {
+    panelComp = '<div class="result-card">' +
+      '<div class="rc-header"><span class="rc-title">Comparables</span><span class="rc-badge">' + allForList.length + ' encontrados</span></div>' +
+      '<div class="rc-body">' +
+      '<div class="comp-list">' + listItems + '</div>' +
+      (allForList.length > 20 ? '<div style="text-align:center;font-size:11px;color:#bbb;margin-top:10px">Mostrando 20 de ' + allForList.length + ' · <a href="mercado.html" style="color:#8B6F3A">Ver todos en Mercado ↗</a></div>' : '') +
+      '</div></div>';
+  }
+
+  // ---- PANEL 4: Contexto mercado ----
+  var panelCtx = '<div class="result-card">' +
+    '<div class="rc-header"><span class="rc-title">Contexto de Mercado — Tandil</span></div>' +
+    '<div class="rc-body">' +
+    '<div class="ctx-row"><span class="ctx-key">Rango real m² (Santiago, mar 2026)</span><span class="ctx-val">USD 2.000–2.600</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">m² prom. Estudio Pascua</span><span class="ctx-val">~USD 2.200</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Depto 2 amb gama media</span><span class="ctx-val">USD 60.000–80.000</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Depto 3 amb gama media</span><span class="ctx-val">USD 120.000–150.000</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Depto 2 amb gama alta</span><span class="ctx-val">USD 100.000–130.000</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Lotes</span><span class="ctx-val">USD 17.000–200.000</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Alquiler 2 amb</span><span class="ctx-val">desde $400.000/mes</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Propiedades en venta (Tandil)</span><span class="ctx-val">+1.200 activas</span></div>' +
+    '<div class="ctx-row"><span class="ctx-key">Escrituras PBA — Mar 2026</span><span class="ctx-val">11.116 (+8% interanual)</span></div>' +
+    '</div></div>';
+
+  document.getElementById('results').innerHTML = panelValor + panelStats + panelComp + panelCtx;
+}
+
+// Allow Enter key on inputs
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
+    calcular();
+  }
+});
+</script>
+</body>
+</html>
