@@ -548,7 +548,7 @@
                 <div class="fichas-form-col">
                     <div class="fichas-section" style="background:#1e2045;border:1px solid #2e3068">
                         <div class="fichas-section-label">Importar desde URL</div>
-                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de MercadoLibre o CasasDeHoy. Si ya la tenemos en nuestra base, los datos se completan automáticamente.</div>
+                        <div style="font-size:11px;color:#999;margin-bottom:10px">Pegá una URL de MercadoLibre, CasasDeHoy, Zonaprop o Argenprop. Los datos se completan automáticamente.</div>
                         <div style="display:flex;gap:8px">
                             <input id="fi-url" type="url" placeholder="https://casasdehoy.com/propiedad/..." style="flex:1">
                             <button class="fichas-btn-secondary" onclick="fichasImportURL()" id="fi-url-btn" style="white-space:nowrap">Importar</button>
@@ -2296,6 +2296,7 @@ function deleteSesion(){
 }
 
 // ---- FICHAS ----
+var RAILWAY_SCRAPER_URL='https://scraper-fichas.up.railway.app'; // actualizar con URL real del deploy
 var fichasImages=[];
 
 function fichasHandleFiles(input){
@@ -2379,39 +2380,19 @@ async function fichasImportURL(){
     var btn=document.getElementById('fi-url-btn');
     var status=document.getElementById('fi-url-status');
     btn.disabled=true;btn.textContent='Buscando...';
-    status.textContent='Buscando en la base de datos...';status.style.color='#8B6F3A';
+    status.textContent='Consultando datos de la propiedad...';status.style.color='#8B6F3A';
     try{
-        // Normalizar URL para búsqueda: sacar parámetros y trailing slashes
-        var urlBusqueda=url.split('?')[0].replace(/\/+$/,'');
-        // Intentar extraer fuente_id de la URL para buscar por clave exacta
-        var cdHoyId=urlBusqueda.match(/-(\d+)-\d+\.html$/i);
-        var mlaId=urlBusqueda.match(/MLA[-\s]?(\d+)/i);
-        var res;
-        if(cdHoyId){
-            res=await sb.from('propiedades_mercado').select('*')
-                .eq('fuente','casasdehoy').eq('fuente_id',cdHoyId[1]).limit(1).single();
-        }else if(mlaId){
-            res=await sb.from('propiedades_mercado').select('*')
-                .eq('fuente','mercadolibre').eq('fuente_id','MLA'+mlaId[1]).limit(1).single();
-        }else{
-            res=await sb.from('propiedades_mercado').select('*')
-                .ilike('url','%'+urlBusqueda+'%').limit(1).single();
-        }
-        if(res.error||!res.data){
-            status.textContent='Esta propiedad no está en nuestra base. Completá el formulario manualmente.';status.style.color='#C8453A';
-            toast('Propiedad no encontrada en la base',true);
-            return;
-        }
-        var data=res.data;
+        var resp=await fetch(RAILWAY_SCRAPER_URL+'/property?url='+encodeURIComponent(url));
+        if(!resp.ok){throw new Error('HTTP '+resp.status);}
+        var data=await resp.json();
+        if(data.error){throw new Error(data.error);}
         var filled=0;
-        // Mapeo correcto a columnas reales de propiedades_mercado
-        var tipoVal=(data.tipologia||data.tipo_propiedad||data.tipo||'').toLowerCase();
-        if(tipoVal){
+        if(data.tipo){
             var tipoSel=document.getElementById('fi-tipo');
+            var tipoVal=data.tipo.toLowerCase();
             for(var o of tipoSel.options){if(o.value.toLowerCase()===tipoVal){tipoSel.value=o.value;filled++;break;}}
         }
-        var zonaVal=data.zona||data.barrio;
-        if(zonaVal){document.getElementById('fi-barrio').value=zonaVal;filled++;}
+        if(data.barrio){document.getElementById('fi-barrio').value=data.barrio;filled++;}
         if(data.ambientes){
             var ambSel=document.getElementById('fi-amb');
             for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;filled++;break;}}
@@ -2419,23 +2400,17 @@ async function fichasImportURL(){
         if(data.dormitorios){document.getElementById('fi-dorm').value=data.dormitorios;filled++;}
         if(data.banos){document.getElementById('fi-ban').value=data.banos;filled++;}
         if(data.sup_cubierta){document.getElementById('fi-sup-c').value=data.sup_cubierta;filled++;}
-        var supTotal=data.metros_totales||data.sup_total;
-        if(supTotal){document.getElementById('fi-sup-t').value=supTotal;filled++;}
-        var precioVal=data.precio_usd||data.precio;
-        if(precioVal){document.getElementById('fi-precio').value=precioVal;filled++;}
-        // precio_usd en DB siempre es USD; sólo leer moneda si viene como campo explícito
-        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';}
-        else if(data.precio_usd){document.getElementById('fi-moneda').value='USD';}
-        // Usar título como descripción (más limpio que el campo descripcion del scraper)
-        var descVal=data.titulo||data.descripcion;
-        if(descVal){document.getElementById('fi-desc').value=descVal;filled++;}
+        if(data.sup_total){document.getElementById('fi-sup-t').value=data.sup_total;filled++;}
+        if(data.precio){document.getElementById('fi-precio').value=data.precio;filled++;}
+        if(data.moneda){document.getElementById('fi-moneda').value=data.moneda==='ARS'?'ARS':'USD';}
+        if(data.descripcion){document.getElementById('fi-desc').value=data.descripcion;filled++;}
         fichasUpdatePreview();
-        status.textContent=filled+' campos importados desde la base. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
+        status.textContent=filled+' campos importados. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
         toast('Datos importados correctamente');
     }catch(err){
         console.error(err);
-        status.textContent='Esta propiedad no está en nuestra base. Completá el formulario manualmente.';status.style.color='#C8453A';
-        toast('Propiedad no encontrada',true);
+        status.textContent='No se pudieron obtener los datos. Completá el formulario manualmente.';status.style.color='#C8453A';
+        toast('No se pudo importar la propiedad',true);
     }finally{btn.disabled=false;btn.textContent='Importar';}
 }
 
