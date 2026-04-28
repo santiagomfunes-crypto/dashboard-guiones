@@ -1,0 +1,2 @@
+# Sin dependencias externas — solo stdlib Python 3.x
+# El servidor usa http.server, urllib y json (todos builtin)
