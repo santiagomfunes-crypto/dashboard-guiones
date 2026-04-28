@@ -42,6 +42,7 @@ interface PropertyData {
   precio?: number;
   moneda?: "USD" | "ARS";
   descripcion?: string;
+  imagenes?: string[];
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -235,56 +236,81 @@ function parseMercadoLibre(html: string): PropertyData {
   return result;
 }
 
-// CasasDeHoy: detalle de propiedad
+// CasasDeHoy: detalle de propiedad individual
+// Estructura real del portal: sin <h1>, precio en formato argentino (. = miles),
+// m² con entidad HTML &sup2;, atributos con número DESPUÉS del label.
 function parseCasasDeHoy(html: string): PropertyData {
   const result: PropertyData = {};
 
-  // Título principal
-  const titulo = first(/<h1[^>]*>([\s\S]*?)<\/h1>/i, html);
-  if (titulo) {
-    const clean = stripHtml(titulo);
+  // Tipo y barrio desde <title>: "Casa en Venta por Inmob. - Bo. La Rosa - Dirección"
+  const titleText = first(/<title>([\s\S]*?)<\/title>/i, html);
+  if (titleText) {
+    const clean = stripHtml(titleText).trim();
     result.tipo = normalizeTipo(clean);
-    result.descripcion = clean;
+    const parts = clean.split(" - ");
+    if (parts.length >= 2) {
+      // La segunda parte suele ser el barrio
+      result.barrio = parts[1].trim().substring(0, 100);
+    }
   }
 
-  // Precio
-  const precioUsd = first(/U\$S\s*([\d.,]+)/i, html);
-  const precioArs = first(/\$\s*([\d.,]+)/i, html);
-  if (precioUsd) {
-    result.precio = parseNum(precioUsd);
+  // Descripción: <p> dentro de la sección "Características" (antes de "Comodidades")
+  const caracteristicas = first(
+    /Caracter[ií]sticas[\s\S]*?separator-line-gris[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i,
+    html
+  );
+  if (caracteristicas) {
+    const clean = stripHtml(caracteristicas).trim();
+    if (clean && clean.length > 5) {
+      result.descripcion = clean.substring(0, 500);
+    }
+  }
+
+  // Precio: <h3 class="azul"><strong>U$S 580.000</strong></h3>
+  // Formato argentino: el punto es separador de miles (580.000 = 580,000)
+  const precioUsdRaw = first(/<h3[^>]*class="[^"]*azul[^"]*"[^>]*>[\s\S]*?U\$S\s*([\d.]+)/i, html);
+  const precioArsRaw = first(/<h3[^>]*class="[^"]*azul[^"]*"[^>]*>[\s\S]*?\$\s*([\d.]+)/i, html);
+  if (precioUsdRaw) {
+    result.precio = parseInt(precioUsdRaw.replace(/\./g, ""), 10) || undefined;
     result.moneda = "USD";
-  } else if (precioArs) {
-    result.precio = parseNum(precioArs);
+  } else if (precioArsRaw) {
+    result.precio = parseInt(precioArsRaw.replace(/\./g, ""), 10) || undefined;
     result.moneda = "ARS";
   }
 
-  // Metros
-  const m2Cub = first(/([\d.,]+)\s*m²?\s*cub/i, html) || first(/cubiertos?[^<]*?([\d.,]+)/i, html);
+  // m² total: "378 m&sup2;" — el portal usa la entidad HTML &sup2; en lugar del carácter ²
+  const m2 = first(/fa-arrows[^>]*>[\s\S]{0,200}?([\d.,]+)\s*m(?:²|&sup2;)/i, html) ||
+              first(/([\d.,]+)\s*m(?:²|&sup2;)/i, html);
+  if (m2) result.supTotal = parseNum(m2);
+
+  // m² cubierto (si aparece explícitamente)
+  const m2Cub = first(/([\d.,]+)\s*m(?:²|&sup2;)\s*(?:cub|cubierto)/i, html) ||
+                first(/cubierto[^<]*?([\d.,]+)/i, html);
   if (m2Cub) result.supCubierta = parseNum(m2Cub);
 
-  const m2Tot = first(/([\d.,]+)\s*m²?\s*tot/i, html) || first(/totales?[^<]*?([\d.,]+)/i, html);
-  if (m2Tot) result.supTotal = parseNum(m2Tot);
-
-  // Dormitorios
-  const dorms = first(/(\d+)\s*dormitorio/i, html) || first(/(\d+)\s*habitaci/i, html);
+  // Dormitorios: "Dormitorios: 4" — el número va DESPUÉS del label
+  const dorms = first(/[Dd]ormitorios?:\s*(\d+)/i, html);
   if (dorms) result.dormitorios = parseInt(dorms);
 
-  // Ambientes
-  const amb = first(/(\d+)\s*ambiente/i, html);
+  // Ambientes (muchas fichas no lo tienen)
+  const amb = first(/[Aa]mbientes?:\s*(\d+)/i, html) || first(/(\d+)\s*ambiente/i, html);
   if (amb) result.ambientes = parseInt(amb);
 
-  // Baños
-  const banos = first(/(\d+)\s*ba[ñn]o/i, html);
+  // Baños: "Baños: 4" — el número va DESPUÉS del label
+  const banos = first(/[Bb]a[ñn]os?:\s*(\d+)/i, html);
   if (banos) result.banos = parseInt(banos);
 
-  // Barrio / zona
-  const barrio = first(/<p[^>]*class="[^"]*zona[^"]*"[^>]*>([\s\S]*?)<\/p>/i, html) ||
-                 first(/Tandil[^,]*,?\s*([^<\n]+)/i, html);
-  if (barrio) result.barrio = stripHtml(barrio).substring(0, 100);
-
-  // Descripción larga
-  const desc = first(/<div[^>]*class="[^"]*descripcion[^"]*"[^>]*>([\s\S]*?)<\/div>/i, html);
-  if (desc) result.descripcion = stripHtml(desc).substring(0, 500);
+  // Imágenes: "fotos_nuevas/xxx.jpeg" → URL completa
+  const imagenes: string[] = [];
+  const seenImgs = new Set<string>();
+  for (const m of html.matchAll(/fotos_nuevas\/[^\s"'<>]+/g)) {
+    const imgUrl = `https://www.casasdehoy.com.ar/${m[0]}`;
+    if (!seenImgs.has(imgUrl)) {
+      seenImgs.add(imgUrl);
+      imagenes.push(imgUrl);
+    }
+  }
+  if (imagenes.length > 0) result.imagenes = imagenes.slice(0, 20);
 
   return result;
 }
@@ -509,9 +535,11 @@ function findInObject(obj: unknown, key: string, depth = 0): unknown {
 function cleanResult(data: PropertyData): Partial<PropertyData> {
   const out: Partial<PropertyData> = {};
   for (const [k, v] of Object.entries(data)) {
-    if (v !== undefined && v !== null && v !== "" && !isNaN(v as number)) {
-      (out as Record<string, unknown>)[k] = v;
-    }
+    if (v === undefined || v === null) continue;
+    if (typeof v === "number" && isNaN(v)) continue;
+    if (typeof v === "string" && v === "") continue;
+    if (Array.isArray(v) && v.length === 0) continue;
+    (out as Record<string, unknown>)[k] = v;
   }
   return out;
 }
@@ -550,6 +578,52 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({ error: "Portal no soportado. Usar MercadoLibre, CasasDeHoy, Zonaprop o Argenprop." }),
       { status: 422, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }
     );
+  }
+
+  // Para CasasDeHoy: buscar primero en propiedades_mercado (el portal bloquea cloud IPs)
+  if (portal === "casasdehoy") {
+    // El fuente_id está codificado en la URL: ...-{fuente_id}-{page}.html
+    const cdHoyIdMatch = url.match(/-(\d+)-\d+\.html$/i);
+    if (cdHoyIdMatch) {
+      const fuenteId = cdHoyIdMatch[1];
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (supabaseUrl && supabaseKey) {
+        try {
+          const dbResp = await fetch(
+            `${supabaseUrl}/rest/v1/propiedades_mercado?fuente=eq.casasdehoy&fuente_id=eq.${fuenteId}&select=*&limit=1`,
+            {
+              headers: {
+                "apikey": supabaseKey,
+                "Authorization": `Bearer ${supabaseKey}`,
+                "Accept": "application/json",
+              },
+              signal: AbortSignal.timeout(8_000),
+            }
+          );
+          if (dbResp.ok) {
+            const rows = await dbResp.json() as Record<string, unknown>[];
+            if (rows.length > 0) {
+              const row = rows[0];
+              const dbData: PropertyData = {
+                tipo: row.tipologia ? normalizeTipo(String(row.tipologia)) : undefined,
+                barrio: row.zona ? String(row.zona) : undefined,
+                dormitorios: row.dormitorios ? Number(row.dormitorios) : undefined,
+                supTotal: row.metros_totales ? Number(row.metros_totales) : undefined,
+                precio: row.precio_usd ? Number(row.precio_usd) : undefined,
+                moneda: row.precio_usd ? "USD" : undefined,
+                descripcion: row.titulo ? String(row.titulo) : undefined,
+                imagenes: row.imagen_url ? [String(row.imagen_url)] : undefined,
+              };
+              return new Response(JSON.stringify(cleanResult(dbData)), {
+                status: 200,
+                headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+              });
+            }
+          }
+        } catch (_) { /* caer al fetch directo */ }
+      }
+    }
   }
 
   // Para MercadoLibre: intentar API pública primero si es una URL de item
