@@ -43,21 +43,29 @@
         </div>
     </div>
 
+    <!-- Space Nav -->
+    <div class="space-nav">
+        <button class="space-btn on" onclick="switchSpace('contenido',this)">Contenido</button>
+        <button class="space-btn" onclick="switchSpace('inmobiliario',this)">Inmobiliario</button>
+    </div>
+
     <!-- Tabs -->
     <div class="tabs">
-        <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
-        <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
-        <button class="tab" onclick="switchTab('filmados',this)">Filmados</button>
-        <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
-        <button class="tab" onclick="switchTab('fichas',this)">Fichas</button>
-        <button class="tab" onclick="switchTab('briefing',this)">Briefing</button>
-        <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
-        <button class="tab" onclick="switchTab('selector',this)">Selector</button>
-        <button class="tab" onclick="switchTab('reportes',this)">Reportes</button>
-        <button class="tab" onclick="switchTab('guia',this)">Guia</button>
-        <button class="tab" onclick="switchTab('reestructurar',this)">A reestructurar</button>
-        <div class="tab-ext-group">
+        <button class="tab on" data-space="contenido" onclick="switchTab('guiones',this)">Guiones</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('parafilmar',this)">Para Filmar</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('filmados',this)">Filmados</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('ideas',this)">Ideas</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('briefing',this)">Briefing</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('calendario',this)">Calendario</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('selector',this)">Selector</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('reportes',this)">Reportes</button>
+        <button class="tab" data-space="contenido" onclick="switchTab('guia',this)">Guia</button>
+        <div class="tab-ext-group" data-space="contenido">
             <a href="newsletter.html" class="tab-ext">Newsletter ↗</a>
+        </div>
+        <button class="tab" data-space="inmobiliario" style="display:none" onclick="switchTab('fichas',this)">Fichas</button>
+        <button class="tab" data-space="inmobiliario" style="display:none" onclick="switchTab('reestructurar',this)">A reestructurar</button>
+        <div class="tab-ext-group" data-space="inmobiliario" style="display:none">
             <a href="https://santiagomfunes-crypto.github.io/mercado/" target="_blank" class="tab-ext">Mercado ↗</a>
         </div>
     </div>
@@ -1027,12 +1035,29 @@ function renderGrouped(gs){
     el.innerHTML=html;
 }
 
+// Spaces
+var currentSpace='contenido';
+var lastTabPerSpace={contenido:'guiones',inmobiliario:'fichas'};
+
+function switchSpace(space,btn){
+    currentSpace=space;
+    document.querySelectorAll('.space-btn').forEach(function(b){b.classList.remove('on');});
+    if(btn)btn.classList.add('on');
+    document.querySelectorAll('[data-space]').forEach(function(el){
+        el.style.display=el.dataset.space===space?'':'none';
+    });
+    var last=lastTabPerSpace[space]||(space==='contenido'?'guiones':'fichas');
+    var tabBtn=document.querySelector('.tab[data-space="'+space+'"][onclick*="\''+last+'\'"]');
+    switchTab(last,tabBtn);
+}
+
 // Tabs
 function switchTab(name,btn){
     document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on');});
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
     document.getElementById('v-'+name).classList.add('on');
     if(btn)btn.classList.add('on');
+    if(currentSpace&&lastTabPerSpace)lastTabPerSpace[currentSpace]=name;
     if(name==='selector')initTinder();
     if(name==='parafilmar')loadParaFilmar();
     if(name==='briefing')loadBriefing();

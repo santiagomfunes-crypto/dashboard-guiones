@@ -113,6 +113,11 @@ button{cursor:pointer;font-family:inherit}input,textarea,select{font-family:inhe
 .tab-ext-group{margin-left:auto;display:flex;gap:4px;align-items:center;padding:0 8px;flex-shrink:0}
 .tab-ext{padding:8px 12px;font-size:11px;font-weight:600;color:#8B6F3A;text-decoration:none;border:1px solid #E8E4DD;border-radius:7px;transition:all 0.15s;white-space:nowrap}
 .tab-ext:hover{background:#F5F5F3;border-color:#8B6F3A}
+/* Space switcher */
+.space-nav{background:#fff;border-bottom:1px solid #E8E4DD;display:flex;padding:0 20px;gap:0}
+.space-btn{padding:10px 20px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:#bbb;border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;text-transform:uppercase}
+.space-btn:hover{color:#1a1a2e}
+.space-btn.on{color:#8B6F3A;border-bottom-color:#8B6F3A}
 .view{display:none}.view.on{display:block}
 
 /* Mercado */
