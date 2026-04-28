@@ -2383,11 +2383,20 @@ async function fichasImportURL(){
     try{
         // Normalizar URL para búsqueda: sacar parámetros y trailing slashes
         var urlBusqueda=url.split('?')[0].replace(/\/+$/,'');
-        var res=await sb.from('propiedades_mercado')
-            .select('*')
-            .ilike('fuente_url','%'+urlBusqueda+'%')
-            .limit(1)
-            .single();
+        // Intentar extraer fuente_id de la URL para buscar por clave exacta
+        var cdHoyId=urlBusqueda.match(/-(\d+)-\d+\.html$/i);
+        var mlaId=urlBusqueda.match(/MLA[-\s]?(\d+)/i);
+        var res;
+        if(cdHoyId){
+            res=await sb.from('propiedades_mercado').select('*')
+                .eq('fuente','casasdehoy').eq('fuente_id',cdHoyId[1]).limit(1).single();
+        }else if(mlaId){
+            res=await sb.from('propiedades_mercado').select('*')
+                .eq('fuente','mercadolibre').eq('fuente_id','MLA'+mlaId[1]).limit(1).single();
+        }else{
+            res=await sb.from('propiedades_mercado').select('*')
+                .ilike('url','%'+urlBusqueda+'%').limit(1).single();
+        }
         if(res.error||!res.data){
             status.textContent='Esta propiedad no está en nuestra base. Completá el formulario manualmente.';status.style.color='#C8453A';
             toast('Propiedad no encontrada en la base',true);
@@ -2395,12 +2404,14 @@ async function fichasImportURL(){
         }
         var data=res.data;
         var filled=0;
-        if(data.tipo_propiedad||data.tipo){
-            var tipoVal=(data.tipo_propiedad||data.tipo||'').toLowerCase();
+        // Mapeo correcto a columnas reales de propiedades_mercado
+        var tipoVal=(data.tipologia||data.tipo_propiedad||data.tipo||'').toLowerCase();
+        if(tipoVal){
             var tipoSel=document.getElementById('fi-tipo');
             for(var o of tipoSel.options){if(o.value.toLowerCase()===tipoVal){tipoSel.value=o.value;filled++;break;}}
         }
-        if(data.barrio){document.getElementById('fi-barrio').value=data.barrio;filled++;}
+        var zonaVal=data.zona||data.barrio;
+        if(zonaVal){document.getElementById('fi-barrio').value=zonaVal;filled++;}
         if(data.ambientes){
             var ambSel=document.getElementById('fi-amb');
             for(var o of ambSel.options){if(o.value===String(data.ambientes)){ambSel.value=o.value;filled++;break;}}
@@ -2408,10 +2419,16 @@ async function fichasImportURL(){
         if(data.dormitorios){document.getElementById('fi-dorm').value=data.dormitorios;filled++;}
         if(data.banos){document.getElementById('fi-ban').value=data.banos;filled++;}
         if(data.sup_cubierta){document.getElementById('fi-sup-c').value=data.sup_cubierta;filled++;}
-        if(data.sup_total){document.getElementById('fi-sup-t').value=data.sup_total;filled++;}
-        if(data.precio){document.getElementById('fi-precio').value=data.precio;filled++;}
-        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';filled++;}
-        if(data.descripcion){document.getElementById('fi-desc').value=data.descripcion;filled++;}
+        var supTotal=data.metros_totales||data.sup_total;
+        if(supTotal){document.getElementById('fi-sup-t').value=supTotal;filled++;}
+        var precioVal=data.precio_usd||data.precio;
+        if(precioVal){document.getElementById('fi-precio').value=precioVal;filled++;}
+        // precio_usd en DB siempre es USD; sólo leer moneda si viene como campo explícito
+        if(data.moneda){var monSel=document.getElementById('fi-moneda');monSel.value=data.moneda==='ARS'?'ARS':'USD';}
+        else if(data.precio_usd){document.getElementById('fi-moneda').value='USD';}
+        // Usar título como descripción (más limpio que el campo descripcion del scraper)
+        var descVal=data.titulo||data.descripcion;
+        if(descVal){document.getElementById('fi-desc').value=descVal;filled++;}
         fichasUpdatePreview();
         status.textContent=filled+' campos importados desde la base. Revisalos antes de generar el PDF.';status.style.color='#5a9a5a';
         toast('Datos importados correctamente');
@@ -2461,7 +2478,10 @@ function fichasUpdatePreview(){
 function fichasGeneratePDF(){
     if(!fichasImages.length){toast('Necesitás al menos una imagen',true);return;}
     var d=fichasGetData();
-    if(!d.barrio||!d.precio){toast('Completá barrio y precio',true);return;}
+    var missingFields=[];
+    if(!d.barrio)missingFields.push('barrio');
+    if(!d.precio)missingFields.push('precio');
+    if(missingFields.length){toast('Completá: '+missingFields.join(' y '),true);return;}
     if(!window.jspdf){toast('Cargando generador de PDF, esperá un momento...',true);return;}
     var btn=document.getElementById('fichas-pdf-btn');
     btn.disabled=true;btn.textContent='Generando...';
