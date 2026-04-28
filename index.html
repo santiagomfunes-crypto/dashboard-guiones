@@ -48,21 +48,15 @@
         <button class="tab on" onclick="switchTab('guiones',this)">Guiones</button>
         <button class="tab" onclick="switchTab('parafilmar',this)">Para Filmar</button>
         <button class="tab" onclick="switchTab('filmados',this)">Filmados</button>
+        <button class="tab" onclick="switchTab('ideas',this)">Ideas</button>
+        <button class="tab" onclick="switchTab('fichas',this)">Fichas</button>
+        <button class="tab" onclick="switchTab('briefing',this)">Briefing</button>
+        <button class="tab" onclick="switchTab('calendario',this)">Calendario</button>
+        <button class="tab" onclick="switchTab('selector',this)">Selector</button>
+        <button class="tab" onclick="switchTab('reportes',this)">Reportes</button>
+        <button class="tab" onclick="switchTab('guia',this)">Guia</button>
         <button class="tab" onclick="switchTab('reestructurar',this)">A reestructurar</button>
-        <div class="tab-sep"></div>
-        <div class="tab-more-wrap">
-            <button class="tab tab-more" onclick="toggleMore(this)">Más ▾</button>
-            <div class="tab-more-menu" id="tab-more-menu">
-                <button onclick="switchTabMenu('selector')">Selector</button>
-                <button onclick="switchTabMenu('calendario')">Calendario</button>
-                <button onclick="switchTabMenu('ideas')">Ideas</button>
-                <button onclick="switchTabMenu('reportes')">Reportes</button>
-                <button onclick="switchTabMenu('briefing')">Briefing</button>
-                <button onclick="switchTabMenu('guia')">Guía</button>
-                <button onclick="switchTabMenu('fichas')">Fichas</button>
-            </div>
-        </div>
-        <div style="margin-left:auto;display:flex;gap:4px;align-items:center">
+        <div class="tab-ext-group">
             <a href="newsletter.html" class="tab-ext">Newsletter ↗</a>
             <a href="https://santiagomfunes-crypto.github.io/mercado/" target="_blank" class="tab-ext">Mercado ↗</a>
         </div>
@@ -1027,7 +1021,7 @@ function renderGrouped(gs){
 // Tabs
 function switchTab(name,btn){
     document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on');});
-    document.querySelectorAll('.tab,.tab-more').forEach(function(t){t.classList.remove('on');});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
     document.getElementById('v-'+name).classList.add('on');
     if(btn)btn.classList.add('on');
     if(name==='selector')initTinder();
