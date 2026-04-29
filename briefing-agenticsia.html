@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing Diseño Web — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; color: #0B1F33; background: #fff; font-size: 14px; line-height: 1.7; }
+
+  .header {
+    background: #0B1F33;
+    padding: 48px 64px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .header-logo {
+    width: 52px;
+    flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,.9);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-text p {
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+    letter-spacing: 2px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .demo-banner {
+    background: #7AB591;
+    padding: 20px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .demo-banner p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .demo-banner a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    word-break: break-all;
+  }
+
+  .body { max-width: 900px; margin: 0 auto; padding: 64px; }
+
+  .section { margin-bottom: 64px; }
+  .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: #7AB591;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .section h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #0B1F33;
+    margin-bottom: 28px;
+    letter-spacing: .5px;
+  }
+  .section p { color: #555; margin-bottom: 12px; }
+
+  .divider { border: none; border-top: 1px solid #D9DEE3; margin: 64px 0; }
+
+  /* DATOS LEGALES */
+  .datos-card {
+    background: #F5F6F8;
+    border-left: 3px solid #0B1F33;
+    padding: 32px 36px;
+    margin-bottom: 16px;
+  }
+  .datos-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .dato-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+    align-items: baseline;
+  }
+  .dato-key {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #999;
+    text-transform: uppercase;
+    min-width: 180px;
+    flex-shrink: 0;
+  }
+  .dato-val {
+    font-weight: 500;
+    color: #0B1F33;
+    font-size: 15px;
+  }
+  .dato-legal {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #D9DEE3;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: .5px;
+  }
+  .dato-legal strong { color: #0B1F33; }
+
+  /* COLORES */
+  .colores-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .color-item { text-align: center; }
+  .color-swatch {
+    width: 80px;
+    height: 56px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    border: 1px solid #e8e8e8;
+  }
+  .color-hex { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; color: #0B1F33; }
+  .color-nombre { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* TIPOGRAFIA */
+  .tipo-row {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tipo-item {
+    background: #F5F6F8;
+    padding: 24px 28px;
+    flex: 1;
+    min-width: 240px;
+  }
+  .tipo-fam { font-size: 10px; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-bottom: 8px; font-family: 'Montserrat', sans-serif; }
+  .tipo-sample { font-size: 32px; font-weight: 300; color: #0B1F33; margin-bottom: 8px; }
+  .tipo-uso { font-size: 11px; color: #7AB591; letter-spacing: 1px; font-family: 'Montserrat', sans-serif; }
+
+  /* CAMBIOS */
+  .cambios-list { list-style: none; }
+  .cambio-item {
+    display: flex;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid #F5F6F8;
+    align-items: flex-start;
+  }
+  .cambio-item:last-child { border-bottom: none; }
+  .cambio-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: #7AB591;
+    font-weight: 600;
+    min-width: 28px;
+    margin-top: 2px;
+  }
+  .cambio-texto h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0B1F33;
+    margin-bottom: 4px;
+  }
+  .cambio-texto p { font-size: 12px; color: #666; margin: 0; }
+
+  /* REGLAS */
+  .reglas-box {
+    background: #0B1F33;
+    padding: 32px 36px;
+    color: #fff;
+  }
+  .reglas-box h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,.4);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .regla-row { margin-bottom: 14px; display: flex; gap: 12px; align-items: baseline; }
+  .regla-n { font-size: 10px; color: #7AB591; font-family: 'Montserrat', sans-serif; min-width: 20px; }
+  .regla-t { font-size: 13px; color: rgba(255,255,255,.75); }
+  .regla-t strong { color: #fff; }
+
+  .footer {
+    background: #F5F6F8;
+    padding: 32px 64px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #aaa;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <svg class="header-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220">
+    <rect x="10" y="10" width="140" height="200" rx="70" ry="70" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2"/>
+    <line x1="32" y1="110" x2="128" y2="110" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/>
+    <text x="80" y="98" font-family="Georgia,serif" font-weight="300" font-size="52" fill="rgba(255,255,255,.8)" text-anchor="middle" dominant-baseline="auto">A</text>
+    <text x="80" y="179" font-family="Georgia,serif" font-weight="300" font-size="52" fill="rgba(255,255,255,.8)" text-anchor="middle" dominant-baseline="auto">O</text>
+  </svg>
+  <div class="header-text">
+    <h1>Briefing Diseño Web</h1>
+    <p>Grupo Altavista Otero · Tandil · Abril 2026</p>
+  </div>
+</div>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">
+  <p>Demo de referencia disponible en →</p>
+  <a href="https://santiagomfunes-crypto.github.io/dashboard-guiones/altavista-demo.html" target="_blank">
+    santiagomfunes-crypto.github.io/dashboard-guiones/altavista-demo.html
+  </a>
+</div>
+
+<div class="body">
+
+  <!-- OBJETIVO -->
+  <div class="section">
+    <div class="section-label">00 — Objetivo</div>
+    <h2>Rehacer la web de propiedades con esta identidad.</h2>
+    <p>El sitio actual (<strong>propiedades.santiagofunes.agenticsia.online</strong>) tiene el contenido correcto pero necesita una identidad visual premium. La demo de arriba muestra exactamente la dirección estética que buscamos: tipografía serif para los títulos, paleta azul profundo, animaciones suaves, y los datos reales del martillero.</p>
+    <p>La web es la carta de presentación de Santiago Funes como referente inmobiliario en Tandil. Tiene que transmitir <strong>confianza, solvencia y precisión</strong> — no una inmobiliaria genérica.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- DATOS LEGALES Y DE CONTACTO -->
+  <div class="section">
+    <div class="section-label">01 — Datos legales y de contacto</div>
+    <h2>La información que debe aparecer en el sitio.</h2>
+
+    <div class="datos-card">
+      <h3>Martillero responsable</h3>
+      <div class="dato-row">
+        <span class="dato-key">Nombre completo</span>
+        <span class="dato-val">Juan Ignacio Otero</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Título</span>
+        <span class="dato-val">Martillero y Corredor Público</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Matrícula N°</span>
+        <span class="dato-val">1966</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Colegio</span>
+        <span class="dato-val">C.M.C.P. — Departamento Judicial Azul</span>
+      </div>
+      <div class="dato-legal">
+        <strong>Pie legal obligatorio en todas las páginas y fichas:</strong><br>
+        "Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul"
+      </div>
+    </div>
+
+    <div class="datos-card">
+      <h3>Oficina</h3>
+      <div class="dato-row">
+        <span class="dato-key">Dirección</span>
+        <span class="dato-val">Distrito Avellaneda, Tandil</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Ciudad</span>
+        <span class="dato-val">Tandil, Buenos Aires, Argentina</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Dirección secundaria</span>
+        <span class="dato-val">Av. Fleming 691, Tandil</span>
+      </div>
+    </div>
+
+    <div class="datos-card">
+      <h3>Identidad</h3>
+      <div class="dato-row">
+        <span class="dato-key">Nombre de marca</span>
+        <span class="dato-val">Grupo Altavista Otero</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Tagline web</span>
+        <span class="dato-val">Santiago Funes — Grupo Altavista Otero</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Web actual</span>
+        <span class="dato-val">propiedades.santiagofunes.agenticsia.online</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- IDENTIDAD VISUAL -->
+  <div class="section">
+    <div class="section-label">02 — Identidad visual</div>
+    <h2>Paleta, tipografía y reglas de uso.</h2>
+
+    <p style="margin-bottom:24px;"><strong>Paleta de colores — usar exactamente estos valores HEX:</strong></p>
+    <div class="colores-grid">
+      <div class="color-item">
+        <div class="color-swatch" style="background:#0B1F33; border-color:#0B1F33;"></div>
+        <div class="color-hex">#0B1F33</div>
+        <div class="color-nombre">Azul Profundo<br><small style="color:#aaa;font-size:9px;">COLOR PRINCIPAL</small></div>
+      </div>
+      <div class="color-item">
+        <div class="color-swatch" style="background:#1F3A56; border-color:#1F3A56;"></div>
+        <div class="color-hex">#1F3A56</div>
+        <div class="color-nombre">Azul Secundario</div>
+      </div>
+      <div class="color-item">
+        <div class="color-swatch" style="background:#7AB591;"></div>
+        <div class="color-hex">#7AB591</div>
+        <div class="color-nombre">Verde Gris<br><small style="color:#aaa;font-size:9px;">ACENTO — NO FONDO</small></div>
+      </div>
+      <div class="color-item">
+        <div class="color-swatch" style="background:#D9DEE3;"></div>
+        <div class="color-hex">#D9DEE3</div>
+        <div class="color-nombre">Gris Claro</div>
+      </div>
+      <div class="color-item">
+        <div class="color-swatch" style="background:#F5F6F8;"></div>
+        <div class="color-hex">#F5F6F8</div>
+        <div class="color-nombre">Off-white</div>
+      </div>
+      <div class="color-item">
+        <div class="color-swatch" style="background:#FFFFFF;"></div>
+        <div class="color-hex">#FFFFFF</div>
+        <div class="color-nombre">Blanco</div>
+      </div>
+    </div>
+
+    <p style="margin-bottom:24px; margin-top:40px;"><strong>Tipografía — tres familias con roles específicos:</strong></p>
+    <div class="tipo-row">
+      <div class="tipo-item">
+        <div class="tipo-fam">Cormorant Garamond — Display</div>
+        <div class="tipo-sample" style="font-size:48px; font-weight:300; font-family:Georgia,serif; font-style:italic;">Tandil</div>
+        <div class="tipo-uso">Hero titles · Números grandes · Estadísticas</div>
+      </div>
+      <div class="tipo-item">
+        <div class="tipo-fam">Montserrat — Principal</div>
+        <div class="tipo-sample" style="font-family:'Montserrat',sans-serif;">Aa</div>
+        <div class="tipo-uso">Nav · Botones · Labels · UI · Subtítulos</div>
+      </div>
+      <div class="tipo-item">
+        <div class="tipo-fam">Inter — Secundaria</div>
+        <div class="tipo-sample" style="font-family:'Inter',sans-serif; font-weight:300;">Aa</div>
+        <div class="tipo-uso">Cuerpo · Descripciones · Fichas</div>
+      </div>
+    </div>
+
+    <div style="background:#F5F6F8; padding:24px; margin-top:8px; font-size:12px; color:#555; line-height:1.9;">
+      <strong style="font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#0B1F33; display:block; margin-bottom:10px;">Escala tipográfica</strong>
+      H1 — Cormorant Garamond 300 · clamp(56px, 9vw, 108px) · letter-spacing: -1px<br>
+      H2 — Montserrat 300 · 32px · letter-spacing: 1px<br>
+      H3 — Montserrat 500 · 14px · letter-spacing: 2px · UPPERCASE<br>
+      Body — Inter 400 · 13–15px · line-height: 1.8<br>
+      Labels — Montserrat 400 · 9–10px · letter-spacing: 3–4px · UPPERCASE
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CAMBIOS PUNTUALES -->
+  <div class="section">
+    <div class="section-label">03 — Cambios respecto al sitio actual</div>
+    <h2>Lo que necesita mejorar vs. propiedades.santiagofunes.agenticsia.online</h2>
+
+    <ul class="cambios-list">
+      <li class="cambio-item">
+        <span class="cambio-num">01</span>
+        <div class="cambio-texto">
+          <h4>Hero: foto de Tandil de alta definición</h4>
+          <p>Usar la imagen del Cerro San Martín que está en la demo (Wikimedia Commons, 4776×2696px, real Tandil). El sitio actual no tiene foto de fondo o usa una genérica.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">02</span>
+        <div class="cambio-texto">
+          <h4>Stats bar: datos reales del martillero</h4>
+          <p>En lugar de "XX propiedades activas" o estadísticas inventadas: Juan I. Otero / Martillero y Corredor Público — Matrícula 1966 / Dep. Judicial Azul — Av. Fleming 691, Tandil — 100% Operaciones respaldadas. Ver sección stats en la demo.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">03</span>
+        <div class="cambio-texto">
+          <h4>Tipografía: incorporar Cormorant Garamond para títulos</h4>
+          <p>El sitio actual usa fuentes sin personalidad. Los títulos grandes (hero, secciones principales) deben usar Cormorant Garamond weight 300, que le da el tono premium que buscamos.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">04</span>
+        <div class="cambio-texto">
+          <h4>Paleta: ajustar colores al sistema de marca</h4>
+          <p>#0B1F33 como navy principal. Quitar cualquier azul fuera de paleta. El verde #7AB591 solo como acento (labels, iconos), nunca como color de fondo principal.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">05</span>
+        <div class="cambio-texto">
+          <h4>Pie legal en fichas de propiedades</h4>
+          <p>Cada ficha debe mostrar: "Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul". Es obligación legal, no opcional.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">06</span>
+        <div class="cambio-texto">
+          <h4>Animaciones de entrada suaves</h4>
+          <p>fadeUp en hero (opacity 0 → 1 con translate), scroll reveal en cards. Las animaciones deben ser sutiles, no llamativas. Ver implementación en la demo.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">07</span>
+        <div class="cambio-texto">
+          <h4>Nav con efecto scroll</h4>
+          <p>Nav transparente al inicio → fondo #0B1F33 semitransparente con backdrop-filter blur cuando el usuario scrollea. Ver nav en la demo.</p>
+        </div>
+      </li>
+      <li class="cambio-item">
+        <span class="cambio-num">08</span>
+        <div class="cambio-texto">
+          <h4>Dirección de oficina actualizada</h4>
+          <p>La dirección principal a mostrar es <strong>Distrito Avellaneda, Tandil</strong>. La referencia secundaria es Av. Fleming 691.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- REGLAS DE MARCA -->
+  <div class="section">
+    <div class="section-label">04 — Reglas de marca</div>
+    <h2>Lo que nunca debe hacerse.</h2>
+
+    <div class="reglas-box">
+      <h3>Restricciones de identidad</h3>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No usar el verde <strong>#7AB591 como color de fondo</strong> principal — solo como acento</span>
+      </div>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No usar <strong>tonos dorados</strong> (#8B6F3A ni similares) — son de una identidad anterior</span>
+      </div>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No <strong>rotar, deformar ni cambiar colores</strong> del isotipo AO</span>
+      </div>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No usar lenguaje exagerado: "increíble", "espectacular", "única oportunidad" — <strong>los datos hablan solos</strong></span>
+      </div>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No publicar fichas de propiedades <strong>sin el pie legal</strong> del martillero</span>
+      </div>
+      <div class="regla-row">
+        <span class="regla-n">✕</span>
+        <span class="regla-t">No usar combinaciones de color fuera de las 5 definidas en la paleta</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- REFERENCIA TÉCNICA -->
+  <div class="section">
+    <div class="section-label">05 — Referencia técnica</div>
+    <h2>Links y recursos.</h2>
+
+    <div class="datos-card">
+      <h3>Links</h3>
+      <div class="dato-row">
+        <span class="dato-key">Demo de referencia</span>
+        <span class="dato-val" style="font-size:13px;"><a href="https://santiagomfunes-crypto.github.io/dashboard-guiones/altavista-demo.html" style="color:#0B1F33;">santiagomfunes-crypto.github.io/dashboard-guiones/altavista-demo.html</a></span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Sitio actual</span>
+        <span class="dato-val" style="font-size:13px;"><a href="https://propiedades.santiagofunes.agenticsia.online/" style="color:#0B1F33;">propiedades.santiagofunes.agenticsia.online</a></span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Foto hero Tandil</span>
+        <span class="dato-val" style="font-size:12px; word-break:break-all;"><a href="https://upload.wikimedia.org/wikipedia/commons/4/48/Ciudad_desde_el_Cerro_San_Mart%C3%ADn_-_panoramio.jpg" style="color:#0B1F33;">Wikimedia Commons — Ciudad desde el Cerro San Martín (4776×2696px)</a></span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-key">Fonts (Google)</span>
+        <span class="dato-val" style="font-size:13px;">Cormorant Garamond · Montserrat · Inter</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Grupo Altavista Otero · Briefing diseño web · Tandil, Abril 2026
+</div>
+
+</body>
+</html>
