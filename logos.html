@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit de Marca — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Montserrat', sans-serif; background: #F5F6F8; color: #0B1F33; }
+
+  header {
+    background: #0B1F33;
+    padding: 40px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 20px; }
+  .header-title h1 { font-size: 11px; letter-spacing: 4px; color: rgba(255,255,255,.9); text-transform: uppercase; margin-bottom: 4px; }
+  .header-title p { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: 2px; text-transform: uppercase; }
+  .header-links { display: flex; gap: 24px; }
+  .header-links a { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,.45); text-decoration: none; text-transform: uppercase; transition: color .2s; }
+  .header-links a:hover { color: #fff; }
+
+  .body { max-width: 1100px; margin: 0 auto; padding: 64px; }
+
+  .section { margin-bottom: 72px; }
+  .section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 32px; border-bottom: 1px solid #D9DEE3; padding-bottom: 20px; }
+  .section-label { font-size: 9px; letter-spacing: 4px; color: #7AB591; text-transform: uppercase; }
+  .section-title { font-size: 18px; font-weight: 300; }
+
+  .logos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .logos-grid.two { grid-template-columns: repeat(2, 1fr); }
+  .logos-grid.full { grid-template-columns: 1fr; }
+
+  .logo-card { background: #fff; }
+  .logo-card.dark { background: #0B1F33; }
+  .logo-preview {
+    padding: 48px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+  .logo-preview img { max-width: 100%; max-height: 160px; display: block; }
+  .logo-preview.horizontal img { max-height: 80px; }
+  .logo-footer {
+    border-top: 1px solid #F5F6F8;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo-card.dark .logo-footer { border-top-color: rgba(255,255,255,.08); }
+  .logo-name { font-size: 10px; letter-spacing: 1px; color: #888; text-transform: uppercase; }
+  .logo-card.dark .logo-name { color: rgba(255,255,255,.3); }
+  .btn-dl {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    background: #0B1F33;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s;
+  }
+  .logo-card.dark .btn-dl { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); }
+  .logo-card.dark .btn-dl:hover { background: rgba(255,255,255,.2); }
+  .btn-dl:hover { background: #1F3A56; }
+
+  /* PERFIL REDES */
+  .redes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .red-card { background: #fff; text-align: center; }
+  .red-card.dark { background: #0B1F33; }
+  .red-preview { padding: 32px 24px; display: flex; justify-content: center; }
+  .red-preview img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 1px solid #D9DEE3; }
+  .red-card.dark .red-preview img { border-color: rgba(255,255,255,.1); }
+  .red-footer { padding: 16px 24px; border-top: 1px solid #F5F6F8; display: flex; align-items: center; justify-content: space-between; }
+  .red-card.dark .red-footer { border-top-color: rgba(255,255,255,.08); }
+  .red-name { font-size: 10px; letter-spacing: 1px; color: #888; text-transform: uppercase; }
+  .red-card.dark .red-name { color: rgba(255,255,255,.3); }
+
+  .legal {
+    background: #fff;
+    border: 1px solid #D9DEE3;
+    padding: 20px 28px;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.8;
+    margin-top: 48px;
+  }
+  .legal strong { color: #0B1F33; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="36">
+      <rect x="10" y="10" width="140" height="200" rx="70" ry="70" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"/>
+      <line x1="32" y1="110" x2="128" y2="110" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+      <text x="80" y="60" font-family="Georgia,serif" font-size="70" fill="rgba(255,255,255,.7)" text-anchor="middle" dominant-baseline="central">A</text>
+      <text x="80" y="160" font-family="Georgia,serif" font-size="70" fill="rgba(255,255,255,.7)" text-anchor="middle" dominant-baseline="central">O</text>
+    </svg>
+    <div class="header-title">
+      <h1>Kit de Marca</h1>
+      <p>Grupo Altavista Otero · Tandil · 2026</p>
+    </div>
+  </div>
+  <div class="header-links">
+    <a href="manual-de-marca.html">Manual de marca</a>
+    <a href="../briefing-agenticsia.html">Briefing web</a>
+  </div>
+</header>
+
+<div class="body">
+
+  <!-- LOGOS COMPLETOS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">01</span>
+      <span class="section-title">Logo completo — Isotipo + Wordmark</span>
+    </div>
+    <div class="logos-grid two">
+      <div class="logo-card dark">
+        <div class="logo-preview">
+          <img src="logo-negativo.png" alt="Logo negativo">
+        </div>
+        <div class="logo-footer">
+          <span class="logo-name">Negativo — sobre oscuro</span>
+          <a class="btn-dl" href="logo-negativo.png" download>Descargar PNG</a>
+        </div>
+      </div>
+      <div class="logo-card">
+        <div class="logo-preview">
+          <img src="logo-positivo.png" alt="Logo positivo">
+        </div>
+        <div class="logo-footer">
+          <span class="logo-name">Positivo — sobre claro</span>
+          <a class="btn-dl" href="logo-positivo.png" download>Descargar PNG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGO HORIZONTAL -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">02</span>
+      <span class="section-title">Logo horizontal</span>
+    </div>
+    <div class="logos-grid full">
+      <div class="logo-card dark">
+        <div class="logo-preview horizontal">
+          <img src="logo-horizontal-negativo.png" alt="Logo horizontal negativo">
+        </div>
+        <div class="logo-footer">
+          <span class="logo-name">Horizontal — negativo</span>
+          <a class="btn-dl" href="logo-horizontal-negativo.png" download>Descargar PNG</a>
+        </div>
+      </div>
+      <div style="margin-top:2px;">
+        <div class="logo-card">
+          <div class="logo-preview horizontal">
+            <img src="logo-horizontal-positivo.png" alt="Logo horizontal positivo">
+          </div>
+          <div class="logo-footer">
+            <span class="logo-name">Horizontal — positivo</span>
+            <a class="btn-dl" href="logo-horizontal-positivo.png" download>Descargar PNG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ISOTIPO -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">03</span>
+      <span class="section-title">Isotipo — Solo marca AO</span>
+    </div>
+    <div class="logos-grid two">
+      <div class="logo-card dark">
+        <div class="logo-preview">
+          <img src="isotipo-negativo.png" alt="Isotipo negativo" style="max-height:140px;">
+        </div>
+        <div class="logo-footer">
+          <span class="logo-name">Isotipo — negativo</span>
+          <a class="btn-dl" href="isotipo-negativo.png" download>Descargar PNG</a>
+        </div>
+      </div>
+      <div class="logo-card">
+        <div class="logo-preview">
+          <img src="isotipo-positivo.png" alt="Isotipo positivo" style="max-height:140px;">
+        </div>
+        <div class="logo-footer">
+          <span class="logo-name">Isotipo — positivo</span>
+          <a class="btn-dl" href="isotipo-positivo.png" download>Descargar PNG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFIL REDES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">04</span>
+      <span class="section-title">Fotos de perfil redes sociales</span>
+    </div>
+    <div class="redes-grid">
+      <div class="red-card dark">
+        <div class="red-preview"><img src="whatsapp-logo.png" alt="WhatsApp"></div>
+        <div class="red-footer">
+          <span class="red-name">WhatsApp</span>
+          <a class="btn-dl" href="whatsapp-logo.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="red-card dark">
+        <div class="red-preview"><img src="instagram-logo.png" alt="Instagram"></div>
+        <div class="red-footer">
+          <span class="red-name">Instagram</span>
+          <a class="btn-dl" href="instagram-logo.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="red-card dark">
+        <div class="red-preview"><img src="facebook-logo.png" alt="Facebook"></div>
+        <div class="red-footer">
+          <span class="red-name">Facebook</span>
+          <a class="btn-dl" href="facebook-logo.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="red-card dark">
+        <div class="red-preview"><img src="fondo-whatsapp-business.png" alt="Fondo WA" style="width:60px;height:100px;border-radius:4px;"></div>
+        <div class="red-footer">
+          <span class="red-name">Fondo WA</span>
+          <a class="btn-dl" href="fondo-whatsapp-business.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legal">
+    <strong>Uso correcto:</strong> Solo usar los archivos de esta página. No recrear el logo ni usar capturas de pantalla.<br>
+    <strong>Pie legal obligatorio en toda publicación:</strong> "Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul"
+  </div>
+
+</div>
+
+</body>
+</html>
