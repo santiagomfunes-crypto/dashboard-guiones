@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Santiago Funes — Grupo Altavista Otero · Propiedades en Tandil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0B1F33;
+      --navy2:   #1F3A56;
+      --green:   #7AB591;
+      --gray:    #D9DEE3;
+      --offwhite:#F5F6F8;
+      --white:   #FFFFFF;
+      --text:    #444;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--navy); background: var(--white); overflow-x: hidden; }
+
+    /* ──────────── NAV ──────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 22px 64px;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background .4s, padding .4s, box-shadow .4s;
+    }
+    nav.scrolled {
+      background: rgba(11,31,51,.97); padding: 14px 64px;
+      box-shadow: 0 1px 0 rgba(255,255,255,.05);
+      backdrop-filter: blur(12px);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-wm { font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:3px; color:rgba(255,255,255,.9); text-transform:uppercase; line-height:1.4; }
+    .nav-wm small { display:block; font-size:9px; color:rgba(255,255,255,.35); letter-spacing:2px; margin-top:2px; }
+    .nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+    .nav-links a { font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:2px; color:rgba(255,255,255,.55); text-decoration:none; text-transform:uppercase; transition:color .3s; }
+    .nav-links a:hover { color:#fff; }
+    .nav-cta { border:1px solid rgba(255,255,255,.25) !important; padding:9px 20px; border-radius:2px; color:rgba(255,255,255,.8) !important; }
+    .nav-cta:hover { background:#fff !important; color:var(--navy) !important; border-color:#fff !important; }
+
+    /* ──────────── HERO ──────────── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(to bottom, rgba(11,31,51,.72) 0%, rgba(11,31,51,.5) 40%, rgba(11,31,51,.88) 100%),
+                  url('https://upload.wikimedia.org/wikipedia/commons/4/48/Ciudad_desde_el_Cerro_San_Mart%C3%ADn_-_panoramio.jpg') center 40%/cover no-repeat;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: 120px 40px 100px; position: relative;
+    }
+    .hero-eyebrow {
+      font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:5px;
+      color:var(--green); text-transform:uppercase; margin-bottom:28px;
+      opacity:0; animation: fadeUp .9s .2s forwards;
+    }
+    .hero-logo { margin-bottom:36px; opacity:0; animation: fadeUp .9s .4s forwards; }
+    .hero-title {
+      font-family:'Cormorant Garamond',serif; font-size:clamp(56px,9vw,108px);
+      font-weight:300; color:#fff; line-height:.92; letter-spacing:-1px; margin-bottom:8px;
+      opacity:0; animation: fadeUp .9s .6s forwards;
+    }
+    .hero-title em { font-style:italic; color:rgba(255,255,255,.45); }
+    .hero-tag {
+      font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:3px;
+      color:rgba(255,255,255,.35); text-transform:uppercase; margin-bottom:20px;
+      opacity:0; animation: fadeUp .9s .75s forwards;
+    }
+    .hero-sub {
+      font-family:'Inter',sans-serif; font-size:15px; color:rgba(255,255,255,.5);
+      max-width:520px; line-height:1.8; margin:0 auto 52px;
+      opacity:0; animation: fadeUp .9s .85s forwards;
+    }
+    .hero-actions { display:flex; gap:14px; justify-content:center; opacity:0; animation: fadeUp .9s 1s forwards; }
+    .btn { display:inline-flex; align-items:center; gap:8px; font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:15px 34px; border-radius:2px; transition:all .3s; cursor:pointer; border:none; }
+    .btn-light { background:#fff; color:var(--navy); }
+    .btn-light:hover { background:var(--green); color:#fff; }
+    .btn-outline { background:transparent; color:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.25); }
+    .btn-outline:hover { border-color:#fff; color:#fff; }
+    .btn-navy { background:var(--navy); color:#fff; }
+    .btn-navy:hover { background:var(--navy2); }
+    .btn-green { background:var(--green); color:#fff; }
+    .btn-green:hover { filter:brightness(.9); }
+    .hero-scroll { position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; animation: fadeIn 1s 1.4s forwards; }
+    .hero-scroll span { font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:3px; color:rgba(255,255,255,.25); text-transform:uppercase; }
+    .scroll-bar { width:1px; height:36px; background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent); animation:scrollPulse 2s infinite; }
+
+    /* ──────────── STATS ──────────── */
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--gray); }
+    .stat { background:var(--offwhite); padding:44px 32px; text-align:center; }
+    .stat-n { font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:300; color:var(--navy); line-height:1; margin-bottom:8px; }
+    .stat-l { font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2.5px; color:#999; text-transform:uppercase; }
+
+    /* ──────────── VALORES ──────────── */
+    .valores { padding:100px 64px; background:var(--white); }
+    .valores-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:64px; }
+    .valor { padding:52px 40px; background:var(--offwhite); }
+    .valor-num { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:300; color:var(--gray); margin-bottom:20px; line-height:1; }
+    .valor-titulo { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; letter-spacing:2px; color:var(--navy); text-transform:uppercase; margin-bottom:14px; }
+    .valor-texto { font-family:'Inter',sans-serif; font-size:13px; line-height:1.8; color:var(--text); }
+
+    /* ──────────── PROPIEDADES ──────────── */
+    .propiedades-section { padding:100px 64px; background:var(--white); }
+    .section-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; }
+    .eyebrow { font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:4px; color:var(--green); text-transform:uppercase; margin-bottom:12px; }
+    .titulo-section { font-family:'Cormorant Garamond',serif; font-size:clamp(38px,4.5vw,58px); font-weight:300; color:var(--navy); line-height:1.05; letter-spacing:-.5px; }
+    .titulo-section em { font-style:italic; color:var(--navy2); }
+
+    /* Filtros */
+    .filtros {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      padding:20px 0 32px; border-bottom:1px solid var(--gray); margin-bottom:40px;
+    }
+    .filtro-btn {
+      font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:1.5px;
+      text-transform:uppercase; padding:9px 18px; border-radius:2px;
+      border:1px solid var(--gray); background:#fff; color:#888;
+      cursor:pointer; transition:all .25s;
+    }
+    .filtro-btn:hover, .filtro-btn.active { border-color:var(--navy); background:var(--navy); color:#fff; }
+    .filtro-precio { display:flex; gap:8px; align-items:center; margin-left:auto; }
+    .filtro-precio select {
+      font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:1.5px;
+      padding:9px 14px; border:1px solid var(--gray); border-radius:2px;
+      background:#fff; color:#888; cursor:pointer; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 10px center; padding-right:28px;
+    }
+    .props-count { font-family:'Inter',sans-serif; font-size:12px; color:#999; margin-bottom:24px; }
+    .props-count strong { color:var(--navy); font-weight:500; }
+
+    /* Grid */
+    .props-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+    .prop-card { background:#fff; overflow:hidden; position:relative; }
+    .prop-card[style*="display:none"] { display:none !important; }
+    .prop-img-wrap { overflow:hidden; position:relative; height:260px; }
+    .prop-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .7s cubic-bezier(.25,.46,.45,.94), filter .4s; filter:brightness(.88); }
+    .prop-card:hover .prop-img { transform:scale(1.06); filter:brightness(1); }
+    .prop-tag {
+      position:absolute; top:16px; left:16px;
+      font-family:'Montserrat',sans-serif; font-size:8px; letter-spacing:2px; text-transform:uppercase;
+      background:var(--navy); color:#fff; padding:5px 11px; z-index:2;
+    }
+    .prop-price-overlay {
+      position:absolute; bottom:0; left:0; right:0;
+      background:linear-gradient(transparent, rgba(11,31,51,.85));
+      padding:32px 20px 18px;
+      font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:400; color:#fff;
+      z-index:2;
+    }
+    .prop-price-overlay small { font-family:'Montserrat',sans-serif; font-size:10px; color:rgba(255,255,255,.55); margin-right:3px; }
+    .prop-body { padding:22px 24px 26px; background:var(--offwhite); border-top:2px solid var(--gray); transition:background .3s; }
+    .prop-card:hover .prop-body { background:#fff; }
+    .prop-tipo { font-family:'Montserrat',sans-serif; font-size:8px; letter-spacing:2.5px; color:var(--green); text-transform:uppercase; margin-bottom:6px; }
+    .prop-titulo { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:400; color:var(--navy); margin-bottom:4px; line-height:1.2; }
+    .prop-loc { font-family:'Inter',sans-serif; font-size:11.5px; color:#999; margin-bottom:16px; }
+    .prop-specs { display:flex; gap:16px; padding:14px 0; border-top:1px solid var(--gray); border-bottom:1px solid var(--gray); margin-bottom:16px; }
+    .ps { display:flex; flex-direction:column; align-items:center; gap:2px; flex:1; }
+    .ps-val { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:500; color:var(--navy); }
+    .ps-lbl { font-family:'Inter',sans-serif; font-size:9.5px; color:#bbb; }
+    .prop-footer { display:flex; justify-content:flex-end; }
+    .btn-consultar {
+      font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase;
+      padding:9px 18px; border:1px solid var(--navy); color:var(--navy); text-decoration:none;
+      border-radius:2px; transition:all .3s; background:transparent;
+    }
+    .btn-consultar:hover { background:var(--navy); color:#fff; }
+    .no-results { grid-column:1/-1; text-align:center; padding:80px 20px; color:#999; font-family:'Inter',sans-serif; font-size:14px; display:none; }
+
+    /* ──────────── ABOUT ──────────── */
+    .about { display:grid; grid-template-columns:1fr 1fr; min-height:620px; }
+    .about-foto {
+      background:url('https://images.unsplash.com/photo-1560472355-536de3962603?w=900&q=80') center/cover no-repeat;
+      min-height:500px;
+    }
+    .about-body {
+      background:var(--navy); padding:100px 80px;
+      display:flex; flex-direction:column; justify-content:center;
+    }
+    .about-body .eyebrow { margin-bottom:14px; }
+    .about-titulo { font-family:'Cormorant Garamond',serif; font-size:clamp(38px,4vw,54px); font-weight:300; color:#fff; line-height:1.05; letter-spacing:-.5px; margin-bottom:28px; }
+    .about-titulo em { font-style:italic; color:rgba(255,255,255,.4); }
+    .about-texto { font-family:'Inter',sans-serif; font-size:14px; line-height:1.9; color:rgba(255,255,255,.5); margin-bottom:44px; }
+    .about-firma { display:flex; align-items:center; gap:18px; padding-top:28px; border-top:1px solid rgba(255,255,255,.1); }
+    .avatar { width:50px; height:50px; border-radius:50%; background:var(--navy2); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:20px; color:#fff; flex-shrink:0; }
+    .firma-n { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:500; color:#fff; letter-spacing:.5px; }
+    .firma-r { font-family:'Inter',sans-serif; font-size:11px; color:rgba(255,255,255,.3); margin-top:3px; }
+
+    /* ──────────── CTA ──────────── */
+    .cta-section { background:var(--offwhite); padding:100px 64px; text-align:center; }
+    .cta-section .eyebrow { margin-bottom:16px; }
+    .cta-section .titulo-section { margin-bottom:18px; }
+    .cta-sub { font-family:'Inter',sans-serif; font-size:15px; color:#777; max-width:440px; margin:0 auto 48px; line-height:1.7; }
+    .cta-btns { display:flex; gap:14px; justify-content:center; }
+
+    /* ──────────── FOOTER ──────────── */
+    footer { background:var(--navy); padding:56px 64px; display:flex; justify-content:space-between; align-items:center; }
+    .footer-brand { display:flex; align-items:center; gap:16px; }
+    .footer-info { font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:1.5px; color:rgba(255,255,255,.22); line-height:1.8; }
+    .footer-info a { color:rgba(255,255,255,.35); text-decoration:none; transition:color .3s; }
+    .footer-info a:hover { color:#fff; }
+    .footer-nav { display:flex; gap:30px; list-style:none; }
+    .footer-nav a { font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.28); text-decoration:none; transition:color .3s; }
+    .footer-nav a:hover { color:rgba(255,255,255,.7); }
+
+    /* ──────────── ANIMATIONS ──────────── */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes scrollPulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s}
+
+    /* ──────────── WA FLOAT ──────────── */
+    .wa-float {
+      position:fixed; bottom:28px; right:28px; z-index:300;
+      width:52px; height:52px; border-radius:50%;
+      background:#25D366; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 20px rgba(37,211,102,.4); text-decoration:none;
+      transition:transform .3s, box-shadow .3s;
+    }
+    .wa-float:hover { transform:scale(1.08); box-shadow:0 6px 28px rgba(37,211,102,.5); }
+
+    /* ──────────── RESPONSIVE ──────────── */
+    @media(max-width:1100px) { .props-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:900px) {
+      nav{padding:18px 24px;} nav.scrolled{padding:12px 24px;}
+      .nav-links{display:none;}
+      .stats{grid-template-columns:repeat(2,1fr);}
+      .valores{padding:60px 24px;} .valores-grid{grid-template-columns:1fr;}
+      .propiedades-section{padding:60px 24px;}
+      .props-grid{grid-template-columns:1fr;}
+      .section-head{flex-direction:column;align-items:flex-start;gap:20px;}
+      .filtro-precio{margin-left:0;width:100%;}
+      .about{grid-template-columns:1fr;}
+      .about-foto{min-height:280px;}
+      .about-body{padding:60px 28px;}
+      .cta-section{padding:60px 24px;} .cta-btns{flex-direction:column;align-items:center;}
+      footer{flex-direction:column;gap:24px;text-align:center;padding:40px 24px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-brand">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" width="34" height="39">
+      <rect x="80" y="10" width="140" height="220" rx="70" ry="70" fill="none" stroke="#fff" stroke-width="1.4"/>
+      <line x1="104" y1="120" x2="196" y2="120" stroke="#fff" stroke-width=".9"/>
+      <text x="150" y="98" font-family="Georgia,serif" font-size="90" fill="#fff" text-anchor="middle">A</text>
+      <text x="150" y="208" font-family="Georgia,serif" font-size="90" fill="#fff" text-anchor="middle">O</text>
+    </svg>
+    <div class="nav-wm">
+      Santiago Funes
+      <small>by Grupo Altavista Otero</small>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#propiedades">Propiedades</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="tel:+5492494209464">+54 9 249 420-9464</a></li>
+    <li><a href="#contacto" class="nav-cta">Consultar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Tandil · Buenos Aires · Argentina</p>
+  <div class="hero-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" width="68" height="78">
+      <rect x="80" y="10" width="140" height="220" rx="70" ry="70" fill="none" stroke="#fff" stroke-width="1.4"/>
+      <line x1="104" y1="120" x2="196" y2="120" stroke="#fff" stroke-width=".9"/>
+      <text x="150" y="98" font-family="Georgia,serif" font-size="90" fill="#fff" text-anchor="middle">A</text>
+      <text x="150" y="208" font-family="Georgia,serif" font-size="90" fill="#fff" text-anchor="middle">O</text>
+      <text x="150" y="264" font-family="Montserrat,Arial,sans-serif" font-size="10" fill="#fff" text-anchor="middle" letter-spacing="6">GRUPO</text>
+      <text x="150" y="290" font-family="Montserrat,Arial,sans-serif" font-size="13" fill="#fff" text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+    </svg>
+  </div>
+  <h1 class="hero-title">Propiedades<br><em>que reflejan</em><br>tu estilo.</h1>
+  <p class="hero-tag">Trato personalizado · Selección cuidada · Presentación impecable</p>
+  <p class="hero-sub">Encontrá tu próximo hogar o inversión en Tandil, con el respaldo de quienes conocen mejor la ciudad.</p>
+  <div class="hero-actions">
+    <a href="#propiedades" class="btn btn-light">Ver propiedades</a>
+    <a href="#contacto" class="btn btn-outline">Hablar con Santiago</a>
+  </div>
+  <div class="hero-scroll">
+    <span>Explorar</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat reveal">
+    <div class="stat-n" style="font-size:28px; padding-top:8px;">Juan I. Otero</div>
+    <div class="stat-l" style="margin-top:10px;">Martillero y Corredor Público</div>
+  </div>
+  <div class="stat reveal d1">
+    <div class="stat-n">1966</div>
+    <div class="stat-l">Matrícula · Dep. Judicial Azul</div>
+  </div>
+  <div class="stat reveal d2">
+    <div class="stat-n" style="font-size:22px; padding-top:6px;">Av. Fleming 691</div>
+    <div class="stat-l" style="margin-top:10px;">Tandil, Buenos Aires</div>
+  </div>
+  <div class="stat reveal d3">
+    <div class="stat-n">100%</div>
+    <div class="stat-l">Operaciones respaldadas</div>
+  </div>
+</div>
+
+<!-- VALORES -->
+<section class="valores">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow">Nuestra forma de trabajar</div>
+      <h2 class="titulo-section">Tres valores,<br><em>una sola forma</em> de hacer.</h2>
+    </div>
+  </div>
+  <div class="valores-grid">
+    <div class="valor reveal">
+      <div class="valor-num">01</div>
+      <div class="valor-titulo">Elegancia</div>
+      <div class="valor-texto">Cada propiedad se presenta con una estética cuidada, fotografía de calidad y descripción que hace justicia al inmueble.</div>
+    </div>
+    <div class="valor reveal d1">
+      <div class="valor-num">02</div>
+      <div class="valor-titulo">Confianza</div>
+      <div class="valor-texto">Operamos con total transparencia: precios reales, información completa y trato directo desde el primer contacto.</div>
+    </div>
+    <div class="valor reveal d2">
+      <div class="valor-num">03</div>
+      <div class="valor-titulo">Exclusividad</div>
+      <div class="valor-texto">Trabajamos con una cartera seleccionada. Cada propiedad que publicamos tiene nuestro respaldo y criterio detrás.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROPIEDADES -->
+<section class="propiedades-section" id="propiedades">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow">Cartera disponible</div>
+      <h2 class="titulo-section">Propiedades<br><em>en Tandil</em></h2>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros">
+    <button class="filtro-btn active" data-tipo="todos">Todos</button>
+    <button class="filtro-btn" data-tipo="casa">Casas</button>
+    <button class="filtro-btn" data-tipo="departamento">Departamentos</button>
+    <button class="filtro-btn" data-tipo="lote">Lotes</button>
+    <button class="filtro-btn" data-tipo="fideicomiso">Fideicomisos</button>
+    <div class="filtro-precio">
+      <select id="precioMax" onchange="filtrar()">
+        <option value="">Cualquier precio</option>
+        <option value="100000">Hasta USD 100.000</option>
+        <option value="150000">Hasta USD 150.000</option>
+        <option value="200000">Hasta USD 200.000</option>
+        <option value="300000">Hasta USD 300.000</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="props-count" id="contador"><strong>21</strong> propiedades disponibles</p>
+
+  <div class="props-grid" id="propsGrid">
+    <!-- Las tarjetas se generan por JS -->
+  </div>
+  <div class="no-results" id="noResults">No se encontraron propiedades con esos filtros.</div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="nosotros">
+  <div class="about-foto"></div>
+  <div class="about-body reveal">
+    <div class="eyebrow">Quién soy</div>
+    <h2 class="about-titulo">Referente<br><em>inmobiliario</em><br>en Tandil.</h2>
+    <p class="about-texto">
+      Soy Santiago Funes, agente inmobiliario especializado en el mercado de Tandil. Trabajo bajo el paraguas de Grupo Altavista Otero, una sociedad orientada a cerrar operaciones con transparencia, velocidad y criterio profesional.<br><br>
+      Cada propiedad de mi cartera la conozco en persona. Cada cliente que me contacta recibe trato directo, sin intermediarios innecesarios.
+    </p>
+    <div class="about-firma">
+      <div class="avatar">SF</div>
+      <div>
+        <div class="firma-n">Santiago Funes</div>
+        <div class="firma-r">Agente Inmobiliario · Grupo Altavista Otero · Tandil</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contacto">
+  <div class="eyebrow">Contacto directo</div>
+  <h2 class="titulo-section">¿Tenés una propiedad<br><em>o estás buscando?</em></h2>
+  <p class="cta-sub">Escribime ahora. Te respondo en minutos y coordino una visita sin compromiso.</p>
+  <div class="cta-btns">
+    <a href="https://wa.me/5492494209464?text=Hola%20Santiago%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20consultar." class="btn btn-green">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="mailto:info@santiagofunesre.com.ar" class="btn btn-navy">Enviar email</a>
+    <a href="tel:+5492494209464" class="btn btn-outline" style="color:var(--navy);border-color:var(--navy);">+54 9 249 420-9464</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" width="30" height="34">
+      <rect x="80" y="10" width="140" height="220" rx="70" ry="70" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/>
+      <line x1="104" y1="120" x2="196" y2="120" stroke="rgba(255,255,255,.3)" stroke-width=".9"/>
+      <text x="150" y="98" font-family="Georgia,serif" font-size="90" fill="rgba(255,255,255,.3)" text-anchor="middle">A</text>
+      <text x="150" y="208" font-family="Georgia,serif" font-size="90" fill="rgba(255,255,255,.3)" text-anchor="middle">O</text>
+    </svg>
+    <div class="footer-info">
+      © 2026 · Santiago Funes · Grupo Altavista Otero<br>
+      Tandil, Buenos Aires · <a href="tel:+5492494209464">+54 9 249 420-9464</a> · <a href="mailto:info@santiagofunesre.com.ar">info@santiagofunesre.com.ar</a>
+    </div>
+  </div>
+  <ul class="footer-nav">
+    <li><a href="#propiedades">Propiedades</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/5492494209464?text=Hola%20Santiago%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20consultar." class="wa-float" title="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // ─── DATA ───
+  const PROPS = [
+    { id:1, tipo:'casa',         titulo:'Casa en Roser',               dir:'Roser 1200',           precio:420000, dorm:4, banos:5, m2:650,  pos:'',             img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=700&q=80' },
+    { id:2, tipo:'departamento', titulo:'Semipiso en Chacabuco',        dir:'Chacabuco 572',        precio:314000, dorm:2, banos:2, m2:106,  pos:'Semipiso',     img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80' },
+    { id:3, tipo:'casa',         titulo:'Casa en Pinto',                dir:'Pinto 1754',           precio:275000, dorm:3, banos:3, m2:450,  pos:'',             img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=700&q=80' },
+    { id:4, tipo:'departamento', titulo:'Depto en Paz · Contrafrente',  dir:'Paz 343',              precio:265000, dorm:2, banos:2, m2:96,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80' },
+    { id:5, tipo:'departamento', titulo:'Depto en Paz · Frente',        dir:'Paz 341',              precio:200000, dorm:2, banos:2, m2:96,   pos:'Frente',       img:'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=700&q=80' },
+    { id:6, tipo:'departamento', titulo:'Depto en San Lorenzo',         dir:'San Lorenzo 420',      precio:175000, dorm:2, banos:2, m2:77,   pos:'Frente',       img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80' },
+    { id:7, tipo:'departamento', titulo:'Depto en Chacabuco',           dir:'Chacabuco 974',        precio:175000, dorm:2, banos:2, m2:73,   pos:'Frente',       img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80' },
+    { id:8, tipo:'departamento', titulo:'Depto en Uriburu',             dir:'Uriburu 1026',         precio:164000, dorm:2, banos:2, m2:86,   pos:'',             img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80' },
+    { id:9, tipo:'departamento', titulo:'Semipiso 1 dorm en Chacabuco', dir:'Chacabuco 572',        precio:159000, dorm:1, banos:1, m2:56,   pos:'Semipiso',     img:'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=700&q=80' },
+    { id:10,tipo:'departamento', titulo:'Depto en San Lorenzo',         dir:'San Lorenzo 420',      precio:120000, dorm:1, banos:1, m2:54,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80' },
+    { id:11,tipo:'departamento', titulo:'Depto en Uriburu',             dir:'Uriburu 1026',         precio:119900, dorm:1, banos:1, m2:63,   pos:'',             img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80' },
+    { id:12,tipo:'departamento', titulo:'Depto en Garibaldi',           dir:'Garibaldi 431',        precio:110000, dorm:1, banos:1, m2:48,   pos:'Frente',       img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80' },
+    { id:13,tipo:'departamento', titulo:'Depto en Alberdi',             dir:'Alberdi 865',          precio:109000, dorm:1, banos:1, m2:58,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80' },
+    { id:14,tipo:'departamento', titulo:'Depto en Chacabuco',           dir:'Chacabuco 977',        precio:109000, dorm:1, banos:1, m2:48,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=700&q=80' },
+    { id:15,tipo:'fideicomiso',  titulo:'Fideicomiso en Roca',          dir:'Roca 36',              precio:102500, dorm:1, banos:1, m2:60.9, pos:'',             img:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80' },
+    { id:16,tipo:'departamento', titulo:'Depto en Constitución',        dir:'Constitución 862',     precio:100000, dorm:2, banos:1, m2:64,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=80' },
+    { id:17,tipo:'departamento', titulo:'Depto en Alberdi',             dir:'Alberdi 348',          precio:100000, dorm:1, banos:1, m2:60,   pos:'Contrafrente', img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80' },
+    { id:18,tipo:'lote',         titulo:'Lote en Montiel',              dir:'Montiel 658',          precio:98000,  dorm:0, banos:0, m2:562,  pos:'',             img:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700&q=80' },
+    { id:19,tipo:'departamento', titulo:'Depto en Sarmiento',           dir:'Sarmiento 1200',       precio:95000,  dorm:2, banos:2, m2:82,   pos:'Frente',       img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80' },
+    { id:20,tipo:'departamento', titulo:'Depto en Guatemala',           dir:'Guatemala 1098',       precio:80000,  dorm:1, banos:2, m2:40,   pos:'',             img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=80' },
+    { id:21,tipo:'departamento', titulo:'Depto en Paz',                 dir:'Paz 80',               precio:71000,  dorm:2, banos:1, m2:50,   pos:'',             img:'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=700&q=80' },
+  ];
+
+  const TIPO_LABEL = { casa:'Casa', departamento:'Departamento', lote:'Lote', fideicomiso:'Fideicomiso' };
+
+  function formatPrecio(n) {
+    return n.toLocaleString('es-AR');
+  }
+
+  function renderCard(p) {
+    const specs = p.tipo === 'lote'
+      ? `<div class="ps"><div class="ps-val">${p.m2}</div><div class="ps-lbl">m²</div></div>`
+      : `
+        ${p.dorm ? `<div class="ps"><div class="ps-val">${p.dorm}</div><div class="ps-lbl">Dorm.</div></div>` : ''}
+        ${p.banos ? `<div class="ps"><div class="ps-val">${p.banos}</div><div class="ps-lbl">Baños</div></div>` : ''}
+        <div class="ps"><div class="ps-val">${p.m2}</div><div class="ps-lbl">m²</div></div>
+        ${p.pos ? `<div class="ps"><div class="ps-val" style="font-size:10px">${p.pos}</div><div class="ps-lbl">Pos.</div></div>` : ''}
+      `;
+    return `
+      <div class="prop-card reveal" data-tipo="${p.tipo}" data-precio="${p.precio}">
+        <div class="prop-img-wrap">
+          <div class="prop-tag">${TIPO_LABEL[p.tipo]}</div>
+          <img class="prop-img" src="${p.img}" alt="${p.titulo}" loading="lazy">
+          <div class="prop-price-overlay"><small>USD</small>${formatPrecio(p.precio)}</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-tipo">${TIPO_LABEL[p.tipo]} · Venta</div>
+          <h3 class="prop-titulo">${p.titulo}</h3>
+          <p class="prop-loc">${p.dir}, Tandil</p>
+          <div class="prop-specs">${specs}</div>
+          <div class="prop-footer">
+            <a href="https://wa.me/5492494209464?text=Hola%20Santiago%2C%20me%20interesa%20${encodeURIComponent(p.dir)}." class="btn-consultar">Consultar</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Render inicial
+  const grid = document.getElementById('propsGrid');
+  grid.innerHTML = PROPS.map(renderCard).join('');
+
+  // ─── FILTROS ───
+  let tipoActivo = 'todos';
+
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tipoActivo = btn.dataset.tipo;
+      filtrar();
+    });
+  });
+
+  function filtrar() {
+    const maxPrecio = parseInt(document.getElementById('precioMax').value) || Infinity;
+    const cards = grid.querySelectorAll('.prop-card');
+    let visibles = 0;
+    cards.forEach(card => {
+      const tipo   = card.dataset.tipo;
+      const precio = parseInt(card.dataset.precio);
+      const ok = (tipoActivo === 'todos' || tipo === tipoActivo) && precio <= maxPrecio;
+      card.style.display = ok ? '' : 'none';
+      if (ok) visibles++;
+    });
+    document.getElementById('contador').innerHTML = `<strong>${visibles}</strong> propiedades disponibles`;
+    document.getElementById('noResults').style.display = visibles === 0 ? 'block' : 'none';
+    observeReveal();
+  }
+
+  // ─── NAV SCROLL ───
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+  // ─── REVEAL ───
+  function observeReveal() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold: .1 });
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => obs.observe(el));
+  }
+  observeReveal();
+</script>
+
+</body>
+</html>
