@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Altavista Intelligence — Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:    #0B1F33;
+    --navy2:   #1F3A56;
+    --green:   #7AB591;
+    --green2:  #5a9e78;
+    --gray:    #D9DEE3;
+    --offwhite:#F5F6F8;
+    --white:   #FFFFFF;
+    --text:    #444;
+    --amber:   #D4A847;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--navy); background: var(--white); }
+
+  /* ── SLIDE BASE ── */
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 10vw;
+    position: relative;
+  }
+  .slide-dark  { background: var(--navy); color: var(--white); }
+  .slide-navy2 { background: var(--navy2); color: var(--white); }
+  .slide-green { background: var(--green); color: var(--navy); }
+  .slide-light { background: var(--offwhite); color: var(--navy); }
+  .slide-white { background: var(--white); color: var(--navy); }
+
+  /* ── SLIDE NUMBER ── */
+  .slide-num {
+    position: absolute;
+    top: 40px;
+    left: 10vw;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: .35;
+  }
+  .slide-dark .slide-num, .slide-navy2 .slide-num { color: var(--white); }
+
+  /* ── EYEBROW ── */
+  .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .slide-dark .eyebrow, .slide-navy2 .eyebrow { color: var(--green); }
+  .slide-light .eyebrow, .slide-white .eyebrow { color: var(--green2); }
+  .slide-green .eyebrow { color: var(--navy); opacity: .6; }
+
+  /* ── HEADINGS ── */
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -1px;
+  }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+  h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(13px, 1.5vw, 18px);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  p, li {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(14px, 1.4vw, 18px);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── PORTADA ── */
+  .portada {
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 10vw;
+    position: relative;
+    overflow: hidden;
+  }
+  .portada::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(122,181,145,.12) 0%, transparent 70%);
+  }
+  .portada-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 60px;
+    position: relative;
+  }
+  .portada h1 {
+    color: var(--white);
+    font-size: clamp(52px, 8vw, 110px);
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .portada h1 span { color: var(--green); font-style: italic; }
+  .portada-sub {
+    color: rgba(255,255,255,.55);
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(14px, 1.5vw, 20px);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.7;
+    position: relative;
+    margin-bottom: 60px;
+  }
+  .portada-tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.25);
+    position: relative;
+  }
+  .portada-tagline span { color: var(--green); }
+  .portada-ring {
+    position: absolute;
+    right: 8vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(200px, 28vw, 400px);
+    height: clamp(200px, 28vw, 400px);
+    border-radius: 50%;
+    border: 1px solid rgba(122,181,145,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portada-ring::before {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    border: 1px solid rgba(122,181,145,.1);
+  }
+  .portada-ring-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    color: rgba(122,181,145,.4);
+    font-style: italic;
+    font-weight: 300;
+    text-align: center;
+  }
+
+  /* ── HOOK SLIDE ── */
+  .hook-slide {
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 10vw;
+  }
+  .hook-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 72px);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.2;
+    max-width: 900px;
+    text-align: center;
+  }
+  .hook-text strong {
+    color: var(--green);
+    font-weight: 400;
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    margin-top: 48px;
+  }
+  .four-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    padding: 32px;
+    border-radius: 4px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .card-light {
+    padding: 32px;
+    border-radius: 4px;
+    background: var(--white);
+    border: 1px solid var(--gray);
+  }
+  .card h3 { color: var(--green); font-size: 10px; letter-spacing: 3px; margin-bottom: 12px; }
+  .card-light h3 { color: var(--green2); }
+  .card p { font-size: 14px; opacity: .75; }
+  .card .big-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  /* ── STATEMENT ── */
+  .statement {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 40px);
+    font-weight: 300;
+    line-height: 1.3;
+    max-width: 700px;
+  }
+  .statement em { color: var(--green); font-style: italic; }
+
+  /* ── PROBLEM LIST ── */
+  .problem-list {
+    list-style: none;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .problem-list li {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    font-size: clamp(14px, 1.4vw, 18px);
+    color: rgba(255,255,255,.8);
+  }
+  .problem-list li::before {
+    content: '—';
+    color: var(--green);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+
+  /* ── WHY NOW ITEMS ── */
+  .why-items {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 40px;
+  }
+  .why-item {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .why-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: var(--green);
+    font-weight: 300;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 48px;
+  }
+  .why-item h3 {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .why-item p { font-size: 14px; opacity: .7; }
+
+  /* ── PRODUCT LAYERS ── */
+  .layer {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .layer-num {
+    background: var(--green);
+    color: var(--navy);
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    flex-shrink: 0;
+  }
+  .layer-content {
+    padding: 20px 28px;
+    background: rgba(255,255,255,.04);
+    flex: 1;
+  }
+  .layer-content h3 {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .layer-content p { font-size: 13px; opacity: .65; }
+
+  /* ── MARKET SIZE ── */
+  .market-funnel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .market-band {
+    padding: 24px 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .market-band.tam { background: rgba(122,181,145,.2); }
+  .market-band.sam { background: rgba(122,181,145,.35); }
+  .market-band.som { background: var(--green); }
+  .market-band.som * { color: var(--navy) !important; }
+  .market-band-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .market-band.som .market-band-label { color: rgba(11,31,51,.6); }
+  .market-band-name { font-size: 15px; color: rgba(255,255,255,.85); }
+  .market-band.som .market-band-name { color: var(--navy); }
+  .market-band-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--white);
+    font-weight: 300;
+  }
+
+  /* ── REVENUE TIERS ── */
+  .revenue-tiers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .tier {
+    padding: 28px 24px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,.08);
+    position: relative;
+  }
+  .tier-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .tier-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: var(--white);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .tier-unit {
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+    margin-bottom: 16px;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .tier-desc { font-size: 13px; opacity: .55; }
+  .tier.highlight {
+    border-color: var(--green);
+    background: rgba(122,181,145,.08);
+  }
+  .tier.enterprise .tier-price { font-size: 32px; }
+
+  /* ── COMPETITION MATRIX ── */
+  .comp-table {
+    width: 100%;
+    margin-top: 40px;
+    border-collapse: collapse;
+  }
+  .comp-table th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .comp-table td {
+    padding: 16px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    color: rgba(255,255,255,.75);
+  }
+  .comp-table tr.highlight td { background: rgba(122,181,145,.08); color: var(--white); }
+  .comp-table tr.highlight td:first-child { color: var(--green); font-weight: 500; }
+  .check { color: var(--green); font-size: 16px; }
+  .cross { color: rgba(255,255,255,.25); font-size: 16px; }
+
+  /* ── FLYWHEEL ── */
+  .flywheel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .fly-node {
+    text-align: center;
+    padding: 28px 24px;
+    background: rgba(122,181,145,.1);
+    border: 1px solid rgba(122,181,145,.2);
+    border-radius: 4px;
+    min-width: 140px;
+    max-width: 160px;
+    flex: 1;
+  }
+  .fly-node span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--green);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .fly-node p { font-size: 12px; color: rgba(255,255,255,.65); line-height: 1.5; }
+  .fly-arrow {
+    font-size: 20px;
+    color: rgba(122,181,145,.4);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── TEAM ── */
+  .team-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+  }
+  .team-card {
+    padding: 32px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 4px;
+    background: rgba(255,255,255,.03);
+  }
+  .team-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(122,181,145,.2);
+    border: 2px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+  .team-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .team-role {
+    font-size: 11px;
+    color: var(--green);
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .team-bio { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; }
+
+  /* ── FINANCIALS ── */
+  .fin-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .fin-row:first-child {
+    border-bottom: 1px solid rgba(122,181,145,.3);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+  .fin-cell {
+    padding: 16px 20px;
+    font-size: 14px;
+    color: rgba(255,255,255,.75);
+  }
+  .fin-cell.label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+  }
+  .fin-cell.val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--white);
+    font-weight: 300;
+  }
+  .fin-cell.val.highlight { color: var(--green); }
+
+  /* ── ASK ── */
+  .ask-box {
+    background: var(--green);
+    padding: 48px 56px;
+    border-radius: 4px;
+    margin-top: 48px;
+  }
+  .ask-box h3 { color: var(--navy); font-size: 10px; letter-spacing: 3px; margin-bottom: 12px; }
+  .ask-box .ask-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    color: var(--navy);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .ask-box p { color: rgba(11,31,51,.65); font-size: 15px; }
+
+  /* ── ELEVATOR PITCH ── */
+  .elevator {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(122,181,145,.2);
+    border-left: 3px solid var(--green);
+    padding: 32px 40px;
+    border-radius: 4px;
+    margin-top: 40px;
+  }
+  .elevator p {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(14px, 1.5vw, 18px);
+    line-height: 1.8;
+    color: rgba(255,255,255,.8);
+  }
+  .elevator p strong { color: var(--green); font-weight: 500; }
+
+  /* ── CLOSING ── */
+  .closing {
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 10vw;
+  }
+  .closing h1 { color: var(--white); margin-bottom: 24px; }
+  .closing .sub { color: rgba(255,255,255,.45); font-size: 16px; margin-bottom: 48px; }
+  .closing .contact {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  /* ── DIVIDER ── */
+  .divider { width: 40px; height: 1px; background: var(--green); margin: 32px 0; }
+
+  /* ── NAV ── */
+  .nav-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11,31,51,.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    padding: 0 10vw;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    padding: 16px 0;
+    margin-right: 32px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-sticky a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+    text-decoration: none;
+    padding: 16px 14px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+    flex-shrink: 0;
+  }
+  .nav-sticky a:hover { color: rgba(255,255,255,.85); border-color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav-sticky">
+  <span class="nav-brand">Altavista Intelligence</span>
+  <a href="#hook">Tesis</a>
+  <a href="#problema">Problema</a>
+  <a href="#ahora">Por Qué Ahora</a>
+  <a href="#solucion">Solución</a>
+  <a href="#producto">Producto</a>
+  <a href="#mercado">Mercado</a>
+  <a href="#negocio">Negocio</a>
+  <a href="#competencia">Competencia</a>
+  <a href="#gtm">GTM</a>
+  <a href="#equipo">Equipo</a>
+  <a href="#deal">El Deal</a>
+</nav>
+
+<!-- PORTADA -->
+<section class="portada">
+  <div class="portada-logo">Altavista Intelligence — Pitch Deck · 2026</div>
+  <h1>El mercado<br>opera<br><span>a ciegas.</span></h1>
+  <p class="portada-sub">Construimos la primera plataforma de inteligencia del mercado inmobiliario argentino — con precios de cierre reales.</p>
+  <div class="portada-tagline">Archetype: <span>Problem / Solution + Crystal Ball</span></div>
+  <div class="portada-ring">
+    <div class="portada-ring-text">CoStar<br>Argentina</div>
+  </div>
+</section>
+
+<!-- HOOK -->
+<section class="hook-slide" id="hook">
+  <div class="hook-text">
+    "El mercado inmobiliario mueve <strong>miles de millones</strong> en Argentina. Pero ningún comprador, vendedor ni banco sabe con certeza <strong>cuánto vale realmente</strong> una propiedad."
+  </div>
+</section>
+
+<!-- SLIDE 01 — PROBLEMA -->
+<section class="slide slide-dark" id="problema">
+  <span class="slide-num">01 — Problema</span>
+  <div class="two-col">
+    <div>
+      <div class="eyebrow">El pain point</div>
+      <h2>El mercado<br>inmobiliario<br>es opaco.</h2>
+      <div class="divider"></div>
+      <p style="color:rgba(255,255,255,.55); max-width:420px;">
+        Compradores, vendedores y agentes toman decisiones de cientos de miles de dólares sin ningún dato de referencia confiable.
+      </p>
+    </div>
+    <div>
+      <ul class="problem-list">
+        <li>Los <strong style="color:white">precios de publicación</strong> no son los precios reales de cierre. La brecha de negociación es invisible.</li>
+        <li>Las <strong style="color:white">escrituras tampoco</strong> reflejan la realidad — la evasión fiscal hace que los montos declarados sean ficticios.</li>
+        <li><strong style="color:white">Ningún banco</strong> puede originar créditos hipotecarios con confianza porque no hay una fuente de valuación confiable.</li>
+        <li>Los agentes <strong style="color:white">adivinan precios</strong> en base a intuición — y el cliente lo sabe.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 02 — POR QUÉ AHORA -->
+<section class="slide slide-light" id="ahora">
+  <span class="slide-num">02 — Por Qué Ahora</span>
+  <div class="eyebrow">Why Now?</div>
+  <h2 style="max-width:600px;">El momento preciso<br>para construirlo.</h2>
+  <div class="why-items">
+    <div class="why-item">
+      <div class="why-num" style="color:var(--green2);">1</div>
+      <div>
+        <h3 style="color:var(--green2);">Créditos UVA reactivados</h3>
+        <p>La vuelta del crédito hipotecario en Argentina crea demanda urgente de valuaciones certificadas. Los bancos necesitan una fuente de datos confiable para originar préstamos a escala.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num" style="color:var(--green2);">2</div>
+      <div>
+        <h3 style="color:var(--green2);">Blanqueo histórico → capital entrando al real estate</h3>
+        <p>El sinceramiento fiscal de 2024-2025 volcó capital significativo hacia bienes raíces. Inversores necesitan inteligencia de mercado para tomar decisiones fundadas.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num" style="color:var(--green2);">3</div>
+      <div>
+        <h3 style="color:var(--green2);">AI hace viable un AVM sin historia previa</h3>
+        <p>CoStar tardó 38 años en construir su base de datos. Nosotros podemos construir un modelo de valuación automatizado en 18 meses combinando datos propietarios, scraping estructurado y triangulación inteligente.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num" style="color:var(--green2);">4</div>
+      <div>
+        <h3 style="color:var(--green2);">Nadie lo está haciendo</h3>
+        <p>ZonaProp publica precios de lista. Mudafy hace transacciones. Roomix agrega búsquedas. Nadie captura precios de cierre reales ni construye inteligencia de mercado en Argentina.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 03 — SOLUCIÓN -->
+<section class="slide slide-dark" id="solucion">
+  <span class="slide-num">03 — Solución</span>
+  <div class="two-col">
+    <div>
+      <div class="eyebrow">La propuesta de valor</div>
+      <h2>Altavista<br>Intelligence.</h2>
+      <div class="divider"></div>
+      <div class="statement">
+        La <em>capa de inteligencia</em> del mercado inmobiliario argentino. Datos de cierre reales. Valuación automatizada. Sin adivinanzas.
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="card">
+        <h3>Datos propietarios</h3>
+        <p>Capturamos el precio de cierre real desde adentro de cada transacción — independientemente de lo que diga la escritura.</p>
+      </div>
+      <div class="card">
+        <h3>AVM — Automated Valuation Model</h3>
+        <p>Precio estimado con nivel de confianza para cualquier propiedad en Argentina. Comparable global: Zillow Zestimate, CoreLogic.</p>
+      </div>
+      <div class="card">
+        <h3>B2B, no B2C</h3>
+        <p>No competimos con las inmobiliarias. Les damos tecnología. Ellas contribuyen datos y reciben herramientas mejores a cambio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 04 — PRODUCTO -->
+<section class="slide slide-navy2" id="producto">
+  <span class="slide-num">04 — Producto</span>
+  <div class="eyebrow">Las 4 capas de datos</div>
+  <h2 style="margin-bottom:40px;">Un producto con<br>cuatro capas de valor.</h2>
+  <div class="layer">
+    <div class="layer-num">1</div>
+    <div class="layer-content">
+      <h3>Precios</h3>
+      <p>Precio de cierre real por zona, precio/m², brecha de negociación histórica, evolución de mercado. El dato que nadie tiene.</p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">2</div>
+    <div class="layer-content">
+      <h3>Mercado</h3>
+      <p>Días en mercado, tasa de absorción, stock vs demanda en tiempo real, zonas calientes y frías. El pulso del mercado.</p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">3</div>
+    <div class="layer-content">
+      <h3>Valuación — AVM</h3>
+      <p>Precio estimado con nivel de confianza para cualquier inmueble. Score de inversión, comparables automáticos. La joya del producto.</p>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-num">4</div>
+    <div class="layer-content">
+      <h3>Macro Contextualizado</h3>
+      <p>Impacto del tipo de cambio, crédito hipotecario, blanqueo y ciclos macroeconómicos en mercados específicos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 05 — MERCADO -->
+<section class="slide slide-dark" id="mercado">
+  <span class="slide-num">05 — Tamaño de Mercado</span>
+  <div class="two-col">
+    <div>
+      <div class="eyebrow">Market Size — TAM / SAM / SOM</div>
+      <h2>Un mercado enorme<br>sin inteligencia.</h2>
+      <div class="divider"></div>
+      <p style="color:rgba(255,255,255,.55); max-width:400px;">
+        Argentina tiene más de 5,000 inmobiliarias activas, decenas de miles de agentes independientes, y un mercado de crédito hipotecario que vuelve a escalar. El primer jugador que construya el dato gana todo.
+      </p>
+      <div style="margin-top:32px; padding:24px; border:1px solid rgba(122,181,145,.2); border-radius:4px;">
+        <p style="font-size:12px; color:rgba(255,255,255,.4); font-family:'Montserrat',sans-serif; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">Comparable validado</p>
+        <p style="font-size:15px; color:rgba(255,255,255,.8);">CoStar (EEUU) — <strong style="color:var(--green);">$30B</strong> de capitalización bursátil. Construido sobre datos propietarios de transacciones. <strong style="color:var(--green);">93% de renewal rate</strong> anual.</p>
+      </div>
+    </div>
+    <div class="market-funnel">
+      <div class="market-band tam">
+        <div>
+          <div class="market-band-label">TAM</div>
+          <div class="market-band-name">Mercado inmobiliario argentino total</div>
+        </div>
+        <div class="market-band-num" style="color:rgba(255,255,255,.7)">~$50B</div>
+      </div>
+      <div class="market-band sam">
+        <div>
+          <div class="market-band-label">SAM</div>
+          <div class="market-band-name">5,000+ inmobiliarias · 30K+ agentes</div>
+        </div>
+        <div class="market-band-num" style="color:rgba(255,255,255,.85)">~$200M</div>
+      </div>
+      <div class="market-band som">
+        <div>
+          <div class="market-band-label">SOM — Año 3</div>
+          <div class="market-band-name">300 agencies · 3,000 agentes · 5 bancos</div>
+        </div>
+        <div class="market-band-num">$8M ARR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 06 — MODELO DE NEGOCIO -->
+<section class="slide slide-dark" id="negocio">
+  <span class="slide-num">06 — Modelo de Negocio</span>
+  <div class="eyebrow">Revenue Model — SaaS + API + Reports</div>
+  <h2 style="margin-bottom:8px;">Cuatro fuentes<br>de ingreso.</h2>
+  <p style="color:rgba(255,255,255,.45); margin-bottom:0; font-size:14px;">Cada tier accede a más capas de datos y activa el flywheel.</p>
+  <div class="revenue-tiers">
+    <div class="tier highlight">
+      <span class="tier-badge">Pro — Agente independiente</span>
+      <div class="tier-price">$49</div>
+      <div class="tier-unit">/ agente / mes</div>
+      <div class="tier-desc">Dashboard completo, AVM ilimitado, reportes de zona, comparables automáticos.</div>
+    </div>
+    <div class="tier highlight">
+      <span class="tier-badge">Agency — Inmobiliaria</span>
+      <div class="tier-price">$39</div>
+      <div class="tier-unit">/ agente / mes · mín. 3</div>
+      <div class="tier-desc">Todo de Pro + widget embebible en el sitio de la agencia, datos de mercado en tiempo real, contribución de transacciones.</div>
+    </div>
+    <div class="tier">
+      <span class="tier-badge">Reports — Inversores / Desarrolladoras</span>
+      <div class="tier-price">$299</div>
+      <div class="tier-unit">/ reporte trimestral</div>
+      <div class="tier-desc">Análisis de zona, tendencias de precios, proyecciones de mercado, recomendaciones de inversión.</div>
+    </div>
+    <div class="tier enterprise">
+      <span class="tier-badge">Enterprise — Bancos / Portales</span>
+      <div class="tier-price" style="font-size:28px; padding-top:8px;">TBD</div>
+      <div class="tier-unit">/ contrato anual</div>
+      <div class="tier-desc">API de valuaciones certificadas para originar créditos hipotecarios. El revenue más alto del modelo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 07 — COMPETENCIA -->
+<section class="slide slide-navy2" id="competencia">
+  <span class="slide-num">07 — Competencia</span>
+  <div class="eyebrow">Landscape competitivo</div>
+  <h2 style="margin-bottom:8px;">Nadie hace<br>lo que hacemos.</h2>
+  <p style="color:rgba(255,255,255,.45); margin-bottom:0; font-size:14px;">Todos los jugadores existentes son parciales, no tocan datos de cierre reales, o no son B2B.</p>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Jugador</th>
+        <th>Datos de cierre reales</th>
+        <th>B2B / Inmobiliarias</th>
+        <th>AVM</th>
+        <th>API Bancos</th>
+        <th>Argentina</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="highlight">
+        <td><strong>Altavista Intelligence</strong></td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+      </tr>
+      <tr>
+        <td>ZonaProp / ArgenProp</td>
+        <td class="cross">✗ solo lista</td>
+        <td class="cross">✗ portal</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="check">✓</td>
+      </tr>
+      <tr>
+        <td>Roomix</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗ B2C</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="check">✓</td>
+      </tr>
+      <tr>
+        <td>Mudafy</td>
+        <td class="cross">✗ interno</td>
+        <td class="cross">✗ compite</td>
+        <td class="cross">✗</td>
+        <td class="cross">✗</td>
+        <td class="check">✓</td>
+      </tr>
+      <tr>
+        <td>CoStar / Zillow</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="check">✓</td>
+        <td class="cross">✗ no opera acá</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- SLIDE 08 — GO TO MARKET / FLYWHEEL -->
+<section class="slide slide-dark" id="gtm">
+  <span class="slide-num">08 — Go-to-Market</span>
+  <div class="two-col">
+    <div>
+      <div class="eyebrow">Flywheel Model — Waze / CoStar</div>
+      <h2>El dato atrae<br>el dato.</h2>
+      <div class="divider"></div>
+      <p style="color:rgba(255,255,255,.55); margin-bottom:32px; max-width:400px;">
+        Cada nueva inmobiliaria que se suma mejora el producto para todas. El flywheel se autoalimenta. El switching cost crece con el tiempo.
+      </p>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="color:var(--green); font-family:'Cormorant Garamond',serif; font-size:32px; flex-shrink:0; line-height:1;">1</div>
+          <div>
+            <h3 style="color:var(--green); font-size:10px; letter-spacing:2px; margin-bottom:4px;">Fase 0 — Tandil (ahora)</h3>
+            <p style="font-size:13px; color:rgba(255,255,255,.5);">Altavista Inmobiliaria como laboratorio. Datos propios, producto real, primeros aprendizajes.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="color:var(--green); font-family:'Cormorant Garamond',serif; font-size:32px; flex-shrink:0; line-height:1;">2</div>
+          <div>
+            <h3 style="color:var(--green); font-size:10px; letter-spacing:2px; margin-bottom:4px;">Fase 1 — Primeras 10 aliadas</h3>
+            <p style="font-size:13px; color:rgba(255,255,255,.5);">Inmobiliarias beta en Mar del Plata y Buenos Aires. Co-diseño del producto. Datos en volumen.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="color:var(--green); font-family:'Cormorant Garamond',serif; font-size:32px; flex-shrink:0; line-height:1;">3</div>
+          <div>
+            <h3 style="color:var(--green); font-size:10px; letter-spacing:2px; margin-bottom:4px;">Fase 2 — Expansión nacional + Bancos</h3>
+            <p style="font-size:13px; color:rgba(255,255,255,.5);">Red de 100+ inmobiliarias. Primeros contratos bancarios. AVM con suficiente confianza para crédito hipotecario.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="flywheel" style="flex-direction:column; gap:0;">
+        <div class="fly-node" style="width:100%; max-width:100%; text-align:left; display:flex; gap:16px; align-items:center;">
+          <span style="font-size:28px; flex-shrink:0;">+</span>
+          <div>
+            <p style="font-size:13px; color:rgba(255,255,255,.8); font-weight:500; margin-bottom:4px;">Más inmobiliarias aliadas</p>
+            <p style="font-size:12px;">contribuyen transacciones</p>
+          </div>
+        </div>
+        <div style="text-align:center; color:var(--green); font-size:20px; padding:8px;">↓</div>
+        <div class="fly-node" style="width:100%; max-width:100%; text-align:left; display:flex; gap:16px; align-items:center;">
+          <span style="font-size:28px; flex-shrink:0;">→</span>
+          <div>
+            <p style="font-size:13px; color:rgba(255,255,255,.8); font-weight:500; margin-bottom:4px;">Más datos de cierre reales</p>
+            <p style="font-size:12px;">mayor cobertura geográfica</p>
+          </div>
+        </div>
+        <div style="text-align:center; color:var(--green); font-size:20px; padding:8px;">↓</div>
+        <div class="fly-node" style="width:100%; max-width:100%; text-align:left; display:flex; gap:16px; align-items:center;">
+          <span style="font-size:28px; flex-shrink:0;">↑</span>
+          <div>
+            <p style="font-size:13px; color:rgba(255,255,255,.8); font-weight:500; margin-bottom:4px;">AVM más preciso y confiable</p>
+            <p style="font-size:12px;">mejor valuación, mayor utilidad</p>
+          </div>
+        </div>
+        <div style="text-align:center; color:var(--green); font-size:20px; padding:8px;">↓</div>
+        <div class="fly-node" style="width:100%; max-width:100%; text-align:left; display:flex; gap:16px; align-items:center; background:rgba(122,181,145,.2); border-color:rgba(122,181,145,.4);">
+          <span style="font-size:28px; flex-shrink:0;">★</span>
+          <div>
+            <p style="font-size:13px; color:rgba(255,255,255,.9); font-weight:500; margin-bottom:4px;">Mayor valor percibido</p>
+            <p style="font-size:12px; color:var(--green);">más inmobiliarias se suman → loop</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 09 — EQUIPO -->
+<section class="slide slide-dark" id="equipo">
+  <span class="slide-num">09 — Equipo</span>
+  <div class="eyebrow">Dream Team</div>
+  <h2 style="margin-bottom:8px;">El fundador ya<br>opera en el mercado<br>que disrumpe.</h2>
+  <p style="color:rgba(255,255,255,.4); font-size:14px; margin-bottom:0;">La mayor ventaja competitiva: acceso real, datos reales, desde adentro.</p>
+  <div class="team-cards">
+    <div class="team-card">
+      <div class="team-avatar">S</div>
+      <div class="team-name">Santiago Funes</div>
+      <div class="team-role">Founder & CEO</div>
+      <div class="team-bio">
+        Agente inmobiliario y operador activo en Tandil. Founder de Altavista Inmobiliaria — el laboratorio y primer cliente del producto. Formación en marketing y diseño. Construyó el sistema de contenido y datos que da origen a este producto.
+      </div>
+    </div>
+    <div class="team-card" style="border-style:dashed; opacity:.5;">
+      <div class="team-avatar" style="opacity:.4;">C</div>
+      <div class="team-name">CTO / Co-founder</div>
+      <div class="team-role">Buscando</div>
+      <div class="team-bio">
+        Perfil: product engineer con experiencia en proptech o data platforms. Capaz de construir el AVM y escalar la infraestructura de datos. Idealmente con background en real estate o fintech.
+      </div>
+    </div>
+    <div class="team-card" style="border-style:dashed; opacity:.5;">
+      <div class="team-avatar" style="opacity:.4;">A</div>
+      <div class="team-name">Advisor Estratégico</div>
+      <div class="team-role">Conversación abierta</div>
+      <div class="team-bio">
+        Contacto con Roomix (Nacho Gorriti) — posible alianza estratégica: ellos tienen datos de búsqueda, Altavista tiene inteligencia de cierre. Complementarios, no competidores.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10 — FINANCIALS + EL DEAL -->
+<section class="slide slide-dark" id="deal">
+  <span class="slide-num">10 — Financials & El Deal</span>
+  <div class="two-col">
+    <div>
+      <div class="eyebrow">Proyecciones — Escenario conservador</div>
+      <h2 style="margin-bottom:32px;">El número<br>que nos importa<br>es el AUM.</h2>
+      <div style="border:1px solid rgba(255,255,255,.06); border-radius:4px; overflow:hidden;">
+        <div class="fin-row">
+          <div class="fin-cell" style="padding-bottom:4px;"> </div>
+          <div class="fin-cell label">Año 1</div>
+          <div class="fin-cell label">Año 2</div>
+          <div class="fin-cell label">Año 3</div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-cell" style="font-size:11px; color:rgba(255,255,255,.35); font-family:'Montserrat',sans-serif; letter-spacing:1px;">Inmobiliarias</div>
+          <div class="fin-cell val">15</div>
+          <div class="fin-cell val">80</div>
+          <div class="fin-cell val highlight">300</div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-cell" style="font-size:11px; color:rgba(255,255,255,.35); font-family:'Montserrat',sans-serif; letter-spacing:1px;">Agentes</div>
+          <div class="fin-cell val">120</div>
+          <div class="fin-cell val">700</div>
+          <div class="fin-cell val highlight">3,000</div>
+        </div>
+        <div class="fin-row">
+          <div class="fin-cell" style="font-size:11px; color:rgba(255,255,255,.35); font-family:'Montserrat',sans-serif; letter-spacing:1px;">ARR</div>
+          <div class="fin-cell val">$70K</div>
+          <div class="fin-cell val">$450K</div>
+          <div class="fin-cell val highlight">$2M+</div>
+        </div>
+        <div class="fin-row" style="border:none;">
+          <div class="fin-cell" style="font-size:11px; color:rgba(255,255,255,.35); font-family:'Montserrat',sans-serif; letter-spacing:1px;">Con Enterprise</div>
+          <div class="fin-cell val" style="font-size:18px; color:rgba(255,255,255,.3);">—</div>
+          <div class="fin-cell val" style="font-size:18px; color:rgba(255,255,255,.3);">—</div>
+          <div class="fin-cell val highlight">$8M+</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">Lo que buscamos</div>
+      <div class="ask-box">
+        <h3>Ronda Seed</h3>
+        <div class="ask-num">$500K</div>
+        <p>USD, en conversación.</p>
+      </div>
+      <div style="margin-top:24px; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; border:1px solid rgba(255,255,255,.06); border-radius:4px;">
+          <div style="color:var(--green); font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; flex-shrink:0; padding-top:2px;">40%</div>
+          <div style="font-size:13px; color:rgba(255,255,255,.6);">Tech — desarrollo del AVM, dashboard, API</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; border:1px solid rgba(255,255,255,.06); border-radius:4px;">
+          <div style="color:var(--green); font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; flex-shrink:0; padding-top:2px;">35%</div>
+          <div style="font-size:13px; color:rgba(255,255,255,.6);">Equipo — CTO + 2 ingenieros de datos</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; border:1px solid rgba(255,255,255,.06); border-radius:4px;">
+          <div style="color:var(--green); font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; flex-shrink:0; padding-top:2px;">25%</div>
+          <div style="font-size:13px; color:rgba(255,255,255,.6);">GTM — primeras 20 inmobiliarias aliadas, sales</div>
+        </div>
+      </div>
+      <p style="margin-top:24px; font-size:12px; color:rgba(255,255,255,.25); font-family:'Montserrat',sans-serif; letter-spacing:1px; text-transform:uppercase;">
+        Runway: 18 meses → product-market fit → Serie A
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ELEVATOR PITCH -->
+<section class="slide slide-navy2">
+  <div class="eyebrow">Elevator Pitch</div>
+  <h2 style="margin-bottom:32px;">30 segundos.</h2>
+  <div class="elevator">
+    <p>
+      Mi nombre es <strong>Santiago Funes</strong>, soy founder de <strong>Altavista Intelligence</strong>.
+      Construimos la primera plataforma de inteligencia del mercado inmobiliario argentino para <strong>inmobiliarias, agentes y bancos</strong>.
+      Nuestro producto resuelve el problema de que <strong>nadie en Argentina sabe el precio real de cierre de una propiedad</strong> — ni compradores, ni vendedores, ni bancos.
+      Lo hacemos capturando datos de transacciones reales desde adentro del mercado, algo que <strong>ningún portal ni proptech puede replicar</strong>.
+      Nuestro modelo es SaaS B2B con revenue de $49-$299/mes por agente, más contratos enterprise con bancos.
+      Hoy estamos en etapa pre-seed, con el laboratorio operando en Tandil, buscando <strong>$500K seed</strong> para construir el AVM y escalar las primeras 20 inmobiliarias aliadas.
+      El runway nos lleva a product-market fit en 18 meses.
+      <strong>¿Cuándo podemos profundizar?</strong>
+    </p>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="portada-logo" style="margin-bottom:32px;">Altavista Intelligence</div>
+  <h1 style="font-size:clamp(40px,6vw,80px);">El CoStar<br>del mercado<br><span style="color:var(--green); font-style:italic;">residencial argentino.</span></h1>
+  <p class="sub">Documento estratégico completo disponible bajo solicitud.</p>
+  <div class="contact">Santiago Funes · santiagomfunes@gmail.com</div>
+</section>
+
+</body>
+</html>
