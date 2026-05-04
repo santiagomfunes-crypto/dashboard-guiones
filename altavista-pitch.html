@@ -653,9 +653,116 @@
     flex-shrink: 0;
   }
   .nav-sticky a:hover { color: rgba(255,255,255,.85); border-color: var(--green); }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 999;
+    background: var(--green);
+    color: var(--navy);
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    font-weight: 600;
+    box-shadow: 0 4px 24px rgba(0,0,0,.3);
+  }
+
+  /* ── PDF PRINT ── */
+  @media print {
+    @page {
+      size: 297mm 167mm;
+      margin: 0;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    html, body { height: auto; }
+
+    .nav-sticky { display: none !important; }
+    .print-btn  { display: none !important; }
+
+    .portada,
+    .hook-slide,
+    .slide,
+    .closing {
+      height: 167mm;
+      min-height: unset;
+      max-height: 167mm;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      padding: 40px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .closing { page-break-after: auto; break-after: auto; }
+
+    /* Ajuste de fuentes para impresión */
+    h1 { font-size: 52px !important; }
+    h2 { font-size: 36px !important; }
+    h3 { font-size: 11px !important; }
+    p, li { font-size: 13px !important; line-height: 1.55 !important; }
+
+    .portada h1 { font-size: 56px !important; }
+    .hook-text  { font-size: 36px !important; }
+
+    /* Espaciados reducidos */
+    .divider    { margin: 16px 0; }
+    .two-col    { gap: 48px; }
+    .problem-list { gap: 14px; margin-top: 24px; }
+    .why-items  { gap: 18px; margin-top: 24px; }
+    .why-num    { font-size: 36px; }
+    .layer      { margin-bottom: 10px; }
+    .layer-num  { width: 40px; font-size: 22px; }
+    .layer-content { padding: 14px 20px; }
+    .layer-content p { font-size: 12px !important; }
+    .market-funnel { gap: 10px; margin-top: 24px; }
+    .market-band { padding: 16px 24px; }
+    .market-band-num { font-size: 28px; }
+    .revenue-tiers { gap: 12px; margin-top: 24px; }
+    .tier { padding: 20px 18px; }
+    .tier-price { font-size: 36px; }
+    .tier-desc  { font-size: 11px !important; }
+    .comp-table { margin-top: 24px; }
+    .comp-table td { padding: 10px 16px; font-size: 12px !important; }
+    .comp-table th { padding: 8px 16px; }
+    .flywheel   { gap: 0; }
+    .fly-node   { padding: 18px 16px; }
+    .team-cards { gap: 20px; margin-top: 28px; }
+    .team-card  { padding: 20px; }
+    .team-bio   { font-size: 11px !important; }
+    .elevator   { padding: 24px 28px; margin-top: 24px; }
+    .elevator p { font-size: 13px !important; line-height: 1.65 !important; }
+    .ask-box    { padding: 28px 36px; margin-top: 24px; }
+    .ask-box .ask-num { font-size: 52px; }
+    .portada-logo  { margin-bottom: 32px; }
+    .portada-ring  { display: none; }
+    .portada-sub   { font-size: 15px !important; margin-bottom: 32px; }
+    .slide-num  { top: 24px; left: 72px; }
+
+    /* Grillas */
+    .fin-cell.val { font-size: 22px; }
+    .team-avatar  { width: 44px; height: 44px; font-size: 22px; margin-bottom: 12px; }
+  }
 </style>
 </head>
 <body>
+
+<button class="print-btn" onclick="window.print()">Descargar PDF</button>
 
 <!-- NAV -->
 <nav class="nav-sticky">
