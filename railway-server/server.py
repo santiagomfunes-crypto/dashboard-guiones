@@ -190,12 +190,15 @@ def properties_context() -> str:
 
 def sofia_system_prompt() -> str:
     props = properties_context()
-    return f"""Sos Sofía, la asistente de Santiago Funes en Altavista Otero, inmobiliaria en Tandil.
+    return f"""Sos Sofía, la secretaria personal de Santiago Funes, corredor inmobiliario en Altavista Otero, Tandil.
 
 ## TU IDENTIDAD
 
-Sos una persona real. Nunca digas que sos un bot, IA o asistente virtual. Si alguien te pregunta si sos robot o IA, respondé naturalmente: "Para nada jaja, soy Sofía, la asistente de Santiago 😊"
-Santiago Funes es el dueño. Juan Ignacio Otero es Martillero Público (Mat. 1966, Dep. Judicial Azul).
+Tu nombre completo es Sofía. Trabajás directamente con Santiago.
+Sos una persona real. Nunca digas que sos un bot, IA o asistente virtual.
+Si alguien te pregunta si sos robot o IA, respondé: "Para nada jaja, soy Sofía, la secretaria de Santiago 😊"
+Si preguntan por quién sos: "Soy Sofía, trabajo con Santiago en todo lo que es atención y coordinación."
+Santiago Funes es el corredor inmobiliario. Juan Ignacio Otero es Martillero Público (Mat. 1966, Dep. Judicial Azul).
 Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 
 ## CÓMO ESCRIBÍS
@@ -246,7 +249,7 @@ Nunca inventes información que no tenés.
 {props}
 
 Si no hay propiedades que calcen con lo que busca, decís:
-"Ahora mismo no tenemos algo así disponible, pero si me dejás tus datos te aviso cuando entre algo que te sirva." Luego pedí nombre y mail/WhatsApp para el seguimiento.
+"Ahora mismo no tenemos algo así disponible, pero si me dejás tu nombre y número te aviso cuando entre algo que te sirva."
 
 ## BARRIOS Y PROYECTOS DE TANDIL — referencia exacta
 
@@ -393,9 +396,14 @@ def _handle_message(from_phone: str, user_text: str) -> None:
     try:
         lead    = lead_get_or_create(from_phone)
         lead_id = lead["id"]
-        history = messages_get(lead_id)
-        reply   = sofia_reply(history, user_text)
+        # Siempre guardar el mensaje entrante
         message_save(lead_id, "user", user_text)
+        # Si Sofía está pausada (Santiago tomó el control), no responder
+        if lead.get("sofia_paused"):
+            print(f"[WA] Sofía pausada para {from_phone} — mensaje guardado, sin respuesta")
+            return
+        history = messages_get(lead_id, limit=20)
+        reply   = sofia_reply(history, user_text)
         message_save(lead_id, "assistant", reply)
         wa_send(from_phone, reply)
         # Auto-enviar PDF si menciona proyecto Roca
@@ -430,6 +438,22 @@ def wa_send_doc(to: str, doc_url: str, filename: str) -> None:
     print(f"[WA doc → {to}] {resp.status_code}")
 
 # ── Webhook WhatsApp ───────────────────────────────────────────────────────────
+
+@app.route("/wa/send", methods=["POST"])
+def wa_send_manual():
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    body = request.get_json(silent=True) or {}
+    to   = body.get("to", "").strip()
+    text = body.get("text", "").strip()
+    lead_id = body.get("lead_id", "").strip()
+    if not to or not text:
+        return jsonify({"error": "to y text requeridos"}), 400
+    wa_send(to, text)
+    if lead_id:
+        message_save(lead_id, "assistant", text)
+    return jsonify({"ok": True})
+
 
 @app.route("/whatsapp/webhook", methods=["GET"])
 def wa_verify():
