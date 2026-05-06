@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasación — Chacra Desvío Aguirre — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #0B1F33;
+    background: #fff;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* HEADER */
+  .header {
+    background: #0B1F33;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo-svg {
+    width: 56px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    color: white;
+  }
+
+  .logo-text .grupo {
+    font-size: 8px;
+    letter-spacing: 5px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .logo-text .nombre {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .header-doc {
+    text-align: right;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .header-doc .doc-tipo {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 4px;
+  }
+
+  .header-doc .doc-titulo {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 1px;
+  }
+
+  .header-doc .doc-fecha {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+
+  /* ACCENT LINE */
+  .accent-line {
+    height: 3px;
+    background: #7AB591;
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 32px 40px 40px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #7AB591;
+    border-bottom: 1px solid #D9DEE3;
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+  }
+
+  /* FICHA TÉCNICA */
+  .ficha-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+  }
+
+  .ficha-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 12px;
+  }
+
+  .ficha-item .label {
+    color: #888;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .ficha-item .value {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #0B1F33;
+    text-align: right;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+
+  thead tr {
+    background: #0B1F33;
+    color: white;
+  }
+
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 8.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  thead th:last-child {
+    text-align: right;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #eef0f2;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f9fafb;
+  }
+
+  tbody td {
+    padding: 7px 10px;
+    color: #333;
+    font-size: 10px;
+  }
+
+  tbody td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: #0B1F33;
+  }
+
+  .table-subtotal td {
+    background: #eef4f0 !important;
+    font-weight: 700;
+    color: #0B1F33 !important;
+    border-bottom: 2px solid #7AB591 !important;
+  }
+
+  /* FINANCIERO */
+  .financiero-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .fin-box {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+
+  .fin-box-title {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #7AB591;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .fin-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #e8ecef;
+    font-size: 9.5px;
+  }
+
+  .fin-row:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    padding-top: 8px;
+    margin-top: 4px;
+    font-size: 10px;
+  }
+
+  .fin-row .fin-label { color: #666; }
+  .fin-row .fin-val { color: #0B1F33; font-weight: 600; }
+  .fin-row:last-child .fin-val { color: #0B1F33; }
+
+  /* RESUMEN TOTAL */
+  .resumen-box {
+    background: #0B1F33;
+    border-radius: 4px;
+    padding: 20px 24px;
+    color: white;
+  }
+
+  .resumen-rows {
+    margin-bottom: 16px;
+  }
+
+  .resumen-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 10px;
+  }
+
+  .resumen-row .r-label { color: rgba(255,255,255,0.6); }
+  .resumen-row .r-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+  .resumen-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 2px solid #7AB591;
+    padding-top: 14px;
+    margin-top: 8px;
+  }
+
+  .resumen-total .rt-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .resumen-total .rt-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: white;
+    letter-spacing: 1px;
+  }
+
+  .precio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .precio-item {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .precio-item.highlight {
+    background: #eef4f0;
+    border-color: #7AB591;
+  }
+
+  .precio-item .pi-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  .precio-item.highlight .pi-label { color: #7AB591; }
+
+  .precio-item .pi-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: #0B1F33;
+  }
+
+  /* FACTORES */
+  .factores-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .factores-list {
+    list-style: none;
+  }
+
+  .factores-list li {
+    display: flex;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 9.5px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  .factores-list li .icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .icon-pos { background: #eef4f0; color: #7AB591; }
+  .icon-neg { background: #fef0f0; color: #cc4444; }
+
+  /* NOTAS */
+  .nota-box {
+    background: #f9fafb;
+    border-left: 3px solid #7AB591;
+    padding: 10px 14px;
+    font-size: 9.5px;
+    color: #555;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: #0B1F33;
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .footer-left {
+    color: rgba(255,255,255,0.5);
+    font-size: 8.5px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+  }
+
+  .footer-right {
+    color: rgba(255,255,255,0.35);
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310">
+        <rect x="80" y="10" width="140" height="220" rx="70" ry="70"
+              fill="none" stroke="white" stroke-width="1.4"/>
+        <line x1="104" y1="120" x2="196" y2="120"
+              stroke="white" stroke-width="0.9"/>
+        <text x="150" y="98"
+              font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle">A</text>
+        <text x="150" y="175"
+              font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle"
+              dominant-baseline="central">O</text>
+        <text x="150" y="264"
+              font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="10" fill="rgba(255,255,255,0.55)"
+              text-anchor="middle" letter-spacing="6">GRUPO</text>
+        <text x="150" y="288"
+              font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="13" fill="rgba(255,255,255,0.85)"
+              text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+      </svg>
+      <div class="logo-text">
+        <div class="grupo">Grupo</div>
+        <div class="nombre">Altavista Otero</div>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="doc-tipo">Informe de Tasación</div>
+      <div class="doc-titulo">Chacra Rural — Desvío Aguirre</div>
+      <div class="doc-fecha">Mayo 2026 · Tandil, Buenos Aires</div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- 1. FICHA TÉCNICA -->
+    <div class="section">
+      <div class="section-title">1 — Descripción del inmueble</div>
+      <div class="ficha-grid">
+        <div class="ficha-item"><span class="label">Superficie total</span><span class="value">2,75 ha</span></div>
+        <div class="ficha-item"><span class="label">Antigüedad casa</span><span class="value">Aprox. 10 años</span></div>
+        <div class="ficha-item"><span class="label">Ubicación</span><span class="value">1 km de Ruta Prov. 74</span></div>
+        <div class="ficha-item"><span class="label">Superficie vivienda</span><span class="value">120 m²</span></div>
+        <div class="ficha-item"><span class="label">Localidad</span><span class="value">Desvío Aguirre, Tandil</span></div>
+        <div class="ficha-item"><span class="label">Depósito subsuelo</span><span class="value">60 m²</span></div>
+        <div class="ficha-item"><span class="label">Acceso</span><span class="value">Camino de tierra</span></div>
+        <div class="ficha-item"><span class="label">Sala de producción</span><span class="value">30–35 m² (habilitada)</span></div>
+        <div class="ficha-item"><span class="label">Energía</span><span class="value">Red eléctrica + generador</span></div>
+        <div class="ficha-item"><span class="label">Pileta</span><span class="value">Sí</span></div>
+        <div class="ficha-item"><span class="label">Calefacción</span><span class="value">Radiadores</span></div>
+        <div class="ficha-item"><span class="label">Agua caliente</span><span class="value">Panel solar 200 L</span></div>
+        <div class="ficha-item"><span class="label">Riego</span><span class="value">Sistema por goteo instalado</span></div>
+        <div class="ficha-item"><span class="label">Estado dominial</span><span class="value">Escriturada · sin gravámenes</span></div>
+        <div class="ficha-item"><span class="label">Alambrado</span><span class="value">Perimetral completo</span></div>
+        <div class="ficha-item"><span class="label">Agua</span><span class="value">3 tanques + bombeo</span></div>
+      </div>
+    </div>
+
+    <!-- 2. EMPRENDIMIENTOS -->
+    <div class="section">
+      <div class="section-title">2 — Emprendimientos productivos</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Negocio</th>
+            <th>Infraestructura</th>
+            <th>Ciclo</th>
+            <th>Antigüedad</th>
+            <th style="text-align:right">Estado legal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Granja avícola pastoril</strong><br><span style="color:#888;font-size:9px">440 ponedoras · postura 80%</span></td>
+            <td>Gallinero climatizado · sistema pastoril</td>
+            <td>Todo el año</td>
+            <td>10 años</td>
+            <td style="text-align:right">Habilitado</td>
+          </tr>
+          <tr>
+            <td><strong>Granja frutilla orgánica</strong><br><span style="color:#888;font-size:9px">3.200 kg/temporada · riego por goteo</span></td>
+            <td>Sala producción 30–35 m² + campo 200 m²</td>
+            <td>Oct – Abril</td>
+            <td>10 años</td>
+            <td style="text-align:right">Habilitado · transferible</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px; padding:8px 10px; background:#f9fafb; border-radius:4px; font-size:9.5px; color:#555;">
+        <strong style="color:#0B1F33">Base de clientes:</strong> 2.029 clientes identificados con demanda regular. Cartera documentable y transferible al comprador.
+      </div>
+    </div>
+
+    <!-- 3. ANÁLISIS FINANCIERO -->
+    <div class="section">
+      <div class="section-title">3 — Análisis financiero de los negocios</div>
+      <div class="financiero-cols">
+        <div>
+          <div class="fin-box" style="margin-bottom:12px">
+            <div class="fin-box-title">Granja avícola — anual</div>
+            <div class="fin-row"><span class="fin-label">Producción anual</span><span class="fin-val">4.110 maples</span></div>
+            <div class="fin-row"><span class="fin-label">Precio promedio</span><span class="fin-val">$11.000 / maple</span></div>
+            <div class="fin-row"><span class="fin-label">Ingreso bruto anual</span><span class="fin-val">$45.214.400</span></div>
+            <div class="fin-row"><span class="fin-label">Bruto mensual</span><span class="fin-val">$3.767.866</span></div>
+            <div class="fin-row"><span class="fin-label">Neto mensual (tras costos)</span><span class="fin-val">$3.117.000</span></div>
+          </div>
+          <div class="fin-box">
+            <div class="fin-box-title">Frutilla orgánica — temporada</div>
+            <div class="fin-row"><span class="fin-label">Producción temporada</span><span class="fin-val">3.200 kg</span></div>
+            <div class="fin-row"><span class="fin-label">Precio promedio</span><span class="fin-val">$11.000 / kg</span></div>
+            <div class="fin-row"><span class="fin-label">Bruto temporada</span><span class="fin-val">$35.200.000</span></div>
+            <div class="fin-row"><span class="fin-label">Bruto mensual (7 meses)</span><span class="fin-val">$5.028.571</span></div>
+            <div class="fin-row"><span class="fin-label">Neto mensual (tras costos)</span><span class="fin-val">$4.183.000</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="fin-box" style="height:100%">
+            <div class="fin-box-title">Flujo neto combinado — resumen anual</div>
+            <div class="fin-row"><span class="fin-label">Oct–Abril · 7 meses</span><span class="fin-val">$8.145.557/mes</span></div>
+            <div class="fin-row"><span class="fin-label">Subtotal temporada alta</span><span class="fin-val">$57.018.899</span></div>
+            <div style="margin:10px 0 6px; border-top:1px solid #e8ecef;"></div>
+            <div class="fin-row"><span class="fin-label">May–Sep · 5 meses</span><span class="fin-val">$3.117.000/mes</span></div>
+            <div class="fin-row"><span class="fin-label">Subtotal temporada baja</span><span class="fin-val">$15.585.000</span></div>
+            <div style="margin:10px 0 6px; border-top:1px solid #e8ecef;"></div>
+            <div class="fin-row"><span class="fin-label" style="font-weight:700;color:#0B1F33">Neto anual total</span><span class="fin-val" style="font-size:12px;color:#0B1F33">$72.603.899</span></div>
+            <div class="fin-row"><span class="fin-label" style="font-weight:700;color:#0B1F33">Promedio mensual real</span><span class="fin-val" style="font-size:12px;color:#0B1F33">$6.050.325</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. VALUACIÓN -->
+    <div class="section">
+      <div class="section-title">4 — Valuación por componentes</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Detalle</th>
+            <th style="text-align:right">Valor USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Terreno</strong></td>
+            <td>2,75 ha productivas · ref. USD 6.500/ha zona serrana BA</td>
+            <td>USD 17.875</td>
+          </tr>
+          <tr>
+            <td><strong>Vivienda 120 m²</strong></td>
+            <td>Construcción estándar-buena · 10 años antigüedad</td>
+            <td>USD 84.000</td>
+          </tr>
+          <tr>
+            <td><strong>Pileta</strong></td>
+            <td>Incluida en la propiedad · funcional</td>
+            <td>USD 9.000</td>
+          </tr>
+          <tr>
+            <td><strong>Calefacción + agua solar</strong></td>
+            <td>Sistema radiadores + termotanque solar 200 L</td>
+            <td>USD 6.000</td>
+          </tr>
+          <tr>
+            <td><strong>Depósito subsuelo</strong></td>
+            <td>60 m² bajo vivienda</td>
+            <td>USD 18.000</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Subtotal — construcciones</strong></td>
+            <td><strong>USD 117.000</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Alambrado perimetral</strong></td>
+            <td>Perimetral completo, buen estado</td>
+            <td>USD 10.000</td>
+          </tr>
+          <tr>
+            <td><strong>Sistema riego por goteo</strong></td>
+            <td>Instalado y operativo</td>
+            <td>USD 4.000</td>
+          </tr>
+          <tr>
+            <td><strong>Generador eléctrico</strong></td>
+            <td>Backup de red eléctrica</td>
+            <td>USD 3.000</td>
+          </tr>
+          <tr>
+            <td><strong>Tanques de agua + bombeo</strong></td>
+            <td>3 tanques con sistema de bombeo</td>
+            <td>USD 2.500</td>
+          </tr>
+          <tr>
+            <td><strong>Sala de producción habilitada</strong></td>
+            <td>30–35 m² · habilitación municipal vigente</td>
+            <td>USD 16.000</td>
+          </tr>
+          <tr>
+            <td><strong>Gallinero climatizado</strong></td>
+            <td>Estructura + aire acondicionado · sistema pastoril</td>
+            <td>USD 3.500</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Subtotal — infraestructura productiva</strong></td>
+            <td><strong>USD 39.000</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Fondo de comercio</strong></td>
+            <td>Capitalización 22 meses sobre promedio real $6.050.325/mes<br>
+            <span style="font-size:9px;color:#888">Multiplicador 22 meses: 10 años trayectoria · 2.029 clientes · habilitación transferible</span></td>
+            <td>USD 121.000 <span style="font-size:9px;font-weight:400;color:#888">(ref. $1.100/USD)</span></td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Subtotal — fondo de comercio</strong></td>
+            <td><strong>USD 121.000</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. RESUMEN Y PRECIO -->
+    <div class="section">
+      <div class="section-title">5 — Valor de mercado estimado</div>
+      <div class="resumen-box">
+        <div class="resumen-rows">
+          <div class="resumen-row"><span class="r-label">Terreno (2,75 ha)</span><span class="r-val">USD 17.875</span></div>
+          <div class="resumen-row"><span class="r-label">Construcciones (vivienda + mejoras)</span><span class="r-val">USD 117.000</span></div>
+          <div class="resumen-row"><span class="r-label">Infraestructura productiva</span><span class="r-val">USD 39.000</span></div>
+          <div class="resumen-row"><span class="r-label">Fondo de comercio (ambos negocios)</span><span class="r-val">USD 121.000</span></div>
+        </div>
+        <div class="resumen-total">
+          <span class="rt-label">Valor técnico total</span>
+          <span class="rt-val">USD 294.875</span>
+        </div>
+      </div>
+
+      <div class="precio-grid">
+        <div class="precio-item">
+          <div class="pi-label">Piso de negociación</div>
+          <div class="pi-val">USD 290.000</div>
+        </div>
+        <div class="precio-item highlight">
+          <div class="pi-label">Precio de publicación</div>
+          <div class="pi-val">USD 310.000</div>
+        </div>
+        <div class="precio-item">
+          <div class="pi-label">Referencia técnica</div>
+          <div class="pi-val">USD 294.875</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FACTORES -->
+    <div class="section">
+      <div class="section-title">6 — Factores que sostienen y condicionan el valor</div>
+      <div class="factores-cols">
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7AB591;margin-bottom:8px;font-weight:600;">Fortalezas</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-pos">+</span>10 años de operación ininterrumpida — negocio probado, no proyecto</li>
+            <li><span class="icon icon-pos">+</span>2.029 clientes activos documentables y transferibles</li>
+            <li><span class="icon icon-pos">+</span>Habilitación municipal vigente y transferible al comprador</li>
+            <li><span class="icon icon-pos">+</span>Doble fuente de ingreso — diversificación real ante riesgos de cosecha</li>
+            <li><span class="icon icon-pos">+</span>Riego por goteo instalado — infraestructura lista, sin inversión adicional</li>
+            <li><span class="icon icon-pos">+</span>Energía redundante (red + generador) — producción sin interrupciones</li>
+            <li><span class="icon icon-pos">+</span>Agua caliente solar — reduce costo operativo de la vivienda</li>
+            <li><span class="icon icon-pos">+</span>Escritura limpia y sin gravámenes — operación sin riesgo legal</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#cc4444;margin-bottom:8px;font-weight:600;">Condicionantes</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-neg">–</span>Acceso no pavimentado — puede dificultar logística en días de lluvia</li>
+            <li><span class="icon icon-neg">–</span>Estacionalidad de frutillas — 5 meses sin ese ingreso; requiere capital de trabajo</li>
+            <li><span class="icon icon-neg">–</span>Sin automatización en gallinero — requiere mano de obra diaria, no es negocio pasivo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. NOTAS -->
+    <div class="section">
+      <div class="section-title">7 — Consideraciones para el comprador</div>
+      <div class="nota-box">
+        <strong>Auditoría de ingresos:</strong> el fondo de comercio representa aproximadamente el 41% del valor total. Se recomienda al comprador solicitar declaración jurada o comprobantes de los últimos 6–12 meses antes del cierre de la operación.
+      </div>
+      <div class="nota-box">
+        <strong>Transferencia de la habilitación:</strong> la habilitación municipal para comercialización de productos es transferible. Verificar con el Municipio el procedimiento y plazos de transferencia previo a la firma.
+      </div>
+      <div class="nota-box">
+        <strong>Animales incluidos:</strong> las 440 gallinas ponedoras están incluidas en el precio de venta como parte del activo productivo.
+      </div>
+      <div class="nota-box" style="border-left-color:#0B1F33">
+        Este informe fue elaborado con información provista por la propietaria. Se recomienda complementar con tasación de referente local y verificación de habilitaciones en el Municipio antes del cierre de la operación. El valor del fondo de comercio está expresado en pesos argentinos y su equivalente en dólares es referencial al tipo de cambio vigente al momento de la valuación.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      Grupo Altavista Otero · Real Estate · Tandil, Buenos Aires<br>
+      Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul
+    </div>
+    <div class="footer-right">
+      Informe confidencial · Mayo 2026<br>
+      Uso exclusivo del destinatario
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

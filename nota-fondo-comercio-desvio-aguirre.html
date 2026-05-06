@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nota Técnica — Fondo de Comercio — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #0B1F33;
+    background: #fff;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header {
+    background: #0B1F33;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo-svg { width: 56px; height: auto; flex-shrink: 0; }
+
+  .logo-text { color: white; }
+  .logo-text .grupo {
+    font-size: 8px; letter-spacing: 5px; font-weight: 400;
+    color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 2px;
+  }
+  .logo-text .nombre {
+    font-size: 14px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; color: white;
+  }
+
+  .header-doc { text-align: right; }
+  .header-doc .doc-tipo {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); margin-bottom: 4px;
+  }
+  .header-doc .doc-titulo {
+    font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 1px;
+  }
+  .header-doc .doc-fecha {
+    font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 1px;
+  }
+
+  .accent-line { height: 3px; background: #7AB591; }
+
+  .content { padding: 36px 40px 40px; }
+
+  .intro-label {
+    font-size: 8px; letter-spacing: 4px; text-transform: uppercase;
+    color: #7AB591; margin-bottom: 8px; font-weight: 600;
+  }
+
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; color: #0B1F33;
+    letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.3;
+  }
+
+  .intro-sub {
+    font-size: 9.5px; color: #888; letter-spacing: 0.5px; margin-bottom: 28px;
+  }
+
+  .section { margin-bottom: 26px; }
+
+  .section-title {
+    font-size: 8px; font-weight: 700; letter-spacing: 4px;
+    text-transform: uppercase; color: #7AB591;
+    border-bottom: 1px solid #D9DEE3;
+    padding-bottom: 6px; margin-bottom: 14px;
+  }
+
+  .body-text {
+    font-size: 10px; color: #333; line-height: 1.85; margin-bottom: 12px;
+  }
+
+  .formula-box {
+    background: #f4f7f5;
+    border: 1px solid #c8ddd0;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-family: 'Montserrat', monospace;
+    font-size: 10px;
+    color: #0B1F33;
+    line-height: 2;
+  }
+
+  .formula-box .formula-line {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .formula-box .f-label { color: #666; min-width: 200px; }
+  .formula-box .f-val { font-weight: 700; color: #0B1F33; }
+  .formula-box .f-result { color: #7AB591; font-weight: 700; }
+
+  .tasa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .tasa-item {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .tasa-item.total {
+    background: #eef4f0;
+    border-color: #7AB591;
+  }
+
+  .tasa-item .ti-label {
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #999; margin-bottom: 6px;
+  }
+
+  .tasa-item.total .ti-label { color: #7AB591; }
+
+  .tasa-item .ti-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; color: #0B1F33;
+  }
+
+  .tasa-item .ti-desc {
+    font-size: 8px; color: #aaa; margin-top: 4px; line-height: 1.4;
+  }
+
+  .calc-box {
+    background: #0B1F33;
+    border-radius: 4px;
+    padding: 18px 22px;
+    color: white;
+    margin: 14px 0;
+  }
+
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 10px;
+  }
+
+  .calc-row .cr-label { color: rgba(255,255,255,0.55); }
+  .calc-row .cr-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+  .calc-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 2px solid #7AB591;
+    padding-top: 12px;
+    margin-top: 8px;
+  }
+
+  .calc-total .ct-label {
+    font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .calc-total .ct-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 300; color: white;
+  }
+
+  .atributos-list { list-style: none; margin: 12px 0; }
+
+  .atributo-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .atributo-num {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    background: #eef4f0;
+    color: #7AB591;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .atributo-body {}
+  .atributo-title {
+    font-size: 10px; font-weight: 700; color: #0B1F33; margin-bottom: 3px;
+  }
+  .atributo-text { font-size: 9.5px; color: #555; line-height: 1.7; }
+
+  .retorno-box {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+
+  .retorno-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .retorno-item { text-align: center; }
+  .retorno-item .ri-label {
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #999; margin-bottom: 6px;
+  }
+  .retorno-item .ri-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 300; color: #0B1F33;
+  }
+  .retorno-item .ri-sub { font-size: 8px; color: #aaa; margin-top: 3px; }
+
+  .retorno-excedente {
+    background: #eef4f0;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 9.5px;
+    color: #3a6b4a;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .nota-box {
+    background: #f9fafb;
+    border-left: 3px solid #7AB591;
+    padding: 10px 14px;
+    font-size: 9.5px;
+    color: #555;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 8px;
+    line-height: 1.65;
+  }
+
+  .nota-box strong { color: #0B1F33; }
+
+  .footer {
+    background: #0B1F33;
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+  }
+
+  .footer-left {
+    color: rgba(255,255,255,0.5);
+    font-size: 8.5px; letter-spacing: 0.5px; line-height: 1.6;
+  }
+
+  .footer-right {
+    color: rgba(255,255,255,0.35);
+    font-size: 8px; letter-spacing: 1px;
+    text-align: right; line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310">
+        <rect x="80" y="10" width="140" height="220" rx="70" ry="70"
+              fill="none" stroke="white" stroke-width="1.4"/>
+        <line x1="104" y1="120" x2="196" y2="120" stroke="white" stroke-width="0.9"/>
+        <text x="150" y="98" font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle">A</text>
+        <text x="150" y="175" font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle"
+              dominant-baseline="central">O</text>
+        <text x="150" y="264" font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="10" fill="rgba(255,255,255,0.55)"
+              text-anchor="middle" letter-spacing="6">GRUPO</text>
+        <text x="150" y="288" font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="13" fill="rgba(255,255,255,0.85)"
+              text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+      </svg>
+      <div class="logo-text">
+        <div class="grupo">Grupo</div>
+        <div class="nombre">Altavista Otero</div>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="doc-tipo">Nota Técnica Complementaria</div>
+      <div class="doc-titulo">Chacra Rural — Desvío Aguirre</div>
+      <div class="doc-fecha">Mayo 2026 · Tandil, Buenos Aires</div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="intro-label">Nota técnica</div>
+    <div class="intro-title">La lógica detrás del fondo de comercio</div>
+    <div class="intro-sub">Complemento al informe de tasación — Chacra Desvío Aguirre · Mayo 2026</div>
+
+    <!-- 1 -->
+    <div class="section">
+      <div class="section-title">1 — ¿Qué compra alguien cuando compra un negocio?</div>
+      <p class="body-text">
+        Cuando alguien adquiere una propiedad con negocios productivos activos, en realidad está comprando dos cosas distintas. Por un lado, los <strong>activos físicos</strong>: el terreno, la vivienda, el gallinero, la sala de producción, el sistema de riego — todo lo que se puede ver y tocar. Por otro, los <strong>negocios en funcionamiento</strong>: la granja avícola y la granja de frutilla orgánica — todo lo que genera dinero todos los meses.
+      </p>
+      <p class="body-text">
+        El fondo de comercio es el valor de esos negocios. Valuarlo correctamente requiere una lógica diferente a la del metro cuadrado, y esa lógica tiene fundamento económico preciso.
+      </p>
+    </div>
+
+    <!-- 2 -->
+    <div class="section">
+      <div class="section-title">2 — La pregunta correcta</div>
+      <p class="body-text">
+        Un comprador que pone dinero en un negocio está eligiendo no poner ese dinero en otra cosa: un plazo fijo, un departamento, un bono. La pregunta correcta no es <em>"¿cuánto cuesta?"</em> sino:
+      </p>
+      <div class="formula-box">
+        <div class="formula-line">
+          <span style="font-style:italic; color:#555;">¿Cuánto debería pagar hoy para recibir esta corriente de ganancias futuras,
+          considerando todas las alternativas disponibles?</span>
+        </div>
+      </div>
+      <p class="body-text">
+        Eso tiene una respuesta matemática precisa. El precio justo de cualquier negocio estable es el valor presente de sus flujos futuros, descontados por el riesgo de que no se cumplan.
+      </p>
+    </div>
+
+    <!-- 3 -->
+    <div class="section">
+      <div class="section-title">3 — La fórmula económica aplicada</div>
+      <p class="body-text">Para un negocio con ingresos estables, la fórmula se reduce a una perpetuidad:</p>
+
+      <div class="formula-box">
+        <div class="formula-line" style="margin-bottom:6px;">
+          <span class="f-label">Valor del negocio</span>
+          <span class="f-val">=</span>
+          <span style="color:#555;">Ganancia neta anual ÷ Tasa de retorno requerida</span>
+        </div>
+        <div style="height:1px; background:#ddeae3; margin: 8px 0;"></div>
+        <div class="formula-line" style="margin-bottom:4px;">
+          <span class="f-label">Tasa de retorno requerida</span>
+          <span class="f-val">=</span>
+          <span style="color:#555;">Tasa libre de riesgo + Prima por riesgo del negocio</span>
+        </div>
+      </div>
+
+      <p class="body-text">En Argentina, en mayo de 2026, esa tasa se construye así:</p>
+
+      <div class="tasa-grid">
+        <div class="tasa-item">
+          <div class="ti-label">Tasa libre de riesgo</div>
+          <div class="ti-val">~35%</div>
+          <div class="ti-desc">Plazo fijo / cauciones · alternativa sin riesgo</div>
+        </div>
+        <div class="tasa-item">
+          <div class="ti-label">Prima por riesgo</div>
+          <div class="ti-val">+20%</div>
+          <div class="ti-desc">Negocio agropecuario · MiPyme · operativo</div>
+        </div>
+        <div class="tasa-item total">
+          <div class="ti-label">Tasa total aplicada</div>
+          <div class="ti-val">~55%</div>
+          <div class="ti-desc">Tasa de descuento utilizada en la valuación</div>
+        </div>
+      </div>
+
+      <p class="body-text" style="margin-top:14px;">Aplicando los datos del informe:</p>
+
+      <div class="calc-box">
+        <div class="calc-row">
+          <span class="cr-label">Ganancia neta avícola (12 meses)</span>
+          <span class="cr-val">$37.404.000</span>
+        </div>
+        <div class="calc-row">
+          <span class="cr-label">Ganancia neta frutilla (7 meses de temporada)</span>
+          <span class="cr-val">$29.281.000</span>
+        </div>
+        <div class="calc-row">
+          <span class="cr-label">Ganancia neta anual combinada</span>
+          <span class="cr-val">$72.603.899</span>
+        </div>
+        <div class="calc-row">
+          <span class="cr-label">Tasa de descuento aplicada</span>
+          <span class="cr-val">54,5% anual</span>
+        </div>
+        <div class="calc-total">
+          <span class="ct-label">Valor del fondo de comercio</span>
+          <span class="ct-val">$132.000.000 · USD 121.000</span>
+        </div>
+      </div>
+
+      <p class="body-text" style="color:#888; font-size:9px; margin-top:6px;">
+        Tipo de cambio de referencia: $1.100/USD · vigente al momento de la tasación.
+      </p>
+    </div>
+
+    <!-- 4 -->
+    <div class="section">
+      <div class="section-title">4 — ¿Por qué este negocio vale más que el promedio?</div>
+      <p class="body-text">
+        Un negocio genérico con los mismos ingresos, pero sin historia ni clientes documentados, se valuaría con una tasa más alta — entre 65% y 80% anual — lo que arroja un precio significativamente menor. Esta granja aplica una tasa de 54,5% porque tiene tres atributos concretos que reducen el riesgo percibido:
+      </p>
+
+      <ul class="atributos-list">
+        <li class="atributo-item">
+          <div class="atributo-num">1</div>
+          <div class="atributo-body">
+            <div class="atributo-title">Diez años de operación ininterrumpida</div>
+            <div class="atributo-text">No es un proyecto ni una proyección. Es un negocio que viene funcionando una década, atravesó inflaciones, crisis y temporadas adversas, y sigue produciendo. Para el comprador, eso elimina el riesgo de ejecución — el más difícil de cuantificar y el que más encarece cualquier valuación. Compra un negocio que ya funciona, no una apuesta a que funcione.</div>
+          </div>
+        </li>
+        <li class="atributo-item">
+          <div class="atributo-num">2</div>
+          <div class="atributo-body">
+            <div class="atributo-title">2.029 clientes identificados, documentados y transferibles</div>
+            <div class="atributo-text">El riesgo más frecuente en la venta de un negocio es que los clientes se vayan con la persona que lo manejaba. Acá ese riesgo está resuelto: la cartera existe, está documentada y es legalmente transferible. Quien compra no hereda una expectativa de demanda — hereda la demanda misma. Eso tiene un valor diferencial muy concreto en la ecuación de riesgo.</div>
+          </div>
+        </li>
+        <li class="atributo-item">
+          <div class="atributo-num">3</div>
+          <div class="atributo-body">
+            <div class="atributo-title">Habilitación municipal vigente y transferible</div>
+            <div class="atributo-text">Para comercializar productos de origen animal y vegetal hace falta una habilitación que cuesta meses de gestión obtener. Cualquier competidor que quisiera replicar este negocio desde cero enfrentaría esa barrera. El comprador la recibe lista y transferible. Es una ventaja regulatoria que el mercado premia directamente en el precio.</div>
+          </div>
+        </li>
+      </ul>
+
+      <p class="body-text" style="margin-top:6px;">
+        Cada atributo reduce la incertidumbre. Menos incertidumbre implica menor prima de riesgo. Menor prima de riesgo implica mayor precio de venta. Es lógica económica directa, no estimación subjetiva.
+      </p>
+    </div>
+
+    <!-- 5 -->
+    <div class="section">
+      <div class="section-title">5 — Lo que obtiene el comprador</div>
+      <p class="body-text">Quien pague USD 121.000 por el fondo de comercio de ambas granjas obtiene la siguiente estructura de retorno:</p>
+
+      <div class="retorno-box">
+        <div class="retorno-grid">
+          <div class="retorno-item">
+            <div class="ri-label">Inversión en negocio</div>
+            <div class="ri-val">USD 121.000</div>
+            <div class="ri-sub">~$133.100.000 ARS</div>
+          </div>
+          <div class="retorno-item">
+            <div class="ri-label">Ganancia neta anual</div>
+            <div class="ri-val">$72.603.899</div>
+            <div class="ri-sub">promedio ponderado por estacionalidad</div>
+          </div>
+          <div class="retorno-item">
+            <div class="ri-label">Retorno sobre inversión</div>
+            <div class="ri-val" style="color:#3a6b4a;">54,5%</div>
+            <div class="ri-sub">anual en pesos</div>
+          </div>
+        </div>
+        <div class="retorno-excedente">
+          Frente a una alternativa sin riesgo al ~35% anual, el comprador obtiene un excedente real de casi 20 puntos porcentuales como compensación por el trabajo y el riesgo operativo. Es un retorno coherente con el mercado.
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="section">
+      <div class="section-title">6 — La única pregunta que importa antes del cierre</div>
+      <p class="body-text">
+        El fondo de comercio representa el 41% del valor total de la propiedad — una porción significativa. Cualquier comprador serio va a querer verificar los ingresos antes del cierre. Eso no debilita la negociación: la fortalece. Un número que se puede demostrar vale más que uno que se toma por fe.
+      </p>
+
+      <div class="nota-box">
+        <strong>Documentación recomendada:</strong> declaración jurada de ingresos, facturas de venta de huevos y frutillas, registros de producción de los últimos 6 a 12 meses. A mayor documentación disponible, mayor confianza del comprador y menor margen de regateo en el precio.
+      </div>
+      <div class="nota-box">
+        <strong>Transferencia de habilitación:</strong> verificar con el Municipio el procedimiento y los plazos de transferencia previo a la firma. El trámite existe y la habilitación es transferible; solo requiere coordinación administrativa con anticipación.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      Grupo Altavista Otero · Real Estate · Tandil, Buenos Aires<br>
+      Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul
+    </div>
+    <div class="footer-right">
+      Nota técnica complementaria · Mayo 2026<br>
+      Uso exclusivo del destinatario
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

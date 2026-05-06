@@ -1,0 +1,13 @@
+Campaña,Ad Set,Ángulo,UTM Content,Presupuesto/día,Fecha inicio,Fecha fin,Leads,CPL (USD),Leads calificados,Visitas coordinadas,Cierres,Estado
+C1 Deptos,GAR431_Rendimiento,Rendimiento,gar431_rendimiento,$10,,,,,,,, Activo
+C1 Deptos,GAR431_Escasez,Escasez,gar431_escasez,$10,,,,,,,, Activo
+C1 Deptos,GAR431_Ciudad,Ciudad,gar431_ciudad,$10,,,,,,,, Activo
+C1 Deptos,GAR431_Objecion,Objeción,gar431_objecion,$10,,,,,,,, Activo
+C1 Deptos,GAR431_UGC,UGC video,gar431_ugc,$10,,,,,,,, Activo
+C1 Deptos,Deptos_Inversion,Inversión general,deptos_inversion,$10,,,,,,,,Lanzar día 7
+C1 Deptos,SanLorenzo_Stock,Stock San Lorenzo,sanlor420_stock,$10,,,,,,,,Lanzar día 7
+C2 Casas,Casas_CABA,Porteños,casas_caba,$7,,,,,,,, Activo
+C2 Casas,CasaBelgrano_Directa,Propiedad directa,belgrano146_directa,$7,,,,,,,, Activo
+C2 Casas,Hammerdem_Testimonio,Retargeting testimonio,retarg_testimonio,$5,,,,,,,, Activo
+C2 Casas,Hammerdem_Objecion,Retargeting objeción,retarg_objecion,$5,,,,,,,, Activo
+C2 Casas,Hammerdem_PruebaSocial,Retargeting prueba,retarg_pruebasocial,$5,,,,,,,, Activo

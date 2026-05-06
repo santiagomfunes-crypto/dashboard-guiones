@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Scraper diario MercadoLibre Inmuebles → Supabase
-Extrae propiedades en Tandil desde el HTML de MercadoLibre
+Extrae propiedades en Tandil desde MercadoLibre con Playwright (renderiza JS)
 y hace upsert en la tabla propiedades_mercado.
 
 Uso: python3 scraper_mercadolibre.py
@@ -23,16 +23,6 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 ENV_FILE = SCRIPT_DIR / ".env"
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/120.0.0.0 Safari/537.36"
-    ),
-    "Accept": "text/html,application/xhtml+xml",
-    "Accept-Language": "es-AR,es;q=0.9",
-}
-
 # URLs a scrapear: (tipologia, operacion, url_base)
 SEARCH_URLS = [
     ("departamento", "venta",    "https://inmuebles.mercadolibre.com.ar/departamentos/venta/tandil/"),
@@ -47,7 +37,24 @@ SEARCH_URLS = [
 
 MAX_PAGES = 3          # máximo de páginas por combinación (48 items/página)
 PAGE_SIZE = 48
-DELAY_BETWEEN_REQUESTS = 2  # segundos entre requests
+DELAY_BETWEEN_REQUESTS = 3  # segundos entre requests (más tiempo para JS)
+PAGE_LOAD_TIMEOUT = 20000   # ms timeout para carga inicial
+PAGE_JS_WAIT = 8            # segundos de espera para que el JS renderice los resultados
+
+
+# ── Tipo de cambio ────────────────────────────────────────────────────────────
+
+def get_dolar_blue():
+    """Obtiene el tipo de cambio blue desde dolarapi.com. Retorna (compra, venta) o (None, None)."""
+    url = "https://dolarapi.com/v1/dolares/blue"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+            return data.get("compra"), data.get("venta")
+    except Exception as e:
+        print(f"  Advertencia: no se pudo obtener cotización blue: {e}", file=sys.stderr)
+        return None, None
 
 
 # ── Carga de credenciales ──────────────────────────────────────────────────────
@@ -64,26 +71,11 @@ def load_env():
     return env
 
 
-# ── Scraping ──────────────────────────────────────────────────────────────────
-
-def fetch_html(url):
-    req = urllib.request.Request(url, headers=HEADERS)
-    try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            return resp.read().decode("utf-8")
-    except urllib.error.HTTPError as e:
-        print(f"  HTTP {e.code} para {url}", file=sys.stderr)
-        return None
-    except Exception as e:
-        print(f"  Error fetching {url}: {e}", file=sys.stderr)
-        return None
-
+# ── Extracción de datos del HTML ───────────────────────────────────────────────
 
 def extract_thumbnail_map(html):
     """Extrae el mapa {MLA_ID: thumbnail_url} del JSON embebido en el HTML de ML."""
     thumb_map = {}
-    # ML embute el estado de la página en un script _n.ctx.r={...}
-    # que contiene cada item con su campo "thumbnail"
     script_blocks = re.findall(r'<script[^>]*>(.*?)</script>', html, re.DOTALL)
     for block in script_blocks:
         if '"thumbnail"' not in block or '"id":"MLA' not in block:
@@ -106,7 +98,6 @@ def extract_polycards(html):
     pattern = re.compile(r'\{"id":"POLYCARD","state":"VISIBLE","polycard":\{')
     for match in pattern.finditer(html):
         start = match.start()
-        # Extraer el JSON completo del POLYCARD usando balance de llaves
         depth = 0
         end = start
         for i, ch in enumerate(html[start:], start):
@@ -137,15 +128,12 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
     url_path = meta.get("url", "")
     url = f"https://{url_path}" if url_path and not url_path.startswith("http") else url_path
 
-    # Indexar componentes por tipo
     comp_by_type = {}
     for c in components:
         comp_by_type[c.get("type")] = c
 
-    # Título
     titulo = comp_by_type.get("title", {}).get("title", {}).get("text", "")
 
-    # Tipología y operación desde headline
     headline_text = comp_by_type.get("headline", {}).get("headline", {}).get("text", "").lower()
     tipologia = tipologia_default
     operacion = operacion_default
@@ -159,14 +147,15 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
                 tipologia = t
                 break
 
-    # Precio (solo USD por ahora)
     precio_usd = None
+    precio_ars = None
     price_comp = comp_by_type.get("price", {}).get("price", {})
     current_price = price_comp.get("current_price", {})
     if current_price.get("currency") == "USD":
         precio_usd = current_price.get("value")
+    elif current_price.get("currency") == "ARS":
+        precio_ars = current_price.get("value")
 
-    # Atributos: ambientes, baños, m²
     dormitorios = None
     metros_totales = None
     cochera = False
@@ -174,15 +163,13 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
     attrs = comp_by_type.get("attributes_list", {}).get("attributes_list", {}).get("texts", [])
     for attr in attrs:
         attr_lower = attr.lower()
-        # Dormitorios / ambientes
         m = re.search(r"(\d+)\s+amb", attr_lower)
         if m:
             ambientes = int(m.group(1))
-            dormitorios = max(0, ambientes - 1)  # ambientes = dormitorios + sala
+            dormitorios = max(0, ambientes - 1)
         m = re.search(r"(\d+)\s+dorm", attr_lower)
         if m:
             dormitorios = int(m.group(1))
-        # Metros cubiertos o totales
         m = re.search(r"([\d,.]+)\s*m²", attr_lower)
         if m:
             val_str = m.group(1).replace(",", ".")
@@ -190,11 +177,9 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
                 metros_totales = float(val_str)
             except ValueError:
                 pass
-        # Cochera
         if "cochera" in attr_lower:
             cochera = True
 
-    # Zona: simplificada a "Tandil"
     zona = "Tandil"
     location_text = comp_by_type.get("location", {}).get("location", {}).get("text", "")
     if location_text:
@@ -210,6 +195,8 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
         "operacion": operacion,
         "zona": zona,
         "precio_usd": precio_usd,
+        "precio_ars": precio_ars,
+        "tipo_cambio_usd": None,
         "dormitorios": dormitorios,
         "metros_totales": metros_totales,
         "cochera": cochera,
@@ -219,47 +206,201 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
 
 
 def has_next_page(html, next_offset):
-    """Retorna True si el HTML contiene un link a la página con next_offset."""
     return f"_Desde_{next_offset}" in html
+
+
+# ── Scraping con Playwright ────────────────────────────────────────────────────
+
+def fetch_html_playwright(page, url):
+    """Usa una página Playwright ya abierta para navegar y obtener el HTML."""
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT)
+        # Esperar que el JS renderice los resultados (supera el micro-landing challenge)
+        time.sleep(PAGE_JS_WAIT)
+        # set_default_timeout garantiza que page.content() no cuelgue indefinidamente
+        page.set_default_timeout(PAGE_LOAD_TIMEOUT)
+        return page.content()
+    except Exception as e:
+        print(f"  Error Playwright en {url}: {e}", file=sys.stderr)
+        return None
 
 
 def scrape_all():
     """Scrapea todas las URLs configuradas y retorna lista de propiedades."""
+    from playwright.sync_api import sync_playwright
+    try:
+        from playwright_stealth import Stealth
+        _stealth = Stealth(
+            navigator_webdriver=True,
+            navigator_platform_override="MacIntel",
+        )
+    except ImportError:
+        _stealth = None
+
     all_props = {}  # fuente_id → prop (dedup)
 
-    for tipologia, operacion, base_url in SEARCH_URLS:
-        print(f"\n→ Scrapeando {tipologia}/{operacion}...")
-        for page in range(MAX_PAGES):
-            offset = page * PAGE_SIZE
-            url = base_url if offset == 0 else f"{base_url}_Desde_{offset + 1}"
-            print(f"  Página {page + 1}: {url}")
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--disable-features=IsolateOrigins,site-per-process",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
+        )
+        context = browser.new_context(
+            user_agent=(
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/124.0.0.0 Safari/537.36"
+            ),
+            locale="es-AR",
+            timezone_id="America/Argentina/Buenos_Aires",
+            viewport={"width": 1280, "height": 800},
+        )
+        # Ocultar flag WebDriver que ML detecta para el anti-bot challenge
+        context.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        page = context.new_page()
+        if _stealth:
+            _stealth.apply_stealth_sync(page)
+            print("  [stealth mode activo]")
 
-            html = fetch_html(url)
-            if not html:
-                break
+        for tipologia, operacion, base_url in SEARCH_URLS:
+            print(f"\n→ Scrapeando {tipologia}/{operacion}...")
+            for pg_idx in range(MAX_PAGES):
+                offset = pg_idx * PAGE_SIZE
+                url = base_url if offset == 0 else f"{base_url}_Desde_{offset + 1}"
+                print(f"  Página {pg_idx + 1}: {url}")
 
-            polycards = extract_polycards(html)
-            print(f"  → {len(polycards)} polycards encontrados")
+                html = fetch_html_playwright(page, url)
+                if not html:
+                    break
 
-            if not polycards:
-                break
+                polycards = extract_polycards(html)
+                print(f"  → {len(polycards)} polycards encontrados")
 
-            thumbnail_map = extract_thumbnail_map(html)
+                if not polycards:
+                    # Intentar extraer via JSON embebido alternativo
+                    # ML a veces embebe los items en window.__PRELOADED_STATE__
+                    alt_count = _try_extract_from_preloaded(html, all_props, tipologia, operacion)
+                    if alt_count == 0:
+                        print(f"  Sin resultados en esta página, cortando paginación")
+                        break
+                    continue
 
-            for pc in polycards:
-                prop = parse_polycard(pc, tipologia, operacion, thumbnail_map)
-                if prop:
-                    all_props[prop["fuente_id"]] = prop
+                thumbnail_map = extract_thumbnail_map(html)
 
-            # Chequear si el HTML linkea a la siguiente página antes de pedirla
-            next_offset = (page + 1) * PAGE_SIZE + 1
-            if not has_next_page(html, next_offset):
-                break
+                for pc in polycards:
+                    prop = parse_polycard(pc, tipologia, operacion, thumbnail_map)
+                    if prop:
+                        all_props[prop["fuente_id"]] = prop
 
-            if page < MAX_PAGES - 1:
-                time.sleep(DELAY_BETWEEN_REQUESTS)
+                next_offset = (pg_idx + 1) * PAGE_SIZE + 1
+                if not has_next_page(html, next_offset):
+                    break
+
+                if pg_idx < MAX_PAGES - 1:
+                    time.sleep(DELAY_BETWEEN_REQUESTS)
+
+        browser.close()
 
     return list(all_props.values())
+
+
+def _try_extract_from_preloaded(html, all_props, tipologia, operacion):
+    """
+    Extracción alternativa desde window.__PRELOADED_STATE__ o similar JSON embebido.
+    Retorna la cantidad de items extraídos.
+    """
+    count = 0
+    # Buscar resultados en __PRELOADED_STATE__
+    m = re.search(r'window\.__PRELOADED_STATE__\s*=\s*(\{.+?\});\s*</script>', html, re.DOTALL)
+    if not m:
+        # Buscar en script type="application/ld+json"
+        ld_blocks = re.findall(r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', html, re.DOTALL)
+        for block in ld_blocks:
+            try:
+                data = json.loads(block)
+                if isinstance(data, dict) and data.get("@type") == "ItemList":
+                    for item in data.get("itemListElement", []):
+                        prop = _parse_ld_item(item, tipologia, operacion)
+                        if prop:
+                            all_props[prop["fuente_id"]] = prop
+                            count += 1
+            except Exception:
+                pass
+        return count
+
+    try:
+        state = json.loads(m.group(1))
+        results = (
+            state.get("initialState", {})
+                 .get("results", [])
+        )
+        for item in results:
+            prop = _parse_preloaded_item(item, tipologia, operacion)
+            if prop:
+                all_props[prop["fuente_id"]] = prop
+                count += 1
+    except Exception:
+        pass
+
+    return count
+
+
+def _parse_preloaded_item(item, tipologia, operacion):
+    """Parsea un item del __PRELOADED_STATE__."""
+    fuente_id = item.get("id", "")
+    if not fuente_id or not fuente_id.startswith("MLA"):
+        return None
+    currency = item.get("currency_id")
+    raw_price = item.get("price")
+    return {
+        "fuente": "mercadolibre",
+        "fuente_id": fuente_id,
+        "url": item.get("permalink", ""),
+        "tipologia": tipologia,
+        "operacion": operacion,
+        "zona": item.get("location", {}).get("city_name", "Tandil"),
+        "precio_usd": raw_price if currency == "USD" else None,
+        "precio_ars": raw_price if currency == "ARS" else None,
+        "tipo_cambio_usd": None,
+        "dormitorios": None,
+        "metros_totales": None,
+        "cochera": False,
+        "titulo": item.get("title", ""),
+        "imagen_url": item.get("thumbnail", ""),
+    }
+
+
+def _parse_ld_item(item, tipologia, operacion):
+    """Parsea un item de JSON-LD."""
+    url = item.get("url", "")
+    fuente_id = ""
+    m = re.search(r'MLA(\d+)', url)
+    if m:
+        fuente_id = f"MLA{m.group(1)}"
+    if not fuente_id:
+        return None
+    return {
+        "fuente": "mercadolibre",
+        "fuente_id": fuente_id,
+        "url": url,
+        "tipologia": tipologia,
+        "operacion": operacion,
+        "zona": "Tandil",
+        "precio_usd": None,
+        "precio_ars": None,
+        "tipo_cambio_usd": None,
+        "dormitorios": None,
+        "metros_totales": None,
+        "cochera": False,
+        "titulo": item.get("name", ""),
+        "imagen_url": item.get("image", ""),
+    }
 
 
 # ── Supabase Upsert ────────────────────────────────────────────────────────────
@@ -272,7 +413,6 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
 
     now = datetime.now(timezone.utc).isoformat()
 
-    # Agregar ultima_vez_visto a todos
     for p in props:
         p["ultima_vez_visto"] = now
 
@@ -288,10 +428,11 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
         print(f"\n[DRY RUN] Se insertarían/actualizarían {len(props)} propiedades")
         print("Muestra (primeras 3):")
         for p in props[:3]:
-            print(f"  {p['fuente_id']}: {p['titulo'][:60]} | {p['precio_usd']} USD")
+            precio_str = (f"USD {p['precio_usd']}" if p.get("precio_usd")
+                          else f"ARS {p.get('precio_ars')} → USD {p.get('precio_usd')}")
+            print(f"  {p['fuente_id']}: {p['titulo'][:60]} | {precio_str}")
         return len(props), 0
 
-    # Upsert en lotes de 50
     batch_size = 50
     inserted = 0
     errors = 0
@@ -320,10 +461,9 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
 def main():
     parser = argparse.ArgumentParser(description="Scraper MercadoLibre Inmuebles → Supabase")
     parser.add_argument("--dry-run", action="store_true", help="No escribir en Supabase")
-    parser.add_argument("--tipologia", help="Solo scrapear esta tipología (ej: departamento)")
     args = parser.parse_args()
 
-    print(f"=== Scraper MercadoLibre Inmuebles ===")
+    print(f"=== Scraper MercadoLibre Inmuebles (Playwright) ===")
     print(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     env = load_env()
@@ -336,6 +476,20 @@ def main():
 
     props = scrape_all()
     print(f"\nTotal propiedades scraped: {len(props)}")
+
+    # Obtener cotización blue y convertir precios ARS → USD
+    dolar_compra, dolar_venta = get_dolar_blue()
+    if dolar_venta:
+        print(f"Dólar blue: compra ${dolar_compra} / venta ${dolar_venta}")
+        convertidas = 0
+        for p in props:
+            if p.get("precio_ars") and not p.get("precio_usd"):
+                p["precio_usd"] = round(p["precio_ars"] / dolar_venta, 2)
+                p["tipo_cambio_usd"] = dolar_venta
+                convertidas += 1
+        print(f"Propiedades convertidas ARS→USD: {convertidas}")
+    else:
+        print("Advertencia: cotización blue no disponible, precios ARS no convertidos")
 
     inserted, errors = upsert_supabase(props, supabase_url, service_key, dry_run=args.dry_run)
 

@@ -8,3 +8,15 @@ test.html
 feedback.json
 ideas.json
 paperclip-backup*
+
+# Logs de scrapers y tests (van a Drive si hacen falta)
+logs/
+*.log
+
+# Supabase CLI temporales
+supabase/.temp/
+
+# Archivos Office binarios (usar Google Drive para estos)
+*.docx
+*.xlsx
+*.pptx

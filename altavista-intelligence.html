@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Altavista Intelligence — Informe Estratégico</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:    #0B1F33;
+    --navy2:   #1F3A56;
+    --green:   #7AB591;
+    --gray:    #D9DEE3;
+    --offwhite:#F5F6F8;
+    --white:   #FFFFFF;
+    --text:    #444;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--navy); background: var(--white); }
+
+  /* PORTADA */
+  .portada {
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .portada::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(122,181,145,.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(122,181,145,.05) 0%, transparent 50%);
+  }
+  .portada-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .portada-logo {
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .portada h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 300;
+    color: #fff;
+    line-height: .95;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .portada h1 em {
+    font-style: italic;
+    color: var(--green);
+  }
+  .portada-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,.35);
+    text-transform: uppercase;
+    margin-bottom: 64px;
+    position: relative;
+  }
+  .portada-meta {
+    display: flex;
+    gap: 48px;
+    position: relative;
+  }
+  .portada-meta-item {
+    text-align: center;
+  }
+  .portada-meta-item .label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,.25);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .portada-meta-item .value {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,.6);
+  }
+  .portada-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,.1);
+    align-self: center;
+  }
+
+  /* SECCIONES */
+  .seccion {
+    padding: 96px 80px;
+    border-bottom: 1px solid var(--gray);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .seccion-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .seccion-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray);
+  }
+  .seccion h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 40px;
+    line-height: 1.1;
+    letter-spacing: -.5px;
+  }
+  .seccion h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 16px;
+    margin-top: 40px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  strong { color: var(--navy); font-weight: 500; }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: var(--offwhite);
+    border-left: 3px solid var(--green);
+    padding: 28px 32px;
+    margin: 32px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .highlight p { margin: 0; font-size: 15px; color: var(--navy); line-height: 1.7; }
+  .highlight p em { color: var(--green); font-style: normal; font-weight: 500; }
+
+  /* DARK BOX */
+  .dark-box {
+    background: var(--navy);
+    padding: 40px 48px;
+    border-radius: 4px;
+    margin: 40px 0;
+  }
+  .dark-box h3 { color: var(--green); margin-top: 0; }
+  .dark-box p { color: rgba(255,255,255,.7); }
+  .dark-box strong { color: #fff; }
+
+  /* GRID 3 COL */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .grid-item {
+    background: var(--offwhite);
+    padding: 32px 28px;
+  }
+  .grid-item .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .grid-item .title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .grid-item p {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0;
+  }
+
+  /* GRID 2 COL */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .grid-2-item {
+    background: var(--offwhite);
+    padding: 32px 28px;
+  }
+  .grid-2-item .title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .grid-2-item p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    margin: 0;
+  }
+
+  /* TABLA */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0;
+    font-size: 13px;
+  }
+  thead th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.7);
+    background: var(--navy2);
+    padding: 14px 20px;
+    text-align: left;
+    font-weight: 400;
+  }
+  tbody tr { border-bottom: 1px solid var(--gray); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td {
+    padding: 16px 20px;
+    color: var(--text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: var(--offwhite); }
+  td strong { color: var(--navy); }
+
+  /* CAPAS */
+  .capa {
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .capa-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 28px;
+    background: var(--offwhite);
+    border-bottom: 1px solid var(--gray);
+  }
+  .capa-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--green);
+    line-height: 1;
+    min-width: 32px;
+  }
+  .capa-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .capa-desc {
+    font-size: 12px;
+    color: var(--text);
+    margin-top: 4px;
+  }
+  .capa-body {
+    padding: 24px 28px;
+  }
+  .capa-body ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .capa-body ul li {
+    font-size: 12.5px;
+    color: var(--text);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .capa-body ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-size: 11px;
+  }
+
+  /* ROADMAP */
+  .roadmap {
+    margin: 40px 0;
+  }
+  .roadmap-item {
+    display: flex;
+    gap: 28px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--gray);
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-time {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    min-width: 100px;
+    padding-top: 3px;
+  }
+  .roadmap-content h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: .5px;
+  }
+  .roadmap-content p {
+    font-size: 13px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  /* DESAFÍO */
+  .desafio {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--gray);
+    align-items: flex-start;
+  }
+  .desafio:last-child { border-bottom: none; }
+  .desafio-icon {
+    font-size: 20px;
+    min-width: 36px;
+  }
+  .desafio-text h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: .5px;
+  }
+  .desafio-text p {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.7;
+  }
+  .desafio-text .respuesta {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* QUOTE */
+  .quote {
+    border-left: 3px solid var(--navy);
+    padding: 24px 32px;
+    margin: 40px 0;
+    background: var(--offwhite);
+  }
+  .quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.4;
+    font-style: italic;
+    margin: 0;
+  }
+  .quote cite {
+    display: block;
+    margin-top: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(11,31,51,.4);
+    font-style: normal;
+  }
+
+  /* FLYWHEEL */
+  .flywheel {
+    background: var(--navy);
+    border-radius: 4px;
+    padding: 48px;
+    margin: 40px 0;
+    text-align: center;
+  }
+  .flywheel-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .flywheel-step {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 4px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .flywheel-step .step-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,.8);
+    line-height: 1.5;
+  }
+  .flywheel-arrow {
+    font-size: 18px;
+    color: var(--green);
+  }
+  .flywheel > p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    padding: 64px 80px;
+    text-align: center;
+  }
+  footer p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,.25);
+    text-transform: uppercase;
+    margin: 0;
+  }
+  footer .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: rgba(255,255,255,.5);
+    letter-spacing: 4px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .seccion { padding: 64px 28px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .capa-body ul { grid-template-columns: 1fr; }
+    .flywheel-steps { flex-direction: column; }
+    .flywheel-arrow { transform: rotate(90deg); }
+    footer { padding: 48px 28px; }
+    .portada-meta { flex-direction: column; gap: 24px; }
+    .portada-divider { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="portada">
+  <div class="portada-eyebrow">Documento Estratégico Confidencial</div>
+  <div class="portada-logo">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="32" cy="32" rx="30" ry="30" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <ellipse cx="32" cy="32" rx="20" ry="20" stroke="rgba(122,181,145,0.4)" stroke-width="1"/>
+      <circle cx="32" cy="32" r="4" fill="#7AB591"/>
+    </svg>
+  </div>
+  <h1>Altavista<br><em>Intelligence</em></h1>
+  <div class="portada-sub">La infraestructura de datos del mercado inmobiliario argentino</div>
+  <div class="portada-meta">
+    <div class="portada-meta-item">
+      <span class="label">Documento</span>
+      <span class="value">Informe Estratégico</span>
+    </div>
+    <div class="portada-divider"></div>
+    <div class="portada-meta-item">
+      <span class="label">Versión</span>
+      <span class="value">Mayo 2026</span>
+    </div>
+    <div class="portada-divider"></div>
+    <div class="portada-meta-item">
+      <span class="label">Mercado</span>
+      <span class="value">Argentina</span>
+    </div>
+  </div>
+</div>
+
+<!-- 1. RESUMEN EJECUTIVO -->
+<div class="seccion">
+  <div class="seccion-label">01 — Resumen Ejecutivo</div>
+  <h2>El mercado inmobiliario argentino opera a ciegas</h2>
+
+  <p>Cada año se escrituran decenas de miles de propiedades en Argentina. Compradores, vendedores y agentes toman decisiones que involucran ahorros de toda una vida — sin datos reales. Los precios que circulan son precios de publicación: lo que el vendedor pide. No lo que se pagó.</p>
+
+  <p>La brecha entre lo que se pide y lo que se paga puede ser del 15% al 40% dependiendo de la zona, el tipo de propiedad y el contexto macroeconómico. Nadie la mide sistemáticamente. Nadie la publica. Nadie la convierte en inteligencia útil para tomar decisiones.</p>
+
+  <div class="highlight">
+    <p><em>Altavista Intelligence</em> es la primera plataforma de inteligencia del mercado inmobiliario argentino basada en datos de transacciones reales — no de publicaciones. Su modelo replica y adapta el sistema MLS que transformó el mercado estadounidense, con una capa de inteligencia artificial diseñada para el contexto particular de Argentina.</p>
+  </div>
+
+  <p>El resultado: agentes que cierran más rápido, vendedores que ponen precios correctos desde el día uno, compradores que negocian con información real, y bancos que valúan propiedades con precisión para otorgar crédito hipotecario.</p>
+</div>
+
+<!-- 2. EL PROBLEMA -->
+<div class="seccion">
+  <div class="seccion-label">02 — El Problema</div>
+  <h2>Tres fallas estructurales que paralizan el mercado</h2>
+
+  <div class="grid-3">
+    <div class="grid-item">
+      <div class="num">01</div>
+      <div class="title">Asimetría de información</div>
+      <p>Los precios de publicación no reflejan los precios de cierre. Las escrituras tampoco — parte de las transacciones se declara por debajo del valor real. El comprador y el vendedor nunca saben cuánto valen de verdad las cosas.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">02</div>
+      <div class="title">Agentes desinformados</div>
+      <p>Los asesores inmobiliarios no tienen acceso a herramientas de inteligencia de mercado. Tazan por intuición, negocian sin datos y no pueden explicarle a un cliente por qué un precio es correcto o incorrecto.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">03</div>
+      <div class="title">Bancos sin datos confiables</div>
+      <p>Con la reactivación del crédito hipotecario, los bancos necesitan valuar propiedades para originar préstamos. El proceso actual es lento, caro e inconsistente. No existe una fuente de datos confiable a la que conectarse.</p>
+    </div>
+  </div>
+
+  <p>El resultado de estas tres fallas combinadas: operaciones que tardan meses en cerrarse, propiedades sobrevaluadas que nunca se venden, compradores que pagan más de lo que deberían, y vendedores que cobran menos de lo que podrían. El mercado pierde eficiencia a gran escala.</p>
+
+  <div class="dark-box">
+    <h3>El dato que falta</h3>
+    <p>En Argentina existen plataformas que agregan precios de <strong>publicación</strong> (ZonaProp, ArgenProp, MercadoLibre). Existen portales de <strong>búsqueda</strong> con AI (Roomix). No existe ninguna plataforma que sistematice precios de <strong>cierre real</strong> y los convierta en inteligencia de mercado accionable.</p>
+    <p style="margin-top:12px;">Ese es el espacio que ocupa Altavista Intelligence.</p>
+  </div>
+</div>
+
+<!-- 3. QUÉ ES EL MLS -->
+<div class="seccion">
+  <div class="seccion-label">03 — El Modelo</div>
+  <h2>Qué es el MLS y cómo transformó el mercado estadounidense</h2>
+
+  <p>El <strong>Multiple Listing Service (MLS)</strong> es el sistema de base de datos compartida que sustenta el mercado inmobiliario de Estados Unidos. Nació en 1885, cuando corredores inmobiliarios en San Diego comenzaron a reunirse para compartir información de propiedades bajo un principio simple:</p>
+
+  <div class="quote">
+    <p>"Ayudame a vender mi inventario y yo te ayudo a vender el tuyo."</p>
+    <cite>Principio fundacional del MLS — San Diego, 1885</cite>
+  </div>
+
+  <h3>Cómo funciona</h3>
+  <p>Cuando un vendedor trabaja con un agente matriculado, el agente carga la propiedad en el MLS. Esa información — precio, características, estado, historial — se vuelve visible para todos los miembros del sistema. Cuando se cierra la operación, el precio real de cierre también queda registrado.</p>
+
+  <p>El resultado es una base de datos de transacciones reales que crece con cada operación. Hoy el MLS estadounidense es la referencia que utilizan:</p>
+
+  <div class="grid-2">
+    <div class="grid-2-item">
+      <div class="title">Agentes e Inmobiliarias</div>
+      <p>Para tasar propiedades con comparables reales, negociar con datos y justificar precios ante compradores y vendedores.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Bancos y Financieras</div>
+      <p>Para valuar propiedades antes de otorgar créditos hipotecarios. Sin datos de MLS, el sistema de hipotecas estadounidense no existiría tal como lo conocemos.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Inversores y Desarrolladoras</div>
+      <p>Para analizar mercados, identificar zonas de crecimiento y tomar decisiones de inversión basadas en evidencia.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Portales Públicos</div>
+      <p>Zillow, Realtor.com y otros portales consumen datos del MLS para mostrar estimaciones de valor al público general.</p>
+    </div>
+  </div>
+
+  <h3>El tamaño del impacto</h3>
+  <p>CoStar Group — la empresa que sistematizó los datos del mercado inmobiliario comercial estadounidense — vale hoy <strong>$30 billones de dólares</strong>. Construyeron ese negocio en 38 años, invirtiendo más de $5 billones en recolección y verificación de datos. Su moat: el mercado no puede operar sin sus datos. La tasa de renovación de sus contratos supera el 93% anual.</p>
+
+  <h3>Por qué no existe en Argentina</h3>
+  <p>El mercado inmobiliario argentino opera de manera fragmentada. Cada inmobiliaria maneja su propio inventario de manera aislada. No existe un sistema de datos compartidos. Las únicas plataformas existentes son portales de publicación donde cada inmobiliaria paga para listar sus propiedades — sin compartir datos de cierre, sin colaboración, sin inteligencia colectiva.</p>
+
+  <p>El equivalente argentino del MLS no existe. Altavista Intelligence lo construye.</p>
+</div>
+
+<!-- 4. ALTAVISTA INTELLIGENCE -->
+<div class="seccion">
+  <div class="seccion-label">04 — El Producto</div>
+  <h2>Altavista Intelligence — Qué es y cómo funciona</h2>
+
+  <p>Altavista Intelligence no es un portal de publicaciones ni una aplicación de búsqueda. Es una <strong>plataforma de datos e inteligencia</strong> que procesa información de transacciones reales del mercado inmobiliario argentino y la convierte en herramientas concretas para agentes, inmobiliarias, inversores y bancos.</p>
+
+  <p>Funciona en dos dimensiones simultáneas:</p>
+
+  <div class="grid-2">
+    <div class="grid-2-item">
+      <div class="title">Altavista Inmobiliaria</div>
+      <p><strong>El laboratorio.</strong> Una agencia operativa en Tandil que cierra transacciones reales. Cada operación alimenta la base de datos con precios de cierre reales, tiempos de negociación, brechas precio pedido / precio pagado. Es el primer contribuidor de datos y la prueba de concepto del modelo.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Altavista Intelligence</div>
+      <p><strong>El producto.</strong> La plataforma B2B que procesa todos los datos y los convierte en inteligencia. Las inmobiliarias que se suman contribuyen sus transacciones y a cambio acceden a las herramientas. Cuantas más inmobiliarias participan, más precisa es la inteligencia para todas.</p>
+    </div>
+  </div>
+
+  <h3>Las cuatro capas de datos</h3>
+
+  <div class="capa">
+    <div class="capa-header">
+      <div class="capa-num">1</div>
+      <div>
+        <div class="capa-title">Precios</div>
+        <div class="capa-desc">El dato más escaso y más valioso del mercado argentino</div>
+      </div>
+    </div>
+    <div class="capa-body">
+      <ul>
+        <li>Precio de cierre real por zona y tipología</li>
+        <li>Precio por m² real (no el del aviso)</li>
+        <li>Brecha de negociación por zona: cuánto se negocia sobre el precio pedido</li>
+        <li>Evolución histórica de precios de cierre</li>
+        <li>Diferencia entre precio de publicación y precio de escrituración</li>
+        <li>Tendencia: sube, baja o estable por barrio y tipología</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="capa">
+    <div class="capa-header">
+      <div class="capa-num">2</div>
+      <div>
+        <div class="capa-title">Mercado</div>
+        <div class="capa-desc">La salud y el ritmo del mercado en tiempo real</div>
+      </div>
+    </div>
+    <div class="capa-body">
+      <ul>
+        <li>Días en mercado por tipología y zona</li>
+        <li>Tasa de absorción: qué tan rápido se consume el inventario</li>
+        <li>Stock disponible vs demanda activa en tiempo real</li>
+        <li>Zonas con mayor liquidez vs zonas con stock estancado</li>
+        <li>Historial de reducciones de precio por propiedad</li>
+        <li>Velocidad de cierre por rango de precio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="capa">
+    <div class="capa-header">
+      <div class="capa-num">3</div>
+      <div>
+        <div class="capa-title">Valuación (AVM)</div>
+        <div class="capa-desc">Automated Valuation Model — tasación AI instantánea para cualquier propiedad</div>
+      </div>
+    </div>
+    <div class="capa-body">
+      <ul>
+        <li>Rango de precio estimado con nivel de confianza</li>
+        <li>Comparables: las propiedades más similares que cerraron en 90 días</li>
+        <li>Score de inversión: rentabilidad estimada y potencial de valorización</li>
+        <li>Tiempo de venta estimado al precio sugerido</li>
+        <li>Precio de publicación recomendado vs precio de cierre esperado</li>
+        <li>Justificación del valor: qué factores suben o bajan el precio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="capa">
+    <div class="capa-header">
+      <div class="capa-num">4</div>
+      <div>
+        <div class="capa-title">Macro Contextualizado</div>
+        <div class="capa-desc">Variables macroeconómicas traducidas a impacto local concreto</div>
+      </div>
+    </div>
+    <div class="capa-body">
+      <ul>
+        <li>Impacto del tipo de cambio en precios de cierre por zona</li>
+        <li>Efecto del crédito hipotecario disponible en la demanda local</li>
+        <li>Alerta temprana de cambios de tendencia por zona</li>
+        <li>Correlación inflación / precios en USD por tipología</li>
+        <li>Análisis de demanda por perfil de comprador (primera vivienda, inversión, upgrade)</li>
+        <li>Comparativa entre mercados: Tandil vs Mar del Plata vs CABA</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 5. FUENTES DE DATOS -->
+<div class="seccion">
+  <div class="seccion-label">05 — Arquitectura de Datos</div>
+  <h2>De dónde vienen los datos y por qué son confiables</h2>
+
+  <p>La fortaleza de cualquier plataforma de inteligencia depende de la calidad de sus fuentes. Altavista Intelligence combina cinco fuentes de datos con niveles distintos de confiabilidad y complementariedad.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Fuente</th>
+        <th>Qué aporta</th>
+        <th>Confiabilidad</th>
+        <th>Escala</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Altavista Inmobiliaria</strong></td>
+        <td>Precios de cierre reales de operaciones propias</td>
+        <td>Muy alta — dato primario</td>
+        <td>Crece con el volumen operativo</td>
+      </tr>
+      <tr>
+        <td><strong>Red de inmobiliarias aliadas</strong></td>
+        <td>Transacciones de socios: precio acordado, días en mercado, brecha</td>
+        <td>Alta — dato reportado verificado</td>
+        <td>Crece con cada nueva inmobiliaria</td>
+      </tr>
+      <tr>
+        <td><strong>Scraper propio</strong></td>
+        <td>Precios de publicación, historial de reducciones, días de publicación</td>
+        <td>Media — dato de publicación</td>
+        <td>Nacional, automatizado</td>
+      </tr>
+      <tr>
+        <td><strong>Registros públicos</strong></td>
+        <td>Escrituras, valuaciones fiscales ARBA, datos catastrales</td>
+        <td>Media — puede estar subvaluado</td>
+        <td>Histórico completo</td>
+      </tr>
+      <tr>
+        <td><strong>Variables macro</strong></td>
+        <td>BCRA, INDEC, tipo de cambio, tasas, crédito hipotecario</td>
+        <td>Alta — fuentes oficiales</td>
+        <td>Nacional, tiempo real</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>El problema de las escrituras y cómo lo resolvemos</h3>
+  <p>En Argentina, una parte significativa de las transacciones se declara por debajo del valor real en escritura para reducir la carga impositiva. Esto significa que los datos públicos de escrituración no reflejan el precio verdadero de la transacción.</p>
+
+  <p>Altavista resuelve esto de dos maneras:</p>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <div class="grid-2-item">
+      <div class="title">Mediación directa</div>
+      <p>Cuando la operación pasa por la plataforma de Altavista, el sistema registra el precio acordado entre las partes — no solo lo que dice la escritura. Esto incluye el precio negociado real, la composición del pago y cualquier diferencia entre precio declarado y precio efectivo.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Modelo de triangulación</div>
+      <p>Para propiedades donde Altavista no medió la transacción, el AVM triangula el precio real usando: tiempo hasta baja del cartel, historial de reducciones, comparables verificados, brecha histórica de la zona, y demanda activa registrada en la plataforma.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 6. MODELO DE NEGOCIO -->
+<div class="seccion">
+  <div class="seccion-label">06 — Modelo de Negocio</div>
+  <h2>Cómo se monetiza la inteligencia</h2>
+
+  <p>Altavista Intelligence opera con un modelo B2B de suscripción con tres niveles de acceso. El modelo está diseñado para que el incentivo de cada participante esté alineado con el crecimiento de la red: quien más aporta, más recibe.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Segmento</th>
+        <th>Producto</th>
+        <th>Modelo de cobro</th>
+        <th>Propuesta de valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Agentes independientes</strong></td>
+        <td>Dashboard Pro</td>
+        <td>Suscripción mensual por agente</td>
+        <td>Tasar con precisión, negociar con datos, cerrar más rápido</td>
+      </tr>
+      <tr>
+        <td><strong>Inmobiliarias</strong></td>
+        <td>Dashboard Pro + widget embebible</td>
+        <td>Suscripción mensual por agente activo</td>
+        <td>Herramientas que sus agentes no pueden tener por su cuenta</td>
+      </tr>
+      <tr>
+        <td><strong>Desarrolladoras e inversores</strong></td>
+        <td>Reportes de mercado + API</td>
+        <td>Suscripción anual o pago por reporte</td>
+        <td>Inteligencia para decisiones de inversión y desarrollo</td>
+      </tr>
+      <tr>
+        <td><strong>Bancos y financieras</strong></td>
+        <td>Valuaciones certificadas (AVM bancario)</td>
+        <td>Contrato anual enterprise + por valuación</td>
+        <td>Originar créditos hipotecarios con datos confiables y velocidad</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>El canal de acceso gratuito</h3>
+  <p>Para compradores y vendedores individuales, Altavista ofrece una tasación básica gratuita vía chatbot. Este acceso free sirve como herramienta de captación de leads que alimenta el negocio de la agencia. El usuario gratuito no paga, pero genera datos y puede convertirse en cliente de la agencia.</p>
+
+  <div class="dark-box">
+    <h3>El incentivo de las inmobiliarias aliadas</h3>
+    <p>Las inmobiliarias que se suman a la red contribuyen sus datos de cierre y a cambio acceden a la plataforma completa. El mecanismo es similar al MLS: <strong>quien no contribuye datos no accede a los datos de los demás.</strong> Esto crea el incentivo correcto para que la red crezca con calidad.</p>
+    <p style="margin-top:12px;">Para la primera inmobiliaria de cada ciudad que se suma, la ventaja es mayor: accede a los datos que otros aún no tienen. El early adopter gana más que el rezagado.</p>
+  </div>
+</div>
+
+<!-- 7. EL FLYWHEEL -->
+<div class="seccion">
+  <div class="seccion-label">07 — Escalabilidad</div>
+  <h2>El flywheel que hace que el sistema se autoalimente</h2>
+
+  <p>La razón por la cual Altavista Intelligence puede escalar sin límite geográfico es el efecto flywheel: cada participante que se suma mejora el producto para todos los demás, lo que atrae más participantes.</p>
+
+  <div class="flywheel">
+    <p>El ciclo de crecimiento</p>
+    <div class="flywheel-steps">
+      <div class="flywheel-step">
+        <div class="step-text">Más inmobiliarias<br>y agentes se suman</div>
+      </div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-step">
+        <div class="step-text">Más datos de<br>transacciones reales</div>
+      </div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-step">
+        <div class="step-text">AVM más preciso,<br>mejor inteligencia</div>
+      </div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-step">
+        <div class="step-text">Plataforma más<br>valiosa</div>
+      </div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-step">
+        <div class="step-text">Más inmobiliarias<br>quieren entrar</div>
+      </div>
+    </div>
+  </div>
+
+  <p>Este modelo es el mismo que construyeron Waze (datos de tráfico), CoStar (datos de real estate comercial) y las redes MLS en EEUU. El primer mover que alcanza masa crítica de datos hace que entrar tarde sea cada vez menos viable para un competidor.</p>
+
+  <h3>La expansión geográfica</h3>
+  <p>Altavista no necesita operar directamente en cada mercado. El modelo escala a través de agentes e inmobiliarias locales que se incorporan a la red y contribuyen sus datos. Altavista aporta la tecnología y la inteligencia; el conocimiento local lo aporta la red.</p>
+
+  <p>La secuencia de expansión: <strong>Tandil → ciudades medianas de Buenos Aires → CABA → Latam.</strong></p>
+</div>
+
+<!-- 8. POR QUÉ ES DIFÍCIL DE COPIAR -->
+<div class="seccion">
+  <div class="seccion-label">08 — Ventaja Competitiva</div>
+  <h2>Por qué Altavista Intelligence es difícil de replicar</h2>
+
+  <p>En un mundo donde la tecnología se puede copiar, el moat real de Altavista no es el código. Es la combinación de cuatro factores que se refuerzan mutuamente y que requieren tiempo para construirse.</p>
+
+  <div class="grid-2">
+    <div class="grid-2-item">
+      <div class="title">Primer mover en datos</div>
+      <p>Los datos de transacciones reales se acumulan con el tiempo. Dos años de datos valen diez veces más que seis meses. Quien empieza primero y mantiene el ritmo construye una ventaja que se amplía, no se reduce, con el tiempo.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Confianza operativa</div>
+      <p>Los agentes comparten datos reales de cierre solo con quien opera en el mercado y tiene credibilidad. Un tech outsider no puede llegar a pedirles esa información. Altavista la tiene porque opera como inmobiliaria desde adentro del mercado.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Red con switching costs</div>
+      <p>Una vez que una inmobiliaria integra sus operaciones a la plataforma y depende de sus datos para tasar y negociar, el costo de cambiar es alto. Los datos históricos propios quedan en la plataforma; los comparables que usan son los de la red.</p>
+    </div>
+    <div class="grid-2-item">
+      <div class="title">Potencial certificación bancaria</div>
+      <p>Si Altavista logra que bancos integren su AVM para originar créditos hipotecarios, esa integración crea un moat regulatorio y técnico que hace casi imposible ser desplazado. Una vez que un banco certifica una fuente de datos, no la cambia fácilmente.</p>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p><em>La pregunta correcta no es "¿puede la AI reemplazarnos?"</em> El chatbot y el AVM son tecnología que otros pueden replicar. Lo que no se puede replicar rápidamente es la base de datos de transacciones reales, la red de inmobiliarias que la alimenta, y la confianza que se tarda años en construir. Altavista usa AI como interfaz; el moat real está en los datos que la AI procesa.</p>
+  </div>
+</div>
+
+<!-- 9. DESAFÍOS -->
+<div class="seccion">
+  <div class="seccion-label">09 — Desafíos</div>
+  <h2>Los obstáculos reales y cómo los abordamos</h2>
+
+  <div class="desafio">
+    <div class="desafio-icon">⚠</div>
+    <div class="desafio-text">
+      <h4>Las escrituras no reflejan el precio real</h4>
+      <p>En Argentina, parte de las transacciones se declara por debajo del valor real para reducir impuestos. Esto contamina los datos públicos y hace que los precios de escrituración no sean confiables.</p>
+      <div class="respuesta">Solución: la plataforma registra el precio acordado entre las partes cuando media la operación, independientemente de lo que diga la escritura. Para el resto, el AVM triangula el precio real usando múltiples señales.</div>
+    </div>
+  </div>
+
+  <div class="desafio">
+    <div class="desafio-icon">⚠</div>
+    <div class="desafio-text">
+      <h4>Las inmobiliarias no están acostumbradas a compartir datos</h4>
+      <p>La cultura del mercado inmobiliario argentino es de información reservada. Muchas inmobiliarias ven sus listings como ventaja competitiva y son reacias a compartir datos de cierre.</p>
+      <div class="respuesta">Solución: el modelo de reciprocidad. Los datos se comparten de manera anonimizada y agregada. El incentivo es claro: quien aporta datos accede a los datos de todos los demás. La primera inmobiliaria de cada ciudad tiene la mayor ventaja.</div>
+    </div>
+  </div>
+
+  <div class="desafio">
+    <div class="desafio-icon">⚠</div>
+    <div class="desafio-text">
+      <h4>El cold start problem</h4>
+      <p>Al principio hay pocos datos, lo que hace que el AVM sea menos preciso, lo que hace que sea más difícil convencer a las primeras inmobiliarias de sumarse.</p>
+      <div class="respuesta">Solución: Altavista Inmobiliaria es el primer contribuidor. Tandil es el mercado piloto donde se construye la primera masa crítica de datos antes de expandir. El scraper propio complementa con datos de publicación mientras se acumulan datos de cierre.</div>
+    </div>
+  </div>
+
+  <div class="desafio">
+    <div class="desafio-icon">⚠</div>
+    <div class="desafio-text">
+      <h4>Contexto macroeconómico argentino</h4>
+      <p>La inflación, el tipo de cambio variable y los cambios regulatorios frecuentes hacen que los datos históricos pierdan vigencia rápidamente y que el AVM necesite actualizaciones constantes.</p>
+      <div class="respuesta">Solución: el modelo de valuación incorpora variables macro en tiempo real y pondera los datos recientes más que los históricos. Esta complejidad es, paradójicamente, una ventaja competitiva: quien la resuelve bien en Argentina tiene una solución que puede exportar a toda Latam.</div>
+    </div>
+  </div>
+
+  <div class="desafio">
+    <div class="desafio-icon">⚠</div>
+    <div class="desafio-text">
+      <h4>Marco regulatorio de los martilleros</h4>
+      <p>En Argentina, la intermediación inmobiliaria requiere un martillero matriculado. Esto puede generar resistencia de los colegios profesionales a un modelo que usa AI.</p>
+      <div class="respuesta">Solución: Altavista se posiciona como proveedor tecnológico para martilleros matriculados, no como reemplazante. La tecnología potencia al profesional humano; no lo desplaza. Esto abre la puerta a integrar el sistema con los colegios de martilleros como aliados.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. COMPETIDORES -->
+<div class="seccion">
+  <div class="seccion-label">10 — Mercado y Competidores</div>
+  <h2>El ecosistema actual y dónde se ubica Altavista</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Jugador</th>
+        <th>Qué resuelven</th>
+        <th>Qué no resuelven</th>
+        <th>Relación con Altavista</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ZonaProp / ArgenProp</strong></td>
+        <td>Publicación de propiedades. Máxima audiencia de compradores.</td>
+        <td>Datos de cierre, inteligencia de mercado, asesoría.</td>
+        <td>Canal de distribución potencial. Altavista puede alimentarlos con datos.</td>
+      </tr>
+      <tr>
+        <td><strong>Roomix</strong></td>
+        <td>Búsqueda AI para compradores. Agrega todos los portales en uno.</td>
+        <td>La transacción. No ayuda a vender, solo a buscar. No tiene datos de cierre.</td>
+        <td>Alianza estratégica posible. Tienen datos de demanda; Altavista tiene datos de cierre.</td>
+      </tr>
+      <tr>
+        <td><strong>Mudafy</strong></td>
+        <td>Transacción completa con especialistas humanos.</td>
+        <td>Inteligencia de mercado sistematizada. Es human-first, no data-first.</td>
+        <td>Competidor en transacciones, pero no en el producto de inteligencia B2B.</td>
+      </tr>
+      <tr>
+        <td><strong>Inmobiliarias tradicionales</strong></td>
+        <td>Relaciones, confianza local, cartera de clientes.</td>
+        <td>Datos, velocidad, inteligencia de mercado, herramientas modernas.</td>
+        <td>Cliente objetivo de Altavista Intelligence. Las herramientas son para ellas.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <p><em>El espacio vacío:</em> ningún jugador actual del mercado argentino provee inteligencia de datos de transacciones reales en formato B2B. Altavista no compite con los portales (ellos son distribución), no compite con las inmobiliarias (son sus clientes), y complementa a Roomix (que tiene el tráfico del comprador). El espacio está disponible.</p>
+  </div>
+</div>
+
+<!-- 11. ROADMAP -->
+<div class="seccion">
+  <div class="seccion-label">11 — Roadmap</div>
+  <h2>La secuencia de construcción</h2>
+
+  <div class="roadmap">
+    <div class="roadmap-item">
+      <div class="roadmap-time">Mes 1 – 2</div>
+      <div class="roadmap-content">
+        <h4>Fundación: Legal + Producto + Data</h4>
+        <p>Constitución legal de Altavista Intelligence. Definición técnica del producto (stack, modelo de datos, AVM v1). Las primeras transacciones de la agencia en Tandil empiezan a alimentar la base. Scraper activo en todos los portales.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-time">Mes 2 – 3</div>
+      <div class="roadmap-content">
+        <h4>MVP: Dashboard + Chatbot</h4>
+        <p>Lanzamiento del dashboard web para agentes con acceso a datos de publicación + primeros datos de cierre. Chatbot de tasación gratuita para captura de leads de compradores y vendedores. Web de Altavista Intelligence online.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-time">Mes 3 – 6</div>
+      <div class="roadmap-content">
+        <h4>Red: primeras inmobiliarias aliadas en Tandil</h4>
+        <p>Onboarding de las primeras 5 inmobiliarias aliadas en Tandil. Cada una contribuye sus transacciones y recibe acceso al dashboard. Primera transacción cerrada 100% a través de la plataforma medida y documentada como caso de estudio.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-time">Mes 6 – 12</div>
+      <div class="roadmap-content">
+        <h4>Expansión: segunda ciudad + primeros ingresos B2B</h4>
+        <p>Replicar el modelo en una segunda ciudad (Mar del Plata u Olavarría). Primeras suscripciones mensuales de agentes e inmobiliarias. Primer acercamiento a desarrolladoras e inversores con reportes de mercado.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-time">Mes 12 – 24</div>
+      <div class="roadmap-content">
+        <h4>Escala: API + bancos + mercado nacional</h4>
+        <p>Lanzamiento de API pública para developers. Primer contrato con banco o financiera para valuaciones de crédito hipotecario. Presencia en 5 ciudades. Altavista comienza a ser citado como referencia de mercado.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-time">Año 3+</div>
+      <div class="roadmap-content">
+        <h4>El índice de referencia</h4>
+        <p>Altavista Intelligence se convierte en el índice de referencia de precios del mercado inmobiliario argentino. Expansión a Latam. Posible integración o alianza estratégica con portales y plataformas regionales.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 12. IMPLICANCIAS -->
+<div class="seccion">
+  <div class="seccion-label">12 — Implicancias</div>
+  <h2>Qué cambia en el mercado si esto funciona</h2>
+
+  <p>Un mercado con datos reales y accesibles no es el mismo mercado. Las implicancias de que Altavista Intelligence alcance masa crítica van más allá del negocio de la plataforma.</p>
+
+  <div class="grid-3">
+    <div class="grid-item">
+      <div class="num">↑</div>
+      <div class="title">Eficiencia de transacciones</div>
+      <p>Las propiedades se publican a precios más cercanos al mercado desde el día uno. Los tiempos de cierre se reducen. El mercado se vuelve más líquido.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">↑</div>
+      <div class="title">Acceso al crédito</div>
+      <p>Los bancos pueden valuar propiedades con mayor velocidad y precisión, lo que acelera el otorgamiento de créditos hipotecarios y amplía el acceso a la vivienda.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">↑</div>
+      <div class="title">Profesionalización del sector</div>
+      <p>Los agentes e inmobiliarias que acceden a datos reales toman mejores decisiones y construyen reputación en base a resultados medibles, no solo en relaciones.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">→</div>
+      <div class="title">Inversión informada</div>
+      <p>Desarrolladores e inversores pueden identificar oportunidades de mercado con datos reales en lugar de intuición. El capital fluye hacia donde los datos indican que hay demanda.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">→</div>
+      <div class="title">Transparencia de precios</div>
+      <p>A medida que más transacciones pasan por la plataforma, la brecha entre precios declarados y precios reales se reduce. El mercado gana en transparencia estructural.</p>
+    </div>
+    <div class="grid-item">
+      <div class="num">→</div>
+      <div class="title">Exportación del modelo</div>
+      <p>Argentina tiene uno de los mercados inmobiliarios más complejos de Latam. Resolver la inteligencia de datos acá crea un modelo exportable a mercados igualmente complejos en la región.</p>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>"El mercado inmobiliario argentino no tiene un problema de demanda ni de oferta. Tiene un problema de información. Quien resuelve eso primero, construye la infraestructura sobre la cual opera el resto del mercado."</p>
+    <cite>Altavista Intelligence — Documento Estratégico, Mayo 2026</cite>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">ALTAVISTA</div>
+  <p>Intelligence · Tandil, Argentina · Mayo 2026</p>
+  <p style="margin-top:12px;">Documento confidencial — para distribución interna y conversaciones estratégicas</p>
+</footer>
+
+</body>
+</html>

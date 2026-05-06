@@ -1,0 +1,31 @@
+{
+  "video_id": "bNGyk2UReZA",
+  "title": "Facebook Ads for Real Estate Agents 2025 — Full Campaign Setup A-Z (LeadDex)",
+  "type": "video",
+  "source_type": "tutorial",
+  "summary": "Guía técnica más completa disponible sobre Meta Ads para real estate. Paso a paso real desde Ads Manager con demostración en vivo. La diferencia clave vs otros tutoriales: usar 'Maximize Conversion Leads' (no 'Maximize Leads') reduce costo/lead Y sube calidad simultáneamente. El método usa matriz de testing con 3 ad angles × 3 targeting sets × 4 imágenes para que el AI encuentre las combinaciones ganadoras. El conditional logic en el formulario entrena al AI para traer el perfil exacto de lead que querés. Budget mínimo real: $1,000/mes. Métricas estándar: $15-30/lead, 40-50% live call rate, 10-20% appointment rate, 40-60% close rate.",
+  "key_concepts": [
+    "ANTI-PATRÓN: boost posts = ads aleatorios a personas aleatorias, resultado cero",
+    "ANTI-PATRÓN: one-off ads (campañas de 2 semanas y abandonar) — los ads son un sistema de largo plazo",
+    "Objetivo campaña: Leads → Instant Forms. Performance goal: MAXIMIZE CONVERSION LEADS (no 'maximize leads')",
+    "Special Ad Category Housing obligatorio — no tocar edad ni género o el ad no se aprueba",
+    "Estructura de testing: 3 ad angles × 3 targeting sets × 4 imágenes por set = matriz completa",
+    "Ad Angle 1: real estate + home equity + mortgage calculator",
+    "Ad Angle 2: Zillow + Trulia + realtor.com (equivalente AR: Zonaprop + Argenprop + Properati)",
+    "Ad Angle 3: house + apartment + residential area + single-family detached homes",
+    "Después de 3-4 días: apagar losers, escalar winners. Diferencia puede ser 10x en costo/lead",
+    "Conditional logic en formulario: 'solo browsing' = cerrar form. 'No necesita vender antes de comprar' = cerrar si optimizás para sellers",
+    "El conditional logic entrena el AI de Meta para traer el perfil exacto — diferencia de 30-40% en calidad de leads",
+    "Native content: el ad debe verse como un post orgánico de un amigo, no como publicidad tradicional",
+    "Responder al lead en <5 minutos: 100x más probabilidad de contacto que a los 30 minutos (MIT study)",
+    "Omnipresencia retargeting: contenido orgánico + retargeting ads para nutrir leads de ciclo largo (90% decide en 1-12 meses)",
+    "Budget mínimo: $1,000/mes. Menos de eso no alcanza ni para testear",
+    "Métricas KPI estándar: $15-30/lead, 40-50% live call, 10-20% appointment, 40-60% close rate",
+    "El AI de Meta es el más avanzado del mundo para marketing — más que TikTok, Twitter, etc.",
+    "Desactivar Standard Enhancements y música del ad — Meta los activa por default y distorsionan el ad",
+    "Email semanal personalizado al local market > drip campaigns genéricos"
+  ],
+  "tags": ["meta-ads", "facebook-ads", "real-estate", "leads", "instant-forms", "conditional-logic", "ad-testing", "ad-angles", "targeting", "conversion-optimization", "omnipresencia", "retargeting", "kpi-metrics"],
+  "credibility_score": 5,
+  "learned_at": "2026-04-29T00:00:00"
+}

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasación — Casa Country Don Bosco — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #0B1F33;
+    background: #fff;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* HEADER */
+  .header {
+    background: #0B1F33;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo-svg {
+    width: 56px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .logo-text { color: white; }
+
+  .logo-text .grupo {
+    font-size: 8px;
+    letter-spacing: 5px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .logo-text .nombre {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .header-doc {
+    text-align: right;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .header-doc .doc-tipo {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 4px;
+  }
+
+  .header-doc .doc-titulo {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 1px;
+  }
+
+  .header-doc .doc-fecha {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+
+  /* ACCENT LINE */
+  .accent-line {
+    height: 3px;
+    background: #7AB591;
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 32px 40px 40px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #7AB591;
+    border-bottom: 1px solid #D9DEE3;
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+  }
+
+  /* FICHA TÉCNICA */
+  .ficha-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+  }
+
+  .ficha-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 12px;
+  }
+
+  .ficha-item .label {
+    color: #888;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .ficha-item .value {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #0B1F33;
+    text-align: right;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+
+  thead tr {
+    background: #0B1F33;
+    color: white;
+  }
+
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 8.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  thead th:last-child { text-align: right; }
+
+  tbody tr { border-bottom: 1px solid #eef0f2; }
+  tbody tr:nth-child(even) { background: #f9fafb; }
+
+  tbody td {
+    padding: 7px 10px;
+    color: #333;
+    font-size: 10px;
+  }
+
+  tbody td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: #0B1F33;
+  }
+
+  .table-subtotal td {
+    background: #eef4f0 !important;
+    font-weight: 700;
+    color: #0B1F33 !important;
+    border-bottom: 2px solid #7AB591 !important;
+  }
+
+  /* FINANCIERO / DOS COLS */
+  .financiero-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .fin-box {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+
+  .fin-box-title {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #7AB591;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .fin-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #e8ecef;
+    font-size: 9.5px;
+  }
+
+  .fin-row:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    padding-top: 8px;
+    margin-top: 4px;
+    font-size: 10px;
+  }
+
+  .fin-row .fin-label { color: #666; }
+  .fin-row .fin-val { color: #0B1F33; font-weight: 600; }
+
+  /* RESUMEN TOTAL */
+  .resumen-box {
+    background: #0B1F33;
+    border-radius: 4px;
+    padding: 20px 24px;
+    color: white;
+  }
+
+  .resumen-rows { margin-bottom: 16px; }
+
+  .resumen-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 10px;
+  }
+
+  .resumen-row .r-label { color: rgba(255,255,255,0.6); }
+  .resumen-row .r-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+  .resumen-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 2px solid #7AB591;
+    padding-top: 14px;
+    margin-top: 8px;
+  }
+
+  .resumen-total .rt-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .resumen-total .rt-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: white;
+    letter-spacing: 1px;
+  }
+
+  .precio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .precio-item {
+    background: #f9fafb;
+    border: 1px solid #e8ecef;
+    border-radius: 4px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .precio-item.highlight {
+    background: #eef4f0;
+    border-color: #7AB591;
+  }
+
+  .precio-item .pi-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  .precio-item.highlight .pi-label { color: #7AB591; }
+
+  .precio-item .pi-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: #0B1F33;
+  }
+
+  /* FACTORES */
+  .factores-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .factores-list { list-style: none; }
+
+  .factores-list li {
+    display: flex;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 9.5px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  .factores-list li .icon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .icon-pos { background: #eef4f0; color: #7AB591; }
+  .icon-neg { background: #fef0f0; color: #cc4444; }
+
+  /* NOTAS */
+  .nota-box {
+    background: #f9fafb;
+    border-left: 3px solid #7AB591;
+    padding: 10px 14px;
+    font-size: 9.5px;
+    color: #555;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  /* BADGE CATEGORÍA */
+  .badge-categoria {
+    display: inline-block;
+    background: #7AB591;
+    color: white;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: #0B1F33;
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .footer-left {
+    color: rgba(255,255,255,0.5);
+    font-size: 8.5px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+  }
+
+  .footer-right {
+    color: rgba(255,255,255,0.35);
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .page-break { page-break-before: always; }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310">
+        <rect x="80" y="10" width="140" height="220" rx="70" ry="70"
+              fill="none" stroke="white" stroke-width="1.4"/>
+        <line x1="104" y1="120" x2="196" y2="120"
+              stroke="white" stroke-width="0.9"/>
+        <text x="150" y="98"
+              font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle">A</text>
+        <text x="150" y="175"
+              font-family="Georgia, 'Times New Roman', serif"
+              font-size="90" fill="white" text-anchor="middle"
+              dominant-baseline="central">O</text>
+        <text x="150" y="264"
+              font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="10" fill="rgba(255,255,255,0.55)"
+              text-anchor="middle" letter-spacing="6">GRUPO</text>
+        <text x="150" y="288"
+              font-family="'Montserrat', Arial, sans-serif"
+              font-weight="400" font-size="13" fill="rgba(255,255,255,0.85)"
+              text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+      </svg>
+      <div class="logo-text">
+        <div class="grupo">Grupo</div>
+        <div class="nombre">Altavista Otero</div>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="doc-tipo">Informe de Tasación</div>
+      <div class="doc-titulo">Casa Premium — Frente Country Don Bosco</div>
+      <div class="doc-fecha">Mayo 2026 · Tandil, Buenos Aires</div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- 1. FICHA TÉCNICA -->
+    <div class="section">
+      <div class="section-title">1 — Descripción del inmueble</div>
+      <div class="badge-categoria">Categoría premium</div>
+      <div class="ficha-grid">
+        <div class="ficha-item"><span class="label">Ubicación</span><span class="value">Frente al Country Don Bosco, Tandil</span></div>
+        <div class="ficha-item"><span class="label">Tipo</span><span class="value">Casa / Residencia</span></div>
+        <div class="ficha-item"><span class="label">Superficie lote</span><span class="value">2.000 m²</span></div>
+        <div class="ficha-item"><span class="label">Superficie construida</span><span class="value">370 m²</span></div>
+        <div class="ficha-item"><span class="label">Dormitorios</span><span class="value">4</span></div>
+        <div class="ficha-item"><span class="label">Baños</span><span class="value">4 completos</span></div>
+        <div class="ficha-item"><span class="label">Pileta</span><span class="value">Sí</span></div>
+        <div class="ficha-item"><span class="label">Garage cubierto</span><span class="value">2 autos</span></div>
+        <div class="ficha-item"><span class="label">Calidad constructiva</span><span class="value">Alta — categoría premium</span></div>
+        <div class="ficha-item"><span class="label">Estado general</span><span class="value">Muy bueno</span></div>
+        <div class="ficha-item"><span class="label">Zona</span><span class="value">Country / Serrana · Tandil</span></div>
+        <div class="ficha-item"><span class="label">Operación</span><span class="value">Venta</span></div>
+      </div>
+    </div>
+
+    <!-- 2. CONTEXTO DE MERCADO -->
+    <div class="section">
+      <div class="section-title">2 — Relevamiento de mercado · Zona Don Bosco</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Zona / Barrio</th>
+            <th>Dorm.</th>
+            <th>M² const.</th>
+            <th style="text-align:right">Precio publicado</th>
+            <th style="text-align:right">USD/m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Don Bosco</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma zona</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/casas-en-venta-en-tandil-don-bosco-49328-295.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>4</td>
+            <td>500 m²</td>
+            <td>USD 580.000</td>
+            <td>USD 1.160/m²</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Don Bosco y Suiza</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma zona</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/casas-en-venta-en-tandil-don-bosco-y-suiza-35731-233.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>4</td>
+            <td>480 m²</td>
+            <td>USD 550.000</td>
+            <td>USD 1.146/m²</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Zona Don Bosco</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma zona</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/casas-en-venta-en-tandil-zona-don-bosco-50016-197.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>4</td>
+            <td>316 m²</td>
+            <td>USD 550.000</td>
+            <td>USD 1.741/m²</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Casa Quinta — Zona Don Bosco (Suiza 1300)</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma zona</span><br>
+              <a href="https://casa.mercadolibre.com.ar/MLA-1687984767-casa-quinta-en-venta-zona-don-bosco-tandil-codigo-205426-_JM" style="font-size:8px;color:#888;text-decoration:none">mercadolibre.com.ar →</a>
+            </td>
+            <td>4</td>
+            <td>320 m²</td>
+            <td>USD 550.000</td>
+            <td>USD 1.719/m²</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="4"><strong>Promedio zona Don Bosco</strong></td>
+            <td><strong>USD 1.441/m²</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px; padding:8px 10px; background:#f9fafb; border-radius:4px; font-size:9.5px; color:#555;">
+        <strong style="color:#0B1F33">Fuente:</strong> base de propiedades activas Tandil (Argenprop, MercadoLibre, Casas de Hoy) — Mayo 2026.
+      </div>
+    </div>
+
+    <!-- 3. VALUACIÓN POR COMPONENTES -->
+    <div class="section">
+      <div class="section-title">3 — Valuación por componentes</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Parámetro</th>
+            <th style="text-align:right">Valor USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Terreno</strong></td>
+            <td>2.000 m² · zona country · ref. USD 160/m² (premium serrano)</td>
+            <td>USD 320.000</td>
+          </tr>
+          <tr>
+            <td><strong>Construcción principal — 370 m²</strong></td>
+            <td>USD 1.000/m² costo reposición categoría premium (2026)</td>
+            <td>USD 370.000</td>
+          </tr>
+          <tr>
+            <td><strong>Pileta</strong></td>
+            <td>Pileta construida · funcional</td>
+            <td>USD 22.000</td>
+          </tr>
+          <tr>
+            <td><strong>Garage cubierto</strong></td>
+            <td>2 autos · cubierto · parte integrada al total</td>
+            <td>USD 18.000</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Costo de reposición total</strong></td>
+            <td><strong>USD 730.000</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Depreciación funcional y de mercado</strong></td>
+            <td>Ajuste compradores reales vs. costo técnico · −15% (zona premium sostiene valor)</td>
+            <td style="color:#cc4444">− USD 109.500</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Valor ajustado a mercado (método costo)</strong></td>
+            <td><strong>USD 620.500</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. DOS MÉTODOS -->
+    <div class="section">
+      <div class="section-title">4 — Reconciliación de métodos</div>
+      <div class="financiero-cols">
+        <div class="fin-box">
+          <div class="fin-box-title">Método de costo de reposición</div>
+          <div class="fin-row"><span class="fin-label">Terreno 2.000 m² premium</span><span class="fin-val">USD 320.000</span></div>
+          <div class="fin-row"><span class="fin-label">Construcción 370 m² · USD 1.000/m²</span><span class="fin-val">USD 370.000</span></div>
+          <div class="fin-row"><span class="fin-label">Pileta + garage cubierto</span><span class="fin-val">USD 40.000</span></div>
+          <div class="fin-row"><span class="fin-label">Depreciación de mercado (−15%)</span><span class="fin-val">− USD 109.500</span></div>
+          <div class="fin-row"><span class="fin-label">Total método costo</span><span class="fin-val">USD 620.500</span></div>
+        </div>
+        <div class="fin-box">
+          <div class="fin-box-title">Método de comparación de mercado</div>
+          <div class="fin-row"><span class="fin-label">Promedio zona Don Bosco</span><span class="fin-val">USD 1.441/m²</span></div>
+          <div class="fin-row"><span class="fin-label">370 m² × USD 1.441/m²</span><span class="fin-val">USD 533.170</span></div>
+          <div class="fin-row"><span class="fin-label">+ Plus lote 2.000 m² (escala)</span><span class="fin-val">USD 25.000</span></div>
+          <div class="fin-row"><span class="fin-label">Total método comparativo</span><span class="fin-val">USD 558.170</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. PRECIO ESTIMADO -->
+    <div class="section">
+      <div class="section-title">5 — Valor de mercado estimado</div>
+      <div class="resumen-box">
+        <div class="resumen-rows">
+          <div class="resumen-row"><span class="r-label">Método costo de reposición ajustado</span><span class="r-val">USD 620.500</span></div>
+          <div class="resumen-row"><span class="r-label">Método comparativo de mercado (zona Don Bosco)</span><span class="r-val">USD 558.170</span></div>
+          <div class="resumen-row"><span class="r-label">Promedio ponderado (50/50)</span><span class="r-val">USD 589.335</span></div>
+        </div>
+        <div class="resumen-total">
+          <span class="rt-label">Valor técnico de referencia</span>
+          <span class="rt-val">USD 580.000</span>
+        </div>
+      </div>
+
+      <div class="precio-grid">
+        <div class="precio-item">
+          <div class="pi-label">Piso de negociación</div>
+          <div class="pi-val">USD 530.000</div>
+        </div>
+        <div class="precio-item highlight">
+          <div class="pi-label">Precio de publicación</div>
+          <div class="pi-val">USD 600.000</div>
+        </div>
+        <div class="precio-item">
+          <div class="pi-label">Referencia técnica</div>
+          <div class="pi-val">USD 580.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FACTORES -->
+    <div class="section">
+      <div class="section-title">6 — Factores que sostienen y condicionan el valor</div>
+      <div class="factores-cols">
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7AB591;margin-bottom:8px;font-weight:600;">Fortalezas</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-pos">+</span>Ubicación frente al Country Don Bosco — demanda sostenida de compradores de alto perfil</li>
+            <li><span class="icon icon-pos">+</span>Lote de 2.000 m² — generoso en zona donde el espacio es escaso y muy valorado</li>
+            <li><span class="icon icon-pos">+</span>370 m² construidos — superficie amplia que supera la media del segmento</li>
+            <li><span class="icon icon-pos">+</span>4 dormitorios y 4 baños — familia grande sin compromisos, o habitaciones de servicio</li>
+            <li><span class="icon icon-pos">+</span>Pileta construida — diferencial concreto en verano y atractivo para reposición</li>
+            <li><span class="icon icon-pos">+</span>Garage cubierto para 2 autos — funcional y muy buscado en este segmento</li>
+            <li><span class="icon icon-pos">+</span>Categoría premium de construcción — materiales y terminaciones que justifican sobreprecio</li>
+            <li><span class="icon icon-pos">+</span>Entorno country — perfil de compradores con mayor poder adquisitivo y menor negociación</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#cc4444;margin-bottom:8px;font-weight:600;">Condicionantes</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-neg">–</span>Mercado acotado — comprador premium en Tandil es un pool pequeño; puede demorar la venta</li>
+            <li><span class="icon icon-neg">–</span>Sin acceso a country — la ubicación es frente, no dentro; impacta vs. propiedades con membresía</li>
+            <li><span class="icon icon-neg">–</span>Ausencia de comparables directos — el segmento opera privado; menor liquidez que zona estándar</li>
+            <li><span class="icon icon-neg">–</span>Costo de mantenimiento elevado (pileta, lote grande) — factor que algunos compradores descuentan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. CONSIDERACIONES -->
+    <div class="section">
+      <div class="section-title">7 — Consideraciones para la operación</div>
+      <div class="nota-box">
+        <strong>Segmento de compradores:</strong> el perfil más probable es profesional establecido, empresario local o familia en reposición. No es el perfil típico de inversor. La estrategia de comunicación debe apuntar a calidad de vida, privacidad y solidez de la construcción, no a rentabilidad.
+      </div>
+      <div class="nota-box">
+        <strong>Estrategia de precio:</strong> publicar en USD 600.000 da margen real de negociación hasta USD 570.000–580.000. Por debajo de USD 530.000 la operación estaría cediendo valor técnico comprobable frente al mercado activo de la zona.
+      </div>
+      <div class="nota-box">
+        <strong>Tiempo estimado de venta:</strong> propiedades en este rango de precio en Tandil registran plazos de 4 a 12 meses. Una estrategia de difusión discreta entre redes de contacto del segmento puede acortar ese plazo significativamente.
+      </div>
+      <div class="nota-box" style="border-left-color:#0B1F33">
+        Este informe fue elaborado sobre la base de información provista por el propietario y datos del mercado local activo a mayo de 2026. El valor estimado es de referencia técnica y no reemplaza una inspección presencial completa ni un análisis dominial. Se recomienda verificar antigüedad, planos aprobados y libre deuda antes de escriturar.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      Grupo Altavista Otero · Real Estate · Tandil, Buenos Aires<br>
+      Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul
+    </div>
+    <div class="footer-right">
+      Informe confidencial · Mayo 2026<br>
+      Uso exclusivo del destinatario
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

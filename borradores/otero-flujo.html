@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuesta Otero · SFRE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f4f0; color: #1a1a1a; min-height: 100vh; padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 800; color: #111; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #aaa; margin-bottom: 36px; }
+  .sec-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #bbb; margin-bottom: 14px; }
+  .divider { height: 1px; background: #e5e5e0; margin: 32px 0; }
+  .card { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+
+  /* MODELOS */
+  .modelos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px; }
+  .modelo-tag { font-size: 10px; color: #bbb; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .modelo-desc { font-size: 12px; color: #888; margin-bottom: 14px; line-height: 1.4; min-height: 32px; }
+  .bar { display: flex; border-radius: 6px; overflow: hidden; height: 46px; }
+  .bar-o { background: #eeeeff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #3333bb; border-right: 2px solid #f4f4f0; }
+  .bar-s { background: #eeffee; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #1a7a1a; }
+  .bar-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: #bbb; }
+  .badge-star { display: inline-block; background: #3333bb; color: #fff; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+
+  /* TABLA GASTOS */
+  .gastos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .gasto-bloque { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .gasto-title { font-size: 11px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.5px; }
+  .gt-split { color: #cc8800; }
+  .gt-sfre { color: #1a7a1a; }
+  .gasto-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f0f0eb; font-size: 12px; }
+  .gasto-row:last-child { border-bottom: none; }
+  .g-nombre { color: #666; }
+  .g-val { font-weight: 700; }
+  .v-split { color: #cc8800; }
+  .v-sfre { color: #1a7a1a; }
+  .g-note { font-size: 10px; color: #bbb; }
+
+  /* MATRICULA CARD */
+  .matricula { background: #fafaf5; border: 1px solid #e5e5e0; border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .mat-label { font-size: 12px; color: #888; }
+  .mat-nombre { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 2px; }
+  .mat-vals { display: flex; gap: 16px; }
+  .mat-item { text-align: right; }
+  .mat-num { font-size: 16px; font-weight: 800; color: #3333bb; }
+  .mat-sub { font-size: 10px; color: #bbb; }
+
+  /* SIMULACIÓN */
+  .sim-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e5e0; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .sim-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #bbb; padding: 10px 14px; text-align: left; background: #fafaf7; border-bottom: 1px solid #f0f0eb; }
+  .sim-table td { padding: 13px 14px; font-size: 13px; border-bottom: 1px solid #f5f5f0; color: #555; }
+  .sim-table tbody tr:hover td { background: #fafaf7; }
+  .sim-table .td-op { color: #333; line-height: 1.4; }
+  .sim-table .td-sub { font-size: 11px; color: #bbb; display: block; }
+  .sim-table .td-o { color: #3333bb; font-weight: 700; }
+  .sim-table .td-s { color: #1a7a1a; font-weight: 700; }
+  .sim-table .total-row td { background: #f5f5f0 !important; font-weight: 800; font-size: 15px; border-top: 2px solid #e5e5e0; padding: 16px 14px; border-bottom: none; }
+  .highlight-row td { background: #eeeefc !important; }
+
+  /* NETO */
+  .neto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .neto-card { border-radius: 12px; padding: 20px; }
+  .neto-card.o { background: #f0f0ff; border: 1px solid #cccce8; }
+  .neto-card.s { background: #f0fff0; border: 1px solid #cce8cc; }
+  .neto-nombre { font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+  .neto-nombre.oc { color: #3333bb; }
+  .neto-nombre.sc { color: #1a7a1a; }
+  .neto-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 12px; }
+  .neto-row.total { border-bottom: none; padding-top: 12px; margin-top: 6px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .neto-label { color: #888; }
+  .neto-val { font-weight: 600; }
+  .v-pos { color: #1a7a1a; }
+  .v-neg { color: #cc3333; }
+  .v-total-o { color: #3333bb; font-size: 20px; font-weight: 800; }
+  .v-total-s { color: #1a7a1a; font-size: 20px; font-weight: 800; }
+
+  /* COMPARE */
+  .compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: center; }
+  .compare-card { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .compare-card.better { border-color: #aaddaa; background: #f0fff0; }
+  .c-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #bbb; margin-bottom: 10px; }
+  .c-label.b { color: #1a7a1a; }
+  .c-monto { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+  .c-monto.old { color: #ccc; }
+  .c-monto.new { color: #1a7a1a; }
+  .c-desc { font-size: 11px; color: #aaa; line-height: 1.6; }
+  .c-arrow { text-align: center; padding: 0 20px; }
+  .c-arrow-val { font-size: 20px; font-weight: 800; color: #1a7a1a; }
+  .c-arrow-label { font-size: 10px; color: #bbb; margin-top: 4px; }
+
+  .frase { background: #fff; border-left: 3px solid #3333bb; padding: 14px 20px; border-radius: 0 12px 12px 0; font-size: 13px; color: #555; font-style: italic; line-height: 1.6; margin: 24px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .nota { font-size: 11px; color: #bbb; margin-top: 10px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>Propuesta Otero · SFRE</h1>
+<p class="subtitle">Gastos divididos · Otero 100% cuando tiene ambas puntas · Santiago paga infraestructura SFRE</p>
+
+<!-- MODELOS DE COMISIÓN -->
+<div class="sec-title">Comisión por operación</div>
+<div class="modelos">
+
+  <div class="card">
+    <div class="modelo-tag">Caso A</div>
+    <div class="modelo-desc">Otero tiene ambas puntas — él lo hace todo <span class="badge-star">NUEVO</span></div>
+    <div class="bar">
+      <div class="bar-o" style="flex:1">100%</div>
+    </div>
+    <div class="bar-labels"><span>Otero (todo)</span><span style="color:#ddd">SFRE 0%</span></div>
+  </div>
+
+  <div class="card">
+    <div class="modelo-tag">Caso B</div>
+    <div class="modelo-desc">Una punta cada uno — operación compartida</div>
+    <div class="bar">
+      <div class="bar-o" style="flex:0.5">50%</div>
+      <div class="bar-s" style="flex:0.5">50%</div>
+    </div>
+    <div class="bar-labels"><span>Otero</span><span>SFRE</span></div>
+  </div>
+
+  <div class="card">
+    <div class="modelo-tag">Caso C</div>
+    <div class="modelo-desc">SFRE trae el deal, Otero solo firma</div>
+    <div class="bar">
+      <div class="bar-o" style="flex:0.2">20%</div>
+      <div class="bar-s" style="flex:0.8">80%</div>
+    </div>
+    <div class="bar-labels"><span>Otero</span><span>SFRE</span></div>
+  </div>
+
+</div>
+<p class="nota">Sin piso · Sin techo · Se liquida por operación · Otero cobra el 100% de su parte sin retención.</p>
+
+<div class="divider"></div>
+
+<!-- MATRÍCULA -->
+<div class="sec-title">Matrícula CUCICBA</div>
+<div class="matricula">
+  <div>
+    <div class="mat-nombre">Habilitación profesional Otero</div>
+    <div class="mat-label">Renovación anual + cuota mensual al Colegio</div>
+  </div>
+  <div class="mat-vals">
+    <div class="mat-item">
+      <div class="mat-num">$800.000</div>
+      <div class="mat-sub">ARS / año · renovación</div>
+    </div>
+    <div class="mat-item">
+      <div class="mat-num">$2.240</div>
+      <div class="mat-sub">ARS / mes · cuota</div>
+    </div>
+    <div class="mat-item">
+      <div class="mat-num" style="color:#888">~$695</div>
+      <div class="mat-sub">USD / año estimado · TC $1.200</div>
+    </div>
+  </div>
+</div>
+<p class="nota">* Quién paga la matrícula: a definir con Marcos. Opciones: SFRE cubre como beneficio, o va dentro de gastos compartidos.</p>
+
+<div class="divider"></div>
+
+<!-- GASTOS -->
+<div class="sec-title">División de gastos</div>
+<div class="gastos-grid">
+
+  <div class="gasto-bloque">
+    <div class="gasto-title gt-split">⟷ Dividido 50/50</div>
+    <div class="gasto-row">
+      <span class="g-nombre">Oficina (alquiler)</span>
+      <span class="g-val v-split">50% c/u</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">WiFi / servicios</span>
+      <span class="g-val v-split">50% c/u</span>
+    </div>
+  </div>
+
+  <div class="gasto-bloque">
+    <div class="gasto-title gt-sfre">↑ Santiago Funes paga 100%</div>
+    <div class="gasto-row">
+      <span class="g-nombre">CRM</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">Portales (ZonaProp, etc.)</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">Web / dominio</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">Pauta digital</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">Agencia / filmmaker</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+    <div class="gasto-row">
+      <span class="g-nombre">Marketing de contenido</span>
+      <span class="g-val v-sfre">SFRE</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- SIMULACIÓN -->
+<div class="sec-title">Simulación — mes tipo: USD 500.000 vendidos · comisión 3%</div>
+<table class="sim-table">
+  <thead>
+    <tr>
+      <th>Operación</th>
+      <th>Volumen</th>
+      <th>Comisión bruta</th>
+      <th style="color:#3333bb">Otero cobra</th>
+      <th style="color:#1a7a1a">SFRE cobra</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="highlight-row">
+      <td class="td-op">
+        Otero: ambas puntas
+        <span class="td-sub">Caso A · 100% Otero</span>
+      </td>
+      <td>USD 120.000</td>
+      <td>USD 3.600</td>
+      <td class="td-o">USD 3.600</td>
+      <td class="td-s" style="color:#ccc;font-weight:400">USD 0</td>
+    </tr>
+    <tr>
+      <td class="td-op">
+        Operación compartida
+        <span class="td-sub">Caso B · 50% / 50%</span>
+      </td>
+      <td>USD 180.000</td>
+      <td>USD 5.400</td>
+      <td class="td-o">USD 2.700</td>
+      <td class="td-s">USD 2.700</td>
+    </tr>
+    <tr>
+      <td class="td-op">
+        SFRE lead · Otero firma
+        <span class="td-sub">Caso C · 20% / 80%</span>
+      </td>
+      <td>USD 200.000</td>
+      <td>USD 6.000</td>
+      <td class="td-o">USD 1.200</td>
+      <td class="td-s">USD 4.800</td>
+    </tr>
+    <tr class="total-row">
+      <td style="color:#666">TOTAL DEL MES</td>
+      <td style="color:#999">USD 500.000</td>
+      <td style="color:#999">USD 15.000</td>
+      <td class="td-o" style="font-size:18px">USD 7.500</td>
+      <td class="td-s" style="font-size:18px">USD 7.500</td>
+    </tr>
+  </tbody>
+</table>
+<p class="nota">En este mix el resultado es 50/50. Si Otero hace más operaciones propias (Caso A), su % sube. Si SFRE trae más leads (Caso C), el % de SFRE sube. Es dinámico.</p>
+
+<div class="divider"></div>
+
+<!-- NETO DESPUÉS DE GASTOS -->
+<div class="sec-title">Neto después de gastos — mismo mes (estimado)</div>
+<div class="neto-grid">
+
+  <div class="neto-card o">
+    <div class="neto-nombre oc">Otero — neto del mes</div>
+    <div class="neto-row"><span class="neto-label">Comisiones brutas</span><span class="neto-val" style="color:#3333bb">+ USD 7.500</span></div>
+    <div class="neto-row"><span class="neto-label">Oficina (50%)</span><span class="neto-val v-neg">− USD 150</span></div>
+    <div class="neto-row"><span class="neto-label">WiFi (50%)</span><span class="neto-val v-neg">− USD 25</span></div>
+    <div class="neto-row"><span class="neto-label">CRM / portales / web / pauta</span><span class="neto-val v-pos">USD 0 ✓</span></div>
+    <div class="neto-row total">
+      <span class="neto-label" style="font-weight:700;color:#555">NETO ESTIMADO</span>
+      <span class="neto-val v-total-o">≈ USD 7.325</span>
+    </div>
+  </div>
+
+  <div class="neto-card s">
+    <div class="neto-nombre sc">SFRE — neto del mes</div>
+    <div class="neto-row"><span class="neto-label">Comisiones brutas</span><span class="neto-val" style="color:#1a7a1a">+ USD 7.500</span></div>
+    <div class="neto-row"><span class="neto-label">Oficina (50%)</span><span class="neto-val v-neg">− USD 150</span></div>
+    <div class="neto-row"><span class="neto-label">WiFi (50%)</span><span class="neto-val v-neg">− USD 25</span></div>
+    <div class="neto-row"><span class="neto-label">CRM + portales + web</span><span class="neto-val v-neg">− USD 250</span></div>
+    <div class="neto-row"><span class="neto-label">Pauta + agencia + filmmaker</span><span class="neto-val v-neg">− USD 700</span></div>
+    <div class="neto-row total">
+      <span class="neto-label" style="font-weight:700;color:#555">NETO ESTIMADO</span>
+      <span class="neto-val v-total-s">≈ USD 6.375</span>
+    </div>
+  </div>
+
+</div>
+<p class="nota">* Gastos de SFRE son estimativos — ajustar con los números reales de Marcos. El diferencial a favor de Otero refleja que Santiago paga toda la infraestructura de marketing.</p>
+
+<div class="divider"></div>
+
+<!-- COMPARACIÓN HOY VS CON SFRE -->
+<div class="sec-title">Otero hoy solo vs. con SFRE</div>
+<div class="compare">
+  <div class="compare-card">
+    <div class="c-label">Hoy — trabaja solo</div>
+    <div class="c-monto old">≈ USD 4.400</div>
+    <div class="c-desc">
+      Volumen propio: ~USD 200.000/mes<br>
+      Comisión bruta: USD 6.000<br>
+      Gastos propios: − USD 1.600<br>
+      (oficina $400 + portales $300 + wifi $50 + matrícula prorrateada $200 + otros $650)<br><br>
+      Sin leads externos. Sin estructura compartida.
+    </div>
+  </div>
+  <div class="c-arrow">
+    <div class="c-arrow-val">+$2.925</div>
+    <div class="c-arrow-label">/ mes más</div>
+    <div style="font-size:26px;margin-top:10px;color:#ccc">→</div>
+  </div>
+  <div class="compare-card better">
+    <div class="c-label b">Con SFRE — mismo esfuerzo</div>
+    <div class="c-monto new">≈ USD 7.325</div>
+    <div class="c-desc">
+      Volumen combinado: USD 500.000<br>
+      Comisiones: USD 7.500<br>
+      Solo paga: oficina $150 + wifi $25<br><br>
+      + Leads de SFRE<br>
+      + CRM, portales, web, pauta, filmmaker: $0 para él
+    </div>
+  </div>
+</div>
+
+<div class="frase">"Vos te quedás con el 100% de lo que traés. Si compartimos la operación, 50/50. Y todo lo que es nuestra infraestructura — portales, pauta, CRM, filmmaker — corre por nuestra cuenta."</div>
+
+<div class="divider"></div>
+
+<!-- PRÓXIMOS PASOS -->
+<div class="sec-title">Próximos pasos</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+  <div style="background:#f0fff0;border:1px solid #aaddaa;border-radius:10px;padding:16px;">
+    <div style="font-size:10px;font-weight:700;color:#1a7a1a;margin-bottom:10px;letter-spacing:1px">SI VA BIEN HOY</div>
+    <div style="font-size:12px;color:#666;line-height:1.9;">→ Pedirle facturación anual + gastos reales<br>→ Fijar fecha con Marcos para cerrar<br>→ No firmar nada todavía</div>
+  </div>
+  <div style="background:#fffbf0;border:1px solid #ddc87a;border-radius:10px;padding:16px;">
+    <div style="font-size:10px;font-weight:700;color:#cc8800;margin-bottom:10px;letter-spacing:1px">SI PONE PEROS</div>
+    <div style="font-size:12px;color:#666;line-height:1.9;">→ Escuchar qué no le cierra<br>→ No improvisar contrapropuestas<br>→ "Lo hablo con Marcos y te vuelvo."</div>
+  </div>
+  <div style="background:#fff4f4;border:1px solid #ddaaaa;border-radius:10px;padding:16px;">
+    <div style="font-size:10px;font-weight:700;color:#cc3333;margin-bottom:10px;letter-spacing:1px">SI DICE QUE NO</div>
+    <div style="font-size:12px;color:#666;line-height:1.9;">→ Preguntar qué número sí le cerraría<br>→ Cerrar sin quemar el vínculo<br>→ No presionar hoy</div>
+  </div>
+</div>
+
+</body>
+</html>

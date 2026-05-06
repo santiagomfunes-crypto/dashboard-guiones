@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasación — Lotes 13 y 14 · Galicia esq. J. Bulewski — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Montserrat', sans-serif; color: #0B1F33; background: #fff; font-size: 11px; line-height: 1.7; }
+  @page { size: A4; margin: 0; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; position: relative; }
+
+  .header { background: #0B1F33; padding: 28px 40px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header-logo { display: flex; align-items: center; gap: 18px; }
+  .logo-svg { width: 56px; height: auto; flex-shrink: 0; }
+  .logo-text .grupo { font-size: 8px; letter-spacing: 5px; font-weight: 400; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 2px; }
+  .logo-text .nombre { font-size: 14px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: white; }
+  .header-doc { text-align: right; }
+  .header-doc .doc-tipo { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .header-doc .doc-titulo { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 1px; }
+  .header-doc .doc-fecha { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 1px; }
+
+  .accent-line { height: 3px; background: #7AB591; }
+  .content { padding: 32px 40px 40px; }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 8px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #7AB591; border-bottom: 1px solid #D9DEE3; padding-bottom: 6px; margin-bottom: 14px; }
+
+  .ficha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+  .ficha-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0; gap: 12px; }
+  .ficha-item .label { color: #888; font-size: 9.5px; font-weight: 500; letter-spacing: 0.5px; flex-shrink: 0; }
+  .ficha-item .value { font-size: 9.5px; font-weight: 600; color: #0B1F33; text-align: right; }
+
+  .lotes-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .lote-box { border: 1px solid #e8ecef; border-radius: 4px; padding: 14px 16px; }
+  .lote-box-title { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: #7AB591; margin-bottom: 10px; font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  thead tr { background: #0B1F33; color: white; }
+  thead th { padding: 8px 10px; text-align: left; font-weight: 500; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; }
+  thead th:last-child { text-align: right; }
+  tbody tr { border-bottom: 1px solid #eef0f2; }
+  tbody tr:nth-child(even) { background: #f9fafb; }
+  tbody td { padding: 7px 10px; color: #333; font-size: 10px; }
+  tbody td:last-child { text-align: right; font-weight: 600; color: #0B1F33; }
+  .table-subtotal td { background: #eef4f0 !important; font-weight: 700; color: #0B1F33 !important; border-bottom: 2px solid #7AB591 !important; }
+
+  .financiero-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .fin-box { background: #f9fafb; border: 1px solid #e8ecef; border-radius: 4px; padding: 14px 16px; }
+  .fin-box-title { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: #7AB591; margin-bottom: 10px; font-weight: 600; }
+  .fin-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #e8ecef; font-size: 9.5px; }
+  .fin-row:last-child { border-bottom: none; font-weight: 700; padding-top: 8px; margin-top: 4px; font-size: 10px; }
+  .fin-row .fin-label { color: #666; }
+  .fin-row .fin-val { color: #0B1F33; font-weight: 600; }
+
+  .resumen-box { background: #0B1F33; border-radius: 4px; padding: 20px 24px; color: white; }
+  .resumen-rows { margin-bottom: 16px; }
+  .resumen-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10px; }
+  .resumen-row .r-label { color: rgba(255,255,255,0.6); }
+  .resumen-row .r-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+  .resumen-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid #7AB591; padding-top: 14px; margin-top: 8px; }
+  .resumen-total .rt-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .resumen-total .rt-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: white; letter-spacing: 1px; }
+
+  .precio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .precio-item { background: #f9fafb; border: 1px solid #e8ecef; border-radius: 4px; padding: 12px 14px; text-align: center; }
+  .precio-item.highlight { background: #eef4f0; border-color: #7AB591; }
+  .precio-item .pi-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+  .precio-item.highlight .pi-label { color: #7AB591; }
+  .precio-item .pi-val { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: #0B1F33; }
+  .precio-item .pi-sub { font-size: 8px; color: #999; margin-top: 3px; }
+
+  .precio-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+
+  .factores-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .factores-list { list-style: none; }
+  .factores-list li { display: flex; gap: 8px; padding: 5px 0; font-size: 9.5px; border-bottom: 1px solid #f0f0f0; color: #444; line-height: 1.5; }
+  .factores-list li .icon { flex-shrink: 0; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-top: 1px; }
+  .icon-pos { background: #eef4f0; color: #7AB591; }
+  .icon-neg { background: #fef0f0; color: #cc4444; }
+
+  .nota-box { background: #f9fafb; border-left: 3px solid #7AB591; padding: 10px 14px; font-size: 9.5px; color: #555; border-radius: 0 4px 4px 0; margin-bottom: 8px; line-height: 1.6; }
+
+  .badge { display: inline-block; background: #7AB591; color: white; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; margin-bottom: 12px; }
+  .badge-dark { display: inline-block; background: #0B1F33; color: white; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; margin-left: 6px; }
+
+  .footer { background: #0B1F33; padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .footer-left { color: rgba(255,255,255,0.5); font-size: 8.5px; letter-spacing: 0.5px; line-height: 1.6; }
+  .footer-right { color: rgba(255,255,255,0.35); font-size: 8px; letter-spacing: 1px; text-align: right; line-height: 1.6; }
+
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-logo">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310">
+        <rect x="80" y="10" width="140" height="220" rx="70" ry="70" fill="none" stroke="white" stroke-width="1.4"/>
+        <line x1="104" y1="120" x2="196" y2="120" stroke="white" stroke-width="0.9"/>
+        <text x="150" y="98" font-family="Georgia,'Times New Roman',serif" font-size="90" fill="white" text-anchor="middle">A</text>
+        <text x="150" y="175" font-family="Georgia,'Times New Roman',serif" font-size="90" fill="white" text-anchor="middle" dominant-baseline="central">O</text>
+        <text x="150" y="264" font-family="'Montserrat',Arial,sans-serif" font-weight="400" font-size="10" fill="rgba(255,255,255,0.55)" text-anchor="middle" letter-spacing="6">GRUPO</text>
+        <text x="150" y="288" font-family="'Montserrat',Arial,sans-serif" font-weight="400" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+      </svg>
+      <div class="logo-text">
+        <div class="grupo">Grupo</div>
+        <div class="nombre">Altavista Otero</div>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="doc-tipo">Informe de Tasación</div>
+      <div class="doc-titulo">Lotes 13 y 14 · Galicia esq. J. Bulewski</div>
+      <div class="doc-fecha">Mayo 2026 · Tandil, Buenos Aires</div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+
+  <div class="content">
+
+    <!-- 1. FICHA -->
+    <div class="section">
+      <div class="section-title">1 — Descripción del inmueble</div>
+      <span class="badge">Lotes urbanos · Zona residencial · Entorno natural</span>
+      <span class="badge-dark">Mz 197 U · Tandil</span>
+
+      <div class="lotes-cols" style="margin-top:14px;">
+        <div class="lote-box">
+          <div class="lote-box-title">Lote 13</div>
+          <div class="ficha-item"><span class="label">Parcela</span><span class="value">Mz 197 U · Parc. 13</span></div>
+          <div class="ficha-item"><span class="label">Frente (Galicia)</span><span class="value">~20,00 m</span></div>
+          <div class="ficha-item"><span class="label">Lados internos</span><span class="value">17,50 m · 24,95 m · 34,95 m</span></div>
+          <div class="ficha-item"><span class="label">Contralínea</span><span class="value">~17,45 m</span></div>
+          <div class="ficha-item"><span class="label">Superficie estimada</span><span class="value">~435 m² (ARBA Carto)</span></div>
+        </div>
+        <div class="lote-box">
+          <div class="lote-box-title">Lote 14</div>
+          <div class="ficha-item"><span class="label">Parcela</span><span class="value">Mz 197 U · Parc. 14</span></div>
+          <div class="ficha-item"><span class="label">Frente (Galicia)</span><span class="value">~20,00 m</span></div>
+          <div class="ficha-item"><span class="label">Lado interno</span><span class="value">~44,95 m</span></div>
+          <div class="ficha-item"><span class="label">Fondo</span><span class="value">~44,95 m</span></div>
+          <div class="ficha-item"><span class="label">Superficie estimada</span><span class="value">~900 m² (ARBA Carto)</span></div>
+        </div>
+      </div>
+
+      <div class="ficha-grid">
+        <div class="ficha-item"><span class="label">Calles</span><span class="value">Galicia esq. Juan Bulewski · Tandil</span></div>
+        <div class="ficha-item"><span class="label">Manzana catastral</span><span class="value">197 U · Partido Tandil</span></div>
+        <div class="ficha-item"><span class="label">Superficie total (conjunto)</span><span class="value">~1.335 m²</span></div>
+        <div class="ficha-item"><span class="label">Entorno inmediato</span><span class="value">~100 m de área natural</span></div>
+        <div class="ficha-item"><span class="label">Zonificación</span><span class="value">Residencial · confirmar con Municipio</span></div>
+        <div class="ficha-item"><span class="label">Operación</span><span class="value">Venta (por separado o en conjunto)</span></div>
+      </div>
+      <div style="margin-top:10px;padding:8px 12px;background:#f0f7f3;border-radius:4px;font-size:9px;color:#555;">
+        <strong style="color:#0B1F33">Nota:</strong> superficies calculadas a partir de medidas registradas en ARBA Carto (imagen catastral). Sujetas a verificación con mensura oficial.
+      </div>
+    </div>
+
+    <!-- 2. RELEVAMIENTO -->
+    <div class="section">
+      <div class="section-title">2 — Relevamiento de mercado · Lotes residenciales en entornos similares, Tandil</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Referencia</th>
+            <th>M² lote</th>
+            <th style="text-align:right">Precio publicado</th>
+            <th style="text-align:right">USD/m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong style="color:#0B1F33">Lote Barrio Cerro de la Cruz</strong><br>
+              <span style="font-size:8.5px;color:#888">Zona serranías · entorno natural directo</span><br>
+              <a href="https://www.argenprop.com/terreno-en-venta-en-tandil-1634734" style="font-size:8px;color:#999;text-decoration:none">argenprop.com →</a>
+            </td>
+            <td>480 m²</td>
+            <td>USD 72.000</td>
+            <td>USD 150/m²</td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:#0B1F33">Lote Barrio Las Tipas</strong><br>
+              <span style="font-size:8.5px;color:#888">Barrio residencial · vista serranías</span><br>
+              <a href="https://www.argenprop.com/terreno-en-venta-en-tandil-1589422" style="font-size:8px;color:#999;text-decoration:none">argenprop.com →</a>
+            </td>
+            <td>600 m²</td>
+            <td>USD 80.000</td>
+            <td>USD 133/m²</td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:#0B1F33">Lote en barrio con naturaleza · Tandil</strong><br>
+              <span style="font-size:8.5px;color:#888">Lote amplio · arbolado · 900 m² aprox.</span><br>
+              <a href="https://www.argenprop.com/terreno-en-venta-en-tandil-1612083" style="font-size:8px;color:#999;text-decoration:none">argenprop.com →</a>
+            </td>
+            <td>900 m²</td>
+            <td>USD 110.000</td>
+            <td>USD 122/m²</td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:#0B1F33">Lote residencial periférico · Tandil</strong><br>
+              <span style="font-size:8.5px;color:#888">Zona tranquila · buena accesibilidad</span><br>
+              <a href="https://www.argenprop.com/terreno-en-venta-en-tandil-1601774" style="font-size:8px;color:#999;text-decoration:none">argenprop.com →</a>
+            </td>
+            <td>420 m²</td>
+            <td>USD 55.000</td>
+            <td>USD 131/m²</td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:#0B1F33">Lote en barrio · Tandil · vista natural</strong><br>
+              <span style="font-size:8.5px;color:#888">Lote irregular · zona residencial baja densidad</span><br>
+              <a href="https://www.argenprop.com/terreno-en-venta-en-tandil-1578333" style="font-size:8px;color:#999;text-decoration:none">argenprop.com →</a>
+            </td>
+            <td>750 m²</td>
+            <td>USD 95.000</td>
+            <td>USD 127/m²</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="3"><strong>Promedio zona residencial · entorno natural · Tandil</strong></td>
+            <td><strong>USD 133/m²</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;padding:8px 10px;background:#f9fafb;border-radius:4px;font-size:9.5px;color:#555;">
+        <strong style="color:#0B1F33">Fuente:</strong> Argenprop · relevamiento Mayo 2026. Lotes en zonas residenciales de baja densidad con proximidad a áreas naturales en Tandil.
+      </div>
+    </div>
+
+    <!-- 3. FACTORES -->
+    <div class="section">
+      <div class="section-title">3 — Factores de valor</div>
+      <div class="factores-cols">
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0B1F33;margin-bottom:8px;">Fortalezas</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-pos">+</span>100 m reales de área natural — diferencial fuerte en Tandil</li>
+            <li><span class="icon icon-pos">+</span>Dos lotes contiguos: posibilidad de desarrollo mayor o división para venta individual</li>
+            <li><span class="icon icon-pos">+</span>Lote 14 con frente de 20 m y ~900 m² — superficie generosa para casa con jardín</li>
+            <li><span class="icon icon-pos">+</span>Calidad de entorno: zona tranquila, residencial, sin tráfico intenso</li>
+            <li><span class="icon icon-pos">+</span>Tandil: ciudad en alza turística y de segunda residencia; la demanda de lotes con naturaleza crece</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#0B1F33;margin-bottom:8px;">Restricciones a considerar</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-neg">−</span>Zonificación residencial (baja densidad probable): sin FOT elevado como zona centro</li>
+            <li><span class="icon icon-neg">−</span>Mayor distancia al casco histórico respecto de lotes céntricos</li>
+            <li><span class="icon icon-neg">−</span>Superficies calculadas desde imagen catastral: mensura oficial puede diferir ±5%</li>
+            <li><span class="icon icon-neg">−</span>Lote 13 más irregular: menor practicidad constructiva que el lote 14</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. VALUACIÓN -->
+    <div class="section">
+      <div class="section-title">4 — Valuación por lote</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Lote</th>
+            <th>Superficie</th>
+            <th>Valor base comparable</th>
+            <th>Plus entorno natural (+15%)</th>
+            <th style="text-align:right">Valor técnico</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Lote 13</strong></td>
+            <td>~435 m²</td>
+            <td>435 × USD 133 = USD 57.855</td>
+            <td>+ USD 8.678</td>
+            <td>USD 66.533</td>
+          </tr>
+          <tr>
+            <td><strong>Lote 14</strong></td>
+            <td>~900 m²</td>
+            <td>900 × USD 133 = USD 119.700<br><span style="font-size:8.5px;color:#888">Ajuste escala (900 m² > promedio): −8%</span></td>
+            <td>+ USD 16.534</td>
+            <td>USD 126.514</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="4"><strong>Valor técnico total (ambos lotes)</strong></td>
+            <td><strong>USD 193.047</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. RECONCILIACIÓN -->
+    <div class="section">
+      <div class="section-title">5 — Reconciliación de métodos</div>
+      <div class="financiero-cols">
+        <div class="fin-box">
+          <div class="fin-box-title">Método comparativo directo</div>
+          <div class="fin-row"><span class="fin-label">USD/m² comparable</span><span class="fin-val">USD 133/m²</span></div>
+          <div class="fin-row"><span class="fin-label">Ajuste escala (lotes grandes)</span><span class="fin-val">−8%</span></div>
+          <div class="fin-row"><span class="fin-label">Plus entorno natural</span><span class="fin-val">+15%</span></div>
+          <div class="fin-row"><span class="fin-label">Superficie total</span><span class="fin-val">~1.335 m²</span></div>
+          <div class="fin-row"><span class="fin-label">Resultado método</span><span class="fin-val">USD 193.000</span></div>
+        </div>
+        <div class="fin-box">
+          <div class="fin-box-title">Método residencial (uso final)</div>
+          <div class="fin-row"><span class="fin-label">Casa residencial ~200 m²</span><span class="fin-val">USD 1.200/m² construcción</span></div>
+          <div class="fin-row"><span class="fin-label">Valor de venta casa construida</span><span class="fin-val">USD 280.000–320.000</span></div>
+          <div class="fin-row"><span class="fin-label">Incidencia terreno (25–30%)</span><span class="fin-val">25–30%</span></div>
+          <div class="fin-row"><span class="fin-label">Valor implícito del terreno</span><span class="fin-val">USD 70.000–96.000 c/lote</span></div>
+          <div class="fin-row"><span class="fin-label">Resultado método (conjunto)</span><span class="fin-val">USD 185.000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CONCLUSIÓN -->
+    <div class="section">
+      <div class="section-title">6 — Conclusión de valor · Mayo 2026</div>
+      <div class="resumen-box">
+        <div class="resumen-rows">
+          <div class="resumen-row"><span class="r-label">Método comparativo directo</span><span class="r-val">USD 193.000</span></div>
+          <div class="resumen-row"><span class="r-label">Método residencial (uso final)</span><span class="r-val">USD 185.000</span></div>
+          <div class="resumen-row"><span class="r-label">Promedio ponderado (ambos métodos)</span><span class="r-val">USD 189.000</span></div>
+        </div>
+        <div class="resumen-total">
+          <span class="rt-label">Valor de publicación · conjunto</span>
+          <span class="rt-val">USD 200.000</span>
+        </div>
+      </div>
+
+      <div class="precio-grid" style="margin-top:16px;">
+        <div class="precio-item">
+          <div class="pi-label">Lote 13 · piso</div>
+          <div class="pi-val">USD 55.000</div>
+          <div class="pi-sub">~435 m² · precio mínimo</div>
+        </div>
+        <div class="precio-item highlight">
+          <div class="pi-label">Lote 13 · publicación</div>
+          <div class="pi-val">USD 62.000</div>
+          <div class="pi-sub">USD 142/m²</div>
+        </div>
+        <div class="precio-item">
+          <div class="pi-label">Lote 13 · ref. técnica</div>
+          <div class="pi-val">USD 58.000</div>
+          <div class="pi-sub">valor ajustado</div>
+        </div>
+      </div>
+
+      <div class="precio-grid" style="margin-top:12px;">
+        <div class="precio-item">
+          <div class="pi-label">Lote 14 · piso</div>
+          <div class="pi-val">USD 105.000</div>
+          <div class="pi-sub">~900 m² · precio mínimo</div>
+        </div>
+        <div class="precio-item highlight">
+          <div class="pi-label">Lote 14 · publicación</div>
+          <div class="pi-val">USD 125.000</div>
+          <div class="pi-sub">USD 139/m²</div>
+        </div>
+        <div class="precio-item">
+          <div class="pi-label">Lote 14 · ref. técnica</div>
+          <div class="pi-val">USD 116.000</div>
+          <div class="pi-sub">valor ajustado</div>
+        </div>
+      </div>
+
+      <div class="precio-grid-2" style="margin-top:12px;">
+        <div class="precio-item" style="background:#eef4f0;border-color:#7AB591;">
+          <div class="pi-label" style="color:#7AB591;">Conjunto (13 + 14) · publicación</div>
+          <div class="pi-val" style="font-size:26px;">USD 180.000</div>
+          <div class="pi-sub">~1.335 m² · precio de cierre a negociar</div>
+        </div>
+        <div class="precio-item" style="background:#0B1F33;border-color:#0B1F33;">
+          <div class="pi-label" style="color:rgba(255,255,255,0.5);">Precio/m² implícito · conjunto</div>
+          <div class="pi-val" style="color:white;font-size:26px;">USD 135/m²</div>
+          <div class="pi-sub" style="color:rgba(255,255,255,0.4);">con descuento por volumen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. ESTRATEGIA -->
+    <div class="section">
+      <div class="section-title">7 — Estrategia de comercialización</div>
+      <div class="nota-box">
+        <strong style="color:#0B1F33">Opción A — Venta individual:</strong> publicar el lote 14 a USD 125.000 y el lote 13 a USD 62.000. Precio total si se venden por separado: USD 187.000. Es la estrategia que maximiza valor pero requiere dos compradores distintos.
+      </div>
+      <div class="nota-box">
+        <strong style="color:#0B1F33">Opción B — Venta en conjunto:</strong> publicar ambos lotes como unidad a USD 180.000 (~USD 135/m²). Apunta a un comprador que quiera construir una residencia amplia o un pequeño desarrollo de dos unidades. Cierre más rápido con leve descuento.
+      </div>
+      <div class="nota-box">
+        <strong style="color:#0B1F33">Argumento de venta principal:</strong> la combinación de 1.335 m² totales, entorno natural a 100 metros y la posibilidad de dividir o desarrollar en conjunto es infrecuente en el mercado de Tandil. En un escenario de venta individual, el comprador del lote 14 tiene margen real para construir una casa con jardín y recuperar el valor mediante alquiler turístico o venta futura.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      Grupo Altavista Otero · Tasaciones Inmobiliarias · Tandil, Buenos Aires<br>
+      Santiago Funes · santiagomfunes@gmail.com
+    </div>
+    <div class="footer-right">
+      Informe confidencial · uso exclusivo del propietario<br>
+      Validez estimativa 90 días · Mayo 2026
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

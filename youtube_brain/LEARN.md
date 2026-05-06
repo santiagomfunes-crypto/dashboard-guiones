@@ -96,9 +96,26 @@ Para fuentes web: mismo schema + `credibility_score` (1-5) + `source_type`.
 
 | ID | Tipo | Tema | Destilado en |
 |---|---|---|---|
+| CKxUe5QysG8 | video/tutorial | Meta Ads inmobiliario ES: videomarketing + landing IA → 7 leads/$480 en 30 días | — |
+| pDOZbKWuHfI | video/tutorial | Lead form ads + carousel ads para real estate (básico, Lowell Brown Toronto) | — |
+| bNGyk2UReZA | video/tutorial | Facebook Ads 2025 A-Z: maximize conversion leads, conditional logic, matriz de testing | — |
 | empre_ar_ivan | web/podcast | Iván Briones: banca global → real estate | referencia/playbook-briones.md |
 | detras_puesto_metodo | web/artículo | Método Briones: testeo contenido TikTok | referencia/playbook-briones.md |
 | infobae_beltran_mar2026 | web/entrevista | Beltrán: contactos, contenido, mercado 2026 | referencia/playbook-briones.md |
+| canal26_esquina | web/artículo | Formato torneo: mejor esquina/barrio por eliminación | referencia/playbook-briones.md |
+| mejorinformado_mentalidad | web/entrevista | Briones: autenticidad, romper tabú ambición, impacto 14-55 | referencia/playbook-briones.md |
+| mindlin_estrategia | web/artículo | Fórmula datos + provocación = leads reales | referencia/playbook-briones.md |
+
+### Archivos en brain_data/ fuera de scope de este brain (→ sfre-gestion o descarte)
+
+| Archivo | Razón |
+|---|---|
+| sistema_voz_inmobiliaria.json | Infraestructura técnica (Retell AI + Claude Code), no marca personal |
+| benja_claude_design.json | Herramienta de diseño IA, no contenido de marca |
+| agustin_tokens_optimization.json | Optimización de tokens, fuera de scope |
+| benja_anthropic_changes.json | Novedades Anthropic, fuera de scope |
+| claude_code_limits_optimization.json | Optimización Claude Code, fuera de scope |
+| web_paperclip_tutorial.json | Tutorial Paperclip, fuera de scope |
 
 ---
 

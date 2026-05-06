@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasación — Lote Mitre 630 — Grupo Altavista Otero</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Montserrat', sans-serif; color: #0B1F33; background: #fff; font-size: 11px; line-height: 1.7; }
+  @page { size: A4; margin: 0; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; position: relative; }
+
+  .header { background: #0B1F33; padding: 28px 40px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header-logo { display: flex; align-items: center; gap: 18px; }
+  .logo-svg { width: 56px; height: auto; flex-shrink: 0; }
+  .logo-text .grupo { font-size: 8px; letter-spacing: 5px; font-weight: 400; color: rgba(255,255,255,0.55); text-transform: uppercase; margin-bottom: 2px; }
+  .logo-text .nombre { font-size: 14px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: white; }
+  .header-doc { text-align: right; }
+  .header-doc .doc-tipo { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .header-doc .doc-titulo { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 1px; }
+  .header-doc .doc-fecha { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 3px; letter-spacing: 1px; }
+
+  .accent-line { height: 3px; background: #7AB591; }
+  .content { padding: 32px 40px 40px; }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 8px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #7AB591; border-bottom: 1px solid #D9DEE3; padding-bottom: 6px; margin-bottom: 14px; }
+
+  .ficha-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+  .ficha-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f0f0; gap: 12px; }
+  .ficha-item .label { color: #888; font-size: 9.5px; font-weight: 500; letter-spacing: 0.5px; flex-shrink: 0; }
+  .ficha-item .value { font-size: 9.5px; font-weight: 600; color: #0B1F33; text-align: right; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  thead tr { background: #0B1F33; color: white; }
+  thead th { padding: 8px 10px; text-align: left; font-weight: 500; font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; }
+  thead th:last-child { text-align: right; }
+  tbody tr { border-bottom: 1px solid #eef0f2; }
+  tbody tr:nth-child(even) { background: #f9fafb; }
+  tbody td { padding: 7px 10px; color: #333; font-size: 10px; }
+  tbody td:last-child { text-align: right; font-weight: 600; color: #0B1F33; }
+  .table-subtotal td { background: #eef4f0 !important; font-weight: 700; color: #0B1F33 !important; border-bottom: 2px solid #7AB591 !important; }
+
+  .financiero-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .fin-box { background: #f9fafb; border: 1px solid #e8ecef; border-radius: 4px; padding: 14px 16px; }
+  .fin-box-title { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: #7AB591; margin-bottom: 10px; font-weight: 600; }
+  .fin-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #e8ecef; font-size: 9.5px; }
+  .fin-row:last-child { border-bottom: none; font-weight: 700; padding-top: 8px; margin-top: 4px; font-size: 10px; }
+  .fin-row .fin-label { color: #666; }
+  .fin-row .fin-val { color: #0B1F33; font-weight: 600; }
+
+  .resumen-box { background: #0B1F33; border-radius: 4px; padding: 20px 24px; color: white; }
+  .resumen-rows { margin-bottom: 16px; }
+  .resumen-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 10px; }
+  .resumen-row .r-label { color: rgba(255,255,255,0.6); }
+  .resumen-row .r-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+  .resumen-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid #7AB591; padding-top: 14px; margin-top: 8px; }
+  .resumen-total .rt-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .resumen-total .rt-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: white; letter-spacing: 1px; }
+
+  .precio-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .precio-item { background: #f9fafb; border: 1px solid #e8ecef; border-radius: 4px; padding: 12px 14px; text-align: center; }
+  .precio-item.highlight { background: #eef4f0; border-color: #7AB591; }
+  .precio-item .pi-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+  .precio-item.highlight .pi-label { color: #7AB591; }
+  .precio-item .pi-val { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: #0B1F33; }
+
+  .factores-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .factores-list { list-style: none; }
+  .factores-list li { display: flex; gap: 8px; padding: 5px 0; font-size: 9.5px; border-bottom: 1px solid #f0f0f0; color: #444; line-height: 1.5; }
+  .factores-list li .icon { flex-shrink: 0; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; margin-top: 1px; }
+  .icon-pos { background: #eef4f0; color: #7AB591; }
+  .icon-neg { background: #fef0f0; color: #cc4444; }
+
+  .nota-box { background: #f9fafb; border-left: 3px solid #7AB591; padding: 10px 14px; font-size: 9.5px; color: #555; border-radius: 0 4px 4px 0; margin-bottom: 8px; line-height: 1.6; }
+
+  .badge { display: inline-block; background: #7AB591; color: white; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; margin-bottom: 12px; }
+
+  .footer { background: #0B1F33; padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .footer-left { color: rgba(255,255,255,0.5); font-size: 8.5px; letter-spacing: 0.5px; line-height: 1.6; }
+  .footer-right { color: rgba(255,255,255,0.35); font-size: 8px; letter-spacing: 1px; text-align: right; line-height: 1.6; }
+
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-logo">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 310">
+        <rect x="80" y="10" width="140" height="220" rx="70" ry="70" fill="none" stroke="white" stroke-width="1.4"/>
+        <line x1="104" y1="120" x2="196" y2="120" stroke="white" stroke-width="0.9"/>
+        <text x="150" y="98" font-family="Georgia,'Times New Roman',serif" font-size="90" fill="white" text-anchor="middle">A</text>
+        <text x="150" y="175" font-family="Georgia,'Times New Roman',serif" font-size="90" fill="white" text-anchor="middle" dominant-baseline="central">O</text>
+        <text x="150" y="264" font-family="'Montserrat',Arial,sans-serif" font-weight="400" font-size="10" fill="rgba(255,255,255,0.55)" text-anchor="middle" letter-spacing="6">GRUPO</text>
+        <text x="150" y="288" font-family="'Montserrat',Arial,sans-serif" font-weight="400" font-size="13" fill="rgba(255,255,255,0.85)" text-anchor="middle" letter-spacing="4.5">ALTAVISTA OTERO</text>
+      </svg>
+      <div class="logo-text">
+        <div class="grupo">Grupo</div>
+        <div class="nombre">Altavista Otero</div>
+      </div>
+    </div>
+    <div class="header-doc">
+      <div class="doc-tipo">Informe de Tasación</div>
+      <div class="doc-titulo">Lote Urbano — Mitre 630, Tandil</div>
+      <div class="doc-fecha">Mayo 2026 · Tandil, Buenos Aires</div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+
+  <div class="content">
+
+    <!-- 1. FICHA -->
+    <div class="section">
+      <div class="section-title">1 — Descripción del inmueble</div>
+      <div class="badge">Lote urbano · Zona centro</div>
+      <div class="ficha-grid">
+        <div class="ficha-item"><span class="label">Dirección</span><span class="value">Mitre 630 · entre Rodríguez y 9 de Julio</span></div>
+        <div class="ficha-item"><span class="label">Partida ARBA</span><span class="value">47529</span></div>
+        <div class="ficha-item"><span class="label">Partido / Circ. / Secc.</span><span class="value">103 (Tandil) · Circ. 1 · Secc. A</span></div>
+        <div class="ficha-item"><span class="label">Manzana / Parcela</span><span class="value">28 / 14C</span></div>
+        <div class="ficha-item"><span class="label">Superficie terreno</span><span class="value">924 m² (dato ARBA)</span></div>
+        <div class="ficha-item"><span class="label">Frente aprox.</span><span class="value">~10,85 m</span></div>
+        <div class="ficha-item"><span class="label">Profundidad aprox.</span><span class="value">~85 m</span></div>
+        <div class="ficha-item"><span class="label">Zonificación</span><span class="value">Densidad 1000</span></div>
+        <div class="ficha-item"><span class="label">Zona</span><span class="value">Centro · Cuatro Avenidas · Tandil</span></div>
+        <div class="ficha-item"><span class="label">Operación</span><span class="value">Venta</span></div>
+      </div>
+    </div>
+
+    <!-- 2. RELEVAMIENTO -->
+    <div class="section">
+      <div class="section-title">2 — Relevamiento de mercado · Lotes en calle Mitre y calles centrales equivalentes</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Ubicación</th>
+            <th>M² lote</th>
+            <th style="text-align:right">Precio publicado</th>
+            <th style="text-align:right">USD/m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Mitre al 400</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma calle</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-mitre-al-400-45476-175.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>381 m²</td>
+            <td>USD 240.000</td>
+            <td>USD 630/m²</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Lote Céntrico Mitre</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma calle</span><br>
+              <a href="https://terreno.mercadolibre.com.ar/MLA-1699301469-lote-centrico-mitre-_JM" style="font-size:8px;color:#888;text-decoration:none">mercadolibre.com.ar →</a>
+            </td>
+            <td>381 m²</td>
+            <td>USD 200.000</td>
+            <td>USD 525/m²</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Mitre 300</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma calle</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-mitre-300-50486-144.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>s/d</td>
+            <td>USD 280.000</td>
+            <td>—</td>
+          </tr>
+          <tr style="background:#eef4f0">
+            <td>
+              <strong style="color:#0B1F33">Mitre 1100</strong>
+              <span style="font-size:8.5px;color:#7AB591;font-weight:600"> · misma calle · fuera de las 4 avs.</span><br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-mitre-1100-10141-83.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>842 m²</td>
+            <td>USD 260.000</td>
+            <td>USD 309/m²</td>
+          </tr>
+          <tr>
+            <td>
+              Chacabuco 759<br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-chacabuco-759--40287-90.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>466 m²</td>
+            <td>USD 350.000</td>
+            <td>USD 751/m²</td>
+          </tr>
+          <tr>
+            <td>
+              Yrigoyen 800<br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-yrigoyen-800-38261-135.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>281 m²</td>
+            <td>USD 280.000</td>
+            <td>USD 996/m²</td>
+          </tr>
+          <tr>
+            <td>
+              Pinto 900<br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-pinto-900-43804-110.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>1.616 m²</td>
+            <td>USD 1.050.000</td>
+            <td>USD 650/m²</td>
+          </tr>
+          <tr>
+            <td>
+              Maipú 771<br>
+              <a href="https://www.casasdehoy.com.ar/2022/lotes-en-venta-en-tandil-maipu-771-51231-110.html" style="font-size:8px;color:#888;text-decoration:none">casasdehoy.com.ar →</a>
+            </td>
+            <td>485 m²</td>
+            <td>USD 250.000</td>
+            <td>USD 515/m²</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="3"><strong>Promedio calles centrales (excl. Mitre 1100)</strong></td>
+            <td><strong>USD 614/m²</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;padding:8px 10px;background:#f9fafb;border-radius:4px;font-size:9.5px;color:#555;">
+        <strong style="color:#0B1F33">Fuente:</strong> base de propiedades activas Tandil (Argenprop, MercadoLibre, Casas de Hoy) — Mayo 2026. Filas verdes = misma calle.
+      </div>
+    </div>
+
+    <!-- 3. VALUACIÓN -->
+    <div class="section">
+      <div class="section-title">3 — Valuación del lote</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Fundamento</th>
+            <th style="text-align:right">Valor USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Superficie</strong></td>
+            <td>924 m² según Partida ARBA 47529</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Valor base de referencia</strong></td>
+            <td>Promedio calles centrales: USD 614/m²<br>
+            <span style="font-size:9px;color:#888">Ajuste por escala (924 m² > promedio del mercado): −15%</span></td>
+            <td>USD 522/m²</td>
+          </tr>
+          <tr>
+            <td><strong>924 m² × USD 522/m²</strong></td>
+            <td>Valor base ajustado</td>
+            <td>USD 482.328</td>
+          </tr>
+          <tr>
+            <td><strong>Plus densidad 1000</strong></td>
+            <td>Zonificación permite desarrollo en altura — mayor FOT que lotes residenciales.<br>
+            <span style="font-size:9px;color:#888">+20% sobre valor base por potencial constructivo</span></td>
+            <td>+ USD 96.465</td>
+          </tr>
+          <tr class="table-subtotal">
+            <td colspan="2"><strong>Valor técnico total</strong></td>
+            <td><strong>USD 578.793</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. RECONCILIACIÓN -->
+    <div class="section">
+      <div class="section-title">4 — Reconciliación de métodos</div>
+      <div class="financiero-cols">
+        <div class="fin-box">
+          <div class="fin-box-title">Método comparativo directo</div>
+          <div class="fin-row"><span class="fin-label">Mitre 400 (381 m²)</span><span class="fin-val">USD 525–630/m²</span></div>
+          <div class="fin-row"><span class="fin-label">Ajuste por escala (924 vs 381 m²)</span><span class="fin-val">− USD 90/m²</span></div>
+          <div class="fin-row"><span class="fin-label">Tasa ajustada</span><span class="fin-val">USD 455/m²</span></div>
+          <div class="fin-row"><span class="fin-label">924 m² × USD 455/m²</span><span class="fin-val">USD 420.420</span></div>
+          <div class="fin-row"><span class="fin-label">Plus D1000</span><span class="fin-val">USD 504.504</span></div>
+        </div>
+        <div class="fin-box">
+          <div class="fin-box-title">Método por residual de desarrollo</div>
+          <div class="fin-row"><span class="fin-label">Superficie edificable (FOT ~2)</span><span class="fin-val">1.848 m² apt</span></div>
+          <div class="fin-row"><span class="fin-label">Valor de venta USD 1.500/m² apt</span><span class="fin-val">USD 2.772.000</span></div>
+          <div class="fin-row"><span class="fin-label">Incidencia tierra (20%)</span><span class="fin-val">USD 554.400</span></div>
+          <div class="fin-row"><span class="fin-label">Costo construcción + margen dev.</span><span class="fin-val">Resto</span></div>
+          <div class="fin-row"><span class="fin-label">Valor tierra por residual</span><span class="fin-val">USD 554.400</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. PRECIO -->
+    <div class="section">
+      <div class="section-title">5 — Valor de mercado estimado</div>
+      <div class="resumen-box">
+        <div class="resumen-rows">
+          <div class="resumen-row"><span class="r-label">Método comparativo directo</span><span class="r-val">USD 504.504</span></div>
+          <div class="resumen-row"><span class="r-label">Método residual de desarrollo</span><span class="r-val">USD 554.400</span></div>
+          <div class="resumen-row"><span class="r-label">Método base + prima D1000</span><span class="r-val">USD 578.793</span></div>
+          <div class="resumen-row"><span class="r-label">Promedio ponderado</span><span class="r-val">USD 545.899</span></div>
+        </div>
+        <div class="resumen-total">
+          <span class="rt-label">Valor técnico de referencia</span>
+          <span class="rt-val">USD 550.000</span>
+        </div>
+      </div>
+      <div class="precio-grid">
+        <div class="precio-item">
+          <div class="pi-label">Piso de negociación</div>
+          <div class="pi-val">USD 490.000</div>
+        </div>
+        <div class="precio-item highlight">
+          <div class="pi-label">Precio de publicación</div>
+          <div class="pi-val">USD 590.000</div>
+        </div>
+        <div class="precio-item">
+          <div class="pi-label">Referencia técnica</div>
+          <div class="pi-val">USD 550.000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FACTORES -->
+    <div class="section">
+      <div class="section-title">6 — Factores que sostienen y condicionan el valor</div>
+      <div class="factores-cols">
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7AB591;margin-bottom:8px;font-weight:600;">Fortalezas</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-pos">+</span>Ubicación en calle Mitre entre Rodríguez y 9 de Julio — corazón del centro de Tandil</li>
+            <li><span class="icon icon-pos">+</span>Dentro del cuadrilátero de las Cuatro Avenidas — máxima densidad y demanda</li>
+            <li><span class="icon icon-pos">+</span>Densidad 1000 — zonificación permite edificio en altura (máximo potencial constructivo)</li>
+            <li><span class="icon icon-pos">+</span>924 m² — lote de gran superficie para zona central, difícil de encontrar</li>
+            <li><span class="icon icon-pos">+</span>Frente a calle Mitre — arteria comercial y residencial de alta valorización</li>
+            <li><span class="icon icon-pos">+</span>Dato dominial limpio en ARBA — partida 47529 identificada sin inconvenientes</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#cc4444;margin-bottom:8px;font-weight:600;">Condicionantes</div>
+          <ul class="factores-list">
+            <li><span class="icon icon-neg">–</span>Frente reducido (~10,85 m) para 924 m² — lote largo y angosto, puede limitar diseños arquitectónicos</li>
+            <li><span class="icon icon-neg">–</span>Mercado de lotes céntricos es pequeño — pocos compradores finales, mayoría desarrolladores</li>
+            <li><span class="icon icon-neg">–</span>Verificar código de edificación vigente y restricciones de línea municipal antes del cierre</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. NOTAS -->
+    <div class="section">
+      <div class="section-title">7 — Consideraciones</div>
+      <div class="nota-box">
+        <strong>Perfil de comprador:</strong> por la zonificación D1000 y la superficie, el comprador más probable es un desarrollador inmobiliario interesado en construir un edificio de departamentos. La valorización del lote está directamente ligada al potencial de unidades construidas y vendibles.
+      </div>
+      <div class="nota-box">
+        <strong>Potencial constructivo estimado:</strong> con FOT ~2 sobre 924 m², el proyecto podría sumar aproximadamente 1.800–2.000 m² vendibles de departamentos. A valores actuales de Tandil (USD 1.400–1.600/m²), el producto final representaría USD 2.500.000–3.200.000 brutos.
+      </div>
+      <div class="nota-box" style="border-left-color:#0B1F33">
+        Este informe fue elaborado en base a datos catastrales oficiales (ARBA Carto, Mayo 2026), datos de mercado activo de portales inmobiliarios locales y metodología de valuación por comparación directa y residual de desarrollo. Los valores son de referencia técnica y no reemplazan tasación pericial certificada ni verificación notarial.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      Grupo Altavista Otero · Real Estate · Tandil, Buenos Aires<br>
+      Martillero responsable: Juan Otero · Mat. N° 1966 · C.M.C.P. Azul
+    </div>
+    <div class="footer-right">
+      Informe confidencial · Mayo 2026<br>
+      Uso exclusivo del destinatario
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

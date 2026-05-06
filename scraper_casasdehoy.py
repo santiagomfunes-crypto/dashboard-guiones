@@ -52,6 +52,21 @@ MAX_PAGES_DEFAULT = 5    # páginas por combinación (~24 items/página)
 DELAY_BETWEEN_REQUESTS = 2  # segundos entre requests
 
 
+# ── Tipo de cambio ────────────────────────────────────────────────────────────
+
+def get_dolar_blue():
+    """Obtiene el tipo de cambio blue desde dolarapi.com. Retorna (compra, venta) o (None, None)."""
+    url = "https://dolarapi.com/v1/dolares/blue"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+            return data.get("compra"), data.get("venta")
+    except Exception as e:
+        print(f"  Advertencia: no se pudo obtener cotización blue: {e}", file=sys.stderr)
+        return None, None
+
+
 # ── Carga de credenciales ──────────────────────────────────────────────────────
 
 def load_env():
@@ -125,14 +140,22 @@ def parse_card(card_html, tipologia_default, operacion_default):
                 tipologia = t
                 break
 
-    # ── Precio USD ──
-    precio_m = re.search(r'<span[^>]*class="precio"[^>]*>\s*U\$S\s*([\d.]+)', card_html)
+    # ── Precio ──
     precio_usd = None
-    if precio_m:
+    precio_ars = None
+    usd_m = re.search(r'<span[^>]*class="precio"[^>]*>\s*U\$S\s*([\d.]+)', card_html)
+    if usd_m:
         try:
-            precio_usd = int(precio_m.group(1).replace(".", ""))
+            precio_usd = int(usd_m.group(1).replace(".", ""))
         except ValueError:
             pass
+    if precio_usd is None:
+        ars_m = re.search(r'<span[^>]*class="precio"[^>]*>\s*\$\s*([\d.,]+)', card_html)
+        if ars_m:
+            try:
+                precio_ars = int(ars_m.group(1).replace(".", "").replace(",", ""))
+            except ValueError:
+                pass
 
     # ── Atributos de la propiedad (comodidades) ──
     metros_totales = None
@@ -173,6 +196,8 @@ def parse_card(card_html, tipologia_default, operacion_default):
         "operacion": operacion,
         "zona": zona,
         "precio_usd": precio_usd,
+        "precio_ars": precio_ars,
+        "tipo_cambio_usd": None,
         "dormitorios": dormitorios,
         "metros_totales": metros_totales,
         "cochera": cochera,
@@ -270,8 +295,14 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
         print(f"\n[DRY RUN] Se insertarían/actualizarían {len(props)} propiedades")
         print("Muestra (primeras 5):")
         for p in props[:5]:
+            if p.get("precio_usd"):
+                precio_str = f"USD {p['precio_usd']}"
+            elif p.get("precio_ars"):
+                precio_str = f"ARS {p['precio_ars']} → USD {p.get('precio_usd', '?')}"
+            else:
+                precio_str = "sin precio"
             print(f"  ID={p['fuente_id']} | {p['tipologia']}/{p['operacion']} | "
-                  f"${p.get('precio_usd','?')} USD | {p['zona'][:40]}")
+                  f"{precio_str} | {p['zona'][:40]}")
         return len(props), 0
 
     batch_size = 50
@@ -363,6 +394,20 @@ def main():
 
     props = scrape_all(args.max_pages)
     print(f"\nTotal propiedades únicas scraped: {len(props)}")
+
+    # Obtener cotización blue y convertir precios ARS → USD
+    dolar_compra, dolar_venta = get_dolar_blue()
+    if dolar_venta:
+        print(f"Dólar blue: compra ${dolar_compra} / venta ${dolar_venta}")
+        convertidas = 0
+        for p in props:
+            if p.get("precio_ars") and not p.get("precio_usd"):
+                p["precio_usd"] = round(p["precio_ars"] / dolar_venta, 2)
+                p["tipo_cambio_usd"] = dolar_venta
+                convertidas += 1
+        print(f"Propiedades convertidas ARS→USD: {convertidas}")
+    else:
+        print("Advertencia: cotización blue no disponible, precios ARS no convertidos")
 
     inserted, errors = upsert_supabase(props, supabase_url, service_key, dry_run=args.dry_run)
 

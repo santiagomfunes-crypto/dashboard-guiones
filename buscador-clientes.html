@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscador de propiedades — Altavista Otero</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Montserrat', sans-serif; background: #F2EFE9; color: #0B1F33; min-height: 100vh; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400&display=swap');
+
+  header {
+    background: #0B1F33;
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .brand { display: flex; align-items: center; gap: 10px; }
+  header .brand-text p { font-size: 8px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase; line-height: 1; }
+  header .brand-text p + p { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  header a { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+  header a:hover { color: rgba(255,255,255,0.7); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  h1 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(11,31,51,0.4); margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: rgba(11,31,51,0.6); margin-bottom: 32px; }
+
+  .searches { display: flex; flex-direction: column; gap: 40px; }
+
+  .search-block { background: white; border: 1px solid #D9DEE3; }
+  .search-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #D9DEE3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0B1F33;
+  }
+  .search-header .num {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-right: 10px;
+  }
+  .search-header .label { font-size: 13px; font-weight: 500; color: white; }
+  .search-header .count { font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+
+  .props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: #D9DEE3;
+  }
+
+  .prop-card {
+    background: white;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .prop-card:hover { background: #f8f8f8; }
+
+  .prop-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    background: #0B1F33;
+  }
+  .prop-img-placeholder {
+    width: 100%;
+    height: 160px;
+    background: #0B1F33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.15);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .prop-body { padding: 14px 16px; }
+  .prop-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0B1F33;
+    margin-bottom: 4px;
+  }
+  .prop-zona {
+    font-size: 11px;
+    color: rgba(11,31,51,0.5);
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .prop-specs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .prop-spec {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: rgba(11,31,51,0.4);
+    text-transform: uppercase;
+  }
+  .prop-spec span { font-weight: 600; color: #0B1F33; }
+
+  .prop-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .btn-compartir {
+    flex: 1;
+    padding: 8px;
+    background: #0B1F33;
+    color: white;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+  }
+  .btn-compartir:hover { background: #1F3A56; }
+
+  .btn-ver {
+    padding: 8px 12px;
+    border: 1px solid #D9DEE3;
+    color: rgba(11,31,51,0.4);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-ver:hover { border-color: #0B1F33; color: #0B1F33; }
+
+  .fuente-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(11,31,51,0.7);
+    color: rgba(255,255,255,0.7);
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 7px;
+  }
+
+  .empty { padding: 32px; text-align: center; color: rgba(11,31,51,0.3); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .loading { padding: 32px; text-align: center; color: rgba(11,31,51,0.3); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+  .admin-url { font-size: 9px; color: rgba(11,31,51,0.25); margin-top: 32px; text-align: center; letter-spacing: 1px; }
+  .admin-url a { color: rgba(11,31,51,0.4); }
+
+  .prop-titulo {
+    font-size: 11px;
+    color: rgba(11,31,51,0.5);
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg width="18" height="24" viewBox="0 0 160 220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="10" width="140" height="200" rx="70" ry="70" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/>
+      <line x1="32" y1="110" x2="128" y2="110" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+      <text x="80" y="60" font-family="Georgia,serif" font-weight="300" font-size="52" fill="rgba(255,255,255,0.4)" text-anchor="middle" dominant-baseline="central">A</text>
+      <text x="80" y="160" font-family="Georgia,serif" font-weight="300" font-size="52" fill="rgba(255,255,255,0.4)" text-anchor="middle" dominant-baseline="central">O</text>
+    </svg>
+    <div class="brand-text">
+      <p>Altavista Otero</p>
+      <p>Buscador de propiedades</p>
+    </div>
+  </div>
+  <a href="https://propiedades.santiagofunes.com.ar/admin/compartir" target="_blank">Admin compartir ↗</a>
+</header>
+
+<main>
+  <h1>Propiedades en el mercado</h1>
+  <p class="subtitle">Buscando en Argenprop, ZonaProp, MercadoLibre y más. Hacé click en "Compartir" para generar un link con tu marca.</p>
+
+  <div class="searches" id="searches">
+    <div class="loading">Cargando datos del mercado...</div>
+  </div>
+
+  <p class="admin-url">
+    Datos del mercado de Tandil · <a href="https://propiedades.santiagofunes.com.ar/admin/compartir" target="_blank">propiedades.santiagofunes.com.ar/admin/compartir</a>
+  </p>
+</main>
+
+<script>
+const SUPABASE_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El'
+const ADMIN_URL = 'https://propiedades.santiagofunes.com.ar/admin/compartir'
+
+const FUENTE_LABEL = {
+  argenprop: 'Argenprop',
+  zonaprop: 'ZonaProp',
+  mercadolibre: 'MercadoLibre',
+  casasdehoy: 'Casas de Hoy',
+  infocasas: 'Infocasas',
+}
+
+// Las 6 búsquedas de Santiago
+const SEARCHES = [
+  {
+    id: 1,
+    label: 'Depto 1 dorm · Zona centro · Hasta USD 60.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && p.dormitorios === 1
+      && p.precio_usd != null && p.precio_usd <= 60000
+      && zonaMatch(p.zona, ['centro']),
+  },
+  {
+    id: 2,
+    label: 'Depto 1 dorm · Semi-céntrico · USD 50.000 – 60.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && p.dormitorios === 1
+      && p.precio_usd != null && p.precio_usd >= 50000 && p.precio_usd <= 60000
+      && zonaMatch(p.zona, ['semi', 'centro', 'santamarina', 'españa', 'maipú', 'maipu', 'belgrano', 'mitre', 'pinto', 'chacabuco', 'rodriguez', 'uriburu', 'colón', 'colon', 'saavedra', 'paz', 'san martin', 'independencia', 'fuerte']),
+  },
+  {
+    id: 3,
+    label: 'Depto 2 ambientes · USD 60.000 – 70.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && (p.dormitorios === 1 || p.dormitorios === 0)
+      && p.precio_usd != null && p.precio_usd >= 60000 && p.precio_usd <= 70000,
+  },
+  {
+    id: 4,
+    label: 'Depto 2 dorm · Cocina separada · ~USD 80.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && p.dormitorios === 2
+      && p.precio_usd != null && p.precio_usd >= 70000 && p.precio_usd <= 95000,
+  },
+  {
+    id: 5,
+    label: 'Depto 2 dorm · Zona indistinta · Hasta USD 150.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && p.dormitorios === 2
+      && p.precio_usd != null && p.precio_usd <= 150000,
+  },
+  {
+    id: 6,
+    label: 'Depto 2 dorm · Estiramos · Hasta USD 160.000',
+    filter: p => p.tipologia === 'departamento' && p.operacion === 'venta'
+      && p.dormitorios === 2
+      && p.precio_usd != null && p.precio_usd > 150000 && p.precio_usd <= 160000,
+  },
+]
+
+function zonaMatch(zona, keywords) {
+  if (!zona) return false
+  const z = zona.toLowerCase()
+  return keywords.some(k => z.includes(k))
+}
+
+function fmtPrice(usd) {
+  if (!usd) return 'Consultar'
+  return 'USD ' + Number(usd).toLocaleString('es-AR')
+}
+
+function fmtFuente(f) {
+  return FUENTE_LABEL[f] || f || ''
+}
+
+function compartirUrl(propUrl) {
+  return ADMIN_URL + '?url=' + encodeURIComponent(propUrl)
+}
+
+function renderCard(p) {
+  const img = p.imagen_url
+    ? `<img class="prop-img" src="${escHtml(p.imagen_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      + `<div class="prop-img-placeholder" style="display:none">Sin foto</div>`
+    : `<div class="prop-img-placeholder">Sin foto</div>`
+
+  const specs = []
+  if (p.dormitorios != null) specs.push(`<span class="prop-spec"><span>${p.dormitorios}</span> dorm</span>`)
+  if (p.metros_totales) specs.push(`<span class="prop-spec"><span>${p.metros_totales}</span> m²</span>`)
+  if (p.cochera) specs.push(`<span class="prop-spec">cochera</span>`)
+
+  return `<div class="prop-card">
+    <div style="position:relative">
+      ${img}
+      <span class="fuente-tag">${escHtml(fmtFuente(p.fuente))}</span>
+    </div>
+    <div class="prop-body">
+      <div class="prop-price">${fmtPrice(p.precio_usd)}</div>
+      <div class="prop-zona">${escHtml(p.zona || 'Tandil')}</div>
+      <div class="prop-specs">${specs.join('')}</div>
+      <div class="prop-actions">
+        <a class="btn-compartir" href="${compartirUrl(p.url)}" target="_blank">Compartir →</a>
+        <a class="btn-ver" href="${escHtml(p.url)}" target="_blank">Ver ↗</a>
+      </div>
+    </div>
+  </div>`
+}
+
+function escHtml(s) {
+  if (!s) return ''
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+async function load() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/propiedades_mercado?select=id,fuente,url,tipologia,operacion,zona,precio_usd,dormitorios,metros_totales,cochera,titulo,imagen_url&tipologia=eq.departamento&operacion=eq.venta&precio_usd=lte.200000&order=precio_usd.asc&limit=1000`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } }
+  )
+  const data = await res.json()
+
+  const container = document.getElementById('searches')
+  container.innerHTML = ''
+
+  for (const s of SEARCHES) {
+    const matches = data.filter(s.filter).slice(0, 40)
+
+    const block = document.createElement('div')
+    block.className = 'search-block'
+    block.innerHTML = `
+      <div class="search-header">
+        <div style="display:flex;align-items:center">
+          <span class="num">#${s.id}</span>
+          <span class="label">${s.label}</span>
+        </div>
+        <span class="count">${matches.length} propiedades</span>
+      </div>
+      <div class="props-grid">
+        ${matches.length === 0
+          ? '<div class="empty">Sin resultados en la base actual</div>'
+          : matches.map(renderCard).join('')}
+      </div>
+    `
+    container.appendChild(block)
+  }
+}
+
+load().catch(e => {
+  document.getElementById('searches').innerHTML = `<div class="empty">Error cargando datos: ${e.message}</div>`
+})
+</script>
+</body>
+</html>

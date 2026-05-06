@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta Ads — Mayo 2026 — Grupo Alta Vista Otero</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #f5f5f3;
+  }
+  .container {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 20px 80px;
+  }
+  .header {
+    background: #0B1F33;
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.65); font-size: 13px; }
+  .header .meta { display: flex; gap: 24px; margin-top: 20px; }
+  .header .meta-item { }
+  .header .meta-item .label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; }
+  .header .meta-item .value { font-size: 20px; font-weight: 700; color: #fff; }
+
+  h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin: 40px 0 16px;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0B1F33;
+    margin: 24px 0 10px;
+  }
+  h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 0 8px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1px solid #e8e8e6;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #0B1F33;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0ee;
+  }
+
+  .campaign-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0B1F33;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px 10px 0 0;
+    margin-top: 32px;
+  }
+  .campaign-header h3 { color: white; margin: 0; font-size: 16px; }
+  .campaign-header .budget {
+    background: rgba(255,255,255,0.15);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .campaign-body {
+    background: white;
+    border: 1px solid #e8e8e6;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 12px 0;
+  }
+  th {
+    background: #f7f7f5;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    border-bottom: 1px solid #eee;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0ee;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: #0B1F33; }
+
+  .ad-set {
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  .ad-set-header {
+    background: #f7f7f5;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ad-set-header .budget-badge {
+    background: #0B1F33;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+  .ad-set-body { padding: 16px; }
+
+  .ad-copy {
+    background: #f9f9f7;
+    border-left: 3px solid #0B1F33;
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 10px 0;
+    white-space: pre-line;
+  }
+  .ad-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+  }
+  .ad-meta span strong { color: #333; }
+
+  .script-box {
+    background: #eef4ff;
+    border: 1px solid #c5d8f5;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.9;
+    margin: 10px 0;
+    font-style: italic;
+  }
+
+  .form-box {
+    background: #f0faf5;
+    border: 1px solid #b8e0cc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .form-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed #cde8d8;
+    font-size: 13px;
+  }
+  .form-row:last-child { border-bottom: none; }
+  .form-answer { flex: 1; }
+  .form-action { font-size: 12px; font-weight: 600; }
+  .action-pass { color: #2d7a4f; }
+  .action-close { color: #c0392b; }
+
+  .rule-box {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0ee;
+  }
+  .rule-box:last-child { border-bottom: none; }
+  .rule-num {
+    width: 26px;
+    height: 26px;
+    background: #0B1F33;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .timeline-row {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0ee;
+    font-size: 13px;
+  }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-day {
+    width: 80px;
+    font-weight: 700;
+    color: #0B1F33;
+    flex-shrink: 0;
+  }
+
+  .checklist-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f7f7f5;
+    font-size: 13px;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .phase-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .phase-test { background: #fef3cd; color: #856404; }
+  .phase-scale { background: #d1e7dd; color: #0f5132; }
+  .phase-retarg { background: #f8d7da; color: #842029; }
+
+  .budget-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .budget-card {
+    border: 1px solid #e8e8e6;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .budget-card .amount { font-size: 28px; font-weight: 800; color: #0B1F33; }
+  .budget-card .desc { font-size: 12px; color: #888; margin-top: 4px; }
+  .budget-card .sub { font-size: 11px; color: #aaa; }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .metric-card {
+    background: #f7f7f5;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .metric-card .value { font-size: 20px; font-weight: 800; color: #0B1F33; }
+  .metric-card .label { font-size: 11px; color: #888; margin-top: 4px; }
+
+  .utm-code {
+    background: #1e1e2e;
+    color: #a9dc76;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    margin: 10px 0;
+    word-break: break-all;
+  }
+
+  .urgent-badge { color: #c0392b; font-weight: 700; }
+  .soon-badge { color: #d68910; font-weight: 700; }
+
+  .divider {
+    border: none;
+    border-top: 2px solid #e8e8e6;
+    margin: 32px 0;
+  }
+
+  @media print {
+    body { background: white; }
+    .container { margin: 0; padding: 20px; }
+    .ad-set { break-inside: avoid; }
+    .campaign-body { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Meta Ads — Campaña Mayo 2026</h1>
+    <p>Grupo Alta Vista Otero · Tandil · Basado en reunión con Leonel Paez</p>
+    <div class="meta">
+      <div class="meta-item">
+        <div class="label">Budget total</div>
+        <div class="value">USD 1.000</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Campañas</div>
+        <div class="value">2</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Ad sets</div>
+        <div class="value">10</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Propiedades</div>
+        <div class="value">27</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISTRIBUCIÓN -->
+  <h2>Distribución del presupuesto</h2>
+  <div class="budget-breakdown">
+    <div class="budget-card">
+      <div class="amount">$600</div>
+      <div class="desc">C1 — Deptos e Inversión</div>
+      <div class="sub">$300 testeo + $300 escala</div>
+    </div>
+    <div class="budget-card">
+      <div class="amount">$400</div>
+      <div class="desc">C2 — Casas + Retargeting</div>
+      <div class="sub">$250 adquisición + $150 Hammerdem</div>
+    </div>
+  </div>
+
+  <!-- REGLAS -->
+  <h2>Reglas de la campaña</h2>
+  <div class="card">
+    <div class="rule-box">
+      <div class="rule-num">1</div>
+      <div><strong>Special Ad Category: Vivienda siempre.</strong> Sin esto Meta puede banear la cuenta permanentemente.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">2</div>
+      <div><strong>Performance goal: Maximize conversion leads.</strong> Nunca el default "maximize number of leads". Esto baja el costo Y sube la calidad al mismo tiempo.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">3</div>
+      <div><strong>No tocar edad ni género.</strong> La categoría Vivienda lo prohíbe — el ad no se aprueba si los modificás.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">4</div>
+      <div><strong>Decisiones por plata gastada, no por días.</strong> Con $200-$300 invertidos ya tenés suficiente señal para apagar los perdedores.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">5</div>
+      <div><strong>4 creativos mínimo por ad set.</strong> El AI necesita variedad para encontrar la imagen/video que mejor funciona en tu mercado.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">6</div>
+      <div><strong>Llamar al lead en menos de 5 minutos.</strong> Estudio MIT: 100x más probabilidad de contacto vs llamar a los 30 minutos.</div>
+    </div>
+    <div class="rule-box">
+      <div class="rule-num">7</div>
+      <div><strong>Lookalike sobre intereses genéricos.</strong> La base de datos de clientes es el activo más valioso — créala antes de lanzar cualquier campaña.</div>
+    </div>
+  </div>
+
+  <!-- AUDIENCIAS -->
+  <h2>Audiencias — crear antes de lanzar</h2>
+  <div class="card">
+    <h4>1. Custom Audience — base de datos propia</h4>
+    <p style="font-size:13px; color:#555;">Exportar mails + teléfonos del CRM/WhatsApp → Meta → Audiences → Create → Custom Audience → Customer list → subir CSV.</p>
+    <h4 style="margin-top:16px;">2. Lookalike 1% Argentina <span style="color:#c0392b; font-size:11px; font-weight:700; margin-left:6px;">USAR EN C1 Y C2</span></h4>
+    <p style="font-size:13px; color:#555;">Source: Custom Audience recién creada · País: Argentina · Size: 1% · Guardar como: <code>Lookalike 1% AR — Base Clientes</code></p>
+    <h4 style="margin-top:16px;">3. Retargeting 180 días <span style="color:#c0392b; font-size:11px; font-weight:700; margin-left:6px;">USAR EN C2 HAMMERDEM</span></h4>
+    <p style="font-size:13px; color:#555;">Meta sources: Instagram + Facebook + Lead forms — últimos 180 días. Captura también los leads de la agencia anterior. Guardar como: <code>Retargeting 180d — Interacciones</code></p>
+  </div>
+
+  <!-- UTMs -->
+  <h2>UTMs — pegar en cada ad</h2>
+  <div class="card">
+    <div class="utm-code">?utm_source=meta&utm_medium=paid&utm_campaign=mayo26&utm_content=NOMBRE_AD</div>
+    <table>
+      <thead><tr><th>Ad Set</th><th>utm_content</th></tr></thead>
+      <tbody>
+        <tr><td>GAR431_Rendimiento</td><td><code>gar431_rendimiento</code></td></tr>
+        <tr><td>GAR431_Escasez</td><td><code>gar431_escasez</code></td></tr>
+        <tr><td>GAR431_Ciudad</td><td><code>gar431_ciudad</code></td></tr>
+        <tr><td>GAR431_Objecion</td><td><code>gar431_objecion</code></td></tr>
+        <tr><td>GAR431_UGC</td><td><code>gar431_ugc</code></td></tr>
+        <tr><td>Deptos_Inversion</td><td><code>deptos_inversion</code></td></tr>
+        <tr><td>SanLorenzo_Stock</td><td><code>sanlor420_stock</code></td></tr>
+        <tr><td>Casas_CABA</td><td><code>casas_caba</code></td></tr>
+        <tr><td>CasaBelgrano_Directa</td><td><code>belgrano146_directa</code></td></tr>
+        <tr><td>Hammerdem — Testimonio</td><td><code>retarg_testimonio</code></td></tr>
+        <tr><td>Hammerdem — Objeción</td><td><code>retarg_objecion</code></td></tr>
+        <tr><td>Hammerdem — Prueba social</td><td><code>retarg_pruebasocial</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CAMPAÑA 1 -->
+  <div class="campaign-header">
+    <h3>Campaña 1 — Deptos e Inversión</h3>
+    <div class="budget">$600</div>
+  </div>
+  <div class="campaign-body">
+
+    <table>
+      <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre</td><td><strong>AV_C1_Deptos_Mayo26</strong></td></tr>
+        <tr><td>Objetivo</td><td><strong>Leads</strong></td></tr>
+        <tr><td>Special Ad Category</td><td><strong style="color:#c0392b;">Vivienda — obligatorio</strong></td></tr>
+        <tr><td>Performance goal</td><td><strong>Maximize conversion leads</strong></td></tr>
+        <tr><td>Audiencia</td><td>Lookalike 1% Argentina</td></tr>
+        <tr><td>Ubicación</td><td>Tandil (20km) + CABA + Gran Buenos Aires</td></tr>
+        <tr><td>Edad / Género</td><td>No tocar</td></tr>
+        <tr><td>Placements</td><td>Advantage+ (automático)</td></tr>
+        <tr><td>Budget por set</td><td><strong>$10/día</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Fase 1 — Testeo · Garibaldi 431</h3>
+    <span class="phase-label phase-test">$300 · 5 ad sets · $10/día · hasta agotar los $300</span>
+    <p style="font-size:13px; color:#555; margin-bottom:16px;">Correr hasta gastar $300. Ordenar por CPL. Apagar los 3 con mayor costo por lead. Los 2 ganadores pasan a escala.</p>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 1 — GAR431_Rendimiento <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">Un departamento en el centro de Tandil alquila hoy desde $350.000 por mes.
+
+Garibaldi 431: 1 ambiente, 48 m², frente, USD 100.000.
+
+Hacé los números. Te mandamos toda la info.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Garibaldi 431 — ¿Cuánto rinde?</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> gar431_rendimiento</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos — exterior · interior · frente edificio · detalle</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 2 — GAR431_Escasez <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">Departamento en Garibaldi 431, Tandil.
+1 ambiente · 48 m² · frente · USD 100.000
+
+Última unidad disponible en este edificio. Centro, entrega inmediata.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Garibaldi 431 — Última unidad</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> gar431_escasez</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> mismas 4 fotos, orden diferente</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 3 — GAR431_Ciudad <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">5.8 personas nuevas por día eligen Tandil. El metro cuadrado subió y sigue subiendo.
+
+Garibaldi 431: USD 100.000 en el centro. Listo para alquilar o para vivir.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Tandil crece — Tu propiedad en el centro</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> gar431_ciudad</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 2-3 fotos Tandil (ciudad/sierras) + 1-2 fotos del depto</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 4 — GAR431_Objecion <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">"¿Conviene comprar con esta economía?"
+
+El dólar sube. El alquiler sube. El ladrillo sube.
+Lo que no sube: tu poder de compra si esperás.
+
+Garibaldi 431 · 1 ambiente · USD 100.000 · Centro de Tandil.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> La respuesta que nadie te da</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> gar431_objecion</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos del depto</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 5 — GAR431_UGC · VIDEO <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <p style="font-size:12px; color:#888; margin-bottom:8px;">Santi a cámara · 30-45 seg · frente al edificio o adentro · ropa cotidiana · subtítulos obligatorios</p>
+        <div class="script-box">"Te muestro el departamento que más me preguntan esta semana.
+
+Garibaldi 431, pleno centro de Tandil. Un ambiente, 48 metros cuadrados, frente a la calle. USD 100.000.
+
+Hoy alquila desde 350.000 pesos por mes. Hacé los números.
+
+Si tenés los dólares y estás mirando dónde ponerlos, escribime directo. Te mando toda la info."</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Garibaldi 431 — Mirá esto</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> gar431_ugc</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> el video + 2 fotos como variante</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Fase 2 — Escala · desde el día 7</h3>
+    <span class="phase-label phase-scale">$300 · 2 ad sets · ángulos ganadores del testeo</span>
+    <p style="font-size:13px; color:#555; margin-bottom:16px;">Los 2 ángulos que ganaron en Garibaldi, aplicados a toda la cartera de deptos.</p>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 6 — Deptos_Inversion <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">En Tandil hay departamentos desde USD 60.000 que alquilan desde $350.000 por mes.
+
+Tenemos 15+ unidades disponibles — 1 y 2 ambientes, distintos precios y ubicaciones.
+
+Si tenés dólares y querés que trabajen, te mandamos las opciones.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Deptos en Tandil — Desde USD 60.000</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> deptos_inversion</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos variadas de la cartera</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 7 — SanLorenzo_Stock <span class="budget-badge">$10/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">San Lorenzo 420, Tandil.
+2 ambientes · 77 m² · frente · USD 175.000
+1 ambiente · 54 m² · USD 120.000
+
+5 unidades disponibles. Entrega inmediata.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> San Lorenzo 420 — 5 unidades disponibles</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> sanlor420_stock</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos del edificio/unidades</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Formulario C1 — Form_Deptos_Mayo26</h3>
+    <p style="font-size:12px; color:#888; margin-bottom:12px;">Form type: More volume · usar en los 7 ad sets de C1</p>
+    <div class="form-box">
+      <h4 style="margin:0 0 10px;">P1 — ¿Buscás la propiedad para...?</h4>
+      <div class="form-row"><div class="form-answer">Invertir / alquilar</div><div class="form-action action-pass">→ P2</div></div>
+      <div class="form-row"><div class="form-answer">Vivir en ella</div><div class="form-action action-pass">→ P2</div></div>
+      <div class="form-row"><div class="form-answer">Solo estoy mirando</div><div class="form-action action-close">→ Cerrar form</div></div>
+      <h4 style="margin:16px 0 10px;">P2 — ¿En qué plazo pensás decidir?</h4>
+      <div class="form-row"><div class="form-answer">En los próximos 3 meses</div><div class="form-action action-pass">→ P3</div></div>
+      <div class="form-row"><div class="form-answer">Entre 3 y 12 meses</div><div class="form-action action-pass">→ P3</div></div>
+      <div class="form-row"><div class="form-answer">Sin fecha definida</div><div class="form-action action-close">→ Cerrar form</div></div>
+      <h4 style="margin:16px 0 10px;">P3 — ¿Cuál es tu presupuesto?</h4>
+      <div class="form-row"><div class="form-answer">Hasta USD 80.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">USD 80.000 – 150.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">USD 150.000 – 200.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">Prefiero hablarlo directamente</div><div class="form-action action-pass">→ Submit</div></div>
+      <p style="font-size:12px; color:#555; margin-top:14px; padding-top:12px; border-top:1px dashed #cde8d8;"><strong>Thank you page:</strong> "¡Gracias! Te contactamos a la brevedad." · Botón → <strong>wa.me/5492494209464</strong></p>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- CAMPAÑA 2 -->
+  <div class="campaign-header">
+    <h3>Campaña 2 — Casas, Premium y Retargeting</h3>
+    <div class="budget">$400</div>
+  </div>
+  <div class="campaign-body">
+
+    <table>
+      <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre</td><td><strong>AV_C2_Casas_Mayo26</strong></td></tr>
+        <tr><td>Objetivo</td><td><strong>Leads</strong></td></tr>
+        <tr><td>Special Ad Category</td><td><strong style="color:#c0392b;">Vivienda — obligatorio</strong></td></tr>
+        <tr><td>Performance goal (adquisición)</td><td><strong>Maximize conversion leads</strong></td></tr>
+        <tr><td>Performance goal (retargeting)</td><td>Maximize number of leads</td></tr>
+        <tr><td>Audiencia adquisición</td><td>Lookalike 2% Argentina</td></tr>
+        <tr><td>Audiencia retargeting</td><td>Custom Audience 180 días</td></tr>
+        <tr><td>Ubicación</td><td>Tandil (20km) + CABA + Gran Buenos Aires</td></tr>
+        <tr><td>Budget adquisición</td><td>$7/día por set</td></tr>
+        <tr><td>Budget retargeting</td><td>$5/día</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:24px;">Adquisición — 2 ad sets</h3>
+    <span class="phase-label phase-scale">$250 · Lookalike 2%</span>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 1 — Casas_CABA <span class="budget-badge">$7/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">450 m², 3 dormitorios, jardín y garage. En Tandil. USD 275.000.
+
+El equivalente a un 2 ambientes chico en Palermo.
+
+Sierras, gastronomía, UNICEN. La ciudad que 5.8 personas eligen cada día para vivir.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Tandil: más espacio, misma inversión</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> casas_caba</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos Casa Pinto 1754</span></div>
+      </div>
+    </div>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 2 — CasaBelgrano_Directa <span class="budget-badge">$7/día</span></div>
+      <div class="ad-set-body">
+        <div class="ad-copy">Casa en Belgrano 146, Tandil.
+4 dormitorios · 3 baños · 200 m² · USD 195.000
+
+Amplia, bien ubicada, lista para entrar.
+Consultá sin compromiso.</div>
+        <div class="ad-meta">
+          <span><strong>Título:</strong> Casa Belgrano 146 — Consultas abiertas</span>
+          <span><strong>CTA:</strong> Más información</span>
+          <span><strong>UTM:</strong> belgrano146_directa</span>
+        </div>
+        <div class="ad-meta" style="margin-top:6px;"><span><strong>Creativos:</strong> 4 fotos Casa Belgrano 146</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Hammerdem — Retargeting 180 días</h3>
+    <span class="phase-label phase-retarg">$150 · Alta frecuencia · Reconvertir leads existentes</span>
+    <p style="font-size:13px; color:#555; margin-bottom:16px;">No busca leads nuevos. Apunta a todas las personas que ya interactuaron — incluyendo los de la agencia anterior. Alta frecuencia de aparición.</p>
+
+    <div class="ad-set">
+      <div class="ad-set-header">Ad Set 3 — Hammerdem_Retargeting <span class="budget-badge">$5/día</span></div>
+      <div class="ad-set-body">
+        <p style="font-size:12px; color:#888; margin-bottom:12px;">3 piezas en rotación dentro del mismo ad set</p>
+
+        <h4>Pieza A — Testimonio</h4>
+        <div class="script-box">"Un cliente nuestro compró un departamento en Tandil el año pasado. Hoy está alquilando a $420.000 por mes, con un inquilino que entró el mismo mes de la entrega. Me escribió la semana pasada para contarme cómo le fue. Eso es lo que pasa cuando comprás bien, en la ciudad correcta, en el momento correcto. Si querés ver las opciones disponibles ahora, escribime."</div>
+        <div class="ad-meta"><span><strong>UTM:</strong> retarg_testimonio</span></div>
+
+        <h4 style="margin-top:16px;">Pieza B — Objeción</h4>
+        <div class="script-box">"La pregunta que más me hacen: '¿Y si no consigo inquilino?' El 30% de los hogares en Tandil alquilan. La ciudad crece 5 personas por día y la oferta no alcanza. Tenemos propiedades que se alquilan el mismo mes de la entrega. El riesgo real no es quedarte sin inquilino. El riesgo real es esperar y que el precio suba otro 20%."</div>
+        <div class="ad-meta"><span><strong>UTM:</strong> retarg_objecion</span></div>
+
+        <h4 style="margin-top:16px;">Pieza C — Prueba social</h4>
+        <div class="ad-copy">Seguimos cerrando operaciones en Tandil.
+
+Si estuviste mirando propiedades con nosotros y todavía no tomaste una decisión — este es un buen momento para hablar.</div>
+        <div class="ad-meta"><span><strong>UTM:</strong> retarg_pruebasocial</span></div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;">Formulario C2 — Form_Casas_Mayo26</h3>
+    <p style="font-size:12px; color:#888; margin-bottom:12px;">Form type: More volume · usar en los 2 ad sets de adquisición</p>
+    <div class="form-box">
+      <h4 style="margin:0 0 10px;">P1 — ¿Qué tipo de propiedad buscás?</h4>
+      <div class="form-row"><div class="form-answer">Casa</div><div class="form-action action-pass">→ P2</div></div>
+      <div class="form-row"><div class="form-answer">Departamento grande (+$200k)</div><div class="form-action action-pass">→ P2</div></div>
+      <div class="form-row"><div class="form-answer">Lote para construir</div><div class="form-action action-pass">→ P2</div></div>
+      <div class="form-row"><div class="form-answer">Solo estoy mirando</div><div class="form-action action-close">→ Cerrar form</div></div>
+      <h4 style="margin:16px 0 10px;">P2 — ¿En qué plazo pensás decidir?</h4>
+      <div class="form-row"><div class="form-answer">En los próximos 3 meses</div><div class="form-action action-pass">→ P3</div></div>
+      <div class="form-row"><div class="form-answer">Entre 3 y 12 meses</div><div class="form-action action-pass">→ P3</div></div>
+      <div class="form-row"><div class="form-answer">Sin fecha definida</div><div class="form-action action-close">→ Cerrar form</div></div>
+      <h4 style="margin:16px 0 10px;">P3 — ¿Cuál es tu presupuesto?</h4>
+      <div class="form-row"><div class="form-answer">USD 90.000 – 200.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">USD 200.000 – 300.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">Más de USD 300.000</div><div class="form-action action-pass">→ Submit</div></div>
+      <div class="form-row"><div class="form-answer">Prefiero hablarlo directamente</div><div class="form-action action-pass">→ Submit</div></div>
+      <p style="font-size:12px; color:#555; margin-top:14px; padding-top:12px; border-top:1px dashed #cde8d8;"><strong>Thank you page:</strong> "¡Gracias! Te contactamos a la brevedad." · Botón → <strong>wa.me/5492494209464</strong></p>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- SCRIPTS -->
+  <h2>Scripts de video — filmar esta semana</h2>
+
+  <p style="font-size:13px; color:#555; margin-bottom:24px;"><strong>8 guiones en total:</strong> 4 para Garibaldi 431 · 4 para Roca 36. Con el G4 y R2 ya podés lanzar las dos campañas.</p>
+
+  <!-- GARIBALDI -->
+  <h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1.5px; color:#0B1F33; margin-bottom:16px;">Garibaldi 431 — 4 guiones</h3>
+
+  <div class="card">
+    <div class="card-title">🔴 G4 — UGC Garibaldi (filmar HOY — C1 Ad Set 5)</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Santi frente al edificio o adentro del depto · ropa cotidiana · 30-45 seg · subtítulos obligatorios</p>
+    <div class="script-box">"Te muestro el depto que más me preguntan esta semana.
+
+Garibaldi 431, pleno centro de Tandil. Un ambiente, 48 metros, frente a la calle. USD 100.000.
+
+Hoy alquila desde $350.000 por mes. Hacé los números.
+
+Si tenés los dólares y estás mirando dónde ponerlos, escribime directo. Te mando toda la info."</div>
+    <p style="font-size:12px; color:#888; margin-top:10px;">Empezar caminando hacia el edificio. Tono directo, no vendedor. El video se ve en el feed sin audio — subtítulos desde el primer frame.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟡 G1 — Rendimiento</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Tono analítico · dar los números despacio · no decir tasas prometidas</p>
+    <div class="script-box">"Te muestro los números de este departamento.
+
+Garibaldi 431, centro de Tandil. Un ambiente, 48 metros, frente. USD 100.000.
+
+Hoy un departamento así en el centro alquila desde $350.000 por mes.
+
+Proyectá vos mismo lo que rinde en un año.
+
+Si tenés los dólares y querés ver si cierra para vos, escribime. Te mando todo."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟡 G2 — Escasez</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Solo usar si realmente es la última unidad. No mentir — ajustar al número real.</p>
+    <div class="script-box">"Este departamento me lo preguntan mucho y siempre tengo que decir lo mismo: ya queda uno.
+
+Garibaldi 431, pleno centro. Un ambiente, 48 metros, entrega inmediata. USD 100.000.
+
+No hay más unidades en este edificio después de esta.
+
+Si estás mirando y no te decidiste todavía, esta semana vale la pena hablar."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟢 G3 — Ciudad Tandil</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Tono educativo · para gente que quiere entender el mercado antes de comprar</p>
+    <div class="script-box">"¿Por qué cada vez más gente compra en Tandil?
+
+La ciudad creció 5 personas por día el último año. El metro cuadrado sube. La demanda de alquiler supera la oferta hace años.
+
+Este departamento es un ejemplo concreto: Garibaldi 431, centro, 48 metros, USD 100.000. Listo para alquilar o vivir.
+
+Si querés entender por qué Tandil aparece en las conversaciones de inversión, escribime."</div>
+  </div>
+
+  <!-- ROCA 36 -->
+  <h3 style="font-size:13px; text-transform:uppercase; letter-spacing:1.5px; color:#0B1F33; margin:32px 0 8px;">Roca 36 — 5 guiones</h3>
+  <div class="card" style="background:#f7f9fc; border-color:#c5d8f5; margin-bottom:16px;">
+    <div class="card-title" style="color:#1a3a5c;">Referencia técnica — Fideicomiso de Construcción al Costo</div>
+    <table>
+      <tbody>
+        <tr><td><strong>Propiedad</strong></td><td>Roca 36, Tandil · PB + 3 pisos · 4 unidades por planta</td></tr>
+        <tr><td><strong>Unidad 1 dorm</strong></td><td>52,90 m² cubiertos + 8 m² semicubiertos · USD 102.500</td></tr>
+        <tr><td><strong>Unidad 2 dorm</strong></td><td>2 unidades adyacentes unificadas — coordinado con el estudio de arquitectura</td></tr>
+        <tr><td><strong>Cochera</strong></td><td>USD 9.000 adicional</td></tr>
+        <tr><td><strong>Plazo de obra</strong></td><td>24 meses estimados</td></tr>
+        <tr><td><strong>Pago — Paso 1</strong></td><td>USD 5.000 de reserva (para trabar la unidad)</td></tr>
+        <tr><td><strong>Pago — Paso 2</strong></td><td>30% al constituirse el fideicomiso (~USD 30.750)</td></tr>
+        <tr><td><strong>Pago — Paso 3</strong></td><td>Saldo en cuotas mensuales en pesos · ajustadas por índice CAC (Cámara Argentina de la Construcción)</td></tr>
+        <tr><td><strong>Cochera pago</strong></td><td>30% con el pago inicial · saldo en la 10ª cuota</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px; font-size:12px; color:#555; background:#eef4ff; border-radius:6px; padding:12px;">
+      <strong>Objeciones frecuentes y cómo responderlas:</strong><br><br>
+      <strong>"¿Cuánta plata en dólares necesito tener ya?"</strong> → USD 5.000 para reservar. Después el 30% al constituirse. El resto en cuotas en pesos.<br><br>
+      <strong>"Las cuotas en pesos me van a comer"</strong> → No van por inflación general. Van por el índice CAC, que sigue el costo real de construir. Es más predecible que el IPC.<br><br>
+      <strong>"¿Es precio fijo?"</strong> → No. Es al costo. Los costos de la obra se distribuyen entre los fiduciantes. Más unidades vendidas = menor costo proporcional para cada uno. No hay margen de developer incorporado.<br><br>
+      <strong>"¿Qué pasa si sube mucho la construcción?"</strong> → Los costos se reparten. Todos los fiduciantes comparten el riesgo de forma proporcional.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔴 R2 — Cuotas en pesos / Objeción liquidez (filmar esta semana)</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">El guion más importante para Roca 36. Empieza con la pregunta que el lead tiene pero no hace.</p>
+    <div class="script-box">"La pregunta que más me hacen cuando explico Roca 36:
+
+'¿Cuánta plata en dólares necesito tener ya?'
+
+La respuesta: USD 5.000 para reservar la unidad. Después el 30% al arrancarse la obra. El resto lo pagás en cuotas mensuales en pesos, ajustadas por el índice de la Cámara Argentina de la Construcción.
+
+No va por inflación general. Va por costo de construcción. Es más predecible.
+
+Y el activo que estás comprando es en dólares.
+
+Si te interesa ver si te cierra con tu situación actual, escribime."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟡 R1 — Construcción al costo (el mecanismo)</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Para gente que desconfía del "en pozo" — el mecanismo genera curiosidad antes de la objeción de precio</p>
+    <div class="script-box">"Te explico algo que mucha gente no entiende de comprar en pozo en Argentina.
+
+Un fideicomiso de construcción al costo no es lo mismo que comprarle a un desarrollador. No pagás un precio fijo con el margen del developer adentro. Los costos de la obra se distribuyen entre todos los que compraron. Si la obra se hace bien, el costo final es menor.
+
+Roca 36 está estructurado así. Entrás al precio de construcción. En 24 meses recibís una propiedad terminada a precio de mercado.
+
+Si querés entender cómo funciona en detalle antes de decidir, escribime."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟡 R3 — Timing / Ventana de precio</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">IMPORTANTE: no decir "garantizado" ni "seguro". Usar "historial indica", "tendencia", "en proyectos similares".</p>
+    <div class="script-box">"Las propiedades en construcción tienen una lógica que no tienen las terminadas.
+
+Entrás al precio de hoy, que es el precio de construcción. En 24 meses recibís algo que ya tiene otro precio de mercado.
+
+Roca 36, Tandil. Un dormitorio, 60 metros, centro. USD 102.500 hoy.
+
+¿Va a valer más al terminar? El historial de proyectos similares en la ciudad indica que sí. No es una certeza — es una tendencia que existe hace años.
+
+Escribime si querés ver números antes de decidir."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟢 R4 — Dos dormitorios (ángulo familia / ticket alto)</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Para quien quiere vivir ahí o inversión de mayor superficie. Coordinar con el estudio antes de filmar.</p>
+    <div class="script-box">"Una cosa que no mucha gente sabe de Roca 36.
+
+El proyecto está diseñado para que dos unidades adyacentes se puedan unificar en un departamento de dos dormitorios.
+
+Si estás pensando en mudarte con tu familia, o querés un activo más grande, lo podés estructurar desde el arranque con el estudio de arquitectura.
+
+Un dormitorio entra desde USD 102.500. Dos dormitorios, lo coordinamos.
+
+Escribime y te armo los números."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🟢 R5 — Primera inversión seria</div>
+    <p style="font-size:12px; color:#888; margin-bottom:10px;">Ángulo emocional · para retargeting · tono personal</p>
+    <div class="script-box">"Cuando alguien me pregunta cuál sería su primera inversión seria en ladrillos, siempre le explico lo mismo.
+
+Un fideicomiso al costo te permite entrar con menos capital inicial, distribuir los pagos en cuotas, y llegar a la entrega con un activo terminado.
+
+No hay margen de developer incorporado. El costo lo compartís con los otros fiduciantes.
+
+Roca 36 está pensado para eso. Un dormitorio, 60 metros, centro de Tandil. USD 5.000 de reserva para arrancar.
+
+Si estás en ese momento, escribime. Te explico todo sin compromiso."</div>
+  </div>
+
+  <!-- ORDEN DE FILMACIÓN -->
+  <div class="card" style="margin-top:8px;">
+    <div class="card-title">Orden de filmación recomendado</div>
+    <table>
+      <thead><tr><th>Prioridad</th><th>Video</th><th>Tiempo est.</th><th>Para qué</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:#c0392b;">1</strong></td><td>G4 — Garibaldi UGC</td><td>20 min</td><td>C1 Ad Set 5 — lanzar hoy</td></tr>
+        <tr><td><strong style="color:#c0392b;">2</strong></td><td>R2 — Roca 36 Cuotas/Liquidez</td><td>15 min</td><td>C2 Ad Set — lanzar esta semana</td></tr>
+        <tr><td><strong style="color:#e67e22;">3</strong></td><td>R1 — Roca 36 Mecanismo</td><td>15 min</td><td>C2 adquisición o retargeting</td></tr>
+        <tr><td><strong style="color:#e67e22;">4</strong></td><td>G2 — Garibaldi Escasez</td><td>10 min</td><td>C1 Ad Set 2</td></tr>
+        <tr><td>5</td><td>R3 — Roca 36 Timing 24m</td><td>10 min</td><td>C2 con imagen de obra</td></tr>
+        <tr><td>6</td><td>R4 — Dos dormitorios</td><td>10 min</td><td>C2 ángulo familia/ticket alto</td></tr>
+        <tr><td>7</td><td>R5 — Primera inversión</td><td>15 min</td><td>Retargeting Roca</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:#888; margin-top:12px;">Con G4 + R2 ya podés lanzar las dos campañas.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TIMELINE -->
+  <h2>Timeline del mes</h2>
+  <div class="card">
+    <div class="timeline-row"><div class="timeline-day">Hoy</div><div>Crear 3 audiencias (base propia → Lookalike → Retargeting 180d)</div></div>
+    <div class="timeline-row"><div class="timeline-day">Hoy</div><div>Filmar Video 1 (Garibaldi) + conseguir 4 fotos Garibaldi 431</div></div>
+    <div class="timeline-row"><div class="timeline-day">Hoy</div><div>Lanzar C1 (5 sets Garibaldi) + C2 completa (2 adquisición + Hammerdem)</div></div>
+    <div class="timeline-row"><div class="timeline-day">Día 6-7</div><div>Revisar CPL de C1 → apagar los 3 sets más caros → quedar con 2 ganadores</div></div>
+    <div class="timeline-row"><div class="timeline-day">Día 7</div><div>Lanzar Ad Sets 6 y 7 de C1 (Deptos general + San Lorenzo 420)</div></div>
+    <div class="timeline-row"><div class="timeline-day">Esta semana</div><div>Filmar Video 2 + Video 3 · fotos San Lorenzo 420 · fotos Casa Belgrano 146</div></div>
+    <div class="timeline-row"><div class="timeline-day">Día 15</div><div>Revisión mid-month: mover presupuesto hacia lo que mejor CPL tenga</div></div>
+    <div class="timeline-row"><div class="timeline-day">Día 30</div><div>Análisis final: CPL por ad set, leads calificados, visitas coordinadas, cierres</div></div>
+  </div>
+
+  <!-- MÉTRICAS -->
+  <h2>Métricas esperadas</h2>
+  <div class="metrics-grid">
+    <div class="metric-card"><div class="value">$10-25</div><div class="label">Costo por lead (USD)</div></div>
+    <div class="metric-card"><div class="value">40-65</div><div class="label">Leads del mes</div></div>
+    <div class="metric-card"><div class="value">40-50%</div><div class="label">Tasa de contacto</div></div>
+    <div class="metric-card"><div class="value">10-20%</div><div class="label">Tasa de visita</div></div>
+    <div class="metric-card"><div class="value">40-60%</div><div class="label">Tasa de cierre</div></div>
+    <div class="metric-card"><div class="value">1-4</div><div class="label">Cierres posibles</div></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <h2>Checklist para lanzar hoy</h2>
+  <div class="card">
+    <div class="checklist-item"><div class="checkbox"></div><div>Base de datos exportada → Custom Audience creada en Meta</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Lookalike 1% Argentina creado desde la base</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Audiencia retargeting 180 días creada</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Video 1 filmado y editado con subtítulos (Garibaldi 431)</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>4 fotos de Garibaldi 431 listas para subir</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>C1 creada: Special Ad Category Vivienda + 5 ad sets + performance goal correcto</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>C2 creada: Special Ad Category Vivienda + 3 ad sets + performance goals correctos</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Formulario C1 con conditional logic testeado y publicado</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Formulario C2 con conditional logic testeado y publicado</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>UTMs configurados en todos los ads</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Thank you page → wa.me/5492494209464</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Bot de WhatsApp activo y respondiendo</div></div>
+    <div class="checklist-item"><div class="checkbox"></div><div>Santi en alerta para llamar en menos de 5 minutos al recibir cada lead</div></div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px; font-size:11px; color:#bbb;">
+    Grupo Alta Vista Otero · Meta Ads Mayo 2026 · Basado en reunión con Leonel Paez 02/05/2026
+  </div>
+
+</div>
+</body>
+</html>

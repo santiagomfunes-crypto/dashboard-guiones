@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Altavista Intelligence — Business Model Canvas</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:    #0B1F33;
+    --navy2:   #1F3A56;
+    --green:   #7AB591;
+    --gray:    #D9DEE3;
+    --offwhite:#F5F6F8;
+    --white:   #FFFFFF;
+    --text:    #444;
+    --amber:   #D4A847;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--navy); background: var(--white); }
+
+  /* PORTADA */
+  .portada {
+    background: var(--navy);
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 40vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .portada::after {
+    content: 'BMC';
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px;
+    font-weight: 300;
+    color: rgba(255,255,255,.04);
+    letter-spacing: -8px;
+    line-height: 1;
+  }
+  .portada-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .portada h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .portada h1 em { color: var(--green); font-style: italic; }
+  .portada-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,.3);
+    text-transform: uppercase;
+  }
+
+  /* NAV INTERNA */
+  .nav-interna {
+    background: var(--offwhite);
+    border-bottom: 1px solid var(--gray);
+    padding: 0 80px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-interna a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(11,31,51,.45);
+    text-decoration: none;
+    padding: 18px 24px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  .nav-interna a:hover { color: var(--navy); border-color: var(--green); }
+
+  /* SECCIONES */
+  .seccion {
+    padding: 80px;
+    border-bottom: 1px solid var(--gray);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .seccion-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .seccion-label::after { content: ''; flex: 1; height: 1px; background: var(--gray); }
+  .seccion h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .seccion .bajada {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 48px;
+    max-width: 680px;
+  }
+  p { font-size: 13.5px; line-height: 1.85; color: var(--text); margin-bottom: 12px; }
+  strong { color: var(--navy); font-weight: 500; }
+
+  /* CANVAS GRID */
+  .canvas-wrap {
+    margin: 40px 0;
+    border: 1px solid var(--gray);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .canvas-label-top {
+    background: var(--navy);
+    padding: 10px 0;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+  }
+  .canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .canvas-cell {
+    border-right: 1px solid var(--gray);
+    border-bottom: 1px solid var(--gray);
+    padding: 24px 20px;
+    min-height: 200px;
+  }
+  .canvas-cell:last-child { border-right: none; }
+  .canvas-cell.tall { grid-row: span 2; min-height: 400px; }
+  .canvas-cell.wide { grid-column: span 2; }
+  .canvas-cell.no-border-bottom { border-bottom: none; }
+  .canvas-cell-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .canvas-cell-label .num {
+    background: var(--green);
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .canvas-cell ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .canvas-cell ul li {
+    font-size: 12px;
+    color: var(--text);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .canvas-cell ul li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-size: 16px;
+    line-height: 1;
+    top: 1px;
+  }
+  .canvas-row-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--gray);
+  }
+  .canvas-row-label {
+    padding: 10px 0;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-right: 1px solid var(--gray);
+  }
+  .canvas-row-label:last-child { border-right: none; }
+  .canvas-row-label.green { color: var(--green); }
+  .canvas-row-label.red { color: #C0392B; }
+
+  /* LEAN CANVAS */
+  .lean-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .lean-cell {
+    background: var(--offwhite);
+    padding: 28px 24px;
+    min-height: 180px;
+  }
+  .lean-cell.dark { background: var(--navy); }
+  .lean-cell.green-bg { background: rgba(122,181,145,.12); border: 1px solid rgba(122,181,145,.3); }
+  .lean-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .lean-cell.dark .lean-label { color: rgba(255,255,255,.4); }
+  .lean-cell ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .lean-cell ul li {
+    font-size: 12.5px;
+    color: var(--text);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .lean-cell.dark ul li { color: rgba(255,255,255,.65); }
+  .lean-cell ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-size: 10px;
+    top: 2px;
+  }
+
+  /* REVENUE MODEL */
+  .revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .revenue-card {
+    background: var(--offwhite);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .revenue-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--green);
+  }
+  .revenue-card.premium::before { background: var(--navy); }
+  .revenue-card.enterprise::before { background: var(--amber); }
+  .revenue-seg {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(11,31,51,.4);
+    margin-bottom: 12px;
+  }
+  .revenue-product {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .revenue-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .revenue-price-note {
+    font-size: 10px;
+    color: rgba(11,31,51,.4);
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+  }
+  .revenue-includes {
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .revenue-includes span {
+    display: block;
+    padding: 4px 0;
+    border-top: 1px solid var(--gray);
+  }
+  .revenue-includes span:first-child { border-top: none; }
+
+  /* VALIDACIÓN */
+  .val-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .val-card {
+    background: var(--offwhite);
+    padding: 32px 28px;
+  }
+  .val-phase {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .val-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .val-hypothesis {
+    background: rgba(122,181,145,.1);
+    border-left: 2px solid var(--green);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 12.5px;
+    color: var(--navy);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .val-metric {
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.6;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray);
+    display: flex;
+    gap: 8px;
+  }
+  .val-metric:last-child { border-bottom: none; }
+  .val-metric-label { color: var(--navy); font-weight: 500; min-width: 140px; }
+
+  /* FINANCIERO */
+  .fin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0;
+    font-size: 13px;
+  }
+  .fin-table thead th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.7);
+    background: var(--navy2);
+    padding: 14px 20px;
+    text-align: right;
+    font-weight: 400;
+  }
+  .fin-table thead th:first-child { text-align: left; }
+  .fin-table tbody tr { border-bottom: 1px solid var(--gray); }
+  .fin-table tbody td {
+    padding: 14px 20px;
+    color: var(--text);
+    text-align: right;
+    vertical-align: top;
+  }
+  .fin-table tbody td:first-child { text-align: left; color: var(--navy); font-weight: 500; }
+  .fin-table tbody tr:nth-child(even) td { background: var(--offwhite); }
+  .fin-table tfoot td {
+    padding: 16px 20px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: right;
+    border-top: 2px solid var(--navy);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+  }
+  .fin-table tfoot td:first-child { text-align: left; }
+  .fin-note {
+    font-size: 11px;
+    color: rgba(11,31,51,.4);
+    font-style: italic;
+    margin-top: 8px;
+  }
+  .positive { color: #2E7D52; font-weight: 500; }
+
+  /* DARK HIGHLIGHT */
+  .dark-box {
+    background: var(--navy);
+    padding: 40px 48px;
+    border-radius: 4px;
+    margin: 40px 0;
+  }
+  .dark-box h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+  .dark-box p { color: rgba(255,255,255,.65); font-size: 13.5px; }
+  .dark-box strong { color: #fff; }
+
+  /* KPI CHIPS */
+  .kpi-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 32px 0;
+  }
+  .kpi {
+    background: var(--offwhite);
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+  .kpi-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .kpi-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(11,31,51,.4);
+  }
+
+  /* GTMS */
+  .gtm-step {
+    display: flex;
+    gap: 28px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--gray);
+    align-items: flex-start;
+  }
+  .gtm-step:last-child { border-bottom: none; }
+  .gtm-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--green);
+    line-height: 1;
+    min-width: 48px;
+  }
+  .gtm-content h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: .5px;
+  }
+  .gtm-content p { font-size: 13px; color: var(--text); margin: 0; line-height: 1.7; }
+  .gtm-content .meta {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    background: rgba(122,181,145,.1);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    padding: 56px 80px;
+    text-align: center;
+  }
+  footer .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: rgba(255,255,255,.4);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  footer p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,.2);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .seccion { padding: 56px 28px; }
+    .portada { padding: 56px 28px; }
+    .canvas-grid { grid-template-columns: 1fr 1fr; }
+    .canvas-cell.tall { grid-row: span 1; }
+    .lean-grid { grid-template-columns: 1fr; }
+    .revenue-grid { grid-template-columns: 1fr 1fr; }
+    .val-grid { grid-template-columns: 1fr; }
+    footer { padding: 48px 28px; }
+    .nav-interna { padding: 0 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="portada">
+  <div class="portada-eyebrow">Altavista Intelligence · Plan de Negocio</div>
+  <h1>Business Model<br><em>Canvas</em></h1>
+  <div class="portada-sub">Modelo · Ingresos · Validación · Go-to-Market — Mayo 2026</div>
+</div>
+
+<!-- NAV -->
+<div class="nav-interna">
+  <a href="#canvas">Canvas</a>
+  <a href="#lean">Lean Canvas</a>
+  <a href="#revenue">Ingresos</a>
+  <a href="#validacion">Validación</a>
+  <a href="#financiero">Proyección</a>
+  <a href="#gtm">Go-to-Market</a>
+</div>
+
+<!-- 1. BUSINESS MODEL CANVAS -->
+<div class="seccion" id="canvas">
+  <div class="seccion-label">01 — Business Model Canvas</div>
+  <h2>Los 9 bloques del modelo</h2>
+  <p class="bajada">El Business Model Canvas resume en una vista cómo Altavista Intelligence crea valor, para quién, cómo lo entrega y cómo lo monetiza.</p>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label-top">ALTAVISTA INTELLIGENCE — BUSINESS MODEL CANVAS</div>
+    <div class="canvas-grid">
+
+      <!-- Socios clave -->
+      <div class="canvas-cell tall">
+        <div class="canvas-cell-label"><span class="num">1</span>Socios Clave</div>
+        <ul>
+          <li>Inmobiliarias aliadas (red de datos)</li>
+          <li>Roomix (potencial alianza — datos de demanda)</li>
+          <li>Colegios de martilleros</li>
+          <li>Escribanos para datos de escritura</li>
+          <li>Bancos y financieras hipotecarias</li>
+          <li>Desarrolladoras inmobiliarias</li>
+          <li>Proveedores cloud (AWS / GCP)</li>
+          <li>Anthropic / OpenAI (modelos AI)</li>
+        </ul>
+      </div>
+
+      <!-- Actividades clave -->
+      <div class="canvas-cell">
+        <div class="canvas-cell-label"><span class="num">2</span>Actividades Clave</div>
+        <ul>
+          <li>Recolección y verificación de datos de transacciones</li>
+          <li>Desarrollo y mejora continua del AVM</li>
+          <li>Onboarding de inmobiliarias aliadas</li>
+          <li>Operación de la agencia en Tandil (datos)</li>
+          <li>Ventas B2B a agentes y bancos</li>
+          <li>Mantenimiento del scraper y pipelines de datos</li>
+        </ul>
+      </div>
+
+      <!-- Propuesta de valor -->
+      <div class="canvas-cell tall" style="background: rgba(122,181,145,.07); border-left: 2px solid var(--green);">
+        <div class="canvas-cell-label"><span class="num">3</span>Propuesta de Valor</div>
+        <ul>
+          <li><strong>Para agentes:</strong> tasar con datos reales, negociar con evidencia, cerrar más rápido</li>
+          <li><strong>Para inmobiliarias:</strong> herramientas que ninguna agencia puede costear sola</li>
+          <li><strong>Para bancos:</strong> valuaciones automáticas confiables para originar hipotecas</li>
+          <li><strong>Para inversores:</strong> inteligencia de mercado para decidir dónde y cuánto invertir</li>
+          <li><strong>Para vendedores:</strong> precio correcto desde el día uno, cierre más rápido</li>
+          <li><strong>Para compradores:</strong> saber si el precio es justo antes de negociar</li>
+        </ul>
+      </div>
+
+      <!-- Relaciones con clientes -->
+      <div class="canvas-cell">
+        <div class="canvas-cell-label"><span class="num">4</span>Relación con Clientes</div>
+        <ul>
+          <li>SaaS self-service para agentes</li>
+          <li>Onboarding asistido para inmobiliarias</li>
+          <li>Account manager para cuentas enterprise</li>
+          <li>Chatbot gratuito como captación masiva</li>
+          <li>Comunidad de agentes (foro + reportes)</li>
+        </ul>
+      </div>
+
+      <!-- Segmentos -->
+      <div class="canvas-cell tall">
+        <div class="canvas-cell-label"><span class="num">5</span>Segmentos de Clientes</div>
+        <ul>
+          <li>Agentes inmobiliarios independientes</li>
+          <li>Inmobiliarias (5 a 50 agentes)</li>
+          <li>Bancos y financieras hipotecarias</li>
+          <li>Desarrolladoras e inversores</li>
+          <li>Portales inmobiliarios (API)</li>
+          <li>Compradores y vendedores individuales (free → lead)</li>
+        </ul>
+      </div>
+
+      <!-- Recursos clave -->
+      <div class="canvas-cell">
+        <div class="canvas-cell-label"><span class="num">6</span>Recursos Clave</div>
+        <ul>
+          <li>Base de datos de transacciones reales (el activo central)</li>
+          <li>Modelo AVM (algoritmo de valuación)</li>
+          <li>Agencia operativa en Tandil (fuente de datos)</li>
+          <li>Red de inmobiliarias aliadas</li>
+          <li>Infraestructura cloud y pipelines de datos</li>
+          <li>Equipo tech + equipo comercial B2B</li>
+        </ul>
+      </div>
+
+      <!-- Canales -->
+      <div class="canvas-cell">
+        <div class="canvas-cell-label"><span class="num">7</span>Canales</div>
+        <ul>
+          <li>Venta directa B2B a inmobiliarias</li>
+          <li>Chatbot gratuito (captación orgánica)</li>
+          <li>Contenido educativo (marca Santiago Funes)</li>
+          <li>API para portales e integraciones</li>
+          <li>Colegios de martilleros (canal institucional)</li>
+        </ul>
+      </div>
+
+      <!-- Estructura de costos -->
+      <div class="canvas-cell wide no-border-bottom" style="border-right:none;">
+        <div class="canvas-cell-label"><span class="num">8</span>Estructura de Costos</div>
+        <ul style="flex-direction: row; flex-wrap: wrap; gap: 8px 32px;">
+          <li>Infraestructura cloud y APIs de AI</li>
+          <li>Desarrollo de producto (equipo tech)</li>
+          <li>Operación de la agencia Tandil</li>
+          <li>Ventas y onboarding B2B</li>
+          <li>Legal y compliance</li>
+          <li>Data operations (verificación de datos)</li>
+        </ul>
+      </div>
+
+      <!-- Fuentes de ingresos -->
+      <div class="canvas-cell wide no-border-bottom" style="background: rgba(122,181,145,.07); border-left: 2px solid var(--green); border-right: none;">
+        <div class="canvas-cell-label"><span class="num">9</span>Fuentes de Ingresos</div>
+        <ul style="flex-direction: row; flex-wrap: wrap; gap: 8px 32px;">
+          <li>Suscripción mensual — agentes (Pro)</li>
+          <li>Suscripción mensual — inmobiliarias (por agente activo)</li>
+          <li>Contrato anual — bancos (AVM enterprise)</li>
+          <li>Reportes de mercado — inversores y desarrolladoras</li>
+          <li>API access — portales y terceros</li>
+          <li>Comisión de transacción — agencia propia</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="canvas-row-labels">
+      <div class="canvas-row-label red">← COSTOS</div>
+      <div class="canvas-row-label green">INGRESOS →</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. LEAN CANVAS -->
+<div class="seccion" id="lean">
+  <div class="seccion-label">02 — Lean Canvas</div>
+  <h2>El modelo reducido a lo esencial</h2>
+  <p class="bajada">El Lean Canvas fuerza a definir el problema, la solución, la ventaja injusta y las métricas clave en una sola vista. Es la herramienta de validación antes de construir.</p>
+
+  <div class="lean-grid">
+    <div class="lean-cell">
+      <div class="lean-label">Problema</div>
+      <ul>
+        <li>No existen datos de precios de cierre reales en Argentina</li>
+        <li>Los agentes tazan por intuición, no por datos</li>
+        <li>Los bancos no tienen AVM confiable para hipotecas</li>
+        <li>Compradores y vendedores deciden a ciegas</li>
+      </ul>
+    </div>
+    <div class="lean-cell">
+      <div class="lean-label">Solución</div>
+      <ul>
+        <li>Red de datos de transacciones reales (MLS argentino)</li>
+        <li>AVM: valuación automatizada para cualquier inmueble</li>
+        <li>Dashboard de inteligencia para agentes e inmobiliarias</li>
+        <li>API de valuaciones para bancos y portales</li>
+      </ul>
+    </div>
+    <div class="lean-cell green-bg">
+      <div class="lean-label">Ventaja Injusta</div>
+      <ul>
+        <li>Agencia propia genera datos desde adentro del mercado</li>
+        <li>Confianza operativa: los agentes comparten datos reales</li>
+        <li>Primer mover: nadie lo está construyendo en Argentina</li>
+        <li>Sistemas AI ya operativos (scraper, tasador, price tracker)</li>
+      </ul>
+    </div>
+    <div class="lean-cell">
+      <div class="lean-label">Métricas Clave</div>
+      <ul>
+        <li>Nº de transacciones en la base de datos</li>
+        <li>Nº de inmobiliarias aliadas activas</li>
+        <li>Precisión del AVM (desviación vs precio real)</li>
+        <li>MRR (ingresos recurrentes mensuales)</li>
+        <li>Tasa de retención mensual de suscriptores</li>
+        <li>Tiempo promedio de cierre de operaciones</li>
+      </ul>
+    </div>
+    <div class="lean-cell dark">
+      <div class="lean-label">Propuesta de Valor Única</div>
+      <ul>
+        <li>El único índice de precios de cierre reales del mercado inmobiliario argentino</li>
+        <li>Tomá decisiones con datos. No con intuición.</li>
+      </ul>
+    </div>
+    <div class="lean-cell">
+      <div class="lean-label">Segmentos</div>
+      <ul>
+        <li>Early adopters: agentes independientes con volumen (3+ ops/mes)</li>
+        <li>Clientes principales: inmobiliarias medianas (5-30 agentes)</li>
+        <li>Clientes enterprise: bancos con cartera hipotecaria</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 3. MODELO DE INGRESOS -->
+<div class="seccion" id="revenue">
+  <div class="seccion-label">03 — Modelo de Ingresos</div>
+  <h2>Cómo gana plata Altavista</h2>
+  <p class="bajada">Cuatro fuentes de ingreso con distintos niveles de ticket, recurrencia y escala. El modelo está diseñado para que la suscripción de agentes e inmobiliarias financie la operación mientras se construye el negocio enterprise con bancos.</p>
+
+  <div class="revenue-grid">
+    <div class="revenue-card">
+      <div class="revenue-seg">Agentes individuales</div>
+      <div class="revenue-product">Plan Pro</div>
+      <div class="revenue-price">$49</div>
+      <div class="revenue-price-note">USD / agente / mes</div>
+      <div class="revenue-includes">
+        <span>Dashboard completo</span>
+        <span>AVM ilimitado</span>
+        <span>Datos de cierre por zona</span>
+        <span>Comparables en tiempo real</span>
+        <span>Alertas de mercado</span>
+      </div>
+    </div>
+    <div class="revenue-card premium">
+      <div class="revenue-seg">Inmobiliarias</div>
+      <div class="revenue-product">Plan Agency</div>
+      <div class="revenue-price">$39</div>
+      <div class="revenue-price-note">USD / agente / mes · mínimo 3 agentes</div>
+      <div class="revenue-includes">
+        <span>Todo el Plan Pro</span>
+        <span>Widget embebible en su web</span>
+        <span>Reportes de mercado mensuales</span>
+        <span>Onboarding asistido</span>
+        <span>Panel administrador</span>
+      </div>
+    </div>
+    <div class="revenue-card">
+      <div class="revenue-seg">Desarrolladoras e Inversores</div>
+      <div class="revenue-product">Reportes de Mercado</div>
+      <div class="revenue-price">$299</div>
+      <div class="revenue-price-note">USD / reporte trimestral por zona</div>
+      <div class="revenue-includes">
+        <span>Análisis de mercado por ciudad/zona</span>
+        <span>Tendencias de precios reales</span>
+        <span>Score de inversión por zona</span>
+        <span>Proyección de absorción</span>
+        <span>Comparativa de mercados</span>
+      </div>
+    </div>
+    <div class="revenue-card enterprise">
+      <div class="revenue-seg">Bancos y Financieras</div>
+      <div class="revenue-product">AVM Enterprise</div>
+      <div class="revenue-price">TBD</div>
+      <div class="revenue-price-note">Contrato anual · a definir por volumen</div>
+      <div class="revenue-includes">
+        <span>API de valuaciones certificadas</span>
+        <span>Integración a sistemas bancarios</span>
+        <span>SLA garantizado</span>
+        <span>Soporte dedicado</span>
+        <span>Reportes de compliance</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dark-box">
+    <h3>La palanca del modelo</h3>
+    <p>El negocio de agentes e inmobiliarias es recurrente, predecible y escala con la red. Con <strong>100 agentes activos</strong> al precio Pro, el MRR es ~$4.900 USD/mes — suficiente para financiar operaciones básicas. Con <strong>un solo contrato bancario</strong> de AVM enterprise, el negocio cambia de escala. Eso convierte el producto para agentes en el canal de adquisición del negocio enterprise.</p>
+  </div>
+</div>
+
+<!-- 4. VALIDACIÓN -->
+<div class="seccion" id="validacion">
+  <div class="seccion-label">04 — Plan de Validación</div>
+  <h2>Cómo sabemos que funciona antes de escalar</h2>
+  <p class="bajada">La validación ocurre en etapas. Cada fase prueba una hipótesis específica con un experimento concreto y métricas de éxito definidas de antemano.</p>
+
+  <div class="val-grid">
+
+    <div class="val-card">
+      <div class="val-phase">Fase 1 · Semanas 1–4</div>
+      <div class="val-title">¿Existe demanda por datos reales?</div>
+      <div class="val-hypothesis">"Los agentes de Tandil están dispuestos a pagar por acceso a datos de cierre reales y herramientas de tasación más precisas que las que tienen hoy."</div>
+      <div class="val-metric"><span class="val-metric-label">Experimento</span><span>Mostrar el dashboard a 10 agentes. Pedir $49 USD. Sin producto terminado — solo la propuesta.</span></div>
+      <div class="val-metric"><span class="val-metric-label">Éxito</span><span>3 de 10 agentes pagan o pre-pagan acceso</span></div>
+      <div class="val-metric"><span class="val-metric-label">Fracaso</span><span>Ninguno paga → problema de propuesta de valor o de precio</span></div>
+      <div class="val-metric"><span class="val-metric-label">Herramienta</span><span>Landing page + entrevistas en persona + demo manual</span></div>
+    </div>
+
+    <div class="val-card">
+      <div class="val-phase">Fase 2 · Mes 2–3</div>
+      <div class="val-title">¿Las inmobiliarias comparten datos a cambio de herramientas?</div>
+      <div class="val-hypothesis">"Las inmobiliarias de Tandil están dispuestas a reportar sus datos de cierre si a cambio reciben acceso a la plataforma y los datos de las demás."</div>
+      <div class="val-metric"><span class="val-metric-label">Experimento</span><span>Acercarse a 5 inmobiliarias. Proponer el intercambio datos → acceso.</span></div>
+      <div class="val-metric"><span class="val-metric-label">Éxito</span><span>2 de 5 firman un acuerdo de intercambio de datos</span></div>
+      <div class="val-metric"><span class="val-metric-label">Fracaso</span><span>Ninguna comparte → problema de confianza o incentivo insuficiente</span></div>
+      <div class="val-metric"><span class="val-metric-label">Herramienta</span><span>Contrato simple de intercambio + reunión presencial</span></div>
+    </div>
+
+    <div class="val-card">
+      <div class="val-phase">Fase 3 · Mes 3–5</div>
+      <div class="val-title">¿El AVM es suficientemente preciso?</div>
+      <div class="val-hypothesis">"Con los datos iniciales de Tandil, el AVM puede estimar el precio de cierre de una propiedad con una desviación menor al 10% del precio real."</div>
+      <div class="val-metric"><span class="val-metric-label">Experimento</span><span>Valuar 20 propiedades con el AVM antes de que cierren. Comparar con precio real post-cierre.</span></div>
+      <div class="val-metric"><span class="val-metric-label">Éxito</span><span>Desviación promedio &lt; 10% en al menos 15 de 20 propiedades</span></div>
+      <div class="val-metric"><span class="val-metric-label">Fracaso</span><span>Desviación &gt; 15% → revisar modelo, incorporar más variables</span></div>
+      <div class="val-metric"><span class="val-metric-label">Herramienta</span><span>Datos de la agencia + aliadas + seguimiento de publicaciones hasta cierre</span></div>
+    </div>
+
+    <div class="val-card">
+      <div class="val-phase">Fase 4 · Mes 5–8</div>
+      <div class="val-title">¿Los bancos lo necesitan?</div>
+      <div class="val-hypothesis">"Al menos un banco o financiera hipotecaria en Argentina tiene un dolor real con sus valuaciones actuales y está dispuesto a explorar una solución alternativa."</div>
+      <div class="val-metric"><span class="val-metric-label">Experimento</span><span>Reunirse con 3 bancos. Presentar el AVM con casos reales de Tandil.</span></div>
+      <div class="val-metric"><span class="val-metric-label">Éxito</span><span>1 banco pide un piloto o una propuesta formal</span></div>
+      <div class="val-metric"><span class="val-metric-label">Fracaso</span><span>Ninguno lo considera relevante → revisar propuesta enterprise</span></div>
+      <div class="val-metric"><span class="val-metric-label">Herramienta</span><span>Reunión ejecutiva + demo con datos reales + propuesta comercial</span></div>
+    </div>
+
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-val">3</div>
+      <div class="kpi-label">Agentes pagos · Validación mínima</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">2</div>
+      <div class="kpi-label">Inmobiliarias aliadas · Mes 3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">&lt;10%</div>
+      <div class="kpi-label">Desviación del AVM · Meta</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">1</div>
+      <div class="kpi-label">Piloto bancario · Mes 8</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-val">1</div>
+      <div class="kpi-label">Transacción completa via plataforma · Mes 2</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. PROYECCIÓN FINANCIERA -->
+<div class="seccion" id="financiero">
+  <div class="seccion-label">05 — Proyección Financiera</div>
+  <h2>Los números del primer año</h2>
+  <p class="bajada">Proyección conservadora basada en el crecimiento orgánico de la red de agentes e inmobiliarias, sin asumir contratos enterprise hasta el mes 12. Los precios están en USD para aislar la variable inflacionaria.</p>
+
+  <table class="fin-table">
+    <thead>
+      <tr>
+        <th>Fuente de ingresos</th>
+        <th>Mes 3</th>
+        <th>Mes 6</th>
+        <th>Mes 9</th>
+        <th>Mes 12</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Agentes Pro (×$49 USD)</td>
+        <td>$490</td>
+        <td>$1.470</td>
+        <td>$2.940</td>
+        <td>$4.900</td>
+      </tr>
+      <tr>
+        <td>Inmobiliarias Agency (×$39 × 3 agentes)</td>
+        <td>$234</td>
+        <td>$702</td>
+        <td>$1.404</td>
+        <td>$2.808</td>
+      </tr>
+      <tr>
+        <td>Reportes de mercado</td>
+        <td>—</td>
+        <td>$299</td>
+        <td>$598</td>
+        <td>$1.196</td>
+      </tr>
+      <tr>
+        <td>Comisiones agencia Tandil</td>
+        <td>$2.000</td>
+        <td>$3.500</td>
+        <td>$4.500</td>
+        <td>$6.000</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Total MRR estimado</td>
+        <td>$2.724</td>
+        <td>$5.971</td>
+        <td>$9.442</td>
+        <td class="positive">$14.904</td>
+      </tr>
+    </tfoot>
+  </table>
+  <p class="fin-note">* Proyección conservadora. No incluye contratos enterprise bancarios. Los agentes pagan en pesos al tipo de cambio del día. Mes 3 asume 10 agentes Pro y 2 inmobiliarias Agency.</p>
+
+  <div class="dark-box">
+    <h3>El punto de inflexión</h3>
+    <p>El modelo escala de forma no lineal. <strong>El primer contrato bancario</strong> — que puede valer entre $2.000 y $20.000 USD mensuales dependiendo del volumen de valuaciones — transforma por completo el P&L. Todo el trabajo de construcción de la red de agentes e inmobiliarias es, en última instancia, la prueba de concepto que permite vender ese contrato. Los agentes no son el negocio final; son la evidencia que abre el negocio grande.</p>
+  </div>
+</div>
+
+<!-- 6. GO-TO-MARKET -->
+<div class="seccion" id="gtm">
+  <div class="seccion-label">06 — Go-to-Market</div>
+  <h2>Cómo arranca y cómo crece</h2>
+  <p class="bajada">La estrategia de lanzamiento está diseñada para construir credibilidad local antes de escalar. Tandil es el laboratorio. El modelo probado en Tandil es el pitch para expandir.</p>
+
+  <div class="gtm-step">
+    <div class="gtm-num">1</div>
+    <div class="gtm-content">
+      <h4>Dominar Tandil — el mercado propio</h4>
+      <p>Altavista ya opera como agencia en Tandil. El primer paso es convertir cada transacción en un dato que alimenta el sistema. Sin salir a vender nada todavía — solo operar, recolectar y documentar. El objetivo de este paso no es ingresos: es credibilidad de datos.</p>
+      <span class="meta">Mes 1–2 · Sin costo adicional</span>
+    </div>
+  </div>
+
+  <div class="gtm-step">
+    <div class="gtm-num">2</div>
+    <div class="gtm-content">
+      <h4>Los primeros aliados — la conversación honesta</h4>
+      <p>Acercarse a las 3 mejores inmobiliarias de Tandil con una propuesta directa: "Compartimos datos, todos ganamos mejores herramientas." No es una venta. Es una alianza. La conversación debe ser con el dueño de la inmobiliaria, no con un agente. El argumento: quien entra primero tiene ventaja sobre quien entra después.</p>
+      <span class="meta">Mes 2–3 · Reuniones presenciales</span>
+    </div>
+  </div>
+
+  <div class="gtm-step">
+    <div class="gtm-num">3</div>
+    <div class="gtm-content">
+      <h4>El chatbot gratuito — captación masiva</h4>
+      <p>Lanzar el chatbot de tasación gratuita en la web de Altavista. Cualquier persona puede tasar su propiedad en segundos. Esto captura leads de vendedores, genera datos de comportamiento del mercado y posiciona a Altavista como la referencia de inteligencia inmobiliaria en Tandil. El costo de adquisición es casi cero.</p>
+      <span class="meta">Mes 3 · Distribución orgánica + contenido</span>
+    </div>
+  </div>
+
+  <div class="gtm-step">
+    <div class="gtm-num">4</div>
+    <div class="gtm-content">
+      <h4>Contenido como canal de distribución</h4>
+      <p>La marca personal de Santiago Funes en redes sociales es un canal de distribución existente. Contenido sobre mercado inmobiliario argentino, datos de precios, análisis de zonas — todo alimenta la percepción de Altavista como la empresa que tiene los datos reales. Este canal abre puertas con inmobiliarias, desarrolladoras e inversores sin costo de venta.</p>
+      <span class="meta">Continuo · Ya existe la audiencia</span>
+    </div>
+  </div>
+
+  <div class="gtm-step">
+    <div class="gtm-num">5</div>
+    <div class="gtm-content">
+      <h4>Segunda ciudad — replicar el modelo</h4>
+      <p>Con el modelo validado en Tandil (datos, aliados, AVM preciso, primeros ingresos), expandir a una segunda ciudad. Mar del Plata o Bahía Blanca por su tamaño y dinámica de mercado. La segunda ciudad va más rápido porque ya hay un playbook, un producto que funciona y casos de éxito reales de Tandil.</p>
+      <span class="meta">Mes 5–8 · Capital de la agencia + primeros ingresos SaaS</span>
+    </div>
+  </div>
+
+  <div class="gtm-step">
+    <div class="gtm-num">6</div>
+    <div class="gtm-content">
+      <h4>El banco — la conversación enterprise</h4>
+      <p>Con datos de dos ciudades y precisión de AVM demostrada, pedir reunión con el área de tasaciones o riesgo crediticio de 2-3 bancos. El pitch es simple: "Tenemos el único AVM confiable de Argentina. Hoy sus tasaciones tardan días y cuestan caro. Nosotros las hacemos en segundos y mejoran con cada transacción." El timing ideal: cuando el mercado hipotecario esté creciendo y los bancos estén saturados de solicitudes.</p>
+      <span class="meta">Mes 8–12 · Reuniones ejecutivas</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">ALTAVISTA</div>
+  <p>Intelligence · Business Model Canvas · Mayo 2026</p>
+  <p style="margin-top:8px;">Documento de trabajo — sujeto a revisión continua</p>
+</footer>
+
+</body>
+</html>

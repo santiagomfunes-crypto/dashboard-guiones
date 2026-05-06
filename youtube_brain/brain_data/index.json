@@ -1,5 +1,36 @@
 {
-  "videos": [],
+  "videos": [
+    {
+      "video_id": "CKxUe5QysG8",
+      "title": "Meta Ads para sector inmobiliario: captación de propietarios con videomarketing (Julián Romero ft. Cristina)",
+      "type": "video",
+      "source_type": "tutorial",
+      "tags": ["meta-ads", "facebook-ads", "captacion-inmobiliaria", "videomarketing", "landing-page", "marca-personal", "leads", "real-estate"],
+      "credibility_score": 4,
+      "learned_at": "2026-04-29T00:00:00",
+      "destilado_en": null
+    },
+    {
+      "video_id": "pDOZbKWuHfI",
+      "title": "Best Facebook & Instagram Ad Types for Real Estate Leads (Lowell Brown, Going Social Toronto)",
+      "type": "video",
+      "source_type": "tutorial",
+      "tags": ["meta-ads", "facebook-ads", "lead-form-ads", "carousel-ads", "real-estate"],
+      "credibility_score": 2,
+      "learned_at": "2026-04-29T00:00:00",
+      "destilado_en": null
+    },
+    {
+      "video_id": "bNGyk2UReZA",
+      "title": "Facebook Ads for Real Estate Agents 2025 — Full Campaign Setup A-Z (LeadDex)",
+      "type": "video",
+      "source_type": "tutorial",
+      "tags": ["meta-ads", "facebook-ads", "real-estate", "leads", "instant-forms", "conditional-logic", "ad-testing", "kpi-metrics"],
+      "credibility_score": 5,
+      "learned_at": "2026-04-29T00:00:00",
+      "destilado_en": null
+    }
+  ],
   "web_sources": [
     {
       "source_id": "empre_ar_ivan",
@@ -8,7 +39,8 @@
       "source_type": "podcast",
       "tags": ["ivan-briones", "grupo-briones", "liderazgo", "banca", "real-estate", "cultura-equipo", "marca-personal"],
       "credibility_score": 4,
-      "learned_at": "2026-04-17T00:00:00"
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
     },
     {
       "source_id": "detras_puesto_metodo",
@@ -17,7 +49,8 @@
       "source_type": "artículo",
       "tags": ["metodo-briones", "tiktok", "contenido", "leads", "tasa-finalizacion", "organico", "real-estate"],
       "credibility_score": 4,
-      "learned_at": "2026-04-17T00:00:00"
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
     },
     {
       "source_id": "infobae_beltran_mar2026",
@@ -26,7 +59,38 @@
       "source_type": "entrevista",
       "tags": ["beltran-briones", "grupo-briones", "conversion", "marca-personal", "mercado-2026", "caba", "entrevista"],
       "credibility_score": 5,
-      "learned_at": "2026-04-17T00:00:00"
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
+    },
+    {
+      "source_id": "canal26_esquina",
+      "title": "Briones: La esquina más elegante de Latinoamérica (Canal26 mar 2026)",
+      "type": "web",
+      "source_type": "artículo",
+      "tags": ["beltran-briones", "formato-contenido", "hooks", "comparacion", "2026"],
+      "credibility_score": 3,
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
+    },
+    {
+      "source_id": "mejorinformado_mentalidad",
+      "title": "Briones sin filtros: mentalidad y cambio generacional (MejorInformado)",
+      "type": "web",
+      "source_type": "entrevista",
+      "tags": ["beltran-briones", "mentalidad", "autenticidad", "marca-personal", "2026"],
+      "credibility_score": 4,
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
+    },
+    {
+      "source_id": "mindlin_estrategia",
+      "title": "Estrategia Briones: datos + provocación = leads reales (MindlinDev)",
+      "type": "web",
+      "source_type": "artículo",
+      "tags": ["beltran-briones", "estrategia", "datos-provocacion", "leads", "2026"],
+      "credibility_score": 4,
+      "learned_at": "2026-04-17T00:00:00",
+      "destilado_en": "referencia/playbook-briones.md"
     }
   ]
 }

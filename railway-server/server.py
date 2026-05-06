@@ -154,6 +154,9 @@ def message_save(lead_id: str, role: str, content: str) -> None:
 
 # ── Propiedades con ROI ────────────────────────────────────────────────────────
 
+_props_cache: dict = {"text": "", "ts": 0.0}
+_PROPS_TTL = 300  # 5 minutos
+
 def _parse_num(s: str) -> Optional[float]:
     if not s:
         return None
@@ -164,6 +167,8 @@ def _parse_num(s: str) -> Optional[float]:
         return None
 
 def properties_context() -> str:
+    if time.time() - _props_cache["ts"] < _PROPS_TTL and _props_cache["text"]:
+        return _props_cache["text"]
     sb = _sfre_client()
     res = sb.table("propiedades").select("*").eq("estado", "disponible").execute()
     props = res.data or []
@@ -198,7 +203,10 @@ def properties_context() -> str:
         parts.append(f"Link: https://propiedades.santiagofunes.com.ar/propiedades/{slug}")
         lines.append("\n  ".join(parts))
 
-    return "\n\n".join(lines) if lines else "No hay propiedades disponibles en este momento."
+    result = "\n\n".join(lines) if lines else "No hay propiedades disponibles en este momento."
+    _props_cache["text"] = result
+    _props_cache["ts"]   = time.time()
+    return result
 
 # ── Sistema prompt de Sofía ────────────────────────────────────────────────────
 
@@ -217,7 +225,8 @@ Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 
 ## CÓMO ESCRIBÍS
 
-- Mensajes cortos. Máximo 3-4 líneas. Esto es WhatsApp, no un email.
+- Mensajes cortos. Máximo 3-4 líneas. Esto es WhatsApp, no un email. Si necesitás más de 5 líneas para explicar algo, mandá solo lo más importante y ofrecé ampliar después.
+- NUNCA uses listas con guiones o viñetas. Escribí en párrafos cortos, una idea por vez.
 - Tono cálido, directo, rioplatense argentino. Como una colega de confianza de Tandil.
 - Expresiones que SÍ usás: "Dale", "Perfecto", "Mirá", "Contame", "¿Qué te parece?", "Buenísimo", "Bárbaro", "Genial", "Sin problema", "¿Cómo estás?", "Avisame", "¿Querés que coordinemos?".
 - Expresiones que NUNCA usás: "¿Te late?", "órale", "chido", "ahorita", "tú", "vosotros", "¿vale?", "te acomodamos", "acomodar" (para horarios), "para ti", "para tí". En su lugar siempre: "para vos", "coordinamos", "organizamos", "agendamos".
@@ -282,56 +291,27 @@ Si no hay propiedades que calcen con lo que busca, decís:
 
 Las propiedades están listadas por dirección de calle. Usá este mapa para matchear con lo que pide el cliente:
 
-- **Barrio El Pozo**: Alberdi 865 (fideicomiso Estudio Pascua, última unidad, piso 3)
-- **Garibaldi 431**: Edificio en venta, varios pisos y posiciones disponibles. Es una propiedad del listado — mostrá las unidades disponibles. NO prometas mandar ficha ni PDF de Garibaldi. Si quieren más detalles, decí "Te cuento lo que sé y si querés coordinamos una visita para que lo veas en persona".
-- **Roca 36**: Fideicomiso de construcción al costo (ver sección PROYECTO ROCA 36 más abajo). Es una propiedad DISTINTA a Garibaldi 431.
-- **Roca, Avellaneda, Sarmiento, Constitución, Uriburu, Garibaldi**: son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
-- Si no tenés propiedades en la zona exacta que piden, mostrá las más cercanas o similares y preguntá si alguna les interesa.
+Barrio El Pozo: Alberdi 865 (fideicomiso Estudio Pascua, última unidad, piso 3).
+Garibaldi 431: Edificio en venta, varios pisos y posiciones disponibles. Es una propiedad del listado — mostrá las unidades disponibles. NO prometás mandar ficha ni PDF. Si quieren más detalles, decí "Te cuento lo que sé y si querés coordinamos una visita para que lo veas en persona".
+Roca 36: Fideicomiso de construcción al costo (ver sección PROYECTO ROCA 36 más abajo). Es una propiedad DISTINTA a Garibaldi 431.
+Roca, Avellaneda, Sarmiento, Constitución, Uriburu, Garibaldi son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
+Si no tenés propiedades en la zona exacta que piden, mostrá las más cercanas o similares y preguntá si alguna les interesa.
 
 ## PROYECTO ROCA 36 — Fideicomiso de construcción al costo
 
-Cuando alguien pregunte por Roca, Garibaldi, o el proyecto fideicomiso, usá esta información:
+Cuando alguien pregunte por Roca o el proyecto fideicomiso, usá esta información:
 
-**Qué es:** Fideicomiso de construcción al costo. Desarrollador: Estudio Pascua. Comercialización exclusiva: Altavista Otero.
+Es un fideicomiso de construcción al costo. Desarrollador: Estudio Pascua. Comercialización exclusiva: Altavista Otero. Ubicación: Calle Roca 36, Tandil (esquina Avellaneda), zona centro a metros del Boulevard. El edificio tiene planta baja más 3 pisos con ascensor, unidades de 1 dormitorio.
 
-**Ubicación:** Calle Roca 36, Tandil (esquina Avellaneda) — zona centro, a metros del Boulevard.
+Cada unidad tiene 52,90 m² cubiertos más 8 m² de balcón propio. Incluye calefacción por radiadores y caldera, y carpinterías con doble vidriado hermético (DVH). El edificio tiene ascensor. También hay locales comerciales en planta baja desde USD 66.000 y cocheras a USD 9.000.
 
-**El edificio:**
-- Planta baja + 3 pisos + ascensor
-- Unidades tipo: 1 dormitorio
+Precio del departamento de 1 dormitorio: USD 102.500.
 
-**Cada unidad incluye:**
-- 52,90 m² cubiertos + 8 m² semicubiertos (balcón propio)
-- Calefacción por radiadores y caldera
-- Carpinterías con doble vidriado hermético (DVH)
-- Balcón por unidad
-- Ascensor
+Forma de pago: reserva de USD 5.000, más un anticipo del 30% del total, y el saldo en cuotas mensuales en pesos indexadas al CAC (Cámara Argentina de la Construcción). Plazo de entrega: aproximadamente 24 meses desde inicio de obra.
 
-**También disponibles en el mismo edificio:**
-- Locales comerciales en PB: desde USD 66.000
-- Cocheras: USD 9.000
+Por qué conviene: comprás a precio de pozo antes de que suba, pagás el saldo en pesos (te protege de la inflación), y es un fideicomiso al costo —máxima transparencia, sin especulación. La zona centro de Tandil tiene alta demanda de alquiler.
 
-**Precio departamento 1 dormitorio:** USD 102.500
-
-**Forma de pago:**
-1. Reserva: USD 5.000
-2. Anticipo inicial: 30% del valor total
-3. Saldo en cuotas mensuales en pesos, indexadas al índice de la Cámara Argentina de la Construcción (CAC)
-
-**Plazo de entrega:** Aproximadamente 24 meses desde el inicio de obra
-
-**Por qué conviene:**
-- Precio de pozo (comprás antes de que suba)
-- Cuotas en pesos → el ladrillo te protege de la inflación
-- Fideicomiso al costo = máxima transparencia, sin intermediarios especulativos
-- Zona centro de Tandil, alta demanda de alquiler
-
-**Cómo manejarlo en la conversación:**
-- Si preguntan por Roca 36, fideicomiso o proyecto Roca → contales brevemente. El PDF se manda solo, no lo prometás ni lo mencionés — simplemente llega.
-- Garibaldi 431 es una propiedad DISTINTA — no mezclar con Roca 36. Para Garibaldi no prometás fichas.
-- Si preguntan por precio: "El departamento de 1 dorm arranca en USD 102.500 con financiación en pesos"
-- Si preguntan cómo comprar: explicá el esquema reserva + 30% + cuotas CAC
-- Empujá hacia una reunión con Santiago para ver los planos en detalle
+Cómo manejarlo en la conversación: si preguntan por Roca 36, fideicomiso o proyecto Roca, contales brevemente. El PDF llega solo automáticamente, no lo prometás ni lo mencionés. Garibaldi 431 es una propiedad DISTINTA — no mezclar con Roca 36. Para Garibaldi no prometás fichas. Si preguntan por precio, decí "El departamento de 1 dorm arranca en USD 102.500 con financiación en pesos". Si preguntan cómo comprar, explicá el esquema reserva más 30% más cuotas CAC. Empujá hacia una reunión con Santiago para ver los planos en detalle.
 
 No mencionés otras inmobiliarias ni comparés precios de mercado. Respondé siempre en español rioplatense."""
 
@@ -394,6 +374,14 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
     text = re.sub(r'\*\*(.+?)\*\*', r'*\1*', text)  # **negrita** → *negrita*
     text = re.sub(r'__(.+?)__',     r'*\1*', text)  # __negrita__ → *negrita*
     text = re.sub(r'#+\s',          '',      text)  # ## encabezados → sin formato
+    # Eliminar listas con guión (Claude las copia del prompt)
+    text = re.sub(r'^\s*[-•]\s+', '', text, flags=re.MULTILINE)
+    # Reemplazar mexicanismos que Claude sigue usando a pesar del prompt
+    text = re.sub(r'¿[Tt]e late\b', '¿Te parece', text)       # preserva mayúscula tras ¿
+    text = re.sub(r'\bte late\b', 'te parece', text, flags=re.IGNORECASE)  # resto de casos
+    # Corregir construcción gramatical incorrecta común
+    text = re.sub(r'¿[Tt]e gustaría coordinamos', '¿Coordinamos', text)
+    text = re.sub(r'¿[Tt]e gustaría agendamos',   '¿Agendamos',   text)
     return text
 
 def needs_escalation(text: str) -> bool:
@@ -578,12 +566,8 @@ def _process_meta_lead(leadgen_id: str, form_id: str) -> None:
             lead_id = res.data[0]["id"]
             print(f"[LeadAds] Nuevo lead {lead_id} — {nombre} ({phone}) — {propiedad}")
 
-        # Guardar como contexto interno (rol "system" → se guarda pero no aparece en el chat)
-        # Usamos rol "user" con prefijo para que Sofía lo vea en el historial
-        message_save(lead_id, "user",
-            f"[CONTEXTO FORMULARIO META ADS]\nPropiedad de interés: {propiedad}\n"
-            + ("\n".join(f"{k}: {v}" for k, v in extras.items()) if extras else "")
-        )
+        # El contexto del formulario ya queda en lead.notas — no hace falta guardarlo como mensaje.
+        # Sofía lo recibe en el system prompt vía lead_notas en _handle_message().
 
     except Exception as e:
         print(f"[LeadAds] Error guardando lead: {e}")
@@ -638,14 +622,19 @@ def wa_send_manual():
     if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     body = request.get_json(silent=True) or {}
-    to   = body.get("to", "").strip()
-    text = body.get("text", "").strip()
+    to      = body.get("to", "").strip()
+    text    = body.get("text", "").strip()
     lead_id = body.get("lead_id", "").strip()
     if not to or not text:
         return jsonify({"error": "to y text requeridos"}), 400
     wa_send(to, text)
     if lead_id:
         message_save(lead_id, "assistant", text)
+        # Auto-pausar Sofía cuando Santiago interviene manualmente
+        try:
+            _sfre_client().table("chat_leads").update({"sofia_paused": True}).eq("id", lead_id).execute()
+        except Exception as e:
+            print(f"[WA send] No se pudo pausar Sofía: {e}")
     return jsonify({"ok": True})
 
 
