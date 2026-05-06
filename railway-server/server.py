@@ -95,6 +95,29 @@ def _anthropic_client() -> anthropic.Anthropic:
     return anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
 
+# ── Pricing constants ──────────────────────────────────────────────────────────
+# Claude Haiku 4.5 — https://www.anthropic.com/pricing
+_HAIKU_INPUT_COST_PER_TOKEN  = 0.80 / 1_000_000   # $0.80 / MTok
+_HAIKU_OUTPUT_COST_PER_TOKEN = 4.00 / 1_000_000   # $4.00 / MTok
+# OpenAI Whisper — $0.006/min; asumimos ~30s promedio por audio de WhatsApp
+_WHISPER_COST_PER_CALL = 0.003
+
+
+def _log_api_usage(model: str, tokens_input: int = 0, tokens_output: int = 0,
+                   cost_usd: float = 0.0, source: str = 'sofia') -> None:
+    """Registra uso de API en Supabase para el monitor de costos."""
+    try:
+        _sfre_client().table("api_usage").insert({
+            "model": model,
+            "tokens_input": tokens_input,
+            "tokens_output": tokens_output,
+            "cost_usd": round(cost_usd, 6),
+            "source": source,
+        }).execute()
+    except Exception as e:
+        print(f"[api_usage] {e}")
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # SOFÍA — WhatsApp Bot
 # ══════════════════════════════════════════════════════════════════════════════
@@ -350,6 +373,7 @@ def transcribe_audio(audio_bytes: bytes) -> Optional[str]:
             file=buf,
             language="es",
         )
+        _log_api_usage(model="whisper-1", cost_usd=_WHISPER_COST_PER_CALL)
         return result.text
     except Exception as e:
         print(f"[Whisper] {e}")
@@ -368,6 +392,13 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
         max_tokens=600,
         system=system,
         messages=messages,
+    )
+    _log_api_usage(
+        model="claude-haiku-4-5-20251001",
+        tokens_input=response.usage.input_tokens,
+        tokens_output=response.usage.output_tokens,
+        cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
+                  + response.usage.output_tokens * _HAIKU_OUTPUT_COST_PER_TOKEN),
     )
     text = response.content[0].text
     # Convertir markdown a formato WhatsApp
