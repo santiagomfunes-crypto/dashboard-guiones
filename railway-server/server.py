@@ -390,10 +390,10 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
         messages=messages,
     )
     text = response.content[0].text
-    # Eliminar markdown que WhatsApp muestra como texto literal
-    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)   # **negrita** → sin formato
-    text = re.sub(r'__(.+?)__',     r'\1', text)   # __negrita__
-    text = re.sub(r'#+\s',          '',    text)   # ## encabezados
+    # Convertir markdown a formato WhatsApp
+    text = re.sub(r'\*\*(.+?)\*\*', r'*\1*', text)  # **negrita** → *negrita*
+    text = re.sub(r'__(.+?)__',     r'*\1*', text)  # __negrita__ → *negrita*
+    text = re.sub(r'#+\s',          '',      text)  # ## encabezados → sin formato
     return text
 
 def needs_escalation(text: str) -> bool:
