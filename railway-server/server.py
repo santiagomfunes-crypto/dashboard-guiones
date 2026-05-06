@@ -376,13 +376,16 @@ def transcribe_audio(audio_bytes: bytes) -> Optional[str]:
 
 # ── Respuesta de Sofía ─────────────────────────────────────────────────────────
 
-def sofia_reply(history: list, user_message: str) -> str:
+def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
     messages = history + [{"role": "user", "content": user_message}]
+    system   = sofia_system_prompt()
+    if lead_notas:
+        system += f"\n\n## CONTEXTO DE ESTE LEAD\n{lead_notas}\nUsá este contexto para personalizar tu respuesta. No le preguntés cosas que ya respondió en el formulario."
     client = _anthropic_client()
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=600,
-        system=sofia_system_prompt(),
+        system=system,
         messages=messages,
     )
     return response.content[0].text
@@ -429,8 +432,9 @@ def _handle_message(from_phone: str, user_text: str) -> None:
         if lead.get("sofia_paused"):
             print(f"[WA] Sofía pausada para {from_phone} — mensaje guardado, sin respuesta")
             return
-        history = messages_get(lead_id, limit=20)
-        reply   = sofia_reply(history, user_text)
+        history    = messages_get(lead_id, limit=20)
+        lead_notas = lead.get("notas") or ""
+        reply      = sofia_reply(history, user_text, lead_notas)
         message_save(lead_id, "assistant", reply)
         wa_send(from_phone, reply)
         # Auto-enviar PDF del fideicomiso Roca 36
@@ -508,73 +512,72 @@ def _retrieve_lead(leadgen_id: str) -> Optional[dict]:
         return None
 
 def _parse_lead_fields(field_data: list) -> dict:
-    """Extrae nombre y teléfono de field_data de la Graph API."""
-    result = {}
+    """Extrae todos los campos del formulario de Meta."""
+    NAME_KEYS  = {"full_name", "nombre_completo", "nombre", "name"}
+    PHONE_KEYS = {"phone_number", "telefono", "phone", "celular", "whatsapp"}
+    result = {"name": "", "phone": "", "extras": {}}
     for f in field_data:
-        name  = f.get("name", "").lower()
-        value = (f.get("values") or [""])[0]
-        if name in ("full_name", "nombre_completo", "nombre", "name"):
-            result["name"] = value.strip()
-        elif name in ("phone_number", "telefono", "phone", "celular", "whatsapp"):
-            result["phone"] = value.strip()
+        key   = f.get("name", "").lower()
+        value = (f.get("values") or [""])[0].strip()
+        if not value:
+            continue
+        if key in NAME_KEYS:
+            result["name"] = value
+        elif key in PHONE_KEYS:
+            result["phone"] = value
+        else:
+            # Cualquier otra pregunta del formulario (presupuesto, zona, etc.)
+            result["extras"][f.get("name", key)] = value
     return result
 
-def _send_wa_template_bienvenida(phone: str, nombre: str, propiedad: str) -> None:
-    """
-    Envía el mensaje de bienvenida usando template aprobado.
-    Mientras el template no esté aprobado, usa mensaje de texto libre
-    (solo funciona si el usuario inició conversación antes — dentro de la ventana de 24h).
-    Cuando el template esté aprobado, cambiar a tipo 'template'.
-    """
-    nombre_corto = nombre.split()[0] if nombre else "hola"
-    texto = (
-        f"Hola {nombre_corto} 👋 Soy Sofía, la secretaria de Santiago Funes en Altavista Otero.\n\n"
-        f"Vi que te interesó *{propiedad}*. Contame, ¿qué querés saber?"
-    )
-    wa_send(phone, texto)
+def _build_form_notas(propiedad: str, nombre: str, extras: dict) -> str:
+    """Construye el texto de notas con todo el contexto del formulario."""
+    lines = [f"Origen: Meta Ads — {propiedad}"]
+    if nombre:
+        lines.append(f"Nombre declarado en formulario: {nombre}")
+    for k, v in extras.items():
+        lines.append(f"{k}: {v}")
+    return "\n".join(lines)
 
 def _process_meta_lead(leadgen_id: str, form_id: str) -> None:
-    """Recupera el lead de Meta y lo guarda en Supabase."""
+    """Recupera el lead de Meta y lo guarda en Supabase con todo el contexto del formulario."""
     lead_data = _retrieve_lead(leadgen_id)
     if not lead_data:
         return
 
-    fields = _parse_lead_fields(lead_data.get("field_data", []))
-    phone_raw = fields.get("phone", "")
-    nombre    = fields.get("name", "")
+    fields    = _parse_lead_fields(lead_data.get("field_data", []))
+    phone_raw = fields["phone"]
+    nombre    = fields["name"]
+    extras    = fields["extras"]
+    propiedad = META_FORM_MAP.get(form_id, "una de nuestras propiedades")
+    phone     = _normalize_phone(phone_raw) if phone_raw else ""
+    notas     = _build_form_notas(propiedad, nombre, extras)
 
     if not phone_raw:
-        print(f"[LeadAds] Leadgen {leadgen_id} sin teléfono — guardando sin WhatsApp")
-
-    phone = _normalize_phone(phone_raw) if phone_raw else ""
-    propiedad = META_FORM_MAP.get(form_id, "una de nuestras propiedades")
+        print(f"[LeadAds] Leadgen {leadgen_id} sin teléfono — guardando igualmente")
 
     try:
         sb = _sfre_client()
-        # Verificar si ya existe ese teléfono
-        existing = sb.table("chat_leads").select("id").eq("phone", phone).execute() if phone else None
+        existing = sb.table("chat_leads").select("id,notas").eq("phone", phone).execute() if phone else None
         if existing and existing.data:
             lead_id = existing.data[0]["id"]
-            print(f"[LeadAds] Lead existente {lead_id} actualizado desde Meta form {form_id}")
+            # Actualizar notas con el contexto del formulario
+            sb.table("chat_leads").update({"notas": notas}).eq("id", lead_id).execute()
+            print(f"[LeadAds] Lead existente {lead_id} enriquecido con datos del formulario")
         else:
-            insert_data: dict = {
-                "status": "nuevo",
-                "notas":  f"Lead desde Meta Ads — {propiedad}",
-            }
+            insert_data: dict = {"status": "nuevo", "notas": notas}
             if nombre: insert_data["name"]  = nombre
             if phone:  insert_data["phone"] = phone
-            res = sb.table("chat_leads").insert(insert_data).execute()
+            res     = sb.table("chat_leads").insert(insert_data).execute()
             lead_id = res.data[0]["id"]
             print(f"[LeadAds] Nuevo lead {lead_id} — {nombre} ({phone}) — {propiedad}")
 
-        # Guardar mensaje de sistema con el origen
-        message_save(lead_id, "user", f"[Meta Ads] Formulario completado para: {propiedad}")
-
-        # Enviar WhatsApp de bienvenida si hay teléfono
-        if phone:
-            _send_wa_template_bienvenida(phone, nombre, propiedad)
-            message_save(lead_id, "assistant",
-                f"Hola {nombre.split()[0] if nombre else ''}, soy Sofía. Vi que te interesó {propiedad}. Contame, ¿qué querés saber?")
+        # Guardar como contexto interno (rol "system" → se guarda pero no aparece en el chat)
+        # Usamos rol "user" con prefijo para que Sofía lo vea en el historial
+        message_save(lead_id, "user",
+            f"[CONTEXTO FORMULARIO META ADS]\nPropiedad de interés: {propiedad}\n"
+            + ("\n".join(f"{k}: {v}" for k, v in extras.items()) if extras else "")
+        )
 
     except Exception as e:
         print(f"[LeadAds] Error guardando lead: {e}")
