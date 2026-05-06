@@ -157,14 +157,19 @@ def properties_context() -> str:
     for p in props:
         parts = [f"*{p.get('titulo', '')}*"]
         parts.append(f"Tipo: {p.get('tipo', '')} | Modalidad: {p.get('modalidad', '')}")
-        if p.get("precio"):
-            parts.append(f"Precio: {p['precio']}")
+        parts.append(f"Precio: {p.get('precio') or 'A consultar'}")
         if p.get("superficie"):
             parts.append(f"Superficie: {p['superficie']}")
         if p.get("dormitorios"):
             parts.append(f"Dormitorios: {p['dormitorios']}")
         if p.get("banos"):
             parts.append(f"Baños: {p['banos']}")
+        if p.get("piso"):
+            parts.append(f"Piso: {p['piso']}")
+        if p.get("posicion") and p["posicion"] not in ("", "Indistinto"):
+            parts.append(f"Posición: {p['posicion']}")
+        if p.get("cochera") and p["cochera"] != "Sin cochera":
+            parts.append(f"Cochera: {p['cochera']}")
         if p.get("alquiler_estimado"):
             parts.append(f"Alquiler estimado: {p['alquiler_estimado']}")
             alquiler = _parse_num(p["alquiler_estimado"])
@@ -173,7 +178,7 @@ def properties_context() -> str:
                 roi = (alquiler * 12 / precio) * 100
                 parts.append(f"ROI anual estimado: {roi:.1f}%")
         if p.get("descripcion"):
-            parts.append(f"Descripción: {str(p['descripcion'])[:200]}")
+            parts.append(f"Descripción: {str(p['descripcion'])[:300]}")
         slug = p.get("slug", "")
         parts.append(f"Link: https://propiedades.santiagofunes.com.ar/propiedades/{slug}")
         lines.append("\n  ".join(parts))
@@ -241,6 +246,15 @@ Nunca inventes información que no tenés.
 
 Si no hay propiedades que calcen con lo que busca, decís:
 "Ahora mismo no tenemos algo así disponible, pero si me dejás tus datos te aviso cuando entre algo que te sirva." Luego pedí nombre y mail/WhatsApp para el seguimiento.
+
+## BARRIOS DE TANDIL — referencia
+
+Las propiedades están listadas con su dirección exacta. Cuando alguien pide un barrio, usá esta referencia para matchear:
+- **Centro / Microcentro**: Garibaldi, Avellaneda, Pinto, 9 de Julio, Rodríguez, San Martín (cerca del centro histórico)
+- **Barrio Roca**: Alberdi, Uriburu, Constitución, Sarmiento (zona residencial a pocas cuadras del centro)
+- **Barrio El Pozo**: Chacabuco, Paz, Liniers, Cuba (zona sur/sureste)
+- **Barrio Norte / Movediza**: calles al norte como Montiel
+- Cuando no sabés a qué barrio pertenece una calle específica, mostrá las opciones disponibles más similares y preguntá si alguna zona les interesa.
 
 No mencionés otras inmobiliarias ni comparés precios de mercado. Respondé siempre en español rioplatense."""
 
