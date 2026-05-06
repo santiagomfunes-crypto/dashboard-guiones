@@ -9,6 +9,7 @@ import re
 import json
 import uuid
 import time
+import threading
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -247,14 +248,14 @@ Nunca inventes información que no tenés.
 Si no hay propiedades que calcen con lo que busca, decís:
 "Ahora mismo no tenemos algo así disponible, pero si me dejás tus datos te aviso cuando entre algo que te sirva." Luego pedí nombre y mail/WhatsApp para el seguimiento.
 
-## BARRIOS DE TANDIL — referencia
+## BARRIOS Y PROYECTOS DE TANDIL — referencia exacta
 
-Las propiedades están listadas con su dirección exacta. Cuando alguien pide un barrio, usá esta referencia para matchear:
-- **Centro / Microcentro**: Garibaldi, Avellaneda, Pinto, 9 de Julio, Rodríguez, San Martín (cerca del centro histórico)
-- **Barrio Roca**: Alberdi, Uriburu, Constitución, Sarmiento (zona residencial a pocas cuadras del centro)
-- **Barrio El Pozo**: Chacabuco, Paz, Liniers, Cuba (zona sur/sureste)
-- **Barrio Norte / Movediza**: calles al norte como Montiel
-- Cuando no sabés a qué barrio pertenece una calle específica, mostrá las opciones disponibles más similares y preguntá si alguna zona les interesa.
+Las propiedades están listadas por dirección de calle. Usá este mapa para matchear con lo que pide el cliente:
+
+- **Barrio El Pozo**: Alberdi 865 (fideicomiso Estudio Pascua, última unidad, piso 3)
+- **Proyecto Roca / Garibaldi**: Edificio Garibaldi 431 (varios pisos y posiciones disponibles). Cuando pregunten por "Roca" o "Garibaldi", mencioná el edificio y avisales que les vas a mandar la ficha del proyecto.
+- **Roca, Avellaneda, Sarmiento, Constitución, Uriburu**: son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
+- Si no tenés propiedades en la zona exacta que piden, mostrá las más cercanas o similares y preguntá si alguna les interesa.
 
 No mencionés otras inmobiliarias ni comparés precios de mercado. Respondé siempre en español rioplatense."""
 
@@ -328,6 +329,61 @@ def notify_escalation(lead: dict, last_user_message: str) -> None:
     )
     wa_send(SANTIAGO_PHONE, msg)
 
+# ── Debounce: agrupa mensajes en ráfaga ───────────────────────────────────────
+
+_pending: dict = {}        # phone → {'timer': Timer, 'texts': [str]}
+_pending_lock = threading.Lock()
+DEBOUNCE_SECS = 4.0        # segundos de silencio antes de procesar
+
+def _fire(phone: str) -> None:
+    with _pending_lock:
+        entry = _pending.pop(phone, None)
+    if not entry:
+        return
+    combined = "\n".join(entry['texts'])
+    print(f"[WA batch {phone}] {len(entry['texts'])} msgs → procesar")
+    _handle_message(phone, combined)
+
+def _handle_message(from_phone: str, user_text: str) -> None:
+    try:
+        lead    = lead_get_or_create(from_phone)
+        lead_id = lead["id"]
+        history = messages_get(lead_id)
+        reply   = sofia_reply(history, user_text)
+        message_save(lead_id, "user", user_text)
+        message_save(lead_id, "assistant", reply)
+        wa_send(from_phone, reply)
+        # Auto-enviar PDF si menciona proyecto Roca
+        if any(k in user_text.lower() for k in ["roca", "garibaldi", "proyecto roca"]):
+            wa_send_doc(
+                from_phone,
+                "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
+                "Proyecto-Roca-Altavista.pdf"
+            )
+        if needs_escalation(reply):
+            notify_escalation(lead, user_text)
+    except Exception as e:
+        print(f"[WA Error] {e}")
+
+# ── Envío de documentos PDF ────────────────────────────────────────────────────
+
+def wa_send_doc(to: str, doc_url: str, filename: str) -> None:
+    if not WA_TOKEN or not WA_PHONE_ID:
+        return
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": to,
+        "type": "document",
+        "document": {"link": doc_url, "filename": filename},
+    }
+    resp = http_requests.post(
+        f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages",
+        json=payload,
+        headers={"Authorization": f"Bearer {WA_TOKEN}", "Content-Type": "application/json"},
+        timeout=10,
+    )
+    print(f"[WA doc → {to}] {resp.status_code}")
+
 # ── Webhook WhatsApp ───────────────────────────────────────────────────────────
 
 @app.route("/whatsapp/webhook", methods=["GET"])
@@ -358,7 +414,7 @@ def wa_receive():
         if msg_type == "text":
             user_text = msg["text"]["body"]
         elif msg_type == "audio" and OPENAI_KEY:
-            media_id  = msg.get("audio", {}).get("id")
+            media_id    = msg.get("audio", {}).get("id")
             audio_bytes = wa_download_media(media_id) if media_id else None
             if not audio_bytes:
                 return "ok", 200
@@ -372,19 +428,16 @@ def wa_receive():
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
 
-        lead    = lead_get_or_create(from_phone)
-        lead_id = lead["id"]
-        history = messages_get(lead_id)
-
-        reply = sofia_reply(history, user_text)
-
-        message_save(lead_id, "user", user_text)
-        message_save(lead_id, "assistant", reply)
-
-        wa_send(from_phone, reply)
-
-        if needs_escalation(reply):
-            notify_escalation(lead, user_text)
+        # Debounce: agrupa mensajes en ráfaga antes de responder
+        with _pending_lock:
+            if from_phone in _pending:
+                _pending[from_phone]['timer'].cancel()
+                _pending[from_phone]['texts'].append(user_text)
+            else:
+                _pending[from_phone] = {'texts': [user_text]}
+            t = threading.Timer(DEBOUNCE_SECS, _fire, args=[from_phone])
+            _pending[from_phone]['timer'] = t
+            t.start()
 
     except Exception as e:
         print(f"[WA Error] {e}")
