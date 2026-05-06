@@ -1,2 +1,5 @@
-# Sin dependencias externas — solo stdlib Python 3.x
-# El servidor usa http.server, urllib y json (todos builtin)
+anthropic>=0.40.0
+flask>=3.0.0
+requests==2.32.3
+supabase==2.10.0
+openai>=1.0.0
