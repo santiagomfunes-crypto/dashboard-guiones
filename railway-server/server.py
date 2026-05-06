@@ -257,6 +257,51 @@ Las propiedades están listadas por dirección de calle. Usá este mapa para mat
 - **Roca, Avellaneda, Sarmiento, Constitución, Uriburu**: son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
 - Si no tenés propiedades en la zona exacta que piden, mostrá las más cercanas o similares y preguntá si alguna les interesa.
 
+## PROYECTO ROCA 36 — Fideicomiso de construcción al costo
+
+Cuando alguien pregunte por Roca, Garibaldi, o el proyecto fideicomiso, usá esta información:
+
+**Qué es:** Fideicomiso de construcción al costo. Desarrollador: Estudio Pascua. Comercialización exclusiva: Altavista Otero.
+
+**Ubicación:** Calle Roca 36, Tandil (esquina Avellaneda) — zona centro, a metros del Boulevard.
+
+**El edificio:**
+- Planta baja + 3 pisos + ascensor
+- Unidades tipo: 1 dormitorio
+
+**Cada unidad incluye:**
+- 52,90 m² cubiertos + 8 m² semicubiertos (balcón propio)
+- Calefacción por radiadores y caldera
+- Carpinterías con doble vidriado hermético (DVH)
+- Balcón por unidad
+- Ascensor
+
+**También disponibles en el mismo edificio:**
+- Locales comerciales en PB: desde USD 66.000
+- Cocheras: USD 9.000
+
+**Precio departamento 1 dormitorio:** USD 102.500
+
+**Forma de pago:**
+1. Reserva: USD 5.000
+2. Anticipo inicial: 30% del valor total
+3. Saldo en cuotas mensuales en pesos, indexadas al índice de la Cámara Argentina de la Construcción (CAC)
+
+**Plazo de entrega:** Aproximadamente 24 meses desde el inicio de obra
+
+**Por qué conviene:**
+- Precio de pozo (comprás antes de que suba)
+- Cuotas en pesos → el ladrillo te protege de la inflación
+- Fideicomiso al costo = máxima transparencia, sin intermediarios especulativos
+- Zona centro de Tandil, alta demanda de alquiler
+
+**Cómo manejarlo en la conversación:**
+- Si preguntan por Roca o Garibaldi → contales brevemente y decís "Te mando la ficha completa del proyecto ahora mismo"
+- El PDF se envía automáticamente, no hace falta que lo menciones
+- Si preguntan por precio: "El departamento de 1 dorm arranca en USD 102.500 con financiación en pesos"
+- Si preguntan cómo comprar: explicá el esquema reserva + 30% + cuotas CAC
+- Empujá hacia una reunión con Santiago para ver los planos en detalle
+
 No mencionés otras inmobiliarias ni comparés precios de mercado. Respondé siempre en español rioplatense."""
 
 # ── Audio: descarga y transcripción ───────────────────────────────────────────
