@@ -51,6 +51,20 @@ ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 # OpenAI — para transcripción de audios (Whisper)
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
 
+# Meta Lead Ads
+META_PAGE_TOKEN  = os.environ.get("META_PAGE_TOKEN", "")
+META_VERIFY_TOKEN = os.environ.get("META_LEADGEN_VERIFY_TOKEN", "altavista-leadgen-2026")
+META_APP_SECRET  = os.environ.get("META_APP_SECRET", "")
+
+# Mapeo form_id → propiedad (se pueden agregar desde env o hardcodear)
+# Formato: "FORM_ID_1:Nombre Propiedad 1,FORM_ID_2:Nombre Propiedad 2"
+_FORM_MAP_RAW = os.environ.get("META_FORM_MAP", "")
+META_FORM_MAP: dict[str, str] = {}
+for pair in _FORM_MAP_RAW.split(","):
+    if ":" in pair:
+        fid, fname = pair.split(":", 1)
+        META_FORM_MAP[fid.strip()] = fname.strip()
+
 ALLOWED_ORIGIN = os.environ.get("ALLOWED_ORIGIN", "https://santiagomfunes-crypto.github.io")
 
 SCRAPE_HEADERS = {
@@ -438,6 +452,162 @@ def wa_send_doc(to: str, doc_url: str, filename: str) -> None:
     print(f"[WA doc → {to}] {resp.status_code}")
 
 # ── Webhook WhatsApp ───────────────────────────────────────────────────────────
+
+# ══════════════════════════════════════════════════════════════════════════════
+# META LEAD ADS — Webhooks oficiales
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _normalize_phone(raw: str) -> str:
+    """Normaliza el teléfono al formato E.164 sin el +, p.ej. 5491112345678."""
+    digits = re.sub(r"[^\d]", "", raw)
+    # Si viene con código de país argentino (54) y tiene 13 dígitos → ok
+    # Si viene sin código de país (empieza con 0 o 9) → agrega 54
+    if digits.startswith("54") and len(digits) >= 12:
+        return digits
+    if digits.startswith("0"):
+        digits = "54" + digits[1:]
+    elif digits.startswith("9") and len(digits) == 10:
+        digits = "54" + digits
+    elif not digits.startswith("54"):
+        digits = "54" + digits
+    return digits
+
+def _retrieve_lead(leadgen_id: str) -> Optional[dict]:
+    """Llama a la Graph API para obtener los datos del lead."""
+    if not META_PAGE_TOKEN:
+        print("[LeadAds] META_PAGE_TOKEN no configurado")
+        return None
+    try:
+        resp = http_requests.get(
+            f"https://graph.facebook.com/v20.0/{leadgen_id}",
+            params={"access_token": META_PAGE_TOKEN},
+            timeout=10,
+        )
+        data = resp.json()
+        if "error" in data:
+            print(f"[LeadAds] Error API: {data['error']}")
+            return None
+        return data
+    except Exception as e:
+        print(f"[LeadAds] retrieve_lead error: {e}")
+        return None
+
+def _parse_lead_fields(field_data: list) -> dict:
+    """Extrae nombre y teléfono de field_data de la Graph API."""
+    result = {}
+    for f in field_data:
+        name  = f.get("name", "").lower()
+        value = (f.get("values") or [""])[0]
+        if name in ("full_name", "nombre_completo", "nombre", "name"):
+            result["name"] = value.strip()
+        elif name in ("phone_number", "telefono", "phone", "celular", "whatsapp"):
+            result["phone"] = value.strip()
+    return result
+
+def _send_wa_template_bienvenida(phone: str, nombre: str, propiedad: str) -> None:
+    """
+    Envía el mensaje de bienvenida usando template aprobado.
+    Mientras el template no esté aprobado, usa mensaje de texto libre
+    (solo funciona si el usuario inició conversación antes — dentro de la ventana de 24h).
+    Cuando el template esté aprobado, cambiar a tipo 'template'.
+    """
+    nombre_corto = nombre.split()[0] if nombre else "hola"
+    texto = (
+        f"Hola {nombre_corto} 👋 Soy Sofía, la secretaria de Santiago Funes en Altavista Otero.\n\n"
+        f"Vi que te interesó *{propiedad}*. Contame, ¿qué querés saber?"
+    )
+    wa_send(phone, texto)
+
+def _process_meta_lead(leadgen_id: str, form_id: str) -> None:
+    """Recupera el lead de Meta y lo guarda en Supabase."""
+    lead_data = _retrieve_lead(leadgen_id)
+    if not lead_data:
+        return
+
+    fields = _parse_lead_fields(lead_data.get("field_data", []))
+    phone_raw = fields.get("phone", "")
+    nombre    = fields.get("name", "")
+
+    if not phone_raw:
+        print(f"[LeadAds] Leadgen {leadgen_id} sin teléfono — guardando sin WhatsApp")
+
+    phone = _normalize_phone(phone_raw) if phone_raw else ""
+    propiedad = META_FORM_MAP.get(form_id, "una de nuestras propiedades")
+
+    try:
+        sb = _sfre_client()
+        # Verificar si ya existe ese teléfono
+        existing = sb.table("chat_leads").select("id").eq("phone", phone).execute() if phone else None
+        if existing and existing.data:
+            lead_id = existing.data[0]["id"]
+            print(f"[LeadAds] Lead existente {lead_id} actualizado desde Meta form {form_id}")
+        else:
+            insert_data: dict = {
+                "status": "nuevo",
+                "notas":  f"Lead desde Meta Ads — {propiedad}",
+            }
+            if nombre: insert_data["name"]  = nombre
+            if phone:  insert_data["phone"] = phone
+            res = sb.table("chat_leads").insert(insert_data).execute()
+            lead_id = res.data[0]["id"]
+            print(f"[LeadAds] Nuevo lead {lead_id} — {nombre} ({phone}) — {propiedad}")
+
+        # Guardar mensaje de sistema con el origen
+        message_save(lead_id, "user", f"[Meta Ads] Formulario completado para: {propiedad}")
+
+        # Enviar WhatsApp de bienvenida si hay teléfono
+        if phone:
+            _send_wa_template_bienvenida(phone, nombre, propiedad)
+            message_save(lead_id, "assistant",
+                f"Hola {nombre.split()[0] if nombre else ''}, soy Sofía. Vi que te interesó {propiedad}. Contame, ¿qué querés saber?")
+
+    except Exception as e:
+        print(f"[LeadAds] Error guardando lead: {e}")
+
+
+@app.route("/meta/leadgen", methods=["GET"])
+def meta_leadgen_verify():
+    """Verificación del webhook de Meta."""
+    mode      = request.args.get("hub.mode")
+    token     = request.args.get("hub.verify_token")
+    challenge = request.args.get("hub.challenge")
+    if mode == "subscribe" and token == META_VERIFY_TOKEN:
+        print("[LeadAds] Webhook verificado OK")
+        return challenge, 200
+    return "Forbidden", 403
+
+
+@app.route("/meta/leadgen", methods=["POST"])
+def meta_leadgen_receive():
+    """Recibe notificaciones de nuevos leads desde Meta Lead Ads."""
+    # Verificar firma HMAC si tenemos el app secret
+    if META_APP_SECRET:
+        import hmac, hashlib
+        sig_header = request.headers.get("X-Hub-Signature-256", "")
+        expected = "sha256=" + hmac.new(
+            META_APP_SECRET.encode(), request.data, hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(sig_header, expected):
+            print("[LeadAds] Firma inválida")
+            return "Forbidden", 403
+
+    data = request.get_json(silent=True) or {}
+    if data.get("object") != "page":
+        return "ok", 200
+
+    for entry in data.get("entry", []):
+        for change in entry.get("changes", []):
+            if change.get("field") != "leadgen":
+                continue
+            val = change.get("value", {})
+            leadgen_id = val.get("leadgen_id", "")
+            form_id    = val.get("form_id", "")
+            if leadgen_id:
+                t = threading.Thread(target=_process_meta_lead, args=[leadgen_id, form_id], daemon=True)
+                t.start()
+
+    return "ok", 200
+
 
 @app.route("/wa/send", methods=["POST"])
 def wa_send_manual():
