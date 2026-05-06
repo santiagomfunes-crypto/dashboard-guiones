@@ -270,8 +270,9 @@ Si no hay propiedades que calcen con lo que busca, decís:
 Las propiedades están listadas por dirección de calle. Usá este mapa para matchear con lo que pide el cliente:
 
 - **Barrio El Pozo**: Alberdi 865 (fideicomiso Estudio Pascua, última unidad, piso 3)
-- **Proyecto Roca / Garibaldi**: Edificio Garibaldi 431 (varios pisos y posiciones disponibles). Cuando pregunten por "Roca" o "Garibaldi", mencioná el edificio y avisales que les vas a mandar la ficha del proyecto.
-- **Roca, Avellaneda, Sarmiento, Constitución, Uriburu**: son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
+- **Garibaldi 431**: Edificio en construcción/venta, varios pisos y posiciones disponibles. Es una propiedad del listado — mostrá las unidades disponibles de ese edificio.
+- **Roca 36**: Fideicomiso de construcción al costo (ver sección PROYECTO ROCA 36 más abajo). Es una propiedad DISTINTA a Garibaldi 431.
+- **Roca, Avellaneda, Sarmiento, Constitución, Uriburu, Garibaldi**: son nombres de calles en Tandil (no barrios). Matchear por nombre de calle en el listado de propiedades.
 - Si no tenés propiedades en la zona exacta que piden, mostrá las más cercanas o similares y preguntá si alguna les interesa.
 
 ## PROYECTO ROCA 36 — Fideicomiso de construcción al costo
@@ -313,8 +314,9 @@ Cuando alguien pregunte por Roca, Garibaldi, o el proyecto fideicomiso, usá est
 - Zona centro de Tandil, alta demanda de alquiler
 
 **Cómo manejarlo en la conversación:**
-- Si preguntan por Roca o Garibaldi → contales brevemente y decís "Te mando la ficha completa del proyecto ahora mismo"
+- Si preguntan por "Roca 36" o "proyecto roca" o "fideicomiso" → contales brevemente y decís "Te mando la ficha completa del proyecto ahora mismo"
 - El PDF se envía automáticamente, no hace falta que lo menciones
+- Garibaldi 431 es una propiedad DISTINTA — no mezclar con Roca 36
 - Si preguntan por precio: "El departamento de 1 dorm arranca en USD 102.500 con financiación en pesos"
 - Si preguntan cómo comprar: explicá el esquema reserva + 30% + cuotas CAC
 - Empujá hacia una reunión con Santiago para ver los planos en detalle
@@ -420,8 +422,9 @@ def _handle_message(from_phone: str, user_text: str) -> None:
         reply   = sofia_reply(history, user_text)
         message_save(lead_id, "assistant", reply)
         wa_send(from_phone, reply)
-        # Auto-enviar PDF si menciona proyecto Roca
-        if any(k in user_text.lower() for k in ["roca", "garibaldi", "proyecto roca"]):
+        # Auto-enviar PDF solo si menciona explícitamente el proyecto Roca 36 (fideicomiso)
+        # Garibaldi 431 es una propiedad distinta — NO enviar este PDF
+        if any(k in user_text.lower() for k in ["roca 36", "proyecto roca", "fideicomiso roca"]):
             wa_send_doc(
                 from_phone,
                 "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
@@ -652,15 +655,26 @@ def wa_receive():
 
         if msg_type == "text":
             user_text = msg["text"]["body"]
-        elif msg_type == "audio" and OPENAI_KEY:
+        elif msg_type == "audio":
             media_id    = msg.get("audio", {}).get("id")
             audio_bytes = wa_download_media(media_id) if media_id else None
             if not audio_bytes:
                 return "ok", 200
-            user_text = transcribe_audio(audio_bytes)
-            if not user_text:
+            if OPENAI_KEY:
+                user_text = transcribe_audio(audio_bytes)
+                if not user_text:
+                    # Whisper falló — avisar al usuario y no quedar muda
+                    from_phone = msg.get("from", "")
+                    if from_phone:
+                        wa_send(from_phone, "No escuché bien el audio 😅 ¿Me lo podés escribir?")
+                    return "ok", 200
+                print(f"[Audio transcripto] {user_text[:80]}")
+            else:
+                # Sin Whisper configurado — pedir que escriban
+                from_phone = msg.get("from", "")
+                if from_phone:
+                    wa_send(from_phone, "Por ahora solo puedo leer mensajes de texto 😊 ¿Me contás qué buscás?")
                 return "ok", 200
-            print(f"[Audio transcripto] {user_text[:80]}")
         else:
             return "ok", 200
 
