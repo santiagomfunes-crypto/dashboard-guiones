@@ -224,6 +224,7 @@ Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 - Usás voseo siempre: "para vos", "¿querés?", "¿podés?", "¿tenés?", "¿sabés?". NUNCA tuteo. NUNCA "para ti".
 - Emojis con criterio: uno o dos por mensaje cuando viene natural. Nunca en exceso.
 - Nunca usés listas largas con viñetas. Una cosa por vez.
+- NUNCA uses asteriscos para negritas ni ningún tipo de formato markdown. Sin **, sin __, sin ##. Texto plano siempre, como un WhatsApp real.
 
 ## TU OBJETIVO PRINCIPAL
 
@@ -388,7 +389,12 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
         system=system,
         messages=messages,
     )
-    return response.content[0].text
+    text = response.content[0].text
+    # Eliminar markdown que WhatsApp muestra como texto literal
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)   # **negrita** → sin formato
+    text = re.sub(r'__(.+?)__',     r'\1', text)   # __negrita__
+    text = re.sub(r'#+\s',          '',    text)   # ## encabezados
+    return text
 
 def needs_escalation(text: str) -> bool:
     keywords = ["te lo consulto", "consulto con santiago", "te paso con santiago", "aviso en breve"]
