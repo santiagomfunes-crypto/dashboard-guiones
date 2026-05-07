@@ -158,6 +158,9 @@ def lead_get_or_create(phone: str) -> dict:
 def lead_update_name(lead_id: str, name: str) -> None:
     _sfre_client().table("chat_leads").update({"name": name}).eq("id", lead_id).execute()
 
+def lead_set_paused(lead_id: str, paused: bool) -> None:
+    _sfre_client().table("chat_leads").update({"sofia_paused": paused}).eq("id", lead_id).execute()
+
 def messages_get(lead_id: str, limit: int = 20) -> list:
     res = (
         _sfre_client()
@@ -382,11 +385,13 @@ def transcribe_audio(audio_bytes: bytes) -> Optional[str]:
 
 # ── Respuesta de Sofía ─────────────────────────────────────────────────────────
 
-def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
+def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate: bool = False) -> str:
     messages = history + [{"role": "user", "content": user_message}]
     system   = sofia_system_prompt()
     if lead_notas:
         system += f"\n\n## CONTEXTO DE ESTE LEAD\n{lead_notas}\nUsá este contexto para personalizar tu respuesta. No le preguntés cosas que ya respondió en el formulario."
+    if escalate:
+        system += "\n\n## INSTRUCCIÓN ESPECIAL — HOY\nEste lead está mostrando interés concreto. Respondé con entusiasmo y al final de tu mensaje incluí naturalmente: 'Ya le aviso a Santiago para que se comunique con vos hoy 🤙' (con esas palabras exactas o muy similares)."
     client = _anthropic_client()
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -416,9 +421,55 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "") -> str:
     text = re.sub(r'¿[Tt]e gustaría agendamos',   '¿Agendamos',   text)
     return text
 
+def detect_urgency(user_text: str, history: list) -> tuple:
+    """Clasifica si el lead muestra señales de alta intención. Retorna (is_urgent, summary)."""
+    import json as _json
+    messages = history[-6:] + [{"role": "user", "content": user_text}]
+    try:
+        client = _anthropic_client()
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=150,
+            system="""Sos un clasificador de urgencia para un chatbot inmobiliario.
+Analizá el último mensaje del lead y la conversación reciente.
+Respondé SOLO JSON válido con dos campos:
+- "urgent": true si el lead muestra señales claras de alta intención (quiere ver HOY o esta semana, tiene presupuesto definido, eligió una propiedad específica, dice "me interesa", "lo quiero", "¿cuándo puedo verlo?", "¿podemos firmar?", o similar)
+- "summary": en una oración qué busca y por qué es urgente (para notificar al agente inmobiliario). Vacío si no es urgente.
+Si no hay urgencia clara: {"urgent": false, "summary": ""}""",
+            messages=messages,
+        )
+        _log_api_usage(
+            model="claude-haiku-4-5-20251001",
+            tokens_input=response.usage.input_tokens,
+            tokens_output=response.usage.output_tokens,
+            cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
+                      + response.usage.output_tokens * _HAIKU_OUTPUT_COST_PER_TOKEN),
+        )
+        result = _json.loads(response.content[0].text)
+        return bool(result.get("urgent")), result.get("summary", "")
+    except Exception as e:
+        print(f"[urgency] {e}")
+        return False, ""
+
 def needs_escalation(text: str) -> bool:
     keywords = ["te lo consulto", "consulto con santiago", "te paso con santiago", "aviso en breve"]
     return any(kw in text.lower() for kw in keywords)
+
+def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> None:
+    """Notifica a Santiago que hay un lead caliente listo para tomar."""
+    if not SANTIAGO_PHONE:
+        return
+    name  = lead.get("name") or "Sin nombre"
+    phone = lead.get("phone", "")
+    msg = (
+        f"🔥 *Lead caliente — intervención inmediata*\n\n"
+        f"*{name}* (+{phone})\n"
+        f"{urgency_summary}\n\n"
+        f"_Último mensaje:_ {last_user_message}\n\n"
+        f"Sofía le dijo que te comunicás hoy. Escribile:\n"
+        f"https://wa.me/{phone}"
+    )
+    wa_send(SANTIAGO_PHONE, msg)
 
 def notify_escalation(lead: dict, last_user_message: str) -> None:
     if not SANTIAGO_PHONE:
@@ -460,9 +511,14 @@ def _handle_message(from_phone: str, user_text: str) -> None:
             return
         history    = messages_get(lead_id, limit=20)
         lead_notas = lead.get("notas") or ""
-        reply      = sofia_reply(history, user_text, lead_notas)
+
+        # Detectar urgencia antes de generar la respuesta
+        is_urgent, urgency_summary = detect_urgency(user_text, history)
+
+        reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
         message_save(lead_id, "assistant", reply)
         wa_send(from_phone, reply)
+
         # Auto-enviar PDF del fideicomiso Roca 36
         # Garibaldi 431 es una propiedad distinta — NO usar "garibaldi" como trigger
         roca_keywords = ["roca 36", "proyecto roca", "fideicomiso roca", "fideicomiso", "roca"]
@@ -472,7 +528,13 @@ def _handle_message(from_phone: str, user_text: str) -> None:
                 "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
                 "Proyecto-Roca-Altavista.pdf"
             )
-        if needs_escalation(reply):
+
+        # Urgencia detectada: notificar a Santiago y pausar Sofía
+        if is_urgent:
+            print(f"[WA] Lead caliente detectado: {from_phone} — {urgency_summary}")
+            notify_urgency(lead, user_text, urgency_summary)
+            lead_set_paused(lead_id, True)
+        elif needs_escalation(reply):
             notify_escalation(lead, user_text)
     except Exception as e:
         print(f"[WA Error] {e}")
