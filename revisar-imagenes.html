@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Imágenes Recuperadas — Revisar</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui; background: #0f0f0f; color: #eee; padding: 20px; }
+h1 { font-size: 18px; margin-bottom: 6px; }
+p { font-size: 13px; color: #888; margin-bottom: 20px; }
+.controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.controls button { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.btn-all { background: #333; color: #fff; }
+.btn-select { background: #2563eb; color: #fff; }
+.btn-copy { background: #16a34a; color: #fff; }
+.btn-none { background: #444; color: #aaa; }
+#count { font-size: 13px; color: #facc15; align-self: center; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.card { position: relative; cursor: pointer; border: 3px solid transparent; border-radius: 8px; overflow: hidden; }
+.card:hover { border-color: #555; }
+.card.selected { border-color: #2563eb; }
+.card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+.card .info { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 4px 6px; }
+.card .info span { font-size: 10px; color: #aaa; }
+.card .checkmark { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; background: #2563eb; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 12px; color: white; }
+.card.selected .checkmark { display: flex; }
+.card.failed img { opacity: 0.2; }
+.card.failed::after { content: '✕'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 24px; color: #f00; }
+
+#output { background: #111; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-top: 20px; font-size: 11px; font-family: monospace; color: #22c55e; display: none; white-space: pre-wrap; word-break: break-all; max-height: 400px; overflow-y: auto; }
+
+.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter { padding: 5px 12px; border-radius: 20px; border: 1px solid #333; cursor: pointer; font-size: 11px; color: #888; }
+.filter.active { border-color: #2563eb; color: #fff; background: #1d3a6e; }
+</style>
+</head>
+<body>
+<h1>Imágenes Recuperadas del Cache de Chrome</h1>
+<p id="subtitle">Cargando...</p>
+
+<div class="controls">
+  <button class="btn-all" onclick="selectAll()">Seleccionar todas</button>
+  <button class="btn-none" onclick="selectNone()">Deseleccionar</button>
+  <button class="btn-select" onclick="selectType('jpg')">Solo JPG</button>
+  <button class="btn-copy" onclick="copySelected()">Copiar URLs seleccionadas</button>
+  <span id="count">0 seleccionadas</span>
+</div>
+
+<div class="filters">
+  <div class="filter active" onclick="filterAll(this)">Todas</div>
+  <div class="filter" onclick="filterSize(this, 200)">Grandes &gt;200KB</div>
+  <div class="filter" onclick="filterSize(this, 100)">Medianas &gt;100KB</div>
+  <div class="filter" onclick="filterType(this, 'jpg')">JPG</div>
+  <div class="filter" onclick="filterType(this, 'png')">PNG</div>
+</div>
+
+<div class="grid" id="grid"></div>
+<div id="output"></div>
+
+<script>
+const SUPABASE_BASE = 'https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/recovered/';
+let allImages = [];
+let selected = new Set();
+
+async function loadImages() {
+  // Cargar desde Supabase API
+  const res = await fetch('https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/list/propiedades', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzdmNvcmN3Y2lqcHZ3enhqemd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDA5NzAsImV4cCI6MjA5MzIxNjk3MH0.TZOpZrQWx-rimFw7O1bezFbrgfE6Mc_S2hkf5WJbl9k',
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzdmNvcmN3Y2lqcHZ3enhqemd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDA5NzAsImV4cCI6MjA5MzIxNjk3MH0.TZOpZrQWx-rimFw7O1bezFbrgfE6Mc_S2hkf5WJbl9k'
+    },
+    body: JSON.stringify({ prefix: 'recovered/', limit: 1000, offset: 0 })
+  });
+  const data = await res.json();
+  return (data || []).map(f => ({ name: f.name, url: SUPABASE_BASE + f.name.replace('recovered/', '') }));
+}
+
+function render(images) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  images.forEach(img => {
+    const card = document.createElement('div');
+    card.className = 'card' + (selected.has(img.url) ? ' selected' : '');
+    card.dataset.url = img.url;
+    card.innerHTML = `
+      <img src="${img.url}" loading="lazy" onerror="this.parentElement.classList.add('failed')">
+      <div class="info"><span>${img.name.split('/').pop()}</span></div>
+      <div class="checkmark">✓</div>
+    `;
+    card.addEventListener('click', () => toggle(img.url, card));
+    grid.appendChild(card);
+  });
+}
+
+function toggle(url, card) {
+  if (selected.has(url)) {
+    selected.delete(url);
+    card.classList.remove('selected');
+  } else {
+    selected.add(url);
+    card.classList.add('selected');
+  }
+  document.getElementById('count').textContent = selected.size + ' seleccionadas';
+}
+
+function selectAll() {
+  document.querySelectorAll('.card').forEach(c => {
+    if (!c.classList.contains('failed')) {
+      selected.add(c.dataset.url);
+      c.classList.add('selected');
+    }
+  });
+  document.getElementById('count').textContent = selected.size + ' seleccionadas';
+}
+
+function selectNone() {
+  selected.clear();
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('count').textContent = '0 seleccionadas';
+}
+
+function selectType(type) {
+  document.querySelectorAll('.card').forEach(c => {
+    if (c.dataset.url.endsWith('.' + type) && !c.classList.contains('failed')) {
+      selected.add(c.dataset.url);
+      c.classList.add('selected');
+    }
+  });
+  document.getElementById('count').textContent = selected.size + ' seleccionadas';
+}
+
+function copySelected() {
+  const urls = [...selected];
+  const text = JSON.stringify(urls, null, 2);
+  navigator.clipboard.writeText(text);
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  out.textContent = `// ${urls.length} URLs copiadas al portapapeles:\n` + text;
+}
+
+function filterAll(el) {
+  document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  render(allImages);
+}
+
+function filterSize(el, minKB) {
+  // No tenemos size en la lista del storage, mostrar todas
+  filterAll(el);
+}
+
+function filterType(el, type) {
+  document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  render(allImages.filter(i => i.name.endsWith('.' + type)));
+}
+
+(async () => {
+  document.getElementById('subtitle').textContent = 'Cargando imágenes desde Supabase...';
+  allImages = await loadImages();
+  document.getElementById('subtitle').textContent = `${allImages.length} imágenes recuperadas del cache de Chrome. Revisá cuáles son de propiedades y seleccionálas.`;
+  render(allImages);
+})();
+</script>
+</body>
+</html>
