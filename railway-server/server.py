@@ -486,7 +486,7 @@ def notify_escalation(lead: dict, last_user_message: str) -> None:
 
 # ── Debounce: agrupa mensajes en ráfaga ───────────────────────────────────────
 
-_pending: dict = {}        # phone → {'timer': Timer, 'texts': [str]}
+_pending: dict = {}        # phone → {'timer': Timer, 'texts': [str], 'profile_name': str}
 _pending_lock = threading.Lock()
 DEBOUNCE_SECS = 4.0        # segundos de silencio antes de procesar
 
@@ -496,13 +496,18 @@ def _fire(phone: str) -> None:
     if not entry:
         return
     combined = "\n".join(entry['texts'])
+    profile_name = entry.get('profile_name', '')
     print(f"[WA batch {phone}] {len(entry['texts'])} msgs → procesar")
-    _handle_message(phone, combined)
+    _handle_message(phone, combined, profile_name=profile_name)
 
-def _handle_message(from_phone: str, user_text: str) -> None:
+def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> None:
     try:
         lead    = lead_get_or_create(from_phone)
         lead_id = lead["id"]
+        # Capturar nombre del perfil WhatsApp si el lead no tiene nombre aún
+        if profile_name and not lead.get("name"):
+            lead_update_name(lead_id, profile_name)
+            lead["name"] = profile_name  # actualizar localmente para notify_urgency
         # Siempre guardar el mensaje entrante
         message_save(lead_id, "user", user_text)
         # Si Sofía está pausada (Santiago tomó el control), no responder
@@ -528,6 +533,7 @@ def _handle_message(from_phone: str, user_text: str) -> None:
                 "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
                 "Proyecto-Roca-Altavista.pdf"
             )
+            message_save(lead_id, "assistant", "📄 [PDF enviado: Proyecto-Roca-Altavista.pdf]")
 
         # Urgencia detectada: notificar a Santiago y pausar Sofía
         if is_urgent:
@@ -785,23 +791,18 @@ def wa_receive():
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
 
-        # Capturar nombre del perfil de WhatsApp si está disponible
         wa_profile_name = value.get("contacts", [{}])[0].get("profile", {}).get("name", "")
-        if wa_profile_name:
-            try:
-                lead_check = _sfre_client().table("chat_leads").select("id,name").eq("phone", from_phone).single().execute()
-                if lead_check.data and not lead_check.data.get("name"):
-                    lead_update_name(lead_check.data["id"], wa_profile_name)
-            except Exception:
-                pass
 
         # Debounce: agrupa mensajes en ráfaga antes de responder
         with _pending_lock:
             if from_phone in _pending:
                 _pending[from_phone]['timer'].cancel()
                 _pending[from_phone]['texts'].append(user_text)
+                # Guardar nombre si llegó en este mensaje
+                if wa_profile_name and not _pending[from_phone].get('profile_name'):
+                    _pending[from_phone]['profile_name'] = wa_profile_name
             else:
-                _pending[from_phone] = {'texts': [user_text]}
+                _pending[from_phone] = {'texts': [user_text], 'profile_name': wa_profile_name}
             t = threading.Timer(DEBOUNCE_SECS, _fire, args=[from_phone])
             _pending[from_phone]['timer'] = t
             t.start()
