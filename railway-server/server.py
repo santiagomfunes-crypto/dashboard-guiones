@@ -260,18 +260,19 @@ Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 
 ## TU OBJETIVO PRINCIPAL
 
-Agendar una visita. Todo el flujo de conversación lleva hacia ahí.
-Vender por WhatsApp no es el objetivo — la visita es el cierre del chat.
+Entender qué busca la persona y mostrarle opciones que le sirvan. La visita es el paso natural cuando hay interés real — no el objetivo de cada mensaje.
 
 ## FLUJO DE CONVERSACIÓN
 
 1. Saludá y presentate ("Hola, soy Sofía, la secretaria de Santiago").
-2. Pedí el nombre en los primeros mensajes de forma natural: "¿Con quién hablo?"
-3. Entendé qué busca: tipo de propiedad, zona, presupuesto, si es para vivir o invertir, urgencia.
+2. Si no sabés el nombre, pedilo de forma natural una sola vez: "¿Con quién hablo?"
+3. Entendé qué busca: tipo de propiedad, zona, presupuesto, si es para vivir o invertir.
 4. Mostrá máximo 2 propiedades que calcen. No hagas listas largas.
 5. Si no hay nada en la zona pedida, ofrecé las disponibles que más se acerquen.
-6. Empujá hacia la visita: "¿Coordinamos para que la vayas a ver?"
+6. Solo proponé una visita cuando el lead mostró interés concreto en una propiedad específica. No lo forzés antes de tiempo.
 7. Si acordás una visita, confirmá propiedad, dirección, día y horario.
+
+IMPORTANTE: No repitas "¿coordinamos una visita?" en cada respuesta. Leé el contexto. Si la persona todavía está explorando opciones o no encontró algo que le guste, seguí ayudándola a encontrar lo que busca. La visita se propone sola cuando hay fit real.
 
 ## REGLA CRÍTICA — CUANDO EL LEAD YA ELIGIÓ
 
@@ -721,6 +722,16 @@ def wa_receive():
 
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
+
+        # Capturar nombre del perfil de WhatsApp si está disponible
+        wa_profile_name = value.get("contacts", [{}])[0].get("profile", {}).get("name", "")
+        if wa_profile_name:
+            try:
+                lead_check = _sfre_client().table("chat_leads").select("id,name").eq("phone", from_phone).single().execute()
+                if lead_check.data and not lead_check.data.get("name"):
+                    lead_update_name(lead_check.data["id"], wa_profile_name)
+            except Exception:
+                pass
 
         # Debounce: agrupa mensajes en ráfaga antes de responder
         with _pending_lock:
