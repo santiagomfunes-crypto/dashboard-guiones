@@ -247,13 +247,13 @@ def properties_context() -> str:
             parts.append(f"Posición: {p['posicion']}")
         if p.get("cochera") and p["cochera"] != "Sin cochera":
             parts.append(f"Cochera: {p['cochera']}")
-        if p.get("alquiler_estimado"):
-            parts.append(f"Alquiler estimado: {p['alquiler_estimado']}")
-            alquiler = _parse_num(p["alquiler_estimado"])
-            precio   = _parse_num(p["precio"])
-            if alquiler and precio and precio > 0:
-                roi = (alquiler * 12 / precio) * 100
-                parts.append(f"ROI anual estimado: {roi:.1f}%")
+        # ROI desactivado hasta aprobación de Santiago
+        # if p.get("alquiler_estimado"):
+        #     alquiler = _parse_num(p["alquiler_estimado"])
+        #     precio   = _parse_num(p["precio"])
+        #     if alquiler and precio and precio > 0:
+        #         roi = (alquiler * 12 / precio) * 100
+        #         parts.append(f"ROI anual estimado: {roi:.1f}%")
         if p.get("descripcion"):
             parts.append(f"Descripción: {str(p['descripcion'])[:300]}")
         slug = p.get("slug", "")
