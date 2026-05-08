@@ -181,6 +181,12 @@ def lead_update_name(lead_id: str, name: str) -> None:
 def lead_set_paused(lead_id: str, paused: bool) -> None:
     _sfre_client().table("chat_leads").update({"sofia_paused": paused}).eq("id", lead_id).execute()
 
+def lead_set_unseen(lead_id: str) -> None:
+    try:
+        _sfre_client().table("chat_leads").update({"visto": False}).eq("id", lead_id).execute()
+    except Exception as e:
+        print(f"[lead_set_unseen] {e}")
+
 def messages_get(lead_id: str, limit: int = 20) -> list:
     res = (
         _sfre_client()
@@ -574,8 +580,9 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
         if profile_name and not lead.get("name"):
             lead_update_name(lead_id, profile_name)
             lead["name"] = profile_name  # actualizar localmente para notify_urgency
-        # Siempre guardar el mensaje entrante
+        # Siempre guardar el mensaje entrante y marcar lead como no visto
         message_save(lead_id, "user", user_text)
+        lead_set_unseen(lead_id)
         # Si Sofía está pausada (Santiago tomó el control), no responder
         if lead.get("sofia_paused"):
             print(f"[WA] Sofía pausada para {from_phone} — mensaje guardado, sin respuesta")
