@@ -42,8 +42,12 @@ WA_TOKEN      = os.environ.get("WHATSAPP_TOKEN", "")
 WA_PHONE_ID   = os.environ.get("WHATSAPP_PHONE_ID", "")
 WA_VERIFY     = os.environ.get("WHATSAPP_VERIFY_TOKEN", "altavista-sofia-2026")
 
-# Santiago — número para recibir escalaciones (formato: 5492494XXXXXX)
+# Santiago — número WhatsApp (para detección de mensajes entrantes)
 SANTIAGO_PHONE = os.environ.get("SANTIAGO_PHONE", "")
+
+# Telegram — notificaciones a Santiago sin restricción de ventana 24hs
+TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 # Anthropic
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -142,6 +146,22 @@ def wa_send(to: str, text: str) -> None:
         timeout=10,
     )
     print(f"[WhatsApp send → {to}] {resp.status_code}")
+
+# ── Telegram: notificaciones a Santiago ───────────────────────────────────────
+
+def tg_send(text: str) -> None:
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("[Telegram] Sin credenciales — mensaje no enviado")
+        return
+    try:
+        resp = http_requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "Markdown"},
+            timeout=10,
+        )
+        print(f"[Telegram] {resp.status_code}")
+    except Exception as e:
+        print(f"[Telegram] Error: {e}")
 
 # ── Supabase: leads y mensajes ─────────────────────────────────────────────────
 
@@ -463,11 +483,11 @@ Respondé en español rioplatense, sin markdown. Sé directa y concisa.""",
     )
     return response.content[0].text
 
-def _handle_manager(from_phone: str, user_text: str) -> None:
+def _handle_manager(user_text: str) -> None:
     try:
         print(f"[Manager] Santiago pregunta: {user_text[:60]}")
         reply = manager_reply(user_text)
-        wa_send(from_phone, reply)
+        tg_send(reply)
     except Exception as e:
         print(f"[Manager] Error: {e}")
 
@@ -507,8 +527,6 @@ def needs_escalation(text: str) -> bool:
 
 def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> None:
     """Notifica a Santiago que hay un lead caliente listo para tomar."""
-    if not SANTIAGO_PHONE:
-        return
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
     msg = (
@@ -516,23 +534,21 @@ def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> 
         f"*{name}* (+{phone})\n"
         f"{urgency_summary}\n\n"
         f"_Último mensaje:_ {last_user_message}\n\n"
-        f"Sofía le dijo que te comunicás hoy. Escribile:\n"
-        f"https://wa.me/{phone}"
+        f"Sofía le dijo que te comunicás hoy\\. Escribile:\n"
+        f"https://wa\\.me/{phone}"
     )
-    wa_send(SANTIAGO_PHONE, msg)
+    tg_send(msg)
 
 def notify_escalation(lead: dict, last_user_message: str) -> None:
-    if not SANTIAGO_PHONE:
-        return
     name = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
     msg = (
-        f"⚠️ *Sofía escaló una conversación*\n"
-        f"Lead: {name} (+{phone})\n"
-        f"Último mensaje: {last_user_message}\n"
-        f"Respondele desde tu número si querés tomar el hilo."
+        f"⚠️ *Sofía escaló una conversación*\n\n"
+        f"*{name}* \\(+{phone}\\)\n"
+        f"_Último mensaje:_ {last_user_message}\n\n"
+        f"Escribile: https://wa\\.me/{phone}"
     )
-    wa_send(SANTIAGO_PHONE, msg)
+    tg_send(msg)
 
 # ── Debounce: agrupa mensajes en ráfaga ───────────────────────────────────────
 
@@ -841,9 +857,8 @@ def wa_receive():
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
 
-        # Si es Santiago el que escribe → modo manager (responde con datos reales)
+        # Si es Santiago el que escribe por WhatsApp → ignorar (usa Telegram)
         if SANTIAGO_PHONE and from_phone == SANTIAGO_PHONE:
-            threading.Thread(target=_handle_manager, args=[from_phone, user_text], daemon=True).start()
             return "ok", 200
 
         wa_profile_name = value.get("contacts", [{}])[0].get("profile", {}).get("name", "")
@@ -1342,17 +1357,26 @@ def build_digest(hours: int = 2) -> str:
     return "\n".join(lines)
 
 def send_digest(hours: int = 2) -> None:
-    if not SANTIAGO_PHONE:
-        return
     try:
         msg = build_digest(hours=hours)
         if msg:
-            wa_send(SANTIAGO_PHONE, msg)
+            tg_send(msg)
             print(f"[Digest] Enviado a Santiago ({hours}hs)")
         else:
             print(f"[Digest] Sin actividad en las últimas {hours}hs — omitido")
     except Exception as e:
         print(f"[Digest] Error: {e}")
+
+@app.route("/telegram/webhook", methods=["POST"])
+def telegram_webhook():
+    data = request.get_json(silent=True) or {}
+    msg  = data.get("message", {})
+    chat_id = str(msg.get("chat", {}).get("id", ""))
+    text    = msg.get("text", "").strip()
+    if not text or chat_id != TELEGRAM_CHAT_ID:
+        return "ok", 200
+    threading.Thread(target=_handle_manager, args=[text], daemon=True).start()
+    return "ok", 200
 
 @app.route("/admin/digest", methods=["POST"])
 def trigger_digest():
