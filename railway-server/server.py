@@ -521,7 +521,12 @@ Si no hay urgencia clara: {"urgent": false, "summary": ""}""",
             cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
                       + response.usage.output_tokens * _HAIKU_OUTPUT_COST_PER_TOKEN),
         )
-        result = _json.loads(response.content[0].text)
+        raw = response.content[0].text.strip()
+        # Extraer JSON aunque Claude agregue texto antes o después
+        json_match = re.search(r'\{.*\}', raw, re.DOTALL)
+        if not json_match:
+            return False, ""
+        result = _json.loads(json_match.group(0))
         return bool(result.get("urgent")), result.get("summary", "")
     except Exception as e:
         print(f"[urgency] {e}")
@@ -568,6 +573,15 @@ def _fire(phone: str) -> None:
     if not entry:
         return
     combined = "\n".join(entry['texts'])
+    # Decodificar URL encoding si Meta mandó el texto encodificado
+    try:
+        import urllib.parse as _up
+        decoded = _up.unquote(combined)
+        if decoded != combined:
+            print(f"[WA decode] URL-encoded → decodificado")
+            combined = decoded
+    except Exception:
+        pass
     profile_name = entry.get('profile_name', '')
     print(f"[WA batch {phone}] {len(entry['texts'])} msgs → procesar")
     _handle_message(phone, combined, profile_name=profile_name)
@@ -830,6 +844,13 @@ def wa_receive():
         value   = changes.get("value", {})
         msgs    = value.get("messages", [])
 
+        # Log de statuses (entrega/lectura) — útil para debugging
+        statuses = value.get("statuses", [])
+        if statuses:
+            for s in statuses:
+                print(f"[WA status] {s.get('recipient_id')} → {s.get('status')} (msg {s.get('id','')[:12]})")
+            return "ok", 200
+
         if not msgs:
             return "ok", 200
 
@@ -859,6 +880,7 @@ def wa_receive():
                     wa_send(from_phone, "Por ahora solo puedo leer mensajes de texto 😊 ¿Me contás qué buscás?")
                 return "ok", 200
         else:
+            print(f"[WA tipo ignorado] {msg_type} de {msg.get('from','?')}")
             return "ok", 200
 
         from_phone = msg["from"]
