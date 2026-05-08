@@ -864,9 +864,7 @@ def wa_receive():
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
 
-        # Si es Santiago el que escribe por WhatsApp → ignorar (usa Telegram)
-        if SANTIAGO_PHONE and from_phone == SANTIAGO_PHONE:
-            return "ok", 200
+        # (filtro de número propio desactivado — Santiago puede escribir para probar)
 
         wa_profile_name = value.get("contacts", [{}])[0].get("profile", {}).get("name", "")
 
