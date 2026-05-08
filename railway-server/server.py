@@ -420,9 +420,14 @@ Para los links de cada unidad específica, usá los que figuran en PROPIEDADES D
 
 ## EDIFICIO GARIBALDI 431 — Departamentos de 1 dormitorio
 
-Edificio ubicado en Garibaldi 431, centro de Tandil. Departamentos de 1 dormitorio, 45 m² cubiertos. Disponibles en pisos 1, 2, 3 y 4, en posiciones frente, contrafrente y pasante.
+Edificio en pleno centro de Tandil, Garibaldi 431. 4 pisos. Todos los departamentos son 1 dormitorio, 1 baño completo, living-comedor y cocina. Ubicación céntrica con excelente rentabilidad: renta estimada USD 550/mes, ROI anual 6.3%.
 
-Precios: USD 115.000 sin cochera · USD 125.000 con cochera.
+Tipos de unidad (todas USD 115.000 sin cochera · USD 125.000 con cochera):
+- Frente: 48 m² totales (45 m² cub.) · excelente luminosidad · disponible piso 4
+- Contrafrente: 48 m² totales (45 m² cub.) · tranquilidad y privacidad · disponible pisos 1 a 4
+- Pasante: 52 m² totales (49 m² cub.) · doble orientación, ventilación cruzada · disponible pisos 1 a 4
+
+El pasante es la unidad más grande del edificio y un diferencial importante para inversores.
 
 Para los links de cada unidad específica, usá los que figuran en PROPIEDADES DISPONIBLES HOY. No prometás mandar ficha ni PDF — si el lead quiere más detalles, decí "Te cuento lo que sé y si querés coordinamos una visita para que lo veas en persona."
 
