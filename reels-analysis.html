@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis de Reels — @santiagofunes.realestate</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      line-height: 1.6;
+    }
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 48px 24px;
+      text-align: center;
+      border-bottom: 1px solid #222;
+    }
+    .header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      color: #aaa;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .header h1 {
+      font-size: clamp(24px, 5vw, 42px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .header .handle {
+      color: #5b9bd5;
+      font-size: 18px;
+    }
+    .header .meta {
+      color: #666;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+    .section {
+      margin-top: 48px;
+    }
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #5b9bd5;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    /* Big number highlight */
+    .insight-box {
+      background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .insight-box h2 {
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .insight-box p {
+      color: #9db8d2;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .insight-box strong { color: #fff; }
+
+    /* Stat cards row */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 28px;
+      font-weight: 700;
+      color: #5b9bd5;
+      line-height: 1;
+    }
+    .stat-card .num.green { color: #4ecca3; }
+    .stat-card .num.orange { color: #e8a94d; }
+    .stat-card .label {
+      font-size: 11px;
+      color: #555;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid #1e1e1e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead tr {
+      background: #111;
+    }
+    thead th {
+      padding: 12px 14px;
+      text-align: left;
+      color: #555;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    tbody tr {
+      border-bottom: 1px solid #141414;
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: #111; }
+    tbody tr.top-tier { background: rgba(91,155,213,0.05); }
+    tbody tr.top-tier:hover { background: rgba(91,155,213,0.1); }
+    tbody td {
+      padding: 12px 14px;
+      color: #ccc;
+      vertical-align: middle;
+    }
+    .views-badge {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .views-badge.viral { color: #5b9bd5; }
+    .views-badge.high { color: #4ecca3; }
+    .views-badge.mid { color: #9db8d2; }
+    .views-badge.low { color: #444; }
+    .dur-badge {
+      display: inline-block;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 11px;
+      color: #aaa;
+      white-space: nowrap;
+    }
+    .dur-badge.hot {
+      background: rgba(91,155,213,0.15);
+      border-color: rgba(91,155,213,0.3);
+      color: #5b9bd5;
+    }
+    .shares-cell {
+      font-weight: 600;
+    }
+    .shares-cell.big { color: #4ecca3; }
+
+    /* Pattern cards */
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .pattern-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .pattern-card .icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .pattern-card h3 {
+      font-size: 15px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .pattern-card p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .pattern-card strong { color: #9db8d2; }
+
+    /* Individual reel highlights */
+    .reel-card {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+    .reel-card .reel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .reel-card .reel-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .reel-card .reel-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+      min-width: 100px;
+    }
+    .reel-card .reel-views {
+      font-size: 24px;
+      font-weight: 700;
+      color: #5b9bd5;
+      white-space: nowrap;
+    }
+    .reel-card .reel-sub {
+      font-size: 11px;
+      color: #444;
+      text-align: right;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .pill.blue { background: rgba(91,155,213,0.2); color: #5b9bd5; }
+    .pill.green { background: rgba(78,204,163,0.2); color: #4ecca3; }
+    .pill.orange { background: rgba(232,169,77,0.2); color: #e8a94d; }
+
+    /* Anti-patterns */
+    .anti-card {
+      background: rgba(255,80,80,0.03);
+      border: 1px solid rgba(255,80,80,0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+    .anti-card h3 {
+      color: #cc5555;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .anti-card p {
+      color: #555;
+      font-size: 13px;
+    }
+
+    /* Formula box */
+    .formula {
+      background: linear-gradient(135deg, #051a0f 0%, #0a2a1a 100%);
+      border: 1px solid rgba(78,204,163,0.2);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 32px;
+    }
+    .formula h2 {
+      color: #4ecca3;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .formula ol {
+      padding-left: 20px;
+    }
+    .formula li {
+      color: #9db8d2;
+      font-size: 15px;
+      padding: 6px 0;
+      line-height: 1.6;
+    }
+    .formula li strong { color: #fff; }
+
+    footer {
+      text-align: center;
+      color: #2a2a2a;
+      font-size: 12px;
+      padding: 32px 20px;
+      border-top: 1px solid #111;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">Análisis de contenido</div>
+  <h1>Reels — Qué funciona y por qué</h1>
+  <div class="handle">@santiagofunes.realestate</div>
+  <div class="meta">Mayo 2026 &nbsp;·&nbsp; 31 reels analizados con datos reales de Instagram Insights</div>
+</div>
+
+<div class="container">
+
+  <!-- KEY FINDING -->
+  <div class="section">
+    <div class="section-title">Hallazgo principal</div>
+    <div class="insight-box">
+      <h2>Los reels que explotan son fotos de propiedades de 2 segundos — no videos educativos</h2>
+      <p>De los 10 reels con más de 10k vistas, <strong>8 duran exactamente 2 segundos</strong>. Son imágenes fijas de propiedades con texto overlay. El contenido de vos hablando sobre economía o mercado promedia <strong>2.000–3.000 vistas</strong>. Una foto de una casa con pileta llega a <strong>101.000</strong>.</p>
+    </div>
+  </div>
+
+  <!-- GLOBAL STATS -->
+  <div class="section">
+    <div class="section-title">Números globales del canal</div>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num">264K</div>
+        <div class="label">Máximo vistas</div>
+      </div>
+      <div class="stat-card">
+        <div class="num green">969</div>
+        <div class="label">Máx. compartidos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num orange">408</div>
+        <div class="label">Máx. visitas perfil</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">97%</div>
+        <div class="label">No seguidores (top)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">31</div>
+        <div class="label">Reels analizados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL TABLE -->
+  <div class="section">
+    <div class="section-title">Tabla completa — todos los reels</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Contenido</th>
+            <th>Vistas</th>
+            <th>Compart.</th>
+            <th>Likes</th>
+            <th>Coments</th>
+            <th>Guardados</th>
+            <th>Duración</th>
+            <th>% No seg.</th>
+            <th>Visitas perfil</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="top-tier">
+            <td>San Lorenzo 420 — depto 2 dorm a estrenar</td>
+            <td><span class="views-badge viral">264.393</span></td>
+            <td><span class="shares-cell big">111</span></td>
+            <td>313</td><td>43</td><td>46</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>97.3%</td><td>161</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Casa en venta Barrio El Cerrito — pileta</td>
+            <td><span class="views-badge viral">101.120</span></td>
+            <td><span class="shares-cell big">969</span></td>
+            <td>1.392</td><td>33</td><td>139</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>96%</td><td>78</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Casa ideal para reformar</td>
+            <td><span class="views-badge viral">81.956</span></td>
+            <td><span class="shares-cell big">881</span></td>
+            <td>1.155</td><td>55</td><td>204</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>96.1%</td><td>408</td>
+          </tr>
+          <tr class="top-tier">
+            <td>"Mi vieja es directora de Estudio Pascua" — historia personal</td>
+            <td><span class="views-badge viral">47.767</span></td>
+            <td><span class="shares-cell big">950</span></td>
+            <td>927</td><td>97</td><td>113</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>95.7%</td><td>294</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Mostrando propiedades — casa exterior</td>
+            <td><span class="views-badge viral">36.170</span></td>
+            <td><span class="shares-cell big">237</span></td>
+            <td>202</td><td>33</td><td>58</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>93.3%</td><td>98</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Alberdi & España ⛑️ — obra Estudio Pascua, última unidad</td>
+            <td><span class="views-badge high">16.300</span></td>
+            <td>56</td>
+            <td>69</td><td>7</td><td>2</td>
+            <td><span class="dur-badge hot">0:08</span></td>
+            <td>88.3%</td><td>11</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Casa vieja, interior deteriorado</td>
+            <td><span class="views-badge high">15.289</span></td>
+            <td>84</td>
+            <td>260</td><td>33</td><td>22</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>87.2%</td><td>19</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Depto a estrenar — media cuadra plaza del centro</td>
+            <td><span class="views-badge high">12.952</span></td>
+            <td>44</td>
+            <td>141</td><td>17</td><td>13</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>78.7%</td><td>16</td>
+          </tr>
+          <tr class="top-tier">
+            <td>"Vender propiedades en Tandil" — campo/golf</td>
+            <td><span class="views-badge high">12.265</span></td>
+            <td><span class="shares-cell big">291</span></td>
+            <td>66</td><td>5</td><td>3</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>87.2%</td><td>22</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Depto 3er piso — en venta con cochera</td>
+            <td><span class="views-badge high">11.135</span></td>
+            <td>62</td>
+            <td>106</td><td>7</td><td>14</td>
+            <td><span class="dur-badge hot">0:02</span></td>
+            <td>83.5%</td><td>24</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Chacabuco Urbano Plaza — terraza con pileta</td>
+            <td><span class="views-badge high">10.850</span></td>
+            <td>105</td>
+            <td>111</td><td>3</td><td>12</td>
+            <td><span class="dur-badge">0:16</span></td>
+            <td>85.8%</td><td>26</td>
+          </tr>
+          <tr class="top-tier">
+            <td>Nuevo Desarrollo Estudio Pascua — caminando</td>
+            <td><span class="views-badge high">10.208</span></td>
+            <td>27</td>
+            <td>73</td><td>28</td><td>7</td>
+            <td><span class="dur-badge">0:14</span></td>
+            <td>80.5%</td><td>24</td>
+          </tr>
+          <tr>
+            <td>Lote 10 min del centro de Tandil</td>
+            <td><span class="views-badge mid">4.351</span></td>
+            <td>7</td><td>34</td><td>3</td><td>6</td>
+            <td><span class="dur-badge">0:06</span></td>
+            <td>70.7%</td><td>4</td>
+          </tr>
+          <tr>
+            <td>Trabajo.santiagofunes.com.ar</td>
+            <td><span class="views-badge mid">3.276</span></td>
+            <td>36</td><td>34</td><td>0</td><td>6</td>
+            <td><span class="dur-badge">0:11</span></td>
+            <td>70.7%</td><td>8</td>
+          </tr>
+          <tr>
+            <td>Crédito hipotecario — EE.UU. vs Argentina (educativo)</td>
+            <td><span class="views-badge mid">3.193</span></td>
+            <td>13</td><td>31</td><td>2</td><td>3</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>66.3%</td><td>2</td>
+          </tr>
+          <tr>
+            <td>Tandil Oportunidades — pantalla</td>
+            <td><span class="views-badge mid">2.825</span></td>
+            <td>13</td><td>59</td><td>6</td><td>1</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>55.3%</td><td>5</td>
+          </tr>
+          <tr>
+            <td>Fideicomiso Tandil — sala de reunión</td>
+            <td><span class="views-badge mid">2.320</span></td>
+            <td>15</td><td>20</td><td>2</td><td>4</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>67.8%</td><td>4</td>
+          </tr>
+          <tr>
+            <td>Regulación alquileres 2020 (educativo)</td>
+            <td><span class="views-badge low">2.257</span></td>
+            <td>7</td><td>17</td><td>6</td><td>0</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>60.8%</td><td>0</td>
+          </tr>
+          <tr>
+            <td>Lunes 4 de mayo — anuncio web</td>
+            <td><span class="views-badge low">2.092</span></td>
+            <td>3</td><td>20</td><td>0</td><td>2</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>67.9%</td><td>0</td>
+          </tr>
+          <tr>
+            <td>Lote Ánimas USD 160.000 — pizarrón</td>
+            <td><span class="views-badge low">2.053</span></td>
+            <td>2</td><td>12</td><td>0</td><td>0</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>58%</td><td>0</td>
+          </tr>
+          <tr>
+            <td>MLS: ¿Qué es? — escritorio (educativo)</td>
+            <td><span class="views-badge low">1.928</span></td>
+            <td>2</td><td>13</td><td>0</td><td>1</td>
+            <td><span class="dur-badge">—</span></td>
+            <td>65.4%</td><td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PATTERNS -->
+  <div class="section">
+    <div class="section-title">Lo que tienen en común los top performers</div>
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <div class="icon">📸</div>
+        <h3>Son fotos, no videos</h3>
+        <p>Los 8 reels más virales duran <strong>2 segundos</strong>. Una imagen fija de la propiedad con texto overlay. El usuario para en el scroll inmediatamente o sigue — sin necesidad de aguantar que empieces a hablar.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="icon">🔁</div>
+        <h3>Los compartidos son el motor viral</h3>
+        <p>El 101k tuvo <strong>969 compartidos</strong>. El 47.7k tuvo <strong>950</strong>. La gente manda propiedades a alguien específico: pareja, amigo, familiar. Ese es el mecanismo que explota el alcance.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="icon">👥</div>
+        <h3>97% no seguidores</h3>
+        <p>Los virales llegan a gente que nunca te vio. Los reels educativos tienen 60–67% no seguidores. Los de propiedades tienen <strong>93–97%</strong>. El algoritmo los distribuye porque la gente los comparte.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="icon">🏠</div>
+        <h3>La propiedad es el protagonista</h3>
+        <p>No vos explicando la propiedad — la propiedad sola. Casa con pileta, depto a estrenar, ruina reformable. <strong>El visual hace el trabajo.</strong> La caption complementa con specs y precio.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="icon">🎯</div>
+        <h3>Ganchos específicos que activan a compradores</h3>
+        <p>"Última unidad disponible", "ideal para reformar", "a estrenar", "media cuadra de la plaza". Cada gancho activa a un perfil específico que lo manda a sus contactos.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="icon">🧬</div>
+        <h3>La historia personal también rompe</h3>
+        <p>El único talking head viral (47.7k) habla de que vos creciste entre piletas y obras, que tu madre dirige Estudio Pascua. <strong>Credenciales personales, no educación de mercado.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP 5 DEEP DIVE -->
+  <div class="section">
+    <div class="section-title">Los 5 mejores — análisis individual</div>
+
+    <div class="reel-card">
+      <div>
+        <div class="reel-title">San Lorenzo 420 — Depto 2 dormitorios a estrenar</div>
+        <div class="reel-desc">Foto del edificio, texto con specs completos. Llegó a <strong>58.015 cuentas únicas</strong>. Generó 161 visitas directas al perfil. El 97.3% de las vistas fueron de personas que no te seguían. Es el reel con mayor alcance de todo el canal.</div>
+      </div>
+      <div class="reel-stats">
+        <div class="reel-views">264K</div>
+        <div class="reel-sub">2 segundos · foto</div>
+        <span class="pill blue">97% no seguidores</span>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div>
+        <div class="reel-title">Casa en venta Barrio El Cerrito — Roser 1200</div>
+        <div class="reel-desc">Casa premium con pileta, 270 m², lote profundo. Fue el reel más compartido del canal: <strong>969 veces</strong>. También explotó en Facebook con <strong>27.896 vistas adicionales</strong>. La imagen aspiracional de casa con pileta es el visual más compartible del real estate.</div>
+      </div>
+      <div class="reel-stats">
+        <div class="reel-views">101K</div>
+        <div class="reel-sub">2 segundos · foto</div>
+        <span class="pill green">969 compartidos</span>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div>
+        <div class="reel-title">Casa ideal para reformar</div>
+        <div class="reel-desc">Casa vieja en estado deteriorado. No es la más linda — es la más oportunista. Generó <strong>408 visitas al perfil</strong> (el mayor generador de leads del canal) y <strong>881 compartidos</strong>. El gancho "reformar" activa a un comprador muy específico que lo manda a todos sus conocidos.</div>
+      </div>
+      <div class="reel-stats">
+        <div class="reel-views">82K</div>
+        <div class="reel-sub">2 segundos · foto</div>
+        <span class="pill orange">408 leads directos</span>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div>
+        <div class="reel-title">"Mi vieja es directora de Estudio Pascua"</div>
+        <div class="reel-desc">El único talking head que explotó. Habla de que creciste entre piletas y obras, que tu madre lleva 25 años vendiendo edificios en Tandil. <strong>950 compartidos, 97 comentarios</strong>. La credencial personal es más poderosa que cualquier contenido educativo. La gente lo comparte como "mirá quién es este pibe".</div>
+      </div>
+      <div class="reel-stats">
+        <div class="reel-views">48K</div>
+        <div class="reel-sub">Historia personal</div>
+        <span class="pill green">950 compartidos</span>
+      </div>
+    </div>
+
+    <div class="reel-card">
+      <div>
+        <div class="reel-title">Alberdi & España ⛑️ — Última unidad disponible</div>
+        <div class="reel-desc">Obra de Estudio Pascua, casco de construcción, 8 segundos. Caption: solo "⛑️". La escasez ("última unidad") y el acceso exclusivo (estás en la obra) hacen el trabajo. El más reciente de los top performers.</div>
+      </div>
+      <div class="reel-stats">
+        <div class="reel-views">16K</div>
+        <div class="reel-sub">8 segundos · obra</div>
+        <span class="pill blue">88% no seguidores</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT DOESN'T WORK -->
+  <div class="section">
+    <div class="section-title">Lo que no funciona</div>
+    <div class="anti-card">
+      <h3>Contenido educativo de economía/mercado</h3>
+      <p>Crédito hipotecario, regulación de alquileres, MLS — todos entre 1.900 y 3.200 vistas. Nadie comparte un video de economía. El algoritmo no lo distribuye porque se queda dentro de tu audiencia existente.</p>
+    </div>
+    <div class="anti-card">
+      <h3>Precios en pizarrón sin mostrar la propiedad</h3>
+      <p>Lote Ánimas USD 160.000 filmado desde un escritorio con pizarrón: 2.053 vistas y 2 compartidos. El mismo lote filmado en el lugar generaría 10x más.</p>
+    </div>
+    <div class="anti-card">
+      <h3>Anuncios genéricos ("mirá nuestra web")</h3>
+      <p>"Lunes 4 de mayo, más propiedades en nuestra página web!" — 2.092 vistas, 3 compartidos, 0 visitas al perfil. No hay gancho, no hay emoción, no hay razón para compartirlo.</p>
+    </div>
+  </div>
+
+  <!-- THE FORMULA -->
+  <div class="formula">
+    <h2>La fórmula que funciona</h2>
+    <ol>
+      <li><strong>Una foto de alta calidad de la propiedad</strong> — exterior si es llamativo, o el ambiente más aspiracional (pileta, vista, terraza)</li>
+      <li><strong>Texto overlay claro:</strong> tipo de propiedad + ubicación + ciudad</li>
+      <li><strong>Un gancho emocional:</strong> "a estrenar", "ideal para reformar", "última unidad", "barrio X"</li>
+      <li><strong>Caption con specs completos:</strong> m², ambientes, precio si es posible, CTA directo</li>
+      <li><strong>Duración:</strong> 2 segundos (foto) o máximo 15 segundos si es video en la propiedad</li>
+      <li><strong>El bonus que rompe records:</strong> historia personal tuya — credenciales, origen, por qué estás en esto</li>
+    </ol>
+  </div>
+
+</div>
+
+<footer>
+  Datos extraídos directamente de Instagram Insights — Mayo 2026
+</footer>
+
+</body>
+</html>
