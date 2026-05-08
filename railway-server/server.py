@@ -1249,10 +1249,10 @@ def post_property():
 
 # ── Digest cada 2 horas ────────────────────────────────────────────────────────
 
-def build_digest() -> str:
-    """Construye el resumen de actividad de las últimas 2 horas."""
+def build_digest(hours: int = 2) -> str:
+    """Construye el resumen de actividad de las últimas N horas."""
     from datetime import datetime, timedelta, timezone
-    cutoff = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
     sb = _sfre_client()
     res = sb.table("chat_leads").select("*").gte("last_message_at", cutoff).execute()
     leads = res.data or []
@@ -1286,18 +1286,26 @@ def build_digest() -> str:
 
     return "\n".join(lines)
 
-def send_digest() -> None:
+def send_digest(hours: int = 2) -> None:
     if not SANTIAGO_PHONE:
         return
     try:
-        msg = build_digest()
+        msg = build_digest(hours=hours)
         if msg:
             wa_send(SANTIAGO_PHONE, msg)
-            print("[Digest] Enviado a Santiago")
+            print(f"[Digest] Enviado a Santiago ({hours}hs)")
         else:
-            print("[Digest] Sin actividad en las últimas 2hs — omitido")
+            print(f"[Digest] Sin actividad en las últimas {hours}hs — omitido")
     except Exception as e:
         print(f"[Digest] Error: {e}")
+
+@app.route("/admin/digest", methods=["POST"])
+def trigger_digest():
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    hours = int(request.get_json(silent=True).get("hours", 2))
+    threading.Thread(target=send_digest, args=[hours], daemon=True).start()
+    return jsonify({"ok": True, "hours": hours})
 
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
