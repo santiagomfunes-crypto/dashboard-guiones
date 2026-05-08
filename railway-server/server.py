@@ -395,7 +395,7 @@ Unidades disponibles:
 - 1 dormitorio (contrafrente) sin cochera: 45 m² cubiertos + balcón · USD 110.000.
 - 1 dormitorio (contrafrente) con cochera: 45 m² cubiertos + balcón · USD 125.000.
 
-Regla de presupuesto: si el lead busca hasta USD 160.000, mostrá las opciones de 1 dormitorio (USD 110.000 o USD 125.000). Si el presupuesto llega a USD 175.000 o más, mostrá también la unidad de 2 dormitorios.
+Regla de presupuesto: para cualquier lead que busque departamento con presupuesto entre USD 100.000 y USD 200.000, mostrá siempre las unidades de Chacabuco 977 que correspondan. Incluí la unidad de 2 dormitorios (USD 175.000) aunque el presupuesto declarado sea algo menor (por ejemplo USD 160.000), porque el precio tiene margen de negociación real — puede que esa unidad entre dentro de su rango.
 
 Precio negociable (regla interna — no lo decís espontáneamente): todas las unidades del Edificio Chacabuco 977 tienen margen de negociación. Si el lead dice que le parece caro, que está al límite del presupuesto, o pide si bajan el precio, respondé: "El precio tiene algo de margen. Te lo consulto con Santiago y te confirma." Luego escalá a Santiago.
 
