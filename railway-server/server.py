@@ -217,11 +217,11 @@ _PROPS_TTL = 300  # 5 minutos
 def _parse_num(s: str) -> Optional[float]:
     if not s:
         return None
-    clean = re.sub(r"[^\d.,]", "", str(s)).replace(",", ".")
-    try:
-        return float(clean)
-    except ValueError:
+    # Toma el primer número en formato argentino (115.000 = 115000) o entero simple
+    m = re.search(r'\d{1,3}(?:\.\d{3})+|\d+', str(s))
+    if not m:
         return None
+    return float(m.group().replace('.', ''))
 
 def properties_context() -> str:
     if time.time() - _props_cache["ts"] < _PROPS_TTL and _props_cache["text"]:
