@@ -1247,6 +1247,65 @@ def post_property():
         return jsonify({"error": "Error interno"}), 500
 
 
+# ── Digest cada 2 horas ────────────────────────────────────────────────────────
+
+def build_digest() -> str:
+    """Construye el resumen de actividad de las últimas 2 horas."""
+    from datetime import datetime, timedelta, timezone
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+    sb = _sfre_client()
+    res = sb.table("chat_leads").select("*").gte("last_message_at", cutoff).execute()
+    leads = res.data or []
+    if not leads:
+        return ""
+
+    calientes = [l for l in leads if l.get("sofia_paused")]
+    activos   = [l for l in leads if not l.get("sofia_paused")]
+
+    lines = ["📊 *Resumen Sofía — últimas 2hs*"]
+    lines.append(f"💬 Conversaciones: {len(leads)}\n")
+
+    if calientes:
+        lines.append(f"🔥 *Leads calientes ({len(calientes)}) — esperan tu contacto:*")
+        for l in calientes:
+            name  = l.get("name") or "Sin nombre"
+            phone = l.get("phone", "")
+            msgs  = messages_get(l["id"], limit=10)
+            last_user = next((m["content"] for m in reversed(msgs) if m["role"] == "user"), "—")
+            lines.append(f"• *{name}* (+{phone})\n  _{last_user[:80]}_")
+        lines.append("")
+
+    if activos:
+        lines.append(f"💬 *Activos ({len(activos)}):*")
+        for l in activos:
+            name  = l.get("name") or "Sin nombre"
+            phone = l.get("phone", "")
+            msgs  = messages_get(l["id"], limit=10)
+            last_user = next((m["content"] for m in reversed(msgs) if m["role"] == "user"), "—")
+            lines.append(f"• *{name}* (+{phone})\n  _{last_user[:70]}_")
+
+    return "\n".join(lines)
+
+def send_digest() -> None:
+    if not SANTIAGO_PHONE:
+        return
+    try:
+        msg = build_digest()
+        if msg:
+            wa_send(SANTIAGO_PHONE, msg)
+            print("[Digest] Enviado a Santiago")
+        else:
+            print("[Digest] Sin actividad en las últimas 2hs — omitido")
+    except Exception as e:
+        print(f"[Digest] Error: {e}")
+
+def _start_scheduler() -> None:
+    from apscheduler.schedulers.background import BackgroundScheduler
+    scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
+    scheduler.add_job(send_digest, "interval", hours=2, id="digest_2h")
+    scheduler.start()
+    print("[Scheduler] Digest cada 2hs iniciado")
+
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
@@ -1255,4 +1314,5 @@ if __name__ == "__main__":
     print(f"Sofía WhatsApp: {'lista' if WA_TOKEN and WA_PHONE_ID else 'sin credenciales WA'}")
     print(f"Anthropic: {'configurado' if ANTHROPIC_KEY else 'NO CONFIGURADO'}")
     print(f"Supabase sfre-web: {'OK' if SFRE_SUPABASE_URL else 'NO CONFIGURADO'}")
+    _start_scheduler()
     app.run(host="0.0.0.0", port=PORT)
