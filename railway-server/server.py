@@ -421,6 +421,56 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate
     text = re.sub(r'¿[Tt]e gustaría agendamos',   '¿Agendamos',   text)
     return text
 
+def manager_reply(user_text: str) -> str:
+    """Responde a Santiago con datos reales de los leads cuando le escribe a Sofía."""
+    from datetime import datetime, timezone
+    sb = _sfre_client()
+    res = sb.table("chat_leads").select("*").order("last_message_at", desc=True).limit(15).execute()
+    leads = res.data or []
+
+    leads_ctx = ""
+    for l in leads:
+        name     = l.get("name") or "Sin nombre"
+        phone    = l.get("phone", "")
+        paused   = l.get("sofia_paused", False)
+        last_msg = (l.get("last_message_at") or "")[:16]
+        msgs     = messages_get(l["id"], limit=8)
+        last_user = next((m["content"] for m in reversed(msgs) if m["role"] == "user"), "—")
+        estado = "🔥 CALIENTE — espera tu llamado" if paused else "activo"
+        leads_ctx += f"\n• {name} (+{phone}) | {last_msg} | {estado}\n  Último: {last_user[:120]}\n"
+
+    now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
+    client = _anthropic_client()
+    response = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=500,
+        system=f"""Sos Sofía, secretaria de Santiago Funes (corredor inmobiliario en Altavista Otero, Tandil).
+Santiago te escribe directo para preguntarte sobre el estado de los leads. Respondele de forma clara, breve y útil.
+Podés responder preguntas como "¿cómo va?", "¿qué está pasando?", "¿quién es el más caliente?", "¿qué quiere Fulano?", etc.
+Hoy es {now} (hora Argentina).
+
+ESTADO ACTUAL DE LOS LEADS:
+{leads_ctx}
+Respondé en español rioplatense, sin markdown. Sé directa y concisa.""",
+        messages=[{"role": "user", "content": user_text}],
+    )
+    _log_api_usage(
+        model="claude-haiku-4-5-20251001",
+        tokens_input=response.usage.input_tokens,
+        tokens_output=response.usage.output_tokens,
+        cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
+                  + response.usage.output_tokens * _HAIKU_OUTPUT_COST_PER_TOKEN),
+    )
+    return response.content[0].text
+
+def _handle_manager(from_phone: str, user_text: str) -> None:
+    try:
+        print(f"[Manager] Santiago pregunta: {user_text[:60]}")
+        reply = manager_reply(user_text)
+        wa_send(from_phone, reply)
+    except Exception as e:
+        print(f"[Manager] Error: {e}")
+
 def detect_urgency(user_text: str, history: list) -> tuple:
     """Clasifica si el lead muestra señales de alta intención. Retorna (is_urgent, summary)."""
     import json as _json
@@ -790,6 +840,11 @@ def wa_receive():
 
         from_phone = msg["from"]
         print(f"[WA] {from_phone}: {user_text[:80]}")
+
+        # Si es Santiago el que escribe → modo manager (responde con datos reales)
+        if SANTIAGO_PHONE and from_phone == SANTIAGO_PHONE:
+            threading.Thread(target=_handle_manager, args=[from_phone, user_text], daemon=True).start()
+            return "ok", 200
 
         wa_profile_name = value.get("contacts", [{}])[0].get("profile", {}).get("name", "")
 
