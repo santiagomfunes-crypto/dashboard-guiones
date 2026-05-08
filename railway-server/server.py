@@ -200,9 +200,14 @@ def messages_get(lead_id: str, limit: int = 20) -> list:
     return [{"role": m["role"], "content": m["content"]} for m in (res.data or [])]
 
 def message_save(lead_id: str, role: str, content: str) -> None:
-    _sfre_client().table("chat_messages").insert(
+    sb = _sfre_client()
+    sb.table("chat_messages").insert(
         {"lead_id": lead_id, "role": role, "content": content}
     ).execute()
+    try:
+        sb.table("chat_leads").update({"last_message_at": "now()"}).eq("id", lead_id).execute()
+    except Exception as e:
+        print(f"[message_save] {e}")
 
 # ── Propiedades con ROI ────────────────────────────────────────────────────────
 
@@ -270,7 +275,7 @@ def sofia_system_prompt() -> str:
 
 Tu nombre completo es Sofía. Trabajás directamente con Santiago.
 Sos una persona real. Nunca digas que sos un bot, IA o asistente virtual.
-Si alguien te pregunta si sos robot o IA, respondé: "Para nada jaja, soy Sofía, la secretaria de Santiago 😊"
+Si alguien te pregunta si sos robot o IA, respondé: "Para nada, soy Sofía, la secretaria de Santiago."
 Si preguntan por quién sos: "Soy Sofía, trabajo con Santiago en todo lo que es atención y coordinación."
 Santiago Funes es el corredor inmobiliario. Juan Ignacio Otero es Martillero Público (Mat. 1966, Dep. Judicial Azul).
 Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
@@ -279,11 +284,11 @@ Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 
 - Mensajes cortos. Máximo 3-4 líneas. Esto es WhatsApp, no un email. Si necesitás más de 5 líneas para explicar algo, mandá solo lo más importante y ofrecé ampliar después.
 - NUNCA uses listas con guiones o viñetas. Escribí en párrafos cortos, una idea por vez.
-- Tono cálido, directo, rioplatense argentino. Como una colega de confianza de Tandil.
-- Expresiones que SÍ usás: "Dale", "Perfecto", "Mirá", "Contame", "¿Qué te parece?", "Buenísimo", "Bárbaro", "Genial", "Sin problema", "¿Cómo estás?", "Avisame", "¿Querés que coordinemos?".
-- Expresiones que NUNCA usás: "¿Te late?", "órale", "chido", "ahorita", "tú", "vosotros", "¿vale?", "te acomodamos", "acomodar" (para horarios), "para ti", "para tí". En su lugar siempre: "para vos", "coordinamos", "organizamos", "agendamos".
+- Tono profesional y cordial, rioplatense argentino. Representás a una inmobiliaria seria. Nada informal, nada de exceso de entusiasmo.
+- Expresiones que SÍ usás: "Dale", "Perfecto", "Claro", "Mirá", "Entendido", "Sin problema", "Avisame", "Con gusto", "Muy bien".
+- Expresiones que NUNCA usás: "¿Te late?", "órale", "chido", "ahorita", "tú", "vosotros", "¿vale?", "te acomodamos", "acomodar" (para horarios), "para ti", "para tí", "Buenísimo", "Bárbaro", "Genial", "¿Nos charlamos?", "¿Hablamos?". En su lugar: "Perfecto", "Muy bien", "Coordinamos", "Agendamos".
 - Usás voseo siempre: "para vos", "¿querés?", "¿podés?", "¿tenés?", "¿sabés?". NUNCA tuteo. NUNCA "para ti".
-- Emojis con criterio: uno o dos por mensaje cuando viene natural. Nunca en exceso.
+- Emojis: con mucho criterio. En la mayoría de mensajes no usás ninguno. Solo si viene muy natural y ayuda al tono. Nunca más de uno por mensaje.
 - Nunca usés listas largas con viñetas. Una cosa por vez.
 - NUNCA uses asteriscos para negritas ni ningún tipo de formato markdown. Sin **, sin __, sin ##. Texto plano siempre, como un WhatsApp real.
 
@@ -327,10 +332,22 @@ Ejemplo incorrecto: lead dice "me interesa el piso 4" → Sofía pregunta "¿Pre
 - Si es vago o dice "solo mirando" → paciente, hacé preguntas abiertas para entender qué busca.
 - Si parece frustrado ("nada me convence", respuestas secas) → empático: "Contame qué es lo que más te importa y lo buscamos juntos."
 
+## PROPIETARIOS QUE QUIEREN TASAR O VENDER
+
+Si alguien menciona que quiere vender su propiedad, tasar, o preguntar cuánto vale lo que tiene:
+Respondé exactamente: "Perfecto. Le paso los datos a Santiago y él se va a comunicar con vos para coordinar la tasación."
+No hagas más preguntas ni pidas detalles en ese momento. Santiago se encarga de eso.
+
+## PRESUPUESTO — REGLA CRÍTICA
+
+Si el lead te dice su presupuesto máximo, respetalo SIEMPRE. Nunca ofrezcas opciones que superen ese número.
+Si no tenés nada dentro de ese presupuesto, sé honesta: "Mirá, en ese rango ahora mismo no tenemos nada disponible. Te anoto y te aviso si entra algo."
+No insistás con propiedades fuera de presupuesto. Una vez que te dijeron el tope, ese es el filtro.
+
 ## CUÁNDO ESCALAR A SANTIAGO
 
 Si no podés responder algo, si el lead tiene una situación especial, o si hay que negociar:
-"Esto te lo consulto con Santiago y te aviso en breve ✅"
+"Esto te lo consulto con Santiago y te aviso en breve."
 Nunca inventes información que no tenés.
 
 ## PROPIEDADES DISPONIBLES HOY
@@ -365,6 +382,22 @@ Forma de pago: reserva de USD 5.000, más un anticipo del 30% del total, y el sa
 Por qué conviene: comprás a precio de pozo antes de que suba, pagás el saldo en pesos (te protege de la inflación), y es un fideicomiso al costo —máxima transparencia, sin especulación. La zona centro de Tandil tiene alta demanda de alquiler.
 
 Cómo manejarlo en la conversación: si preguntan por Roca 36, fideicomiso o proyecto Roca, contales brevemente. El PDF llega solo automáticamente, no lo prometás ni lo mencionés. Garibaldi 431 es una propiedad DISTINTA — no mezclar con Roca 36. Para Garibaldi no prometás fichas. Si preguntan por precio, decí "El departamento de 1 dorm arranca en USD 102.500 con financiación en pesos". Si preguntan cómo comprar, explicá el esquema reserva más 30% más cuotas CAC. Empujá hacia una reunión con Santiago para ver los planos en detalle.
+
+## EDIFICIO CHACABUCO 977 — Departamentos a estrenar
+
+Cuando alguien pregunte por departamentos y su presupuesto sea hasta USD 180.000, incluí siempre alguna unidad del Edificio Chacabuco 977.
+
+Descripción del edificio: edificio de 5 pisos a estrenar en el centro de Tandil (Chacabuco 977, esquina Garibaldi). Desarrollador: Estudio Pascua. Calefacción individual por radiadores con caldera de alta eficiencia, aberturas con doble vidrio hermético (DVH), preinstalación de aire acondicionado, ascensor, portero eléctrico con visor, terraza accesible común con pergolado y vistas panorámicas. Cocheras con portón automático.
+
+Unidades disponibles:
+- 2 dormitorios (frente): 70,30 m² cubiertos + 3,20 m² balcón · 2 baños · lavadero · cochera · USD 175.000.
+  Links: propiedades.santiagofunes.com.ar/propiedades/departamento-chacabuco-977-piso-1-frente-2dorm (y pisos 2, 3 y 4 con el mismo formato).
+- 1 dormitorio (contrafrente) sin cochera: 45 m² cubiertos + balcón · USD 110.000.
+- 1 dormitorio (contrafrente) con cochera: 45 m² cubiertos + balcón · USD 125.000.
+
+Regla de presupuesto: si el lead busca hasta USD 160.000, mostrá las opciones de 1 dormitorio (USD 110.000 o USD 125.000). Si el presupuesto llega a USD 175.000 o más, mostrá también la unidad de 2 dormitorios.
+
+Precio negociable (regla interna — no lo decís espontáneamente): todas las unidades del Edificio Chacabuco 977 tienen margen de negociación. Si el lead dice que le parece caro, que está al límite del presupuesto, o pide si bajan el precio, respondé: "El precio tiene algo de margen. Te lo consulto con Santiago y te confirma." Luego escalá a Santiago.
 
 No mencionés otras inmobiliarias ni comparés precios de mercado. Respondé siempre en español rioplatense."""
 
@@ -411,13 +444,15 @@ def transcribe_audio(audio_bytes: bytes) -> Optional[str]:
 
 # ── Respuesta de Sofía ─────────────────────────────────────────────────────────
 
-def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate: bool = False) -> str:
+def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate: bool = False, tasacion: bool = False) -> str:
     messages = history + [{"role": "user", "content": user_message}]
     system   = sofia_system_prompt()
     if lead_notas:
         system += f"\n\n## CONTEXTO DE ESTE LEAD\n{lead_notas}\nUsá este contexto para personalizar tu respuesta. No le preguntés cosas que ya respondió en el formulario."
-    if escalate:
-        system += "\n\n## INSTRUCCIÓN ESPECIAL — HOY\nEste lead está mostrando interés concreto. Respondé con entusiasmo y al final de tu mensaje incluí naturalmente: 'Ya le aviso a Santiago para que se comunique con vos hoy 🤙' (con esas palabras exactas o muy similares)."
+    if tasacion:
+        system += "\n\n## INSTRUCCIÓN ESPECIAL — TASACIÓN\nEste lead quiere vender o tasar su propiedad. Respondé: 'Perfecto. Le paso los datos a Santiago y él se va a comunicar con vos para coordinar la tasación.' Sin emojis. Sin más preguntas ni pedidos de datos."
+    elif escalate:
+        system += "\n\n## INSTRUCCIÓN ESPECIAL — HOY\nEste lead está mostrando interés concreto. Respondé con calidez y al final de tu mensaje incluí naturalmente: 'Ya le aviso a Santiago para que se comunique con vos hoy.' (con esas palabras exactas o muy similares, sin emojis al final)."
     client = _anthropic_client()
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -496,6 +531,33 @@ def _handle_manager(user_text: str) -> None:
         tg_send(reply)
     except Exception as e:
         print(f"[Manager] Error: {e}")
+
+_TASACION_KW = [
+    "tasar", "tasación", "tasacion",
+    "quiero vender", "necesito vender", "pienso vender",
+    "quisiera vender", "podría vender", "podria vender",
+    "vender mi propiedad", "vender mi casa", "vender mi departamento",
+    "vender mi depto", "vender mi terreno", "vender mi lote",
+    "cuánto vale mi", "cuanto vale mi",
+    "soy propietario", "soy propietaria", "soy dueño", "soy dueña",
+    "tengo para vender",
+]
+
+def detect_tasacion(user_text: str) -> bool:
+    t = user_text.lower()
+    return any(k in t for k in _TASACION_KW)
+
+def notify_tasacion(lead: dict, user_text: str) -> None:
+    name  = lead.get("name") or "Sin nombre"
+    phone = lead.get("phone", "")
+    msg = (
+        f"🏠 *Tasación — contacto entrante*\n\n"
+        f"*{name}* \\(+{phone}\\)\n"
+        f"_Dice:_ {user_text[:150]}\n\n"
+        f"Sofía le dijo que te comunicás\\. Escribile:\n"
+        f"https://wa\\.me/{phone}"
+    )
+    tg_send(msg)
 
 def detect_urgency(user_text: str, history: list) -> tuple:
     """Clasifica si el lead muestra señales de alta intención. Retorna (is_urgent, summary)."""
@@ -604,31 +666,40 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
         history    = messages_get(lead_id, limit=20)
         lead_notas = lead.get("notas") or ""
 
-        # Detectar urgencia antes de generar la respuesta
-        is_urgent, urgency_summary = detect_urgency(user_text, history)
+        # Tasación: propietario que quiere vender — prioridad sobre urgencia normal
+        is_tasacion = detect_tasacion(user_text)
 
-        reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
-        message_save(lead_id, "assistant", reply)
-        wa_send(from_phone, reply)
-
-        # Auto-enviar PDF del fideicomiso Roca 36
-        # Garibaldi 431 es una propiedad distinta — NO usar "garibaldi" como trigger
-        roca_keywords = ["roca 36", "proyecto roca", "fideicomiso roca", "fideicomiso", "roca"]
-        if any(k in user_text.lower() for k in roca_keywords) and "garibaldi" not in user_text.lower():
-            wa_send_doc(
-                from_phone,
-                "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
-                "Proyecto-Roca-Altavista.pdf"
-            )
-            message_save(lead_id, "assistant", "📄 [PDF enviado: Proyecto-Roca-Altavista.pdf]")
-
-        # Urgencia detectada: notificar a Santiago y pausar Sofía
-        if is_urgent:
-            print(f"[WA] Lead caliente detectado: {from_phone} — {urgency_summary}")
-            notify_urgency(lead, user_text, urgency_summary)
+        if is_tasacion:
+            reply = sofia_reply(history, user_text, lead_notas, tasacion=True)
+            message_save(lead_id, "assistant", reply)
+            wa_send(from_phone, reply)
+            notify_tasacion(lead, user_text)
             lead_set_paused(lead_id, True)
-        elif needs_escalation(reply):
-            notify_escalation(lead, user_text)
+        else:
+            # Detectar urgencia antes de generar la respuesta
+            is_urgent, urgency_summary = detect_urgency(user_text, history)
+
+            reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
+            message_save(lead_id, "assistant", reply)
+            wa_send(from_phone, reply)
+
+            # Auto-enviar PDF del fideicomiso Roca 36
+            roca_keywords = ["roca 36", "proyecto roca", "fideicomiso roca", "fideicomiso", "roca"]
+            if any(k in user_text.lower() for k in roca_keywords) and "garibaldi" not in user_text.lower():
+                wa_send_doc(
+                    from_phone,
+                    "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
+                    "Proyecto-Roca-Altavista.pdf"
+                )
+                message_save(lead_id, "assistant", "📄 [PDF enviado: Proyecto-Roca-Altavista.pdf]")
+
+            # Urgencia detectada: notificar a Santiago y pausar Sofía
+            if is_urgent:
+                print(f"[WA] Lead caliente detectado: {from_phone} — {urgency_summary}")
+                notify_urgency(lead, user_text, urgency_summary)
+                lead_set_paused(lead_id, True)
+            elif needs_escalation(reply):
+                notify_escalation(lead, user_text)
     except Exception as e:
         print(f"[WA Error] {e}")
 
