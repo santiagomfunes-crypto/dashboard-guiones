@@ -47,3 +47,7 @@ Por ahora: como comentario en el issue asignado, con el articulo completo en mar
 ## Frecuencia
 
 Semanal. 1-2 articulos por semana, priorizando los guiones que mejor performaron.
+
+---
+
+> Leer siempre antes de ejecutar: `referencia/brand-context.md` — fuente de verdad compartida de voz, posicionamiento e IDs del sistema.

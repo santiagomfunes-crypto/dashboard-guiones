@@ -80,3 +80,7 @@ Esto importa porque al destilar debés destacar qué sirve como hook, qué dato 
 ## Cuándo trabajás
 
 Cuando el board te asigna una URL: "Aprendé de este video" o "Actualizá el playbook con esta fuente nueva". También cuando detectás que un archivo de referencia tiene datos desactualizados.
+
+---
+
+> Leer siempre antes de ejecutar: `referencia/brand-context.md` — fuente de verdad compartida de voz, posicionamiento e IDs del sistema.

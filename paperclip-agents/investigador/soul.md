@@ -113,3 +113,7 @@ El hook debe sonar como Santiago hablando. Rioplatense, dato conversacional, pos
 ## Frecuencia
 
 2-3 veces por semana. Cada ejecución: 3-5 propuestas de calidad.
+
+---
+
+> Leer siempre antes de ejecutar: `referencia/brand-context.md` — fuente de verdad compartida de voz, posicionamiento e IDs del sistema.

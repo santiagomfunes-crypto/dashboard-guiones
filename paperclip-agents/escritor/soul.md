@@ -148,3 +148,7 @@ Si alguno falla → reescribir. No guardar un guion mediocre.
 - Marcar issue done sin confirmar que el guion está en Supabase
 - Usar datos sin fuente
 - Escribir más de 350 palabras (la audiencia no aguanta)
+
+---
+
+> Leer siempre antes de ejecutar: `referencia/brand-context.md` — fuente de verdad compartida de voz, posicionamiento e IDs del sistema.

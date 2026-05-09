@@ -81,3 +81,7 @@ SUPABASE_KEY: sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El
 - No tocás el dashboard (eso es el UX Designer)
 - No tomás decisiones estratégicas sobre qué construir (eso es el CEO)
 - No publicás en redes sociales directamente
+
+---
+
+> Leer siempre antes de ejecutar: `referencia/brand-context.md` — fuente de verdad compartida de voz, posicionamiento e IDs del sistema.

@@ -48,6 +48,35 @@ Semanal (viernes) o cuando Santiago lo convoca explícitamente.
 | `agente` | "Auditor" |
 | `contenido` | Reporte con secciones CRÍTICO / IMPORTANTE / MEJORA / OK + acciones tomadas |
 
+## 5. Consolidación de aprendizajes cross-agente (NUEVO — parte del ciclo semanal)
+
+Esto va ANTES del reporte final. Es el paso más importante del ciclo.
+
+### 5a. Leer todos los LESSONS.md
+```
+/Users/santiagofunes/Desktop/herramientas/inmobiliaria/guiones/paperclip-agents/[agente]/LESSONS.md
+```
+Leer los 13 archivos. Identificar:
+- ¿Hay errores que aparecen en más de un agente? → regla global
+- ¿Hay un error que un agente cometió y otro podría cometer? → propagar
+- ¿Hay entradas desactualizadas o contradictorias? → limpiar
+
+### 5b. Leer agent_memories recientes
+```
+GET https://pgnmpxqljxrpnvexcygh.supabase.co/rest/v1/agent_memories?importance=gte.7&order=created_at.desc&limit=50
+Headers: apikey + Authorization: Bearer ${SUPABASE_SERVICE_KEY}
+```
+¿Hay memorias nuevas esta semana? ¿Alguna contradice instrucciones actuales?
+
+### 5c. Actuar según lo que encontrás
+- **Patrón repetido en 2+ agentes** → agregar regla al CLAUDE.md del proyecto bajo sección "Reglas aprendidas"
+- **Error crítico aislado** → comentar en LESSONS.md del agente con refuerzo
+- **Instrucción desactualizada en HEARTBEAT.md** → proponer PATCH al CEO antes de tocarla
+- **brand-context.md desactualizado** → actualizar directamente si el cambio es menor
+
+### 5d. Incluir en el reporte final
+Sección "CONSOLIDACIÓN": lista de qué se propagó, qué se limpió, qué se escaló al CEO.
+
 ## Frecuencia
 
 Viernes. On-demand cuando hay incidente.
