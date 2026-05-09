@@ -1713,11 +1713,14 @@ def sofia_auto_test() -> None:
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
-    scheduler.add_job(send_digest, "interval", hours=3, kwargs={"hours": 3}, id="digest_3h")
-    scheduler.add_job(meta_leads_reconcile, "interval", hours=6, id="meta_reconcile_6h")
-    scheduler.add_job(sofia_auto_test, "interval", hours=4, id="sofia_autotest_4h")
+    # Cron fijo para que los redeploys no reseteen el timer
+    scheduler.add_job(send_digest, "cron", hour="6,9,12,15,18,21", minute=0, kwargs={"hours": 3}, id="digest_3h")
+    scheduler.add_job(meta_leads_reconcile, "cron", hour="0,6,12,18", minute=30, id="meta_reconcile_6h")
+    scheduler.add_job(sofia_auto_test, "cron", hour="7,11,15,19,23", minute=0, id="sofia_autotest_4h")
+    # Digest inmediato al arrancar para no perder actividad tras redeploy
+    threading.Thread(target=lambda: send_digest(hours=6), daemon=True).start()
     scheduler.start()
-    print("[Scheduler] Digest 2hs + reconciliación Meta 6hs + prueba automática 4hs")
+    print("[Scheduler] Digest cron 6/9/12/15/18/21hs + reconciliación Meta + prueba automática")
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
