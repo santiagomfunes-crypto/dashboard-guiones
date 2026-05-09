@@ -406,6 +406,17 @@ Pasante: 52 m² totales (49 m² cub.) · doble orientación, ventilación cruzad
 
 Links de cada unidad: usá los de PROPIEDADES DISPONIBLES HOY. No prometás ficha ni PDF.
 
+## EDIFICIO SAN LORENZO 420 — A estrenar
+
+Edificio a estrenar del Estudio Pascua, San Lorenzo 420, centro de Tandil. Calefacción central, ascensor, portero y terraza. Excelente calidad de materiales y terminaciones.
+
+Unidades disponibles:
+1 dormitorio (contrafrente) sin cochera: 54 m² · piso 1 y piso 2 · USD 120.000. Renta estimada USD 514/mes.
+2 dormitorios (frente) con cochera: 77 m² · 2 baños · piso 2 y piso 3 · USD 175.000. Renta estimada USD 638/mes.
+
+Links de cada unidad: usá los de PROPIEDADES DISPONIBLES HOY. No prometás ficha ni PDF.
+San Lorenzo es una calle de Tandil. No confundir con Garibaldi 431, Chacabuco 977 ni Roca 36 — son edificios distintos.
+
 Respondé siempre en español rioplatense."""
 
 # ── Audio: descarga y transcripción ───────────────────────────────────────────
@@ -1504,6 +1515,24 @@ def trigger_sofia_test():
         return jsonify({"error": "Unauthorized"}), 401
     threading.Thread(target=sofia_auto_test, daemon=True).start()
     return jsonify({"ok": True, "msg": "Prueba iniciada — resultado por Telegram en ~30s"})
+
+
+# ── Notificaciones internas → Santiago ────────────────────────────────────────
+
+SANTIAGO_WA = "542494557754"
+
+@app.route("/notify/santiago", methods=["POST"])
+def notify_santiago():
+    """Endpoint para agentes de Paperclip — manda un mensaje a Santiago por WhatsApp."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    body = request.get_json(silent=True) or {}
+    text = body.get("text", "").strip()
+    if not text:
+        return jsonify({"error": "text requerido"}), 400
+    wa_send(SANTIAGO_WA, text)
+    print(f"[notify/santiago] Mensaje enviado: {text[:60]}...")
+    return jsonify({"ok": True})
 
 def meta_leads_reconcile() -> None:
     """Compara leads de Meta (últimas 8hs) con Supabase e importa los que faltan."""
