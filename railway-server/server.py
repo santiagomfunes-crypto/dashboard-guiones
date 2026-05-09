@@ -492,6 +492,8 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate
     # Corregir construcción gramatical incorrecta común
     text = re.sub(r'¿[Tt]e gustaría coordinamos', '¿Coordinamos', text)
     text = re.sub(r'¿[Tt]e gustaría agendamos',   '¿Agendamos',   text)
+    # Haiku confunde voseo y genera "soy Sos Sofía" — corregir
+    text = re.sub(r'\bsoy\s+[Ss]os\s+', 'soy ', text)
     return text
 
 def manager_reply(user_text: str) -> str:
