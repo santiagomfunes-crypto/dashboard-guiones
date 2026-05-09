@@ -1498,6 +1498,13 @@ def trigger_digest():
     threading.Thread(target=send_digest, args=[hours], daemon=True).start()
     return jsonify({"ok": True, "hours": hours})
 
+@app.route("/admin/test-sofia", methods=["POST"])
+def trigger_sofia_test():
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    threading.Thread(target=sofia_auto_test, daemon=True).start()
+    return jsonify({"ok": True, "msg": "Prueba iniciada — resultado por Telegram en ~30s"})
+
 def meta_leads_reconcile() -> None:
     """Compara leads de Meta (últimas 8hs) con Supabase e importa los que faltan."""
     if not META_PAGE_TOKEN:
@@ -1583,13 +1590,108 @@ def meta_leads_reconcile() -> None:
         print(f"[Reconcile] Error: {e}")
 
 
+_TEST_SCENARIOS = [
+    {
+        "tag": "inversor-roca36",
+        "notas": "Formulario: Proyecto Roca 36. Inversión estimada: USD 100.000. Plazo: 6 meses.",
+        "mensajes": [
+            "Hola, vi el proyecto Roca 36 en el anuncio",
+            "¿Qué retorno tiene como inversión?",
+            "¿Cuánto hay que poner de entrada?",
+        ],
+    },
+    {
+        "tag": "comprador-vivienda",
+        "notas": "Formulario: Garibaldi 431. Para vivienda propia.",
+        "mensajes": [
+            "Hola, consulto por el departamento de Garibaldi",
+            "¿Cuánto sale con cochera?",
+            "¿Qué pisos están disponibles?",
+        ],
+    },
+    {
+        "tag": "lead-generico",
+        "notas": "",
+        "mensajes": [
+            "Hola buenas, busco un depto en Tandil",
+            "Tengo unos 120.000 dólares para invertir",
+            "¿Tienen algo a estrenar?",
+        ],
+    },
+]
+
+_RUBRICA_EVALUACION = """Evaluá esta conversación entre Sofía (secretaria inmobiliaria de Altavista Otero, Tandil) y un lead de WhatsApp.
+
+REGLAS QUE SOFÍA DEBE CUMPLIR:
+1. En los primeros 2 mensajes NO propone visita ni llamada ("¿cuándo venís?", "¿cuándo te viene bien?", "coordinamos", "agendemos").
+2. Hace UNA sola pregunta por mensaje. Nunca dos o más en el mismo mensaje.
+3. NUNCA usa markdown: sin **, sin ##, sin guiones como viñetas, sin listas.
+4. NUNCA usa tuteo: siempre voseo ("para vos", "querés", "podés"). Nunca "para ti", "te", "quieres".
+5. NUNCA dice: "¿Nos charlamos?", "¿Hablamos?", "¿cuándo te queda bien para hablar?", "agendamos una llamada", "jaja", "Buenísimo", "Bárbaro", "Genial".
+6. Cuando el lead pregunta por una propiedad, da información concreta (precio, m², características). No esquiva con "hablemos".
+7. El primer mensaje incluye saludo, presentación y UNA pregunta de calificación.
+
+Analizá mensaje por mensaje de Sofía. Sé específico. Formato de respuesta:
+
+MSG 1: OK | FALLA: [regla N — transcribí la frase exacta que viola la regla]
+MSG 2: OK | FALLA: [...]
+...
+VEREDICTO: SIN ERRORES | ERRORES ENCONTRADOS: [lista de los problemas, una línea cada uno]
+"""
+
+
+def sofia_auto_test() -> None:
+    """Corre una conversación de prueba con Sofía y reporta errores por Telegram."""
+    import random
+    scenario = random.choice(_TEST_SCENARIOS)
+    cl = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+
+    history: list[dict] = []
+    notas = scenario["notas"]
+    log_lines: list[str] = []
+
+    for msg in scenario["mensajes"]:
+        reply = sofia_reply(history, msg, notas)
+        history.append({"role": "user", "content": msg})
+        history.append({"role": "assistant", "content": reply})
+        log_lines.append(f"Lead: {msg}")
+        log_lines.append(f"Sofía: {reply}")
+
+    conversation = "\n\n".join(log_lines)
+
+    eval_r = cl.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=600,
+        messages=[{"role": "user", "content": f"{_RUBRICA_EVALUACION}\n\nCONVERSACIÓN:\n{conversation}"}],
+    )
+    evaluation = eval_r.content[0].text.strip()
+
+    has_errors = "FALLA" in evaluation or "ERRORES ENCONTRADOS" in evaluation
+    emoji = "⚠️" if has_errors else "✅"
+
+    sep = "─" * 30
+    report = (
+        f"{emoji} *Prueba automática Sofía — {scenario['tag']}*\n\n"
+        f"{sep}\n"
+        f"{conversation}\n"
+        f"{sep}\n\n"
+        f"*Evaluación:*\n{evaluation}"
+    )
+
+    for chunk in [report[i:i+4000] for i in range(0, len(report), 4000)]:
+        tg_send(chunk)
+
+    print(f"[AutoTest] {emoji} escenario={scenario['tag']} errores={'sí' if has_errors else 'no'}")
+
+
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
     scheduler.add_job(send_digest, "interval", hours=2, id="digest_2h")
     scheduler.add_job(meta_leads_reconcile, "interval", hours=6, id="meta_reconcile_6h")
+    scheduler.add_job(sofia_auto_test, "interval", hours=4, id="sofia_autotest_4h")
     scheduler.start()
-    print("[Scheduler] Digest cada 2hs + reconciliación Meta cada 6hs iniciados")
+    print("[Scheduler] Digest 2hs + reconciliación Meta 6hs + prueba automática 4hs")
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
