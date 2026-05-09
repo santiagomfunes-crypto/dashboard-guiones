@@ -150,18 +150,12 @@ def wa_send(to: str, text: str) -> None:
 # ── Telegram: notificaciones a Santiago ───────────────────────────────────────
 
 def tg_send(text: str) -> None:
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("[Telegram] Sin credenciales — mensaje no enviado")
-        return
-    try:
-        resp = http_requests.post(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "Markdown"},
-            timeout=10,
-        )
-        print(f"[Telegram] {resp.status_code}")
-    except Exception as e:
-        print(f"[Telegram] Error: {e}")
+    # Redirigido a WhatsApp — limpiar escapes de Telegram
+    clean = (text
+        .replace("\\.", ".").replace("\\(", "(").replace("\\)", ")")
+        .replace("\\-", "-").replace("\\!", "!").replace("\\=", "=")
+    )
+    wa_send(SANTIAGO_WA, clean)
 
 # ── Supabase: leads y mensajes ─────────────────────────────────────────────────
 
@@ -568,14 +562,12 @@ def detect_tasacion(user_text: str) -> bool:
 def notify_tasacion(lead: dict, user_text: str) -> None:
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
-    msg = (
-        f"🏠 *Tasación — contacto entrante*\n\n"
-        f"*{name}* \\(+{phone}\\)\n"
-        f"_Dice:_ {user_text[:150]}\n\n"
-        f"Sofía le dijo que te comunicás\\. Escribile:\n"
-        f"https://wa\\.me/{phone}"
+    tg_send(
+        f"🏠 *Tasación — propietario quiere vender*\n\n"
+        f"*{name}* (+{phone})\n"
+        f"Dice: {user_text[:200]}\n\n"
+        f"Sofía pausó. Escribile: https://wa.me/{phone}"
     )
-    tg_send(msg)
 
 def detect_urgency(user_text: str, history: list) -> tuple:
     """Clasifica si el lead muestra señales de alta intención. Retorna (is_urgent, summary)."""
@@ -620,26 +612,23 @@ def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> 
     """Notifica a Santiago que hay un lead caliente listo para tomar."""
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
-    msg = (
-        f"🔥 *Lead caliente — intervención inmediata*\n\n"
+    tg_send(
+        f"🔥 *Lead caliente — entrá ya*\n\n"
         f"*{name}* (+{phone})\n"
         f"{urgency_summary}\n\n"
-        f"_Último mensaje:_ {last_user_message}\n\n"
-        f"Sofía le dijo que te comunicás hoy\\. Escribile:\n"
-        f"https://wa\\.me/{phone}"
+        f"Último mensaje: {last_user_message[:200]}\n\n"
+        f"Sofía pausó. Escribile: https://wa.me/{phone}"
     )
-    tg_send(msg)
 
 def notify_escalation(lead: dict, last_user_message: str) -> None:
     name = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
-    msg = (
-        f"⚠️ *Sofía escaló una conversación*\n\n"
-        f"*{name}* \\(+{phone}\\)\n"
-        f"_Último mensaje:_ {last_user_message}\n\n"
-        f"Escribile: https://wa\\.me/{phone}"
+    tg_send(
+        f"⚠️ *Sofía necesita ayuda*\n\n"
+        f"*{name}* (+{phone})\n"
+        f"Último mensaje: {last_user_message[:200]}\n\n"
+        f"Escribile: https://wa.me/{phone}"
     )
-    tg_send(msg)
 
 # ── Debounce: agrupa mensajes en ráfaga ───────────────────────────────────────
 
@@ -668,7 +657,7 @@ def _fire(phone: str) -> None:
 
 def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> None:
     try:
-        lead    = lead_get_or_create(from_phone)
+        lead = lead_get_or_create(from_phone)
         lead_id = lead["id"]
         # Capturar nombre del perfil WhatsApp si el lead no tiene nombre aún
         if profile_name and not lead.get("name"):
@@ -1455,7 +1444,7 @@ def build_digest(hours: int = 2) -> str:
     calientes = [l for l in leads if l.get("sofia_paused")]
     activos   = [l for l in leads if not l.get("sofia_paused")]
 
-    lines = ["📊 *Resumen Sofía — últimas 2hs*"]
+    lines = [f"📊 *Resumen Sofía — últimas {hours}hs*"]
     lines.append(f"💬 Conversaciones: {len(leads)}\n")
 
     if calientes:
@@ -1716,7 +1705,7 @@ def sofia_auto_test() -> None:
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
-    scheduler.add_job(send_digest, "interval", hours=2, id="digest_2h")
+    scheduler.add_job(send_digest, "interval", hours=3, kwargs={"hours": 3}, id="digest_3h")
     scheduler.add_job(meta_leads_reconcile, "interval", hours=6, id="meta_reconcile_6h")
     scheduler.add_job(sofia_auto_test, "interval", hours=4, id="sofia_autotest_4h")
     scheduler.start()
