@@ -193,9 +193,12 @@ CMO evalúa los 6 criterios
 
 - **Dashboard**: `index.html` — GitHub Pages (`santiagomfunes-crypto.github.io/dashboard-guiones/`)
 - **Base de datos**: Supabase `https://pgnmpxqljxrpnvexcygh.supabase.co`
-  - Tablas: `guiones`, `variantes`, `newsletter`, `ideas`, `publicaciones`, `sesiones`, `reportes`, `propiedades_mercado`
+  - Tablas: `guiones`, `variantes`, `newsletter`, `ideas`, `publicaciones`, `sesiones`, `reportes`, `propiedades_mercado`, `agent_memories`
+  - `agent_memories`: memoria persistente cross-agente. Campos: `agent_id`, `agent_name`, `content`, `importance (1-10)`, `tags[]`, `project`, `superseded_by`. Los agentes escriben aprendizajes con importance ≥ 7 al finalizar runs y leen al iniciar runs complejos.
 - **Credenciales**: `.env` (gitignored) + backup en `../backups/.env-guiones`
 - **Agentes**: soul files en `paperclip-agents/` + instructions en `~/.paperclip/instances/default/companies/.../agents/`
+  - Cada agente tiene: `SOUL.md`, `HEARTBEAT.md`, `AGENTS.md`, `TOOLS.md`, `LESSONS.md` (nuevo)
+  - `LESSONS.md`: registro de errores y correcciones. El agente lo actualiza antes de cerrar cualquier issue fallido.
 - **Conocimiento**: `referencia/` (playbook, voz, datos, framework) + `youtube_brain/`
 
 ## Usuarios del dashboard

@@ -1,0 +1,54 @@
+{
+  "video_id": "p5YgvC6yzCs",
+  "title": "Claude Code + Obsidian = Memoria Infinita",
+  "channel": "Benjamín Cordero (Imperio Digital)",
+  "duration_seconds": 2010,
+  "url": "https://www.youtube.com/watch?v=p5YgvC6yzCs",
+  "learned_at": "2026-05-09",
+  "summary": "Benjamín Cordero explica cómo implementar un LLM Wiki (concepto de Andrej Karpathy) usando Obsidian + Claude Code como alternativa liviana al RAG tradicional. El sistema organiza archivos Markdown interconectados como Wikipedia: el modelo navega desde un índice en vez de buscar por similitud vectorial. Demostración en vivo: scraping de 88 videos de YouTube, transcripciones → wiki clasificada con relaciones entre conceptos. Ahorro reportado: 95% de tokens por query vs RAG tradicional.",
+  "key_concepts": [
+    {
+      "concept": "LLM Wiki",
+      "description": "Alternativa al RAG: archivos Markdown interconectados que el modelo navega como Wikipedia. No requiere vectorización ni chunking. Popularizado por Andrej Karpathy en nanochat (GitHub)."
+    },
+    {
+      "concept": "Arquitectura de 3 capas",
+      "description": "1) RAW: fuentes crudas sin clasificar (transcripciones, artículos). 2) WIKI: Markdown procesado y clasificado con relaciones (conceptos, entidades, fuentes, síntesis). 3) SCHEMA: CLAUDE.md que actúa como system prompt del agente sobre la wiki."
+    },
+    {
+      "concept": "Índice principal",
+      "description": "Archivo central que conecta todo. Cuando el modelo recibe una pregunta, navega desde el índice hacia los archivos relevantes — reduce de 88 archivos a 6-7 relevantes en milisegundos."
+    },
+    {
+      "concept": "4 operaciones clave",
+      "description": "1) INGEST: digerir, clasificar, etiquetar y crear relaciones para un nuevo archivo. 2) QUERY: consultar la wiki para responder preguntas. 3) LINT: mantenimiento — detectar y conectar archivos huérfanos sin relaciones. 4) BULK INGEST: ingest masivo de muchos archivos a la vez."
+    },
+    {
+      "concept": "Portabilidad",
+      "description": "La carpeta Obsidian funciona con cualquier agente: Claude Code, OpenCoder, Manus, Genspark. No hay lock-in. Basta con abrir la carpeta en el contexto del agente."
+    },
+    {
+      "concept": "LLM Wiki vs RAG",
+      "description": "RAG: vectorización + chunking + búsqueda semántica. Complejo, costoso, difícil de actualizar. Wiki: archivos de texto con relaciones directas, navegación por índice. 95% ahorro en tokens. Límite: funciona bien hasta ~cientos de docs; para millones de docs seguir con RAG tradicional."
+    },
+    {
+      "concept": "Obsidian Clipper",
+      "description": "Plugin Chrome que envía cualquier página web/tweet directo al vault de Obsidian. Útil para captura rápida de fuentes antes de procesarlas con Claude Code."
+    },
+    {
+      "concept": "Setup con Claude Code",
+      "description": "Abrir la carpeta del vault en VS Code + Claude Code. Darle el README del repo de Karpathy + indicarle el canal de YouTube. Claude Code crea CLAUDE.md, estructura RAW/WIKI/INDEX/LOG y scrapea transcripciones automáticamente."
+    }
+  ],
+  "tags": ["llm-wiki", "obsidian", "claude-code", "rag-alternativa", "karpathy", "memoria-ia", "markdown", "agentes", "scraping-youtube", "infraestructura-ia", "benjamin-cordero"],
+  "source_type": "video/tutorial",
+  "credibility_score": 4,
+  "actionable_takeaways": [
+    "El YouTube Brain de SFRE ya es un LLM Wiki primitivo. Se puede mejorar agregando un índice principal y relaciones explícitas entre los JSON.",
+    "Para bases de conocimiento de 50-500 docs (referentes, playbooks, guiones), el LLM Wiki supera al RAG en costo y mantenimiento.",
+    "Si se quisiera escalar el brain del proyecto, la arquitectura es: RAW (JSONs actuales) → WIKI (Markdown con relaciones) → CLAUDE.md (reglas de navegación).",
+    "El Obsidian Clipper puede usarse para alimentar el brain con fuentes web rápidamente, antes de que Claude Code las procese.",
+    "LINT periódico = eliminar archivos huérfanos y crear conexiones faltantes. Mantiene el sistema navegable."
+  ],
+  "relevance_to_sfre": "Alta para infraestructura del proyecto guiones. El brain.py actual guarda JSONs pero no crea relaciones entre conceptos ni tiene índice navegable. Este patrón podría evolucionar el sistema. No aplica a marca personal / contenido directamente."
+}

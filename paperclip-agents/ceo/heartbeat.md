@@ -76,3 +76,42 @@ POST https://pgnmpxqljxrpnvexcygh.supabase.co/rest/v1/reportes
 Headers: apikey + Authorization: Bearer sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El
 Body: { titulo, agente: "CEO", contenido }
 ```
+
+---
+
+## Protocolo de escalación (obligatorio)
+
+```
+MAX_RETRIES: 3
+TIMEOUT_MINUTES: 30
+ESCALATION_TARGET: CEO (c0543ed4-2f1b-4f48-9014-422b6ebe911e)
+```
+
+### Cuándo escalar
+1. Si un run falla 3 veces seguidas por el mismo motivo → comentar en el issue con `status: blocked` + causa exacta
+2. Si llevo más de 30 minutos sin progreso real → crear issue para CEO con contexto completo
+3. NUNCA quedar idle silencioso — siempre documentar el bloqueo
+
+### Cuándo escribir en LESSONS.md
+- Al recibir cualquier corrección de Santiago o de otro agente
+- Cuando un run falla y entiendo por qué
+- **Antes de cerrar el issue**, no después
+
+### Cuándo escribir en agent_memories (Supabase)
+Al finalizar cada run exitoso, insertar aprendizajes con importance ≥ 7:
+```
+POST https://pgnmpxqljxrpnvexcygh.supabase.co/rest/v1/agent_memories
+Headers: apikey + Authorization: Bearer ${SUPABASE_SERVICE_KEY}
+Body: {
+  "agent_id": "c0543ed4-2f1b-4f48-9014-422b6ebe911e",
+  "agent_name": "Ceo",
+  "content": "descripción del aprendizaje",
+  "importance": 8,
+  "tags": ["tag1", "tag2"],
+  "project": "nombre del proyecto si aplica"
+}
+```
+Al iniciar un run complejo, recuperar memorias propias relevantes:
+```
+GET https://pgnmpxqljxrpnvexcygh.supabase.co/rest/v1/agent_memories?agent_id=eq.c0543ed4-2f1b-4f48-9014-422b6ebe911e&importance=gte.7&order=created_at.desc&limit=20
+```

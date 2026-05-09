@@ -105,6 +105,7 @@ Para fuentes web: mismo schema + `credibility_score` (1-5) + `source_type`.
 | canal26_esquina | web/artículo | Formato torneo: mejor esquina/barrio por eliminación | referencia/playbook-briones.md |
 | mejorinformado_mentalidad | web/entrevista | Briones: autenticidad, romper tabú ambición, impacto 14-55 | referencia/playbook-briones.md |
 | mindlin_estrategia | web/artículo | Fórmula datos + provocación = leads reales | referencia/playbook-briones.md |
+| p5YgvC6yzCs | video/tutorial | LLM Wiki (Karpathy) + Obsidian + Claude Code: alternativa al RAG, 95% ahorro tokens, 4 operaciones (ingest/query/lint/bulk) | — |
 
 ### Archivos en brain_data/ fuera de scope de este brain (→ sfre-gestion o descarte)
 
