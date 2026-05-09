@@ -1660,46 +1660,54 @@ VEREDICTO: SIN ERRORES | ERRORES ENCONTRADOS: [lista de los problemas, una líne
 
 def sofia_auto_test() -> None:
     """Corre una conversación de prueba con Sofía y reporta errores por Telegram."""
-    import random
-    scenario = random.choice(_TEST_SCENARIOS)
     cl = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+    all_errors: list[str] = []
 
-    history: list[dict] = []
-    notas = scenario["notas"]
-    log_lines: list[str] = []
+    for scenario in _TEST_SCENARIOS:
+        history: list[dict] = []
+        notas = scenario["notas"]
+        log_lines: list[str] = []
 
-    for msg in scenario["mensajes"]:
-        reply = sofia_reply(history, msg, notas)
-        history.append({"role": "user", "content": msg})
-        history.append({"role": "assistant", "content": reply})
-        log_lines.append(f"Lead: {msg}")
-        log_lines.append(f"Sofía: {reply}")
+        for msg in scenario["mensajes"]:
+            reply = sofia_reply(history, msg, notas)
+            history.append({"role": "user", "content": msg})
+            history.append({"role": "assistant", "content": reply})
+            log_lines.append(f"Lead: {msg}")
+            log_lines.append(f"Sofía: {reply}")
 
-    conversation = "\n\n".join(log_lines)
+        conversation = "\n\n".join(log_lines)
 
-    eval_r = cl.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=600,
-        messages=[{"role": "user", "content": f"{_RUBRICA_EVALUACION}\n\nCONVERSACIÓN:\n{conversation}"}],
-    )
-    evaluation = eval_r.content[0].text.strip()
+        eval_r = cl.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=600,
+            messages=[{"role": "user", "content": f"{_RUBRICA_EVALUACION}\n\nCONVERSACIÓN:\n{conversation}"}],
+        )
+        evaluation = eval_r.content[0].text.strip()
 
-    has_errors = "FALLA" in evaluation or "ERRORES ENCONTRADOS" in evaluation
-    emoji = "⚠️" if has_errors else "✅"
+        has_errors = "FALLA" in evaluation or "ERRORES ENCONTRADOS" in evaluation
+        emoji = "⚠️" if has_errors else "✅"
+        if has_errors:
+            all_errors.append(scenario["tag"])
 
-    sep = "─" * 30
-    report = (
-        f"{emoji} *Prueba automática Sofía — {scenario['tag']}*\n\n"
-        f"{sep}\n"
-        f"{conversation}\n"
-        f"{sep}\n\n"
-        f"*Evaluación:*\n{evaluation}"
-    )
+        sep = "─" * 30
+        report = (
+            f"{emoji} *Prueba automática Sofía — {scenario['tag']}*\n\n"
+            f"{sep}\n"
+            f"{conversation}\n"
+            f"{sep}\n\n"
+            f"*Evaluación:*\n{evaluation}"
+        )
 
-    for chunk in [report[i:i+4000] for i in range(0, len(report), 4000)]:
-        tg_send(chunk)
+        print(f"[AutoTest] {emoji} escenario={scenario['tag']} errores={'sí' if has_errors else 'no'}")
+        print(f"[AutoTest] CONVERSACIÓN:\n{conversation}")
+        print(f"[AutoTest] EVALUACIÓN:\n{evaluation}")
 
-    print(f"[AutoTest] {emoji} escenario={scenario['tag']} errores={'sí' if has_errors else 'no'}")
+        for chunk in [report[i:i+4000] for i in range(0, len(report), 4000)]:
+            tg_send(chunk)
+
+    resumen = f"{'⚠️' if all_errors else '✅'} AutoTest completo — {'errores en: ' + ', '.join(all_errors) if all_errors else 'todos los escenarios OK'}"
+    print(f"[AutoTest] {resumen}")
+    tg_send(resumen)
 
 
 def _start_scheduler() -> None:
