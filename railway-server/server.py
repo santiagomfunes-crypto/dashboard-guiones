@@ -701,6 +701,13 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
         # Tasación: propietario que quiere vender — prioridad sobre urgencia normal
         is_tasacion = detect_tasacion(user_text)
 
+        # El primer mensaje de un formulario Meta incluye los datos del form en el cuerpo
+        # del WhatsApp — "plazo: 1 a 3 meses" etc. generaba falsos positivos de urgencia
+        is_form_first_message = (
+            "completé el formulario" in user_text.lower()
+            and len(history) <= 1
+        )
+
         if is_tasacion:
             reply = sofia_reply(history, user_text, lead_notas, tasacion=True)
             message_save(lead_id, "assistant", reply)
@@ -708,8 +715,8 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
             notify_tasacion(lead, user_text)
             lead_set_paused(lead_id, True)
         else:
-            # Detectar urgencia antes de generar la respuesta
-            is_urgent, urgency_summary = detect_urgency(user_text, history)
+            # No detectar urgencia en el primer mensaje de formulario (falsos positivos)
+            is_urgent, urgency_summary = (False, "") if is_form_first_message else detect_urgency(user_text, history)
 
             reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
             message_save(lead_id, "assistant", reply)
@@ -1516,12 +1523,98 @@ def trigger_digest():
     threading.Thread(target=send_digest, args=[hours], daemon=True).start()
     return jsonify({"ok": True, "hours": hours})
 
+def meta_leads_reconcile() -> None:
+    """Compara leads de Meta (últimas 8hs) con Supabase e importa los que faltan."""
+    if not META_PAGE_TOKEN:
+        return
+    try:
+        from datetime import datetime, timedelta, timezone as tz
+        import re as _re
+
+        PAGE_ID = "100744281781455"
+        since   = int((datetime.now(tz.utc) - timedelta(hours=8)).timestamp())
+        sb      = _sfre_client()
+
+        db_phones = set(
+            l["phone"]
+            for l in sb.table("chat_leads").select("phone").execute().data or []
+        )
+
+        forms_r = http_requests.get(
+            f"https://graph.facebook.com/v20.0/{PAGE_ID}/leadgen_forms",
+            params={"access_token": META_PAGE_TOKEN, "limit": 30, "fields": "id,name"},
+            timeout=15,
+        ).json()
+
+        if "error" in forms_r:
+            print(f"[Reconcile] Token error: {forms_r['error']['message'][:80]}")
+            tg_send("⚠️ *META\\_PAGE\\_TOKEN vencido* — regenerar en Graph Explorer y actualizar Railway")
+            return
+
+        nuevos = []
+        for form in forms_r.get("data", []):
+            leads_r = http_requests.get(
+                f"https://graph.facebook.com/v20.0/{form['id']}/leads",
+                params={
+                    "access_token": META_PAGE_TOKEN,
+                    "limit": 50,
+                    "fields": "id,field_data,created_time",
+                    "filtering": f'[{{"field":"time_created","operator":"GREATER_THAN","value":{since}}}]',
+                },
+                timeout=15,
+            ).json()
+
+            for lead in leads_r.get("data", []):
+                fields    = _parse_lead_fields(lead.get("field_data", []))
+                phone_raw = fields["phone"]
+                if not phone_raw:
+                    continue
+                phone = _normalize_phone(phone_raw)
+                if phone in db_phones:
+                    continue
+                nombre    = fields["name"]
+                prop_name = META_FORM_MAP.get(form["id"], form["name"])
+                notas     = _build_form_notas(prop_name, nombre, fields["extras"])
+                # Insertar lead
+                res     = sb.table("chat_leads").insert(
+                    {"phone": phone, "name": nombre or None, "notas": notas, "status": "nuevo"}
+                ).execute()
+                lead_id = res.data[0]["id"]
+                db_phones.add(phone)
+                nuevos.append({"lead_id": lead_id, "phone": phone, "name": nombre, "prop": prop_name})
+                print(f"[Reconcile] Importado: {nombre} ({phone}) — {prop_name}")
+
+        if nuevos:
+            for n in nuevos:
+                try:
+                    import anthropic as _ant
+                    cl  = _ant.Anthropic(api_key=ANTHROPIC_KEY)
+                    rsp = cl.messages.create(
+                        model="claude-haiku-4-5-20251001",
+                        max_tokens=200,
+                        system="Sos Sofía, secretaria de Santiago Funes en Altavista Otero Tandil. Texto plano, sin emojis, sin markdown. Tono profesional y cordial. Rioplatense argentino. Máximo 3 líneas.",
+                        messages=[{"role": "user", "content": f"Primer contacto para {n['name'] or 'el/la interesado/a'}, que llenó un formulario de Meta Ads sobre {n['prop']}. Presentate y ofrecé información."}],
+                    )
+                    msg = rsp.content[0].text.strip()
+                    wa_send(n["phone"], msg)
+                    message_save(n["lead_id"], "assistant", msg)
+                except Exception as e:
+                    print(f"[Reconcile] Error enviando a {n['phone']}: {e}")
+                time.sleep(2)
+            tg_send(f"🔄 *Reconciliación automática*: {len(nuevos)} lead(s) recuperado(s) de Meta y contactado(s) por Sofía.")
+        else:
+            print("[Reconcile] Sin leads nuevos faltantes.")
+    except Exception as e:
+        print(f"[Reconcile] Error: {e}")
+
+
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
     scheduler.add_job(send_digest, "interval", hours=2, id="digest_2h")
+    scheduler.add_job(meta_leads_reconcile, "interval", hours=6, id="meta_reconcile_6h")
     scheduler.start()
-    print("[Scheduler] Digest cada 2hs iniciado")
+    print("[Scheduler] Digest cada 2hs + reconciliación Meta cada 6hs iniciados")
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
