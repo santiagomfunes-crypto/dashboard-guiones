@@ -1543,6 +1543,55 @@ def wa_debug():
     )
     return jsonify({"status": resp.status_code, "meta_response": resp.json()})
 
+
+@app.route("/wa/fix-subscription", methods=["POST"])
+def wa_fix_subscription():
+    """Suscribe el número de WhatsApp al app — fix para mensajes no recibidos."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    if not WA_TOKEN or not WA_PHONE_ID:
+        return jsonify({"ok": False, "error": "WHATSAPP_TOKEN o WHATSAPP_PHONE_ID no configurados"})
+
+    # 1. Obtener WABA ID desde el phone ID
+    phone_resp = http_requests.get(
+        f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}",
+        params={"fields": "id,display_phone_number,whatsapp_business_account_id"},
+        headers={"Authorization": f"Bearer {WA_TOKEN}"},
+        timeout=10,
+    )
+    phone_data = phone_resp.json()
+    if "error" in phone_data:
+        return jsonify({"ok": False, "step": "get_phone", "error": phone_data["error"]})
+
+    waba_id = phone_data.get("whatsapp_business_account_id")
+    if not waba_id:
+        return jsonify({"ok": False, "step": "get_waba_id", "phone_data": phone_data,
+                        "error": "whatsapp_business_account_id no encontrado en la respuesta"})
+
+    # 2. Suscribir el WABA al app
+    sub_resp = http_requests.post(
+        f"https://graph.facebook.com/v20.0/{waba_id}/subscribed_apps",
+        headers={"Authorization": f"Bearer {WA_TOKEN}"},
+        timeout=10,
+    )
+    sub_data = sub_resp.json()
+
+    # 3. Verificar suscripciones actuales
+    check_resp = http_requests.get(
+        f"https://graph.facebook.com/v20.0/{waba_id}/subscribed_apps",
+        headers={"Authorization": f"Bearer {WA_TOKEN}"},
+        timeout=10,
+    )
+
+    return jsonify({
+        "ok": sub_data.get("success", False),
+        "waba_id": waba_id,
+        "phone_number": phone_data.get("display_phone_number"),
+        "subscribe_result": sub_data,
+        "current_subscriptions": check_resp.json(),
+    })
+
+
 def meta_leads_reconcile() -> None:
     """Compara leads de Meta (últimas 8hs) con Supabase e importa los que faltan."""
     if not META_PAGE_TOKEN:
