@@ -37,14 +37,18 @@ SFRE_SUPABASE_KEY = os.environ.get("SFRE_SUPABASE_SERVICE_KEY", "")
 # API key para POST /properties
 API_KEY = os.environ.get("API_KEY", "")
 
-# WhatsApp Cloud API (Meta directo — usado como fallback si Wati no está configurado)
+# WhatsApp Cloud API (Meta directo — usado como fallback)
 WA_TOKEN      = os.environ.get("WHATSAPP_TOKEN", "")
 WA_PHONE_ID   = os.environ.get("WHATSAPP_PHONE_ID", "")
 WA_VERIFY     = os.environ.get("WHATSAPP_VERIFY_TOKEN", "altavista-sofia-2026")
 
-# Wati BSP (reemplaza Meta directo cuando está configurado)
-WATI_API_URL   = os.environ.get("WATI_API_URL", "")    # ej: https://live-server.wati.io
-WATI_API_TOKEN = os.environ.get("WATI_API_TOKEN", "")  # Bearer token del dashboard Wati
+# Wati BSP
+WATI_API_URL   = os.environ.get("WATI_API_URL", "")
+WATI_API_TOKEN = os.environ.get("WATI_API_TOKEN", "")
+
+# Respond.io BSP (prioridad máxima cuando está configurado)
+RESPOND_API_TOKEN  = os.environ.get("RESPOND_API_TOKEN", "")
+RESPOND_CHANNEL_ID = int(os.environ.get("RESPOND_CHANNEL_ID", "500829"))
 
 # Santiago — número WhatsApp (para detección de mensajes entrantes)
 SANTIAGO_PHONE = os.environ.get("SANTIAGO_PHONE", "")
@@ -133,10 +137,39 @@ def _log_api_usage(model: str, tokens_input: int = 0, tokens_output: int = 0,
 
 # ── WhatsApp API ───────────────────────────────────────────────────────────────
 
+def _respond_send(phone_digits: str, text: str) -> None:
+    """Envía un mensaje vía Respond.io API. Si el contacto no existe, lo crea primero."""
+    phone_e164 = f"+{phone_digits}"
+    payload = {"channelId": RESPOND_CHANNEL_ID, "message": {"type": "text", "text": text}}
+    headers = {"Authorization": f"Bearer {RESPOND_API_TOKEN}", "Content-Type": "application/json"}
+    resp = http_requests.post(
+        f"https://api.respond.io/v2/contact/phone:{phone_e164}/message",
+        json=payload, headers=headers, timeout=10,
+    )
+    if resp.status_code == 404:
+        # Contacto no existe en Respond.io — crearlo y reintentar
+        http_requests.post(
+            f"https://api.respond.io/v2/contact/create_or_update/phone:{phone_e164}",
+            json={}, headers=headers, timeout=10,
+        )
+        resp = http_requests.post(
+            f"https://api.respond.io/v2/contact/phone:{phone_e164}/message",
+            json=payload, headers=headers, timeout=10,
+        )
+    print(f"[Respond.io send → {phone_e164}] {resp.status_code}")
+    if not resp.ok:
+        body = resp.text[:500]
+        print(f"[Respond.io ERROR] {resp.status_code} — {body}")
+        raise RuntimeError(f"Respond.io API error {resp.status_code}: {body}")
+
+
 def wa_send(to: str, text: str) -> None:
-    if WATI_API_URL and WATI_API_TOKEN:
-        # Wati BSP — gestor oficial del WABA (prioridad sobre Meta directo)
-        phone = re.sub(r"[^\d]", "", to)
+    phone = re.sub(r"[^\d]", "", to)
+    if RESPOND_API_TOKEN:
+        # Respond.io BSP — prioridad máxima
+        _respond_send(phone, text)
+    elif WATI_API_URL and WATI_API_TOKEN:
+        # Wati BSP
         resp = http_requests.post(
             f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
             json={"messageText": text},
@@ -162,7 +195,7 @@ def wa_send(to: str, text: str) -> None:
             print(f"[WhatsApp ERROR] {resp.status_code} — {body}")
             raise RuntimeError(f"WhatsApp API error {resp.status_code}: {body}")
     else:
-        raise RuntimeError("[WhatsApp] Sin credenciales — configurar WATI_API_URL/WATI_API_TOKEN o WHATSAPP_TOKEN/WHATSAPP_PHONE_ID")
+        raise RuntimeError("[WhatsApp] Sin credenciales — configurar RESPOND_API_TOKEN, WATI_API_URL/WATI_API_TOKEN, o WHATSAPP_TOKEN/WHATSAPP_PHONE_ID")
 
 def wa_send_internal(text: str) -> None:
     """Notificación interna a Santiago vía Evolution API (sin restricción 24hs de Meta)."""
@@ -1108,6 +1141,63 @@ def wati_receive():
 
     except Exception as e:
         print(f"[Wati Error] {e}")
+
+    return "ok", 200
+
+
+# ── Webhook Respond.io BSP ────────────────────────────────────────────────────
+
+@app.route("/respond/webhook", methods=["POST"])
+def respond_receive():
+    """Recibe mensajes entrantes de WhatsApp vía Respond.io BSP."""
+    data = request.get_json(silent=True) or {}
+    try:
+        contact = data.get("contact", {})
+        from_phone = re.sub(r"[^\d]", "", contact.get("phone", ""))
+        if not from_phone:
+            return "ok", 200
+
+        first = contact.get("firstName") or ""
+        last  = contact.get("lastName") or ""
+        wa_profile = (first + " " + last).strip()
+
+        for event in data.get("events", []):
+            if event.get("type") != "message":
+                continue
+            msg = event.get("message", {})
+            # Ignorar mensajes salientes (propios de Sofía)
+            if (msg.get("direction") or "").upper() == "OUTBOUND":
+                continue
+
+            msg_type = (msg.get("type") or "").upper()
+
+            if msg_type == "TEXT":
+                user_text = msg.get("text", "")
+                if not user_text:
+                    continue
+            elif msg_type in ("AUDIO", "VOICE"):
+                wa_send(from_phone, "No escuché bien el audio 😅 ¿Me lo podés escribir?")
+                continue
+            else:
+                print(f"[Respond.io tipo ignorado] {msg_type} de {from_phone}")
+                continue
+
+            print(f"[Respond.io] {from_phone}: {user_text[:80]}")
+
+            with _pending_lock:
+                if from_phone in _pending:
+                    _pending[from_phone]['timer'].cancel()
+                    _pending[from_phone]['texts'].append(user_text)
+                    if wa_profile and not _pending[from_phone].get('profile_name'):
+                        _pending[from_phone]['profile_name'] = wa_profile
+                else:
+                    _pending[from_phone] = {'texts': [user_text], 'profile_name': wa_profile}
+                t = threading.Timer(DEBOUNCE_SECS, _fire, args=[from_phone])
+                _pending[from_phone]['timer'] = t
+                t.start()
+
+    except Exception as e:
+        print(f"[Respond.io Error] {e}")
 
     return "ok", 200
 
