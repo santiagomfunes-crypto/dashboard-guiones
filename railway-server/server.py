@@ -45,9 +45,10 @@ WA_VERIFY     = os.environ.get("WHATSAPP_VERIFY_TOKEN", "altavista-sofia-2026")
 # Santiago — número WhatsApp (para detección de mensajes entrantes)
 SANTIAGO_PHONE = os.environ.get("SANTIAGO_PHONE", "")
 
-# Telegram — notificaciones a Santiago sin restricción de ventana 24hs
-TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
+# Evolution API — notificaciones internas a Santiago (sin restricción 24hs)
+EVOLUTION_URL      = os.environ.get("EVOLUTION_API_URL", "")
+EVOLUTION_KEY      = os.environ.get("EVOLUTION_API_KEY", "")
+EVOLUTION_INSTANCE = os.environ.get("EVOLUTION_INSTANCE", "santiago")
 
 # Anthropic
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -150,12 +151,29 @@ def wa_send(to: str, text: str) -> None:
         print(f"[WhatsApp ERROR] {resp.status_code} — {body}")
         raise RuntimeError(f"WhatsApp API error {resp.status_code}: {body}")
 
-def tg_send(text: str) -> None:
+def wa_send_internal(text: str) -> None:
+    """Notificación interna a Santiago vía Evolution API (sin restricción 24hs de Meta)."""
     clean = (text
         .replace("\\.", ".").replace("\\(", "(").replace("\\)", ")")
         .replace("\\-", "-").replace("\\!", "!").replace("\\=", "=")
     )
-    wa_send(SANTIAGO_WA, clean)
+    if not EVOLUTION_URL or not EVOLUTION_KEY:
+        raise RuntimeError("[Evolution] EVOLUTION_API_URL o EVOLUTION_API_KEY no configurados")
+    url = f"{EVOLUTION_URL.rstrip('/')}/message/sendText/{EVOLUTION_INSTANCE}"
+    resp = http_requests.post(
+        url,
+        json={"number": SANTIAGO_WA, "text": clean},
+        headers={"apikey": EVOLUTION_KEY, "Content-Type": "application/json"},
+        timeout=10,
+    )
+    print(f"[Evolution send → {SANTIAGO_WA}] {resp.status_code}")
+    if not resp.ok:
+        body = resp.text[:500]
+        print(f"[Evolution ERROR] {resp.status_code} — {body}")
+        raise RuntimeError(f"Evolution API error {resp.status_code}: {body}")
+
+def tg_send(text: str) -> None:
+    wa_send_internal(text)
 
 # ── Supabase: leads y mensajes ─────────────────────────────────────────────────
 
@@ -1522,12 +1540,26 @@ def notify_santiago():
     if not text:
         return jsonify({"error": "text requerido"}), 400
     try:
-        wa_send(SANTIAGO_WA, text)
+        wa_send_internal(text)
         print(f"[notify/santiago] Mensaje enviado: {text[:60]}...")
         return jsonify({"ok": True})
     except RuntimeError as e:
         print(f"[notify/santiago] FALLO: {e}")
         return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/evo/debug", methods=["GET"])
+def evo_debug():
+    """Verifica que la instancia de Evolution API está conectada."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    if not EVOLUTION_URL or not EVOLUTION_KEY:
+        return jsonify({"ok": False, "error": "EVOLUTION_API_URL o EVOLUTION_API_KEY no configurados"})
+    resp = http_requests.get(
+        f"{EVOLUTION_URL.rstrip('/')}/instance/fetchInstances",
+        headers={"apikey": EVOLUTION_KEY},
+        timeout=10,
+    )
+    return jsonify({"status": resp.status_code, "evolution_response": resp.json()})
 
 @app.route("/wa/debug", methods=["GET"])
 def wa_debug():
