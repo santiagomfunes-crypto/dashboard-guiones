@@ -2011,6 +2011,26 @@ def sofia_auto_test() -> None:
     tg_send(resumen)
 
 
+_WABA_ID = "1512049110526718"
+
+def _waba_health_check() -> None:
+    """Re-suscribe el WABA al app cada hora — evita caídas silenciosas de 26hs."""
+    if not WA_TOKEN:
+        return
+    try:
+        resp = http_requests.post(
+            f"https://graph.facebook.com/v20.0/{_WABA_ID}/subscribed_apps",
+            headers={"Authorization": f"Bearer {WA_TOKEN}"},
+            timeout=10,
+        )
+        if resp.ok and resp.json().get("success"):
+            print("[WABA health] Suscripción OK")
+        else:
+            print(f"[WABA health] ERROR: {resp.text[:200]}")
+            tg_send("⚠️ *WABA health check falló* — revisar token WhatsApp en Railway")
+    except Exception as e:
+        print(f"[WABA health] {e}")
+
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
@@ -2018,10 +2038,13 @@ def _start_scheduler() -> None:
     scheduler.add_job(send_digest, "cron", hour="6,9,12,15,18,21", minute=0, kwargs={"hours": 3}, id="digest_3h")
     scheduler.add_job(meta_leads_reconcile, "cron", hour="0,6,12,18", minute=30, id="meta_reconcile_6h")
     scheduler.add_job(sofia_auto_test, "cron", hour="7,11,15,19,23", minute=0, id="sofia_autotest_4h")
-    # Digest inmediato al arrancar para no perder actividad tras redeploy
+    # Re-suscripción WABA cada hora — previene caída silenciosa de mensajes
+    scheduler.add_job(_waba_health_check, "interval", minutes=60, id="waba_health")
+    # Al arrancar: digest inmediato + re-suscripción WABA
     threading.Thread(target=lambda: send_digest(hours=6), daemon=True).start()
+    threading.Thread(target=_waba_health_check, daemon=True).start()
     scheduler.start()
-    print("[Scheduler] Digest cron 6/9/12/15/18/21hs + reconciliación Meta + prueba automática")
+    print("[Scheduler] Digest + reconciliación Meta + prueba automática + WABA health cada 60min")
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
