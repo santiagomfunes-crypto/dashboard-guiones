@@ -130,8 +130,7 @@ def _log_api_usage(model: str, tokens_input: int = 0, tokens_output: int = 0,
 
 def wa_send(to: str, text: str) -> None:
     if not WA_TOKEN or not WA_PHONE_ID:
-        print(f"[WhatsApp] Sin credenciales — mensaje no enviado a {to}")
-        return
+        raise RuntimeError(f"[WhatsApp] Sin credenciales — WHATSAPP_TOKEN o WHATSAPP_PHONE_ID no configurados")
     url = f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages"
     payload = {
         "messaging_product": "whatsapp",
@@ -146,11 +145,12 @@ def wa_send(to: str, text: str) -> None:
         timeout=10,
     )
     print(f"[WhatsApp send → {to}] {resp.status_code}")
-
-# ── Telegram: notificaciones a Santiago ───────────────────────────────────────
+    if not resp.ok:
+        body = resp.text[:500]
+        print(f"[WhatsApp ERROR] {resp.status_code} — {body}")
+        raise RuntimeError(f"WhatsApp API error {resp.status_code}: {body}")
 
 def tg_send(text: str) -> None:
-    # Redirigido a WhatsApp — limpiar escapes de Telegram
     clean = (text
         .replace("\\.", ".").replace("\\(", "(").replace("\\)", ")")
         .replace("\\-", "-").replace("\\!", "!").replace("\\=", "=")
@@ -1505,7 +1505,7 @@ def trigger_sofia_test():
     if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     threading.Thread(target=sofia_auto_test, daemon=True).start()
-    return jsonify({"ok": True, "msg": "Prueba iniciada — resultado por Telegram en ~30s"})
+    return jsonify({"ok": True, "msg": "Prueba iniciada — resultado por WhatsApp en ~30s"})
 
 
 # ── Notificaciones internas → Santiago ────────────────────────────────────────
@@ -1521,9 +1521,27 @@ def notify_santiago():
     text = body.get("text", "").strip()
     if not text:
         return jsonify({"error": "text requerido"}), 400
-    wa_send(SANTIAGO_WA, text)
-    print(f"[notify/santiago] Mensaje enviado: {text[:60]}...")
-    return jsonify({"ok": True})
+    try:
+        wa_send(SANTIAGO_WA, text)
+        print(f"[notify/santiago] Mensaje enviado: {text[:60]}...")
+        return jsonify({"ok": True})
+    except RuntimeError as e:
+        print(f"[notify/santiago] FALLO: {e}")
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/wa/debug", methods=["GET"])
+def wa_debug():
+    """Diagnostica el token de WhatsApp contra la API de Meta."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    if not WA_TOKEN or not WA_PHONE_ID:
+        return jsonify({"ok": False, "error": "WHATSAPP_TOKEN o WHATSAPP_PHONE_ID no configurados en Railway"})
+    resp = http_requests.get(
+        f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}",
+        headers={"Authorization": f"Bearer {WA_TOKEN}"},
+        timeout=10,
+    )
+    return jsonify({"status": resp.status_code, "meta_response": resp.json()})
 
 def meta_leads_reconcile() -> None:
     """Compara leads de Meta (últimas 8hs) con Supabase e importa los que faltan."""
