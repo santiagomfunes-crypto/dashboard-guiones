@@ -37,10 +37,14 @@ SFRE_SUPABASE_KEY = os.environ.get("SFRE_SUPABASE_SERVICE_KEY", "")
 # API key para POST /properties
 API_KEY = os.environ.get("API_KEY", "")
 
-# WhatsApp Cloud API
+# WhatsApp Cloud API (Meta directo — usado como fallback si Wati no está configurado)
 WA_TOKEN      = os.environ.get("WHATSAPP_TOKEN", "")
 WA_PHONE_ID   = os.environ.get("WHATSAPP_PHONE_ID", "")
 WA_VERIFY     = os.environ.get("WHATSAPP_VERIFY_TOKEN", "altavista-sofia-2026")
+
+# Wati BSP (reemplaza Meta directo cuando está configurado)
+WATI_API_URL   = os.environ.get("WATI_API_URL", "")    # ej: https://live-server.wati.io
+WATI_API_TOKEN = os.environ.get("WATI_API_TOKEN", "")  # Bearer token del dashboard Wati
 
 # Santiago — número WhatsApp (para detección de mensajes entrantes)
 SANTIAGO_PHONE = os.environ.get("SANTIAGO_PHONE", "")
@@ -130,26 +134,35 @@ def _log_api_usage(model: str, tokens_input: int = 0, tokens_output: int = 0,
 # ── WhatsApp API ───────────────────────────────────────────────────────────────
 
 def wa_send(to: str, text: str) -> None:
-    if not WA_TOKEN or not WA_PHONE_ID:
-        raise RuntimeError(f"[WhatsApp] Sin credenciales — WHATSAPP_TOKEN o WHATSAPP_PHONE_ID no configurados")
-    url = f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages"
-    payload = {
-        "messaging_product": "whatsapp",
-        "to": to,
-        "type": "text",
-        "text": {"body": text},
-    }
-    resp = http_requests.post(
-        url,
-        json=payload,
-        headers={"Authorization": f"Bearer {WA_TOKEN}", "Content-Type": "application/json"},
-        timeout=10,
-    )
-    print(f"[WhatsApp send → {to}] {resp.status_code}")
-    if not resp.ok:
-        body = resp.text[:500]
-        print(f"[WhatsApp ERROR] {resp.status_code} — {body}")
-        raise RuntimeError(f"WhatsApp API error {resp.status_code}: {body}")
+    if WATI_API_URL and WATI_API_TOKEN:
+        # Wati BSP — gestor oficial del WABA (prioridad sobre Meta directo)
+        phone = re.sub(r"[^\d]", "", to)
+        resp = http_requests.post(
+            f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
+            json={"messageText": text},
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[Wati send → {phone}] {resp.status_code}")
+        if not resp.ok:
+            body = resp.text[:500]
+            print(f"[Wati ERROR] {resp.status_code} — {body}")
+            raise RuntimeError(f"Wati API error {resp.status_code}: {body}")
+    elif WA_TOKEN and WA_PHONE_ID:
+        # Fallback: Meta Cloud API directa
+        resp = http_requests.post(
+            f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages",
+            json={"messaging_product": "whatsapp", "to": to, "type": "text", "text": {"body": text}},
+            headers={"Authorization": f"Bearer {WA_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[WhatsApp send → {to}] {resp.status_code}")
+        if not resp.ok:
+            body = resp.text[:500]
+            print(f"[WhatsApp ERROR] {resp.status_code} — {body}")
+            raise RuntimeError(f"WhatsApp API error {resp.status_code}: {body}")
+    else:
+        raise RuntimeError("[WhatsApp] Sin credenciales — configurar WATI_API_URL/WATI_API_TOKEN o WHATSAPP_TOKEN/WHATSAPP_PHONE_ID")
 
 def wa_send_internal(text: str) -> None:
     """Notificación interna a Santiago vía Evolution API (sin restricción 24hs de Meta)."""
@@ -747,21 +760,30 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
 # ── Envío de documentos PDF ────────────────────────────────────────────────────
 
 def wa_send_doc(to: str, doc_url: str, filename: str) -> None:
-    if not WA_TOKEN or not WA_PHONE_ID:
-        return
-    payload = {
-        "messaging_product": "whatsapp",
-        "to": to,
-        "type": "document",
-        "document": {"link": doc_url, "filename": filename},
-    }
-    resp = http_requests.post(
-        f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages",
-        json=payload,
-        headers={"Authorization": f"Bearer {WA_TOKEN}", "Content-Type": "application/json"},
-        timeout=10,
-    )
-    print(f"[WA doc → {to}] {resp.status_code}")
+    if WATI_API_URL and WATI_API_TOKEN:
+        # Wati: enviar documento como link de texto (template de media no disponible en session msgs)
+        phone = re.sub(r"[^\d]", "", to)
+        resp = http_requests.post(
+            f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
+            json={"messageText": f"📄 {filename}\n{doc_url}"},
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[Wati doc → {phone}] {resp.status_code}")
+    elif WA_TOKEN and WA_PHONE_ID:
+        payload = {
+            "messaging_product": "whatsapp",
+            "to": to,
+            "type": "document",
+            "document": {"link": doc_url, "filename": filename},
+        }
+        resp = http_requests.post(
+            f"https://graph.facebook.com/v20.0/{WA_PHONE_ID}/messages",
+            json=payload,
+            headers={"Authorization": f"Bearer {WA_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[WA doc → {to}] {resp.status_code}")
 
 # ── Webhook WhatsApp ───────────────────────────────────────────────────────────
 
@@ -807,7 +829,8 @@ def _retrieve_lead(leadgen_id: str) -> Optional[dict]:
 def _parse_lead_fields(field_data: list) -> dict:
     """Extrae todos los campos del formulario de Meta."""
     NAME_KEYS  = {"full_name", "nombre_completo", "nombre", "name"}
-    PHONE_KEYS = {"phone_number", "telefono", "phone", "celular", "whatsapp"}
+    PHONE_KEYS = {"phone_number", "telefono", "phone", "celular", "whatsapp",
+                  "número_de_teléfono", "numero_de_telefono", "teléfono"}
     result = {"name": "", "phone": "", "extras": {}}
     for f in field_data:
         key   = f.get("name", "").lower()
@@ -1018,6 +1041,73 @@ def wa_receive():
 
     except Exception as e:
         print(f"[WA Error] {e}")
+
+    return "ok", 200
+
+
+# ── Webhook Wati BSP ──────────────────────────────────────────────────────────
+
+@app.route("/wati/webhook", methods=["POST"])
+def wati_receive():
+    """Recibe mensajes entrantes de WhatsApp vía Wati BSP."""
+    data = request.get_json(silent=True) or {}
+    try:
+        # Ignorar mensajes propios del bot (owner=True) y no-mensajes
+        if data.get("owner"):
+            return "ok", 200
+        if data.get("eventType") != "message":
+            # Ack de entrega/lectura — solo loguear
+            event = data.get("eventType", "?")
+            waid  = data.get("waId", "?")
+            print(f"[Wati event] {event} — {waid}")
+            return "ok", 200
+
+        msg_type   = (data.get("type") or "").lower()
+        from_phone = data.get("waId", "")
+        contact    = data.get("messageContact") or {}
+        wa_profile = contact.get("fullName") or contact.get("firstName") or ""
+
+        if not from_phone:
+            return "ok", 200
+
+        if msg_type == "text":
+            user_text = data.get("text") or ""
+            if not user_text:
+                return "ok", 200
+        elif msg_type == "audio":
+            media_url = (data.get("data") or {}).get("url", "")
+            if OPENAI_KEY and media_url:
+                try:
+                    audio_resp = http_requests.get(media_url, timeout=15)
+                    user_text  = transcribe_audio(audio_resp.content) if audio_resp.ok else ""
+                except Exception:
+                    user_text = ""
+            else:
+                user_text = ""
+            if not user_text:
+                wa_send(from_phone, "No escuché bien el audio 😅 ¿Me lo podés escribir?")
+                return "ok", 200
+            print(f"[Wati audio transcripto] {user_text[:80]}")
+        else:
+            print(f"[Wati tipo ignorado] {msg_type} de {from_phone}")
+            return "ok", 200
+
+        print(f"[Wati] {from_phone}: {user_text[:80]}")
+
+        with _pending_lock:
+            if from_phone in _pending:
+                _pending[from_phone]['timer'].cancel()
+                _pending[from_phone]['texts'].append(user_text)
+                if wa_profile and not _pending[from_phone].get('profile_name'):
+                    _pending[from_phone]['profile_name'] = wa_profile
+            else:
+                _pending[from_phone] = {'texts': [user_text], 'profile_name': wa_profile}
+            t = threading.Timer(DEBOUNCE_SECS, _fire, args=[from_phone])
+            _pending[from_phone]['timer'] = t
+            t.start()
+
+    except Exception as e:
+        print(f"[Wati Error] {e}")
 
     return "ok", 200
 
@@ -1716,6 +1806,124 @@ def meta_leads_reconcile() -> None:
         print(f"[Reconcile] Error: {e}")
 
 
+def meta_leads_reconcile_historical(days: int = 90, contact_new: bool = True) -> dict:
+    """Importa todos los leads de Meta de los últimos N días y opcionalmente los contacta."""
+    if not META_PAGE_TOKEN:
+        return {"error": "META_PAGE_TOKEN no configurado"}
+    from datetime import datetime, timedelta, timezone as tz
+
+    PAGE_ID = "100744281781455"
+    since   = int((datetime.now(tz.utc) - timedelta(days=days)).timestamp())
+    sb      = _sfre_client()
+
+    db_phones = set(
+        l["phone"]
+        for l in sb.table("chat_leads").select("phone").execute().data or []
+    )
+
+    forms_r = http_requests.get(
+        f"https://graph.facebook.com/v20.0/{PAGE_ID}/leadgen_forms",
+        params={"access_token": META_PAGE_TOKEN, "limit": 30, "fields": "id,name"},
+        timeout=15,
+    ).json()
+    if "error" in forms_r:
+        return {"error": forms_r["error"]["message"]}
+
+    importados = []
+    omitidos   = 0
+
+    for form in forms_r.get("data", []):
+        # Paginar hasta 90 días — Meta devuelve hasta 100 por página
+        after  = None
+        while True:
+            params = {
+                "access_token": META_PAGE_TOKEN,
+                "limit": 100,
+                "fields": "id,field_data,created_time",
+                "filtering": f'[{{"field":"time_created","operator":"GREATER_THAN","value":{since}}}]',
+            }
+            if after:
+                params["after"] = after
+
+            leads_r = http_requests.get(
+                f"https://graph.facebook.com/v20.0/{form['id']}/leads",
+                params=params,
+                timeout=20,
+            ).json()
+
+            for lead in leads_r.get("data", []):
+                fields    = _parse_lead_fields(lead.get("field_data", []))
+                phone_raw = fields["phone"]
+                if not phone_raw:
+                    omitidos += 1
+                    continue
+                phone = _normalize_phone(phone_raw)
+                if phone in db_phones:
+                    omitidos += 1
+                    continue
+                nombre    = fields["name"]
+                prop_name = META_FORM_MAP.get(form["id"], form["name"])
+                notas     = _build_form_notas(prop_name, nombre, fields["extras"])
+                try:
+                    res     = sb.table("chat_leads").insert(
+                        {"phone": phone, "name": nombre or None, "notas": notas, "status": "nuevo"}
+                    ).execute()
+                    lead_id = res.data[0]["id"]
+                    db_phones.add(phone)
+                    importados.append({"lead_id": lead_id, "phone": phone, "name": nombre, "prop": prop_name})
+                    print(f"[Reconcile-hist] Importado: {nombre} ({phone}) — {prop_name}")
+                except Exception as e:
+                    print(f"[Reconcile-hist] Error insertando {phone}: {e}")
+
+            # Paginación cursor
+            cursor = leads_r.get("paging", {}).get("cursors", {})
+            after  = cursor.get("after") if leads_r.get("paging", {}).get("next") else None
+            if not after:
+                break
+
+    # Contactar solo los importados ahora (no los ya existentes)
+    contactados = 0
+    if contact_new and importados:
+        for n in importados:
+            try:
+                cl  = _anthropic_client()
+                rsp = cl.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=200,
+                    system="Sos Sofía, secretaria de Santiago Funes en Altavista Otero Tandil. Texto plano, sin emojis, sin markdown. Tono profesional y cordial. Rioplatense argentino. Máximo 3 líneas.",
+                    messages=[{"role": "user", "content": f"Primer contacto para {n['name'] or 'el/la interesado/a'}, que llenó un formulario de Meta Ads sobre {n['prop']}. Presentate como 'Sofía, la secretaria de Santiago' y ofrecé información."}],
+                )
+                msg = rsp.content[0].text.strip()
+                wa_send(n["phone"], msg)
+                message_save(n["lead_id"], "assistant", msg)
+                contactados += 1
+            except Exception as e:
+                print(f"[Reconcile-hist] Error enviando a {n['phone']}: {e}")
+            time.sleep(3)
+
+    summary = f"[Reconcile-hist] {len(importados)} importados, {contactados} contactados, {omitidos} omitidos (ya en DB o sin tel)"
+    print(summary)
+    tg_send(f"📋 *Reconciliación histórica ({days}d)*: {len(importados)} leads recuperados, {contactados} contactados por Sofía.")
+    return {"importados": len(importados), "contactados": contactados, "omitidos": omitidos, "leads": importados}
+
+
+@app.route("/meta/reconcile-historical", methods=["POST"])
+def meta_reconcile_historical_endpoint():
+    """Importa y contacta leads históricos de Meta que no están en la DB."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    body         = request.get_json(silent=True) or {}
+    days         = int(body.get("days", 90))
+    contact_new  = bool(body.get("contact_new", True))
+    # Correr en background para no hacer timeout en Railway
+    threading.Thread(
+        target=meta_leads_reconcile_historical,
+        args=[days, contact_new],
+        daemon=True,
+    ).start()
+    return jsonify({"status": "started", "days": days, "contact_new": contact_new})
+
+
 _TEST_SCENARIOS = [
     {
         "tag": "inversor-roca36",
@@ -1835,7 +2043,12 @@ def _start_scheduler() -> None:
 if __name__ == "__main__":
     print("=== Altavista Otero — Servidor Railway ===")
     print(f"Puerto: {PORT}")
-    print(f"Sofía WhatsApp: {'lista' if WA_TOKEN and WA_PHONE_ID else 'sin credenciales WA'}")
+    if WATI_API_URL and WATI_API_TOKEN:
+        print(f"Sofía WhatsApp: Wati BSP ({WATI_API_URL})")
+    elif WA_TOKEN and WA_PHONE_ID:
+        print(f"Sofía WhatsApp: Meta Cloud API directo (sin Wati)")
+    else:
+        print(f"Sofía WhatsApp: SIN CREDENCIALES — bot inactivo")
     print(f"Anthropic: {'configurado' if ANTHROPIC_KEY else 'NO CONFIGURADO'}")
     print(f"Supabase sfre-web: {'OK' if SFRE_SUPABASE_URL else 'NO CONFIGURADO'}")
     _start_scheduler()
