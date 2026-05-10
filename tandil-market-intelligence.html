@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tandil Market Intelligence</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8e8f0;
+      --text-muted: #8b8fa8;
+      --accent: #6c7fff;
+      --accent2: #ff9f43;
+      --green: #1dd1a1;
+      --red: #ff6b6b;
+      --yellow: #feca57;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* LOADING */
+    #loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 16px;
+    }
+    #loading h2 { font-size: 18px; color: var(--text-muted); font-weight: 500; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #load-detail { font-size: 12px; color: var(--text-muted); }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .header-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: var(--text);
+    }
+    .header-title span {
+      color: var(--accent);
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .filters label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
+    select:hover { border-color: var(--accent); }
+    .header-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .header-meta strong { color: var(--text); }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      background: var(--surface);
+    }
+    .tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* MAIN */
+    main {
+      padding: 24px;
+      max-width: 1400px;
+    }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .card.accent .card-value { color: var(--accent); }
+    .card.green .card-value { color: var(--green); }
+    .card.yellow .card-value { color: var(--yellow); }
+    .card.orange .card-value { color: var(--accent2); }
+
+    /* TIPOLOGÍA BREAKDOWN */
+    .tipo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .tipo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .tipo-name {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+    .tipo-count {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .tipo-median {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface2);
+    }
+    th:hover { color: var(--text); }
+    th.sort-asc::after { content: ' ↑'; }
+    th.sort-desc::after { content: ' ↓'; }
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.zona { max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(29,209,161,0.15); color: var(--green); }
+    .badge-blue { background: rgba(108,127,255,0.15); color: var(--accent); }
+
+    /* CHART AREA */
+    .chart-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .chart-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+    .chart-inner { position: relative; }
+
+    /* DIST FILTERS */
+    .dist-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .dist-controls label { font-size: 11px; color: var(--text-muted); }
+
+    /* PLACEHOLDER */
+    .placeholder {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+    .placeholder h3 { font-size: 16px; margin-bottom: 8px; }
+    .placeholder p { font-size: 13px; color: var(--text-muted); max-width: 420px; margin: 0 auto; }
+
+    /* SECTION HEADER */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ZONA warning */
+    .zona-warning {
+      background: rgba(254,202,87,0.08);
+      border: 1px solid rgba(254,202,87,0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--yellow);
+      margin-bottom: 16px;
+    }
+
+    /* TABLE controls */
+    .table-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    input[type="text"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      width: 200px;
+    }
+    input[type="text"]:hover { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--text-muted); }
+
+    .count-badge {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <h2>Cargando datos del mercado...</h2>
+  <div id="load-detail">Conectando a Supabase</div>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <div class="header-title">Tandil <span>Market Intelligence</span></div>
+    <div class="filters">
+      <label>Operacion</label>
+      <select id="f-op" onchange="applyFilters()">
+        <option value="">Todas</option>
+        <option value="venta">Venta</option>
+        <option value="alquiler">Alquiler</option>
+      </select>
+      <label>Tipologia</label>
+      <select id="f-tipo" onchange="applyFilters()">
+        <option value="">Todas</option>
+      </select>
+      <label>Fuente</label>
+      <select id="f-fuente" onchange="applyFilters()">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="header-meta" id="header-meta"></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('resumen', this)">Resumen</button>
+    <button class="tab" onclick="switchTab('comparativa', this)">Por Zona</button>
+    <button class="tab" onclick="switchTab('distribucion', this)">Distribucion</button>
+    <button class="tab" onclick="switchTab('evolucion', this)">Evolucion</button>
+  </div>
+
+  <main>
+    <!-- VIEW: RESUMEN -->
+    <div class="view active" id="v-resumen">
+      <div class="section-header">
+        <div class="section-title">Resumen del mercado</div>
+      </div>
+
+      <div class="cards" id="cards-main"></div>
+
+      <div class="section-header">
+        <div class="section-title">Por tipologia</div>
+      </div>
+      <div class="tipo-grid" id="tipo-grid"></div>
+
+      <div class="chart-container">
+        <div class="chart-title">Distribucion de precios USD (todas las tipologias)</div>
+        <div class="chart-inner" style="height:260px">
+          <canvas id="chart-precio"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: COMPARATIVA POR ZONA -->
+    <div class="view" id="v-comparativa">
+      <div class="zona-warning" id="zona-warning" style="display:none">
+        zona_normalizada aun no disponible — usando zona raw (direcciones sin normalizar). Los resultados son preliminares hasta que el Arquitecto complete el campo.
+      </div>
+      <div class="section-header">
+        <div class="section-title">Comparativa por zona</div>
+      </div>
+      <div class="table-controls">
+        <input type="text" id="zona-search" placeholder="Filtrar zona..." oninput="renderZonaTable()">
+        <span class="count-badge" id="zona-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table id="zona-table">
+          <thead>
+            <tr>
+              <th onclick="sortZona('zona')">Zona</th>
+              <th onclick="sortZona('total')" class="sort-desc">Propiedades</th>
+              <th onclick="sortZona('mediana_global')">Mediana USD/m2</th>
+              <th onclick="sortZona('mediana_casa')">Casas</th>
+              <th onclick="sortZona('mediana_depto')">Deptos</th>
+              <th onclick="sortZona('mediana_terreno')">Terrenos</th>
+              <th onclick="sortZona('precio_min')">Min USD</th>
+              <th onclick="sortZona('precio_max')">Max USD</th>
+            </tr>
+          </thead>
+          <tbody id="zona-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW: DISTRIBUCION -->
+    <div class="view" id="v-distribucion">
+      <div class="section-header">
+        <div class="section-title">Distribucion de precios</div>
+      </div>
+      <div class="dist-controls">
+        <label>Tipologia</label>
+        <select id="dist-tipo" onchange="renderDistribucion()">
+          <option value="">Todas</option>
+        </select>
+        <label>Min USD</label>
+        <input type="text" id="dist-min" placeholder="0" style="width:90px" oninput="renderDistribucion()">
+        <label>Max USD</label>
+        <input type="text" id="dist-max" placeholder="sin limite" style="width:90px" oninput="renderDistribucion()">
+        <span class="count-badge" id="dist-count"></span>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Histograma de precios USD</div>
+        <div class="chart-inner" style="height:300px">
+          <canvas id="chart-hist"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Precios por tipologia (mediana USD)</div>
+        <div class="chart-inner" style="height:260px">
+          <canvas id="chart-tipo-bar"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">USD/m2 por tipologia — solo props con metros (mediana)</div>
+        <div class="chart-inner" style="height:260px">
+          <canvas id="chart-m2-bar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: EVOLUCION -->
+    <div class="view" id="v-evolucion">
+      <div class="placeholder">
+        <div class="placeholder-icon">📈</div>
+        <h3>Evolucion temporal — proximo lanzamiento</h3>
+        <p>Los datos de evolucion de precios estaran disponibles cuando el Arquitecto implemente el campo <code>precio_historial</code>. La base de datos ya registra <code>primera_vez_visto</code> y <code>ultima_vez_visto</code> para cada propiedad.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+  // Service key guardado en localStorage para no hardcodearlo en el repo
+  const LS_KEY = 'tmid_supabase_key';
+
+  function getStoredKey() {
+    return localStorage.getItem(LS_KEY);
+  }
+
+  function promptForKey() {
+    const k = window.prompt(
+      'Tandil Market Intelligence\n\nIngresa el Supabase service key (se guarda en localStorage de este browser):\n\nEncontrarlo en: .env → SUPABASE_SERVICE_KEY'
+    );
+    if (!k || !k.trim()) { alert('Key requerido para cargar datos.'); return null; }
+    localStorage.setItem(LS_KEY, k.trim());
+    return k.trim();
+  }
+
+  const SUPABASE_KEY = getStoredKey() || promptForKey();
+  if (!SUPABASE_KEY) { document.getElementById('load-detail').textContent = 'Sin key. Recarga la pagina.'; throw new Error('no key'); }
+
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ─── STATE ───────────────────────────────────────────────────────────────
+  let allData = [];
+  let filtered = [];
+  let hasZonaNorm = false;
+
+  // zona table sort
+  let zonaSortKey = 'total';
+  let zonaSortDir = -1; // -1 desc, 1 asc
+
+  // charts
+  let chartPrecio = null;
+  let chartHist = null;
+  let chartTipoBar = null;
+  let chartM2Bar = null;
+
+  // ─── LOAD ────────────────────────────────────────────────────────────────
+  async function loadAll() {
+    const detail = document.getElementById('load-detail');
+    const PAGE = 1000;
+    let offset = 0;
+
+    // Check if zona_normalizada exists
+    const colCheck = await client.from('propiedades_mercado')
+      .select('zona_normalizada').limit(1);
+    hasZonaNorm = !colCheck.error;
+
+    const fields = hasZonaNorm
+      ? 'tipologia,operacion,zona,zona_normalizada,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto'
+      : 'tipologia,operacion,zona,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto';
+
+    while (true) {
+      detail.textContent = `Cargando... ${allData.length} propiedades`;
+      const { data, error } = await client
+        .from('propiedades_mercado')
+        .select(fields)
+        .range(offset, offset + PAGE - 1);
+
+      if (error || !data) { detail.textContent = 'Error: ' + (error?.message || 'sin datos'); break; }
+      allData = allData.concat(data);
+      if (data.length < PAGE) break;
+      offset += PAGE;
+    }
+
+    // Populate filter options
+    populateFilters();
+    applyFilters();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+
+  function populateFilters() {
+    const tipos = [...new Set(allData.map(d => d.tipologia).filter(Boolean))].sort();
+    const fuentes = [...new Set(allData.map(d => d.fuente).filter(Boolean))].sort();
+
+    const fTipo = document.getElementById('f-tipo');
+    tipos.forEach(t => fTipo.add(new Option(capitalize(t), t)));
+
+    const fFuente = document.getElementById('f-fuente');
+    fuentes.forEach(f => fFuente.add(new Option(capitalize(f), f)));
+
+    // dist tipo
+    const distTipo = document.getElementById('dist-tipo');
+    tipos.forEach(t => distTipo.add(new Option(capitalize(t), t)));
+  }
+
+  // ─── FILTERS ─────────────────────────────────────────────────────────────
+  function applyFilters() {
+    const op = document.getElementById('f-op').value;
+    const tipo = document.getElementById('f-tipo').value;
+    const fuente = document.getElementById('f-fuente').value;
+
+    filtered = allData.filter(d => {
+      if (op && d.operacion !== op) return false;
+      if (tipo && d.tipologia !== tipo) return false;
+      if (fuente && d.fuente !== fuente) return false;
+      return true;
+    });
+
+    const meta = document.getElementById('header-meta');
+    meta.innerHTML = `<strong>${filtered.length.toLocaleString('es-AR')}</strong> / ${allData.length.toLocaleString('es-AR')} propiedades`;
+
+    renderResumen();
+    renderZonaTable();
+    renderDistribucion();
+  }
+
+  // ─── RESUMEN ─────────────────────────────────────────────────────────────
+  function renderResumen() {
+    const venta = filtered.filter(d => d.operacion === 'venta');
+    const alquiler = filtered.filter(d => d.operacion === 'alquiler');
+
+    // Main cards
+    const conPrecio = filtered.filter(d => d.precio_usd);
+    const medGlobal = median(conPrecio.map(d => d.precio_usd));
+    const conM2 = filtered.filter(d => d.precio_usd && d.metros_totales && d.metros_totales > 0);
+    const medM2 = median(conM2.map(d => d.precio_usd / d.metros_totales));
+
+    const cards = [
+      { label: 'Total propiedades', value: filtered.length.toLocaleString('es-AR'), sub: 'con filtros activos', cls: 'accent' },
+      { label: 'En venta', value: venta.length.toLocaleString('es-AR'), sub: `${pct(venta.length, filtered.length)}% del total`, cls: 'green' },
+      { label: 'En alquiler', value: alquiler.length.toLocaleString('es-AR'), sub: `${pct(alquiler.length, filtered.length)}% del total`, cls: 'yellow' },
+      { label: 'Mediana USD', value: medGlobal ? '$' + fmt(medGlobal) : '—', sub: 'precio publicado', cls: '' },
+      { label: 'Mediana USD/m2', value: medM2 ? '$' + fmt(medM2) : '—', sub: `${conM2.length.toLocaleString()} props con m2`, cls: 'orange' },
+      { label: 'Con cochera', value: filtered.filter(d => d.cochera).length.toLocaleString('es-AR'), sub: `${pct(filtered.filter(d=>d.cochera).length, filtered.length)}% del total`, cls: '' },
+    ];
+
+    document.getElementById('cards-main').innerHTML = cards.map(c => `
+      <div class="card ${c.cls}">
+        <div class="card-label">${c.label}</div>
+        <div class="card-value">${c.value}</div>
+        <div class="card-sub">${c.sub}</div>
+      </div>
+    `).join('');
+
+    // Por tipología
+    const tipos = [...new Set(filtered.map(d => d.tipologia).filter(Boolean))].sort();
+    const tipoGrid = document.getElementById('tipo-grid');
+    tipoGrid.innerHTML = tipos.map(t => {
+      const grupo = filtered.filter(d => d.tipologia === t);
+      const conP = grupo.filter(d => d.precio_usd);
+      const med = median(conP.map(d => d.precio_usd));
+      const conM = grupo.filter(d => d.precio_usd && d.metros_totales > 0);
+      const medM = median(conM.map(d => d.precio_usd / d.metros_totales));
+      return `
+        <div class="tipo-card">
+          <div class="tipo-name">${t}</div>
+          <div class="tipo-count">${grupo.length.toLocaleString('es-AR')}</div>
+          <div class="tipo-median">${med ? 'Mediana $' + fmt(med) : 'sin precios'}</div>
+          ${medM ? `<div class="tipo-median">$${fmt(medM)}/m2</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    // Chart precio global (distribution by precio bucket)
+    renderPrecioChart();
+  }
+
+  function renderPrecioChart() {
+    const prices = filtered.filter(d => d.precio_usd > 0 && d.precio_usd < 2_000_000).map(d => d.precio_usd);
+    if (!prices.length) return;
+
+    const buckets = 30;
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const step = (max - min) / buckets;
+    const counts = Array(buckets).fill(0);
+    const labels = [];
+    for (let i = 0; i < buckets; i++) {
+      labels.push('$' + fmt(min + i * step));
+    }
+    prices.forEach(p => {
+      const idx = Math.min(Math.floor((p - min) / step), buckets - 1);
+      counts[idx]++;
+    });
+
+    if (chartPrecio) chartPrecio.destroy();
+    chartPrecio = new Chart(document.getElementById('chart-precio'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Propiedades',
+          data: counts,
+          backgroundColor: 'rgba(108,127,255,0.6)',
+          borderColor: 'rgba(108,127,255,0.9)',
+          borderWidth: 1,
+        }]
+      },
+      options: chartOptions('Propiedades')
+    });
+  }
+
+  // ─── ZONA TABLE ───────────────────────────────────────────────────────────
+  function getZona(d) {
+    if (hasZonaNorm && d.zona_normalizada) return d.zona_normalizada;
+    return d.zona || 'Sin zona';
+  }
+
+  function buildZonaData() {
+    const map = {};
+    filtered.forEach(d => {
+      const z = getZona(d);
+      if (!map[z]) map[z] = [];
+      map[z].push(d);
+    });
+
+    return Object.entries(map).map(([zona, props]) => {
+      const conPrecio = props.filter(d => d.precio_usd > 0);
+      const casas = props.filter(d => d.tipologia === 'casa' && d.precio_usd > 0 && d.metros_totales > 0);
+      const deptos = props.filter(d => d.tipologia === 'departamento' && d.precio_usd > 0 && d.metros_totales > 0);
+      const terrenos = props.filter(d => (d.tipologia === 'terreno' || d.tipologia === 'lote') && d.precio_usd > 0 && d.metros_totales > 0);
+      const conM2 = props.filter(d => d.precio_usd > 0 && d.metros_totales > 0);
+
+      return {
+        zona,
+        total: props.length,
+        mediana_global: median(conM2.map(d => d.precio_usd / d.metros_totales)),
+        mediana_casa: median(casas.map(d => d.precio_usd / d.metros_totales)),
+        mediana_depto: median(deptos.map(d => d.precio_usd / d.metros_totales)),
+        mediana_terreno: median(terrenos.map(d => d.precio_usd / d.metros_totales)),
+        precio_min: conPrecio.length ? Math.min(...conPrecio.map(d => d.precio_usd)) : null,
+        precio_max: conPrecio.length ? Math.max(...conPrecio.map(d => d.precio_usd)) : null,
+      };
+    });
+  }
+
+  let zonaData = [];
+
+  function renderZonaTable() {
+    // show warning if no zona_normalizada
+    const warn = document.getElementById('zona-warning');
+    warn.style.display = hasZonaNorm ? 'none' : 'block';
+
+    zonaData = buildZonaData();
+
+    // sort
+    zonaData.sort((a, b) => {
+      const av = a[zonaSortKey] ?? (zonaSortDir > 0 ? Infinity : -Infinity);
+      const bv = b[zonaSortKey] ?? (zonaSortDir > 0 ? Infinity : -Infinity);
+      if (typeof av === 'string') return zonaSortDir * av.localeCompare(bv);
+      return zonaSortDir * (av - bv);
+    });
+
+    // search filter
+    const q = document.getElementById('zona-search').value.toLowerCase();
+    const rows = q ? zonaData.filter(r => r.zona.toLowerCase().includes(q)) : zonaData;
+
+    document.getElementById('zona-count').textContent = `${rows.length} zonas`;
+
+    const tbody = document.getElementById('zona-tbody');
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td class="zona" title="${esc(r.zona)}">${esc(r.zona)}</td>
+        <td class="num">${r.total}</td>
+        <td class="num">${r.mediana_global ? '$' + fmt(r.mediana_global) : '—'}</td>
+        <td class="num">${r.mediana_casa ? '$' + fmt(r.mediana_casa) : '—'}</td>
+        <td class="num">${r.mediana_depto ? '$' + fmt(r.mediana_depto) : '—'}</td>
+        <td class="num">${r.mediana_terreno ? '$' + fmt(r.mediana_terreno) : '—'}</td>
+        <td class="num">${r.precio_min ? '$' + fmt(r.precio_min) : '—'}</td>
+        <td class="num">${r.precio_max ? '$' + fmt(r.precio_max) : '—'}</td>
+      </tr>
+    `).join('');
+
+    // update sort headers
+    document.querySelectorAll('#zona-table th').forEach(th => {
+      th.classList.remove('sort-asc', 'sort-desc');
+    });
+    const keys = ['zona','total','mediana_global','mediana_casa','mediana_depto','mediana_terreno','precio_min','precio_max'];
+    const idx = keys.indexOf(zonaSortKey);
+    const ths = document.querySelectorAll('#zona-table th');
+    if (idx >= 0 && ths[idx]) {
+      ths[idx].classList.add(zonaSortDir > 0 ? 'sort-asc' : 'sort-desc');
+    }
+  }
+
+  function sortZona(key) {
+    if (zonaSortKey === key) zonaSortDir *= -1;
+    else { zonaSortKey = key; zonaSortDir = -1; }
+    renderZonaTable();
+  }
+
+  // ─── DISTRIBUCION ─────────────────────────────────────────────────────────
+  function renderDistribucion() {
+    const tipo = document.getElementById('dist-tipo').value;
+    const minVal = parseFloat(document.getElementById('dist-min').value) || 0;
+    const maxVal = parseFloat(document.getElementById('dist-max').value) || Infinity;
+
+    let data = filtered.filter(d => d.precio_usd > 0);
+    if (tipo) data = data.filter(d => d.tipologia === tipo);
+    if (minVal) data = data.filter(d => d.precio_usd >= minVal);
+    if (maxVal < Infinity) data = data.filter(d => d.precio_usd <= maxVal);
+
+    document.getElementById('dist-count').textContent = `${data.length.toLocaleString('es-AR')} propiedades`;
+
+    // Histograma de precios
+    const prices = data.map(d => d.precio_usd);
+    renderHistogram(prices);
+
+    // Bar chart mediana por tipología
+    renderTipoBar();
+
+    // USD/m2 por tipología
+    renderM2Bar();
+  }
+
+  function renderHistogram(prices) {
+    if (!prices.length) { if (chartHist) { chartHist.destroy(); chartHist = null; } return; }
+
+    const p95 = percentile(prices, 0.95);
+    const clipped = prices.filter(p => p <= p95);
+    const buckets = 25;
+    const min = Math.min(...clipped);
+    const max = Math.max(...clipped);
+    const step = (max - min) / buckets || 1;
+    const counts = Array(buckets).fill(0);
+    const labels = [];
+    for (let i = 0; i < buckets; i++) labels.push('$' + fmtK(min + i * step));
+    clipped.forEach(p => {
+      const idx = Math.min(Math.floor((p - min) / step), buckets - 1);
+      counts[idx]++;
+    });
+
+    if (chartHist) chartHist.destroy();
+    chartHist = new Chart(document.getElementById('chart-hist'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Propiedades',
+          data: counts,
+          backgroundColor: 'rgba(29,209,161,0.5)',
+          borderColor: 'rgba(29,209,161,0.8)',
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        ...chartOptions('Propiedades'),
+        plugins: {
+          ...chartOptions('Propiedades').plugins,
+          subtitle: { display: true, text: `Cortado al p95 = $${fmt(p95)} (${prices.length - clipped.length} props excluidas)`, color: '#8b8fa8', font: { size: 11 } }
+        }
+      }
+    });
+  }
+
+  function renderTipoBar() {
+    const tipos = [...new Set(filtered.map(d => d.tipologia).filter(Boolean))].sort();
+    const medianas = tipos.map(t => {
+      const g = filtered.filter(d => d.tipologia === t && d.precio_usd > 0);
+      return median(g.map(d => d.precio_usd)) || 0;
+    });
+
+    if (chartTipoBar) chartTipoBar.destroy();
+    chartTipoBar = new Chart(document.getElementById('chart-tipo-bar'), {
+      type: 'bar',
+      data: {
+        labels: tipos.map(capitalize),
+        datasets: [{
+          label: 'Mediana USD',
+          data: medianas,
+          backgroundColor: tipos.map((_, i) => `hsl(${200 + i * 30}, 70%, 55%)`),
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        ...chartOptions('USD'),
+        indexAxis: 'y',
+      }
+    });
+  }
+
+  function renderM2Bar() {
+    const tipos = [...new Set(filtered.map(d => d.tipologia).filter(Boolean))].sort();
+    const medianas = tipos.map(t => {
+      const g = filtered.filter(d => d.tipologia === t && d.precio_usd > 0 && d.metros_totales > 0);
+      return median(g.map(d => d.precio_usd / d.metros_totales)) || 0;
+    });
+
+    if (chartM2Bar) chartM2Bar.destroy();
+    chartM2Bar = new Chart(document.getElementById('chart-m2-bar'), {
+      type: 'bar',
+      data: {
+        labels: tipos.map(capitalize),
+        datasets: [{
+          label: 'Mediana USD/m2',
+          data: medianas,
+          backgroundColor: tipos.map((_, i) => `hsl(${30 + i * 30}, 80%, 55%)`),
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        ...chartOptions('USD/m2'),
+        indexAxis: 'y',
+      }
+    });
+  }
+
+  // ─── TABS ─────────────────────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('v-' + name).classList.add('active');
+
+    if (name === 'distribucion') renderDistribucion();
+    if (name === 'comparativa') renderZonaTable();
+  }
+
+  // ─── UTILS ────────────────────────────────────────────────────────────────
+  function median(arr) {
+    const a = arr.filter(v => v != null && isFinite(v));
+    if (!a.length) return null;
+    const s = [...a].sort((a, b) => a - b);
+    const m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  }
+
+  function percentile(arr, p) {
+    const s = [...arr].sort((a, b) => a - b);
+    return s[Math.floor(s.length * p)] || s[s.length - 1];
+  }
+
+  function fmt(n) {
+    if (n == null) return '—';
+    return Math.round(n).toLocaleString('es-AR');
+  }
+
+  function fmtK(n) {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1000) return Math.round(n / 1000) + 'k';
+    return Math.round(n).toString();
+  }
+
+  function pct(a, b) { return b ? Math.round(a / b * 100) : 0; }
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function chartOptions(yLabel) {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#22263a',
+          borderColor: '#2e3250',
+          borderWidth: 1,
+          titleColor: '#e8e8f0',
+          bodyColor: '#8b8fa8',
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.x !== undefined ? ctx.parsed.x : ctx.parsed.y} ${yLabel}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#8b8fa8', font: { size: 11 }, maxRotation: 45 },
+          grid: { color: '#2e3250' }
+        },
+        y: {
+          ticks: { color: '#8b8fa8', font: { size: 11 } },
+          grid: { color: '#2e3250' }
+        }
+      }
+    };
+  }
+
+  // ─── BOOT ─────────────────────────────────────────────────────────────────
+  loadAll();
+</script>
+</body>
+</html>
