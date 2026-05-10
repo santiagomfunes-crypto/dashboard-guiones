@@ -16,8 +16,15 @@ import time
 import argparse
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from pathlib import Path
+
+# Normalización de zonas
+try:
+    from zona_utils import normalizar_zona
+except ImportError:
+    def normalizar_zona(zona, titulo, descripcion):
+        return "Otros Tandil", False
 
 # ── Configuración ─────────────────────────────────────────────────────────────
 
@@ -270,6 +277,106 @@ def scrape_all(max_pages):
     return list(all_props.values())
 
 
+# ── Zona normalizada ───────────────────────────────────────────────────────────
+
+def enrich_with_zona(props):
+    """Agrega zona_normalizada y fuera_de_tandil a cada propiedad."""
+    for p in props:
+        zona_norm, fuera = normalizar_zona(
+            p.get("zona") or "",
+            p.get("titulo") or "",
+            p.get("descripcion") or "",
+        )
+        p["zona_normalizada"] = zona_norm
+        p["fuera_de_tandil"] = fuera
+
+
+# ── Historial de precios ───────────────────────────────────────────────────────
+
+def fetch_existing_prices(fuente_ids, supabase_url, service_key):
+    """Retorna dict {fuente_id: {id, precio_usd}} para propiedades ya existentes en DB."""
+    if not fuente_ids:
+        return {}
+
+    result = {}
+    batch_size = 100
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "apikey": service_key,
+    }
+
+    for i in range(0, len(fuente_ids), batch_size):
+        batch = fuente_ids[i: i + batch_size]
+        ids_str = ",".join(str(fid) for fid in batch)
+        url = (
+            f"{supabase_url}/rest/v1/propiedades_mercado"
+            f"?select=id,fuente_id,precio_usd"
+            f"&fuente=eq.casasdehoy"
+            f"&fuente_id=in.({ids_str})"
+            f"&limit={batch_size}"
+        )
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                rows = json.loads(resp.read())
+                for row in rows:
+                    result[row["fuente_id"]] = {
+                        "id": row["id"],
+                        "precio_usd": row["precio_usd"],
+                    }
+        except Exception as e:
+            print(f"  Advertencia: no se pudo leer precios existentes: {e}", file=sys.stderr)
+
+    return result
+
+
+def register_price_changes(props, existing_prices, supabase_url, service_key):
+    """Registra cambios de precio en propiedades_precio_historial."""
+    historial_rows = []
+    hoy = date.today().isoformat()
+
+    for p in props:
+        fid = str(p.get("fuente_id"))
+        nuevo_precio = p.get("precio_usd")
+        existing = existing_prices.get(fid)
+
+        if not existing or nuevo_precio is None:
+            continue
+
+        precio_anterior = existing.get("precio_usd")
+        if precio_anterior is None or precio_anterior == nuevo_precio:
+            continue
+
+        historial_rows.append({
+            "propiedad_id": existing["id"],
+            "precio_usd": nuevo_precio,
+            "fecha": hoy,
+            "fuente": "casasdehoy",
+        })
+
+    if not historial_rows:
+        return 0
+
+    api_url = f"{supabase_url}/rest/v1/propiedades_precio_historial"
+    headers = {
+        "Authorization": f"Bearer {service_key}",
+        "apikey": service_key,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+    body = json.dumps(historial_rows).encode("utf-8")
+    req = urllib.request.Request(api_url, data=body, headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=30):
+            print(f"  Historial: {len(historial_rows)} cambios de precio registrados ✓")
+            return len(historial_rows)
+    except urllib.error.HTTPError as e:
+        print(f"  Error historial {e.code}: {e.read().decode()[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"  Error historial: {e}", file=sys.stderr)
+    return 0
+
+
 # ── Supabase Upsert ────────────────────────────────────────────────────────────
 
 def upsert_supabase(props, supabase_url, service_key, dry_run=False):
@@ -409,7 +516,22 @@ def main():
     else:
         print("Advertencia: cotización blue no disponible, precios ARS no convertidos")
 
+    # Enriquecer con zona_normalizada
+    enrich_with_zona(props)
+
+    # Leer precios existentes antes del upsert (para detectar cambios)
+    existing_prices = {}
+    if not args.dry_run:
+        print("Leyendo precios existentes para historial...")
+        fuente_ids = [str(p["fuente_id"]) for p in props]
+        existing_prices = fetch_existing_prices(fuente_ids, supabase_url, service_key)
+        print(f"  {len(existing_prices)} propiedades ya existentes en DB")
+
     inserted, errors = upsert_supabase(props, supabase_url, service_key, dry_run=args.dry_run)
+
+    # Registrar cambios de precio en historial
+    if not args.dry_run and existing_prices:
+        register_price_changes(props, existing_prices, supabase_url, service_key)
 
     print(f"\n=== Resultado ===")
     print(f"Upsertadas: {inserted}")
