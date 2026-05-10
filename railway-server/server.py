@@ -1510,7 +1510,7 @@ def trigger_sofia_test():
 
 # ── Notificaciones internas → Santiago ────────────────────────────────────────
 
-SANTIAGO_WA = "542494557754"
+SANTIAGO_WA = SANTIAGO_PHONE or "5492494557754"
 
 @app.route("/notify/santiago", methods=["POST"])
 def notify_santiago():
