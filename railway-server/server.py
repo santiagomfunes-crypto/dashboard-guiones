@@ -1785,15 +1785,7 @@ def meta_leads_reconcile() -> None:
         if nuevos:
             for n in nuevos:
                 try:
-                    import anthropic as _ant
-                    cl  = _ant.Anthropic(api_key=ANTHROPIC_KEY)
-                    rsp = cl.messages.create(
-                        model="claude-haiku-4-5-20251001",
-                        max_tokens=200,
-                        system="Sos Sofía, secretaria de Santiago Funes en Altavista Otero Tandil. Texto plano, sin emojis, sin markdown. Tono profesional y cordial. Rioplatense argentino. Máximo 3 líneas.",
-                        messages=[{"role": "user", "content": f"Primer contacto para {n['name'] or 'el/la interesado/a'}, que llenó un formulario de Meta Ads sobre {n['prop']}. Presentate y ofrecé información."}],
-                    )
-                    msg = rsp.content[0].text.strip()
+                    msg = sofia_reply([], "[primer contacto — enviá tu mensaje de bienvenida]", lead_notas=n.get("notas", f"Origen: Meta Ads — {n['prop']}\nNombre declarado en formulario: {n['name']}"))
                     wa_send(n["phone"], msg)
                     message_save(n["lead_id"], "assistant", msg)
                 except Exception as e:
@@ -1886,14 +1878,7 @@ def meta_leads_reconcile_historical(days: int = 90, contact_new: bool = True) ->
     if contact_new and importados:
         for n in importados:
             try:
-                cl  = _anthropic_client()
-                rsp = cl.messages.create(
-                    model="claude-haiku-4-5-20251001",
-                    max_tokens=200,
-                    system="Sos Sofía, secretaria de Santiago Funes en Altavista Otero Tandil. Texto plano, sin emojis, sin markdown. Tono profesional y cordial. Rioplatense argentino. Máximo 3 líneas.",
-                    messages=[{"role": "user", "content": f"Primer contacto para {n['name'] or 'el/la interesado/a'}, que llenó un formulario de Meta Ads sobre {n['prop']}. Presentate como 'Sofía, la secretaria de Santiago' y ofrecé información."}],
-                )
-                msg = rsp.content[0].text.strip()
+                msg = sofia_reply([], "", lead_notas=n.get("notas", f"Origen: Meta Ads — {n['prop']}\nNombre declarado en formulario: {n['name']}"))
                 wa_send(n["phone"], msg)
                 message_save(n["lead_id"], "assistant", msg)
                 contactados += 1
