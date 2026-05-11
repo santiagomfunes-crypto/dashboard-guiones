@@ -891,6 +891,124 @@
   .alm-legend-dot {
     width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
   }
+
+  /* ══════════════════════════════════════════════
+     STORIES SECTION
+  ══════════════════════════════════════════════ */
+  .st-freq-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .st-freq-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 14px; text-align: center; }
+  .st-freq-day { font-size: 14px; font-weight: 800; color: var(--white); margin-bottom: 3px; }
+  .st-freq-note { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  .st-types-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .st-type-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; border-top: 3px solid; }
+  .st-type-card.tipo-venta     { border-top-color: var(--red); }
+  .st-type-card.tipo-conexion  { border-top-color: var(--blue); }
+  .st-type-card.tipo-nutricion { border-top-color: var(--green); }
+  .st-type-badge { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .st-type-badge.tv { color: var(--red); }
+  .st-type-badge.tc { color: var(--blue); }
+  .st-type-badge.tn { color: var(--green); }
+  .st-type-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+  .st-type-row { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 6px; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .st-type-row strong { color: var(--muted2); font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
+  .st-ex-list { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .st-ex-item { font-size: 11.5px; color: var(--muted2); line-height: 1.6; padding-left: 10px; position: relative; }
+  .st-ex-item::before { content: '·'; position: absolute; left: 0; }
+
+  .rot-cell { padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; text-align: center; display: inline-block; }
+  .rot-venta    { background: rgba(224,80,80,0.15);    color: var(--red); }
+  .rot-conexion { background: rgba(91,135,224,0.15);   color: var(--blue); }
+  .rot-nutricion { background: rgba(76,173,122,0.15);  color: var(--green); }
+
+  .st-slides-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+  .st-slides-header { padding: 16px 20px; background: var(--bg-card2); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .st-slides-header:hover { background: var(--bg-card3); }
+  .st-slides-header.open .chevron { transform: rotate(180deg); }
+  .st-slides-body { display: none; padding: 16px 20px; }
+  .st-slides-body.open { display: block; }
+  .st-slide-row { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .st-slide-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .st-slide-n { width: 24px; height: 24px; border-radius: 50%; background: var(--bg-card3); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--muted2); flex-shrink: 0; margin-top: 2px; }
+  .st-slide-func { font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .st-slide-ex { font-size: 12.5px; color: var(--muted); line-height: 1.6; font-style: italic; }
+
+  .st-week-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin: 22px 0 8px; }
+  .st-list { display: flex; flex-direction: column; gap: 6px; }
+  .st-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 13px 16px; cursor: pointer; display: flex; align-items: center; gap: 14px; transition: all 0.12s; }
+  .st-card:hover { background: var(--bg-card2); border-color: var(--border-light); }
+  .st-card.sc-active { border-color: var(--gold-dim); background: var(--gold-bg); }
+  .st-card-badge { text-align: center; flex-shrink: 0; min-width: 52px; }
+  .st-card-date { font-size: 10px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.06em; line-height: 1.3; }
+  .st-card-tipo { font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+  .st-card-tipo.tv { color: var(--red); }
+  .st-card-tipo.tc { color: var(--blue); }
+  .st-card-tipo.tn { color: var(--green); }
+  .st-card-body { flex: 1; min-width: 0; }
+  .st-card-title { font-size: 13px; font-weight: 600; color: var(--white); line-height: 1.35; margin-bottom: 3px; }
+  .st-card-sub { font-size: 11px; color: var(--muted2); }
+  .st-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+  .st-estado-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+  .se-idea      { background: var(--bg-card3); color: var(--muted); }
+  .se-listo     { background: rgba(201,168,76,0.15);   color: var(--gold); }
+  .se-grabado   { background: rgba(91,135,224,0.15);   color: var(--blue); }
+  .se-diseñado  { background: rgba(155,123,200,0.15);  color: var(--purple); }
+  .se-publicado { background: rgba(76,173,122,0.15);   color: var(--green); }
+
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .ref-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+  .ref-name { font-size: 12px; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+  .ref-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ref-tag { font-size: 10px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; color: var(--muted); }
+
+  /* STORIES PANEL */
+  #stp-overlay { display: none; position: fixed; inset: 0; z-index: 202; background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); }
+  #stp-overlay.open { display: block; }
+  #stp-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 203;
+    width: 560px; max-width: 100vw;
+    background: #111113; border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+  }
+  #stp-panel.open { transform: translateX(0); }
+  .stp-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0; }
+  .stp-tipo-badge { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+  .stp-titulo { font-size: 15px; font-weight: 800; color: var(--white); line-height: 1.3; margin-bottom: 6px; max-width: 460px; }
+  .stp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .stp-close { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 14px; padding: 6px 10px; flex-shrink: 0; transition: all 0.15s; }
+  .stp-close:hover { color: var(--white); border-color: var(--border-light); }
+  .stp-actions { display: flex; gap: 6px; padding: 10px 22px; border-bottom: 1px solid var(--border); flex-shrink: 0; background: var(--bg-card2); flex-wrap: wrap; align-items: center; }
+  .stp-action-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 11px; font-weight: 600; padding: 6px 13px; cursor: pointer; font-family: inherit; transition: all 0.12s; white-space: nowrap; }
+  .stp-action-btn:hover { color: var(--white); border-color: var(--border-light); }
+  .stp-btn-save { color: var(--gold) !important; border-color: rgba(201,168,76,0.4) !important; }
+  .stp-btn-pub  { color: var(--green) !important; border-color: rgba(76,173,122,0.4) !important; }
+  .stp-hint { font-size: 11px; color: var(--green); margin-left: auto; transition: opacity 0.5s; opacity: 0; }
+  .stp-body { flex: 1; overflow-y: auto; padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+  .stp-fields-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stp-field { flex: 1; min-width: 110px; }
+  .stp-field label { display: block; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 5px; }
+  .stp-field input, .stp-field select, .stp-field textarea { width: 100%; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 6px; color: var(--white); font-size: 12px; padding: 7px 10px; font-family: inherit; transition: border-color 0.15s; }
+  .stp-field input:focus, .stp-field select:focus, .stp-field textarea:focus { outline: none; border-color: var(--gold-dim); }
+  .stp-field select option { background: #18181b; }
+  .stp-field textarea { resize: vertical; min-height: 52px; line-height: 1.6; }
+  .stp-slides-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+  .stp-slide { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stp-slide-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .stp-slide-num { width: 20px; height: 20px; border-radius: 50%; background: var(--gold-bg); border: 1px solid rgba(201,168,76,0.25); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: var(--gold); flex-shrink: 0; }
+  .stp-slide-func { font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted2); }
+  .stp-slide textarea { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--white); font-size: 12.5px; padding: 9px 11px; font-family: inherit; line-height: 1.65; resize: vertical; min-height: 68px; transition: border-color 0.15s; margin-bottom: 0; }
+  .stp-slide textarea:focus { outline: none; border-color: var(--gold-dim); }
+  .stp-slide-nota { margin-top: 7px; }
+  .stp-slide-nota input { width: 100%; background: transparent; border: none; border-top: 1px solid var(--border); color: var(--muted2); font-size: 11px; padding: 6px 0 0; font-family: inherit; }
+  .stp-slide-nota input:focus { outline: none; color: var(--muted); }
+  .stp-slide-nota input::placeholder { color: var(--muted2); opacity: 0.6; }
+  @media (max-width: 900px) {
+    .st-types-grid { grid-template-columns: 1fr; }
+    .st-freq-grid  { grid-template-columns: 1fr 1fr; }
+    .ref-grid      { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -905,6 +1023,7 @@
   <button class="nav-btn" onclick="show('ctas',this)">CTAs</button>
   <button class="nav-btn" onclick="show('instagram',this)">Instagram</button>
   <button class="nav-btn" onclick="show('guiones',this);renderGuiones()">Guiones</button>
+  <button class="nav-btn" onclick="show('stories',this);renderStories()">Stories</button>
   <button class="nav-btn" onclick="show('comunicacion',this)">Comunicación</button>
   <button class="nav-btn" onclick="show('personaje',this)">Personaje</button>
   <button class="nav-btn" onclick="show('portfolio',this)">Portfolio</button>
@@ -2421,6 +2540,285 @@
 
 </div>
 
+
+<!-- ============================
+     SECCIÓN — STORIES IG
+============================= -->
+<div id="stories" class="section">
+
+  <div class="sec-title">Stories de Instagram</div>
+  <div class="sec-headline">Presencia diaria · Confianza · Conversión</div>
+
+  <div class="card-gold" style="margin-bottom:28px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Rol en la estrategia general</div>
+    <div class="card-text" style="margin-bottom:14px;">El feed instala autoridad y atrae audiencia nueva. Las stories sostienen la relación, muestran el proceso y convierten confianza en conversación.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <span class="tag tag-red" style="font-size:11px;">Venta → convertir</span>
+      <span class="tag tag-blue" style="font-size:11px;">Conexión → generar confianza</span>
+      <span class="tag tag-green" style="font-size:11px;">Nutrición → instalar criterio</span>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Frecuencia semanal</div>
+  <div class="sec-headline" style="font-size:16px;margin-bottom:16px;">4 días por semana — Lun · Mié · Vie · Dom</div>
+
+  <div class="st-freq-grid">
+    <div class="st-freq-card">
+      <div class="st-freq-day">Lunes</div>
+      <div class="st-freq-note">Arranque de semana. Energía alta, audiencia activa.</div>
+    </div>
+    <div class="st-freq-card">
+      <div class="st-freq-day">Miércoles</div>
+      <div class="st-freq-note">Punto medio. Ideal para educación y nutrición.</div>
+    </div>
+    <div class="st-freq-card">
+      <div class="st-freq-day">Viernes</div>
+      <div class="st-freq-note">Cierre laboral. Buena conversión y reflexión.</div>
+    </div>
+    <div class="st-freq-card">
+      <div class="st-freq-day">Domingo</div>
+      <div class="st-freq-note">Conexión, historia y marca personal. Reflexión semanal.</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--gold-dim);margin-bottom:8px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Principio de rotación</div>
+    <div class="card-text">"No fijamos el tipo de story por día. Fijamos la frecuencia y rotamos la intención semana a semana para mantener equilibrio estratégico sin volvernos predecibles."</div>
+  </div>
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-text"><strong style="color:var(--white);">Distribución semanal:</strong> 1 story de Venta · 1 story de Nutrición · 2 stories de Conexión</div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Tipos de story</div>
+
+  <div class="st-types-grid">
+
+    <div class="st-type-card tipo-venta">
+      <div class="st-type-badge tv">Venta</div>
+      <div class="st-type-title">Generar leads directos</div>
+      <div class="st-type-row"><strong>Obj</strong>Generar respuestas, DMs o leads concretos</div>
+      <div class="st-type-row"><strong>Rol</strong>Convertir atención en conversación comercial</div>
+      <div class="st-type-row"><strong>CTA</strong>TASACIÓN · INVERSIÓN · ANÁLISIS · COMPRA</div>
+      <div class="st-ex-list">
+        <div class="st-ex-item">Si estás pensando en vender, antes de publicar necesitás diagnóstico.</div>
+        <div class="st-ex-item">Si querés invertir, no mires propiedades sueltas.</div>
+        <div class="st-ex-item">Si tenés una propiedad y no sabés si está bien tasada, respondé TASACIÓN.</div>
+      </div>
+    </div>
+
+    <div class="st-type-card tipo-conexion">
+      <div class="st-type-badge tc">Conexión</div>
+      <div class="st-type-title">Humanizar la marca</div>
+      <div class="st-type-row"><strong>Obj</strong>Construir confianza con Santi como persona</div>
+      <div class="st-type-row"><strong>Rol</strong>Que la audiencia sienta que conoce al referente</div>
+      <div class="st-type-row"><strong>CTA</strong>Encuesta · Caja de preguntas · Respuesta suave</div>
+      <div class="st-ex-list">
+        <div class="st-ex-item">Día de oficina o recorrida real.</div>
+        <div class="st-ex-item">Qué mira cuando entra a una casa.</div>
+        <div class="st-ex-item">Por qué volvió a Tandil. Qué piensa de emprender.</div>
+        <div class="st-ex-item">Qué aprendió en la semana. Qué conversación tuvo.</div>
+      </div>
+    </div>
+
+    <div class="st-type-card tipo-nutricion">
+      <div class="st-type-badge tn">Nutrición</div>
+      <div class="st-type-title">Instalar criterio</div>
+      <div class="st-type-row"><strong>Obj</strong>Educar sin sonar profesor, calentar leads</div>
+      <div class="st-type-row"><strong>Rol</strong>Preparar a la audiencia para consultar con criterio</div>
+      <div class="st-type-row"><strong>CTA</strong>ANÁLISIS · TASACIÓN · INVERSIÓN</div>
+      <div class="st-ex-list">
+        <div class="st-ex-item">Una propiedad barata no siempre es oportunidad.</div>
+        <div class="st-ex-item">El precio publicado no siempre es valor real.</div>
+        <div class="st-ex-item">Antes de vender, diagnosticá. Antes de invertir, compará.</div>
+        <div class="st-ex-item">No toda propiedad tiene sentido para cualquier objetivo.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Objetivo de cada tipo</div>
+  <div class="table-wrap" style="margin-bottom:0;">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th><th>Objetivo principal</th><th>Rol</th><th>Métrica</th><th>CTA recomendado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rot-cell rot-venta">Venta</span></td>
+          <td>Generar respuesta, DM o lead directo</td>
+          <td>Convertir atención en conversación comercial</td>
+          <td>Respuestas, DMs, consultas calificadas</td>
+          <td><code style="font-size:10px;">TASACIÓN · INVERSIÓN · ANÁLISIS</code></td>
+        </tr>
+        <tr>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+          <td>Construir confianza con Santi</td>
+          <td>Humanizar la marca y mostrar personaje</td>
+          <td>Respuestas, reacciones, retención, cercanía</td>
+          <td>Encuesta · Caja preguntas · DM suave</td>
+        </tr>
+        <tr>
+          <td><span class="rot-cell rot-nutricion">Nutrición</span></td>
+          <td>Instalar criterio y educar al lead</td>
+          <td>Preparar audiencia para vender, invertir o consultar</td>
+          <td>Preguntas posteriores, interacciones, leads más conscientes</td>
+          <td><code style="font-size:10px;">ANÁLISIS · TASACIÓN · INVERSIÓN</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Rotación semanal — modelo mensual</div>
+  <div class="table-wrap" style="margin-bottom:0;">
+    <table>
+      <thead>
+        <tr><th>Semana</th><th>Lunes</th><th>Miércoles</th><th>Viernes</th><th>Domingo</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;color:var(--muted);">Semana 1</td>
+          <td><span class="rot-cell rot-nutricion">Nutrición</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+          <td><span class="rot-cell rot-venta">Venta</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--muted);">Semana 2</td>
+          <td><span class="rot-cell rot-venta">Venta</span></td>
+          <td><span class="rot-cell rot-nutricion">Nutrición</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--muted);">Semana 3</td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+          <td><span class="rot-cell rot-venta">Venta</span></td>
+          <td><span class="rot-cell rot-nutricion">Nutrición</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--muted);">Semana 4</td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+          <td><span class="rot-cell rot-nutricion">Nutrición</span></td>
+          <td><span class="rot-cell rot-venta">Venta</span></td>
+          <td><span class="rot-cell rot-conexion">Conexión</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Estructura de 5 slides — por tipo</div>
+
+  <div class="st-slides-block">
+    <div class="st-slides-header" onclick="stToggle(this)">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="rot-cell rot-venta" style="font-size:10px;">Venta</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">Story de Venta — Llevar a una acción concreta</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="st-slides-body">
+      <div class="st-slide-row"><div class="st-slide-n">1</div><div><div class="st-slide-func">Tensión directa</div><div class="st-slide-ex">"Si estás pensando en vender tu propiedad en Tandil, no arranques por subirla a internet."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">2</div><div><div class="st-slide-func">Problema / costo</div><div class="st-slide-ex">"Muchas propiedades pierden meses porque salen sin precio, presentación ni estrategia clara."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">3</div><div><div class="st-slide-func">Criterio / método</div><div class="st-slide-ex">"Antes de publicar, nosotros miramos valor real, competencia, demanda, presentación y margen de negociación."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">4</div><div><div class="st-slide-func">Oferta concreta</div><div class="st-slide-ex">"Por eso armamos un diagnóstico para entender cómo conviene salir al mercado."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">5</div><div><div class="st-slide-func">CTA</div><div class="st-slide-ex">"Si querés que veamos tu caso, respondé TASACIÓN."</div></div></div>
+    </div>
+  </div>
+
+  <div class="st-slides-block">
+    <div class="st-slides-header" onclick="stToggle(this)">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="rot-cell rot-conexion" style="font-size:10px;">Conexión</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">Story de Conexión — Que la audiencia conozca a Santi</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="st-slides-body">
+      <div class="st-slide-row"><div class="st-slide-n">1</div><div><div class="st-slide-func">Momento real</div><div class="st-slide-ex">"Hoy arranqué temprano en la oficina revisando propiedades antes de salir a recorrer."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">2</div><div><div class="st-slide-func">Pensamiento personal</div><div class="st-slide-ex">"Cada vez estoy más convencido de que en real estate gana el que mejor entiende el contexto, no el que más publica."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">3</div><div><div class="st-slide-func">Mini historia / experiencia</div><div class="st-slide-ex">"Cuando volví a Tandil, veía muchas propiedades publicadas como fichas frías. Eso me hacía ruido."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">4</div><div><div class="st-slide-func">Valor / postura</div><div class="st-slide-ex">"Para mí, vender una propiedad implica pensar, explicar y acompañar. No solo subir fotos."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">5</div><div><div class="st-slide-func">Interacción suave</div><div class="st-slide-ex">"¿Te pasa que ves publicaciones y sentís que falta información real?"</div></div></div>
+    </div>
+  </div>
+
+  <div class="st-slides-block">
+    <div class="st-slides-header" onclick="stToggle(this)">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="rot-cell rot-nutricion" style="font-size:10px;">Nutrición</span>
+        <span style="font-size:14px;font-weight:700;color:var(--white);">Story de Nutrición — Instalar criterio y calentar leads</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="st-slides-body">
+      <div class="st-slide-row"><div class="st-slide-n">1</div><div><div class="st-slide-func">Creencia equivocada</div><div class="st-slide-ex">"Una propiedad barata no siempre es una oportunidad."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">2</div><div><div class="st-slide-func">Explicación simple</div><div class="st-slide-ex">"Puede ser barata porque tiene poca demanda, mala ubicación, baja liquidez o costos ocultos."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">3</div><div><div class="st-slide-func">Criterio de Santi</div><div class="st-slide-ex">"Antes de llamarla oportunidad, yo miro precio, zona, renta probable, riesgo y salida futura."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">4</div><div><div class="st-slide-func">Aplicación concreta</div><div class="st-slide-ex">"Una misma unidad puede servir para renta, pero no para reventa. O al revés."</div></div></div>
+      <div class="st-slide-row"><div class="st-slide-n">5</div><div><div class="st-slide-func">CTA suave</div><div class="st-slide-ex">"Si estás mirando una propiedad y querés una segunda mirada, respondé ANÁLISIS."</div></div></div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Stories planificadas — Mayo 2026</div>
+  <div class="sec-headline" style="font-size:16px;margin-bottom:6px;">Hacé clic en una story para abrir y editar el guión</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">Los cambios se guardan automáticamente en este browser.</div>
+  <div id="stories-list"></div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Referentes</div>
+  <div class="ref-grid">
+    <div class="ref-card">
+      <div class="ref-name">Ramiro Curia</div>
+      <div class="ref-tags">
+        <span class="ref-tag">Conversión</span><span class="ref-tag">Oferta</span><span class="ref-tag">Palabra clave</span><span class="ref-tag">DM</span><span class="ref-tag">Sistema de adquisición</span><span class="ref-tag">Contenido que trae leads</span>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-name">Víctor Heras</div>
+      <div class="ref-tags">
+        <span class="ref-tag">Storytelling</span><span class="ref-tag">Personaje</span><span class="ref-tag">Tensión</span><span class="ref-tag">Viralidad</span><span class="ref-tag">Historias personales</span><span class="ref-tag">CTA simple</span>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-name">Jan Bastardas</div>
+      <div class="ref-tags">
+        <span class="ref-tag">Autoridad</span><span class="ref-tag">Enemigo</span><span class="ref-tag">Hook</span><span class="ref-tag">Valor por segundo</span><span class="ref-tag">CTA</span>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-name">Alex Hormozi</div>
+      <div class="ref-tags">
+        <span class="ref-tag">Claridad de oferta</span><span class="ref-tag">Dolor económico</span><span class="ref-tag">Valor percibido</span><span class="ref-tag">Promesa concreta</span>
+      </div>
+    </div>
+  </div>
+  <div class="ref-card" style="margin-bottom:0;">
+    <div class="ref-name" style="color:var(--gold);">Santiago Funes</div>
+    <div class="ref-tags">
+      <span class="ref-tag">Recorridas reales</span><span class="ref-tag">Oficina</span><span class="ref-tag">Propiedades</span><span class="ref-tag">Mirada local</span><span class="ref-tag">Criterio</span><span class="ref-tag">Presencia en Tandil</span>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="card-gold" style="margin-bottom:14px;">
+    <div class="card-text" style="font-size:14px;line-height:1.8;">"Stories de venta para convertir. Stories de conexión para confiar. Stories de nutrición para que el lead entienda por qué necesita criterio antes de decidir."</div>
+  </div>
+  <div class="card">
+    <div class="card-text">"No fijamos la intención por día. Fijamos la frecuencia y rotamos el tipo de story para mantener equilibrio estratégico sin volvernos predecibles."</div>
+  </div>
+
+</div><!-- /stories -->
+
+
 </main>
 
 <!-- SCRIPT PANEL -->
@@ -2454,6 +2852,76 @@
       <textarea id="sp-textarea" placeholder="Editá el guión acá..."></textarea>
       <div class="sp-textarea-hint">Se guarda automáticamente en este browser.</div>
     </div>
+  </div>
+</div>
+
+<!-- STORIES PANEL -->
+<div id="stp-overlay" onclick="closeStoryPanel()"></div>
+<div id="stp-panel">
+  <div class="stp-header">
+    <div style="flex:1;min-width:0;">
+      <div class="stp-tipo-badge tv" id="stp-tipo-badge">Venta</div>
+      <div class="stp-titulo" id="stp-titulo"></div>
+      <div class="stp-chips">
+        <span class="tag" style="font-size:10px;" id="stp-fecha-chip"></span>
+        <span class="tag" style="font-size:10px;" id="stp-tema-chip"></span>
+      </div>
+    </div>
+    <button class="stp-close" onclick="closeStoryPanel()">✕</button>
+  </div>
+  <div class="stp-actions">
+    <button class="stp-action-btn stp-btn-save" onclick="stSaveStory()">↓ Guardar</button>
+    <button class="stp-action-btn" onclick="stDuplicate()">⊕ Duplicar</button>
+    <button class="stp-action-btn" onclick="stReset()">↺ Resetear</button>
+    <button class="stp-action-btn stp-btn-pub" onclick="stMarkPublicado()">✓ Publicado</button>
+    <span class="stp-hint" id="stp-hint">Guardado ✓</span>
+  </div>
+  <div class="stp-body">
+
+    <div class="stp-fields-row">
+      <div class="stp-field" style="flex:0 0 140px;">
+        <label>Estado</label>
+        <select id="stp-estado">
+          <option value="idea">Idea</option>
+          <option value="listo">Guion listo</option>
+          <option value="grabado">Grabado</option>
+          <option value="diseñado">Diseñado</option>
+          <option value="publicado">Publicado</option>
+        </select>
+      </div>
+      <div class="stp-field">
+        <label>CTA</label>
+        <input type="text" id="stp-cta" placeholder="TASACIÓN, INVERSIÓN...">
+      </div>
+    </div>
+
+    <div class="stp-fields-row">
+      <div class="stp-field">
+        <label>Objetivo</label>
+        <input type="text" id="stp-objetivo" placeholder="Objetivo de esta story">
+      </div>
+    </div>
+
+    <div class="stp-fields-row">
+      <div class="stp-field">
+        <label>Ángulo</label>
+        <input type="text" id="stp-angulo" placeholder="Ángulo comunicacional">
+      </div>
+    </div>
+
+    <div class="stp-fields-row">
+      <div class="stp-field">
+        <label>Notas internas</label>
+        <textarea id="stp-notas" rows="2" placeholder="Ideas, referencias, contexto..."></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div class="stp-slides-label">Guión — 5 slides</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:12px;">Editá cada slide. Nota visual es opcional (referencia para diseño).</div>
+      <div id="stp-slides-container" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+
   </div>
 </div>
 
@@ -3026,7 +3494,12 @@ function closePanel() {
   if (activeCard) { activeCard.classList.remove('gc-active'); activeCard = null; }
 }
 
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePanel(); });
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') {
+    if (document.getElementById('stp-panel').classList.contains('open')) closeStoryPanel();
+    else closePanel();
+  }
+});
 
 // ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
 
@@ -3097,6 +3570,234 @@ function renderAlmanac() {
   }
 
   document.getElementById('alm-body').innerHTML = html;
+}
+
+// ─── STORIES ─────────────────────────────────────────────────────────────────
+
+var STORIES = {
+  's1205': { fecha:'Lunes 12/05', dia:'Lun', tipo:'nutricion', titulo:'Una propiedad barata no siempre es oportunidad', tema:'Mercado', angulo:'Errores / problemas del mercado', objetivo:'Instalar criterio inmobiliario en la audiencia', cta:'ANÁLISIS' },
+  's1405': { fecha:'Miércoles 14/05', dia:'Mié', tipo:'conexion', titulo:'Día de recorrida por Tandil', tema:'Vida Santi', angulo:'Historia y camino emprendedor', objetivo:'Construir confianza y mostrar proceso real', cta:'Respuesta suave' },
+  's1605': { fecha:'Viernes 16/05', dia:'Vie', tipo:'venta', titulo:'Antes de publicar tu propiedad, leé esto', tema:'Propietarios', angulo:'Querer vender sin estrategia', objetivo:'Generar DMs y leads para tasación', cta:'TASACIÓN' },
+  's1805': { fecha:'Domingo 18/05', dia:'Dom', tipo:'conexion', titulo:'Por qué volví a Tandil a hacer real estate', tema:'Vida Santi', angulo:'Historia y camino emprendedor', objetivo:'Humanizar la marca y mostrar la visión', cta:'DM / Pregunta' },
+  's1905': { fecha:'Lunes 19/05', dia:'Lun', tipo:'venta', titulo:'Si querés invertir, no mires propiedades sueltas', tema:'Inversores', angulo:'Querer invertir sin estrategia', objetivo:'Generar consultas de inversión calificadas', cta:'INVERSIÓN' },
+  's2105': { fecha:'Miércoles 21/05', dia:'Mié', tipo:'nutricion', titulo:'El precio publicado no es el valor real', tema:'Mercado', angulo:'Errores / problemas del mercado', objetivo:'Instalar criterio de valuación', cta:'ANÁLISIS' },
+  's2305': { fecha:'Viernes 23/05', dia:'Vie', tipo:'conexion', titulo:'Qué miro cuando entro a una propiedad', tema:'Vida Santi', angulo:'Detrás de escena', objetivo:'Mostrar proceso profesional real', cta:'Encuesta / Respuesta' },
+  's2505': { fecha:'Domingo 25/05', dia:'Dom', tipo:'conexion', titulo:'Qué aprendí esta semana en el mercado', tema:'Vida Santi', angulo:'Historia y camino emprendedor', objetivo:'Generar cercanía y reflexión semanal', cta:'Respuesta suave' },
+};
+
+var STORY_SLIDES = {
+  's1205': [
+    { funcion:'Creencia equivocada',  texto:'Una propiedad barata no siempre es una oportunidad.', nota:'' },
+    { funcion:'Explicación simple',   texto:'Puede ser barata porque tiene poca demanda, mala ubicación, baja liquidez o costos ocultos.', nota:'' },
+    { funcion:'Criterio de Santi',    texto:'Antes de llamarla oportunidad, yo miro precio, zona, renta probable, riesgo y salida futura.', nota:'' },
+    { funcion:'Aplicación concreta',  texto:'Una misma unidad puede servir para renta, pero no para reventa. O al revés.', nota:'' },
+    { funcion:'CTA suave',            texto:'Si estás mirando una propiedad y querés una segunda mirada, respondé ANÁLISIS.', nota:'' },
+  ],
+  's1405': [
+    { funcion:'Momento real',              texto:'Hoy arranqué temprano y salí a recorrer propiedades por Tandil antes de las 9.', nota:'Grabar caminando o en el auto' },
+    { funcion:'Pensamiento personal',      texto:'Cada recorrida me enseña algo. A veces el precio no tiene nada que ver con lo que uno imagina desde una foto.', nota:'' },
+    { funcion:'Mini historia / experiencia', texto:'Hoy entré a una propiedad que en las fotos parecía chica. Adentro era completamente distinta.', nota:'Mostrar exterior sin datos privados' },
+    { funcion:'Valor / postura',           texto:'Por eso siempre digo: la visita no es el cierre. La visita es donde empezás a entender de verdad.', nota:'' },
+    { funcion:'Interacción suave',         texto:'¿Alguna vez te pasó que una propiedad te sorprendió para bien (o para mal) cuando la fuiste a ver?', nota:'Caja de respuestas' },
+  ],
+  's1605': [
+    { funcion:'Tensión directa',   texto:'Si estás pensando en vender tu propiedad en Tandil, no arranques por subirla a internet.', nota:'' },
+    { funcion:'Problema / costo',  texto:'Muchas propiedades pierden meses porque salen sin precio estratégico, sin presentación y sin posición clara en el mercado.', nota:'' },
+    { funcion:'Criterio / método', texto:'Antes de publicar, nosotros miramos valor real, competencia directa, demanda activa, presentación y margen de negociación.', nota:'Checklist visual en pantalla' },
+    { funcion:'Oferta concreta',   texto:'Por eso armamos un diagnóstico para entender cómo conviene salir al mercado antes de publicar.', nota:'' },
+    { funcion:'CTA',               texto:'Si querés que veamos tu caso, respondé TASACIÓN y lo hablamos.', nota:'Texto bien visible, sin ruido' },
+  ],
+  's1805': [
+    { funcion:'Momento real',              texto:'Hay algo que me preguntan mucho: por qué volví a Tandil si podría haber seguido en cualquier otro lado.', nota:'' },
+    { funcion:'Pensamiento personal',      texto:'Estuve dos años en Costa Rica. Trabajé en gastronomía, lideré equipos, aprendí a tomar decisiones bajo presión real.', nota:'Foto o video de esa etapa si tenés' },
+    { funcion:'Mini historia / experiencia', texto:'Cuando volví, vi que el mercado inmobiliario local necesitaba algo que casi no existía: alguien que explicara con criterio real, sin presión artificial.', nota:'' },
+    { funcion:'Valor / postura',           texto:'No quería ser uno más que vende propiedades. Quería ser la persona a la que llaman antes de tomar una decisión importante.', nota:'' },
+    { funcion:'Interacción suave',         texto:'¿Por qué creés que eso falta en la mayoría de los agentes inmobiliarios?', nota:'Encuesta o caja de preguntas' },
+  ],
+  's1905': [
+    { funcion:'Tensión directa',   texto:'Si querés invertir en real estate y lo que hacés es comparar propiedades sueltas por precio, estás mirando mal.', nota:'' },
+    { funcion:'Problema / costo',  texto:'Comparar por precio sin contexto es la forma más cara de invertir. No sabés renta, liquidez, demanda ni riesgo real.', nota:'' },
+    { funcion:'Criterio / método', texto:'Antes de ver una propiedad, yo miro zona, demanda de alquiler, renta bruta y neta, liquidez futura y estado documental.', nota:'Checklist visual' },
+    { funcion:'Oferta concreta',   texto:'Si tenés un presupuesto y querés saber qué tiene sentido para tu objetivo, hay que arrancar desde el objetivo, no desde la propiedad.', nota:'' },
+    { funcion:'CTA',               texto:'Respondé INVERSIÓN y te explico cómo lo hacemos.', nota:'Texto bien visible' },
+  ],
+  's2105': [
+    { funcion:'Creencia equivocada', texto:'El precio al que está publicada una propiedad no es su valor real de mercado.', nota:'' },
+    { funcion:'Explicación simple',  texto:'Puede estar publicada alta porque el propietario espera negociar. O baja porque necesita liquidez. O mal tasada sin más.', nota:'' },
+    { funcion:'Criterio de Santi',   texto:'El valor real surge de comparar propiedades similares que efectivamente se vendieron, no de las que están publicadas.', nota:'' },
+    { funcion:'Aplicación concreta', texto:'Por eso antes de comprar o vender necesitás un análisis de mercado real, no una consulta de portal.', nota:'' },
+    { funcion:'CTA suave',           texto:'Si querés entender el valor real de una propiedad que estás mirando, respondé ANÁLISIS.', nota:'' },
+  ],
+  's2305': [
+    { funcion:'Momento real',              texto:'Cuando entro a una propiedad, lo primero que hago no es mirar el precio. Es sentir el espacio.', nota:'Grabar entrando a una propiedad (sin datos privados)' },
+    { funcion:'Pensamiento personal',      texto:'La distribución, la luz natural, el estado de las instalaciones, el sonido de la calle. Eso no se ve en fotos.', nota:'' },
+    { funcion:'Mini historia / experiencia', texto:'Hoy entré a una propiedad que en el portal parecía perfecta. Adentro tenía un problema que habría cambiado completamente la negociación.', nota:'' },
+    { funcion:'Valor / postura',           texto:'La visita presencial no es un trámite. Es donde se decide si la propiedad tiene sentido para ese objetivo.', nota:'' },
+    { funcion:'Interacción suave',         texto:'¿Qué es lo primero que mirás cuando entrás a una propiedad?', nota:'Caja de respuestas o encuesta' },
+  ],
+  's2505': [
+    { funcion:'Momento real',              texto:'Fin de semana. Momento de cerrar la semana y entender qué pasó en el mercado.', nota:'' },
+    { funcion:'Pensamiento personal',      texto:'Esta semana aprendí que cuando el crédito se mueve, el comprador que estaba esperando aparece rápido. Hay que estar listo.', nota:'Personalizar con algo real de la semana' },
+    { funcion:'Mini historia / experiencia', texto:'Tuve tres conversaciones con propietarios que no sabían que su propiedad podría ser apto crédito. Eso cambia todo.', nota:'' },
+    { funcion:'Valor / postura',           texto:'Real estate no es solo comprar y vender. Es entender cuándo, para quién y con qué criterio. Eso hace la diferencia.', nota:'' },
+    { funcion:'Interacción suave',         texto:'¿Qué fue lo más sorprendente del mercado inmobiliario que viste esta semana?', nota:'Caja de respuestas' },
+  ],
+};
+
+var STORY_WEEKS = [
+  { label:'Semana 1 — 12 al 18 de mayo', ids:['s1205','s1405','s1605','s1805'] },
+  { label:'Semana 2 — 19 al 25 de mayo', ids:['s1905','s2105','s2305','s2505'] },
+];
+
+var ST_TIPO_LABELS  = { venta:'Venta', conexion:'Conexión', nutricion:'Nutrición' };
+var ST_TIPO_CLS     = { venta:'tv', conexion:'tc', nutricion:'tn' };
+var ST_ESTADO_LABELS = { idea:'Idea', listo:'Guion listo', grabado:'Grabado', diseñado:'Diseñado', publicado:'Publicado' };
+var ST_ESTADO_CLS   = { idea:'se-idea', listo:'se-listo', grabado:'se-grabado', diseñado:'se-diseñado', publicado:'se-publicado' };
+
+function stLsGet(id, key, def) { return lsGet('sfre_st_'+key+'_'+id, def); }
+function stLsSet(id, key, val) { lsSet('sfre_st_'+key+'_'+id, val); }
+function getStoryEstado(id)      { return stLsGet(id,'estado', (STORIES[id]||{}).estado||'idea'); }
+function setStoryEstado(id, val) { stLsSet(id,'estado',val); }
+function getStoryNotas(id)       { return stLsGet(id,'notas',''); }
+function setStoryNotas(id, val)  { stLsSet(id,'notas',val); }
+function getStorySlides(id) {
+  var saved = stLsGet(id,'slides',null);
+  return saved ? saved : JSON.parse(JSON.stringify(STORY_SLIDES[id]||[]));
+}
+function setStorySlides(id, slides) { stLsSet(id,'slides',slides); }
+
+function stToggle(header) {
+  var body = header.nextElementSibling;
+  var open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  header.classList.toggle('open', !open);
+}
+
+function renderStories() {
+  var container = document.getElementById('stories-list');
+  if (!container) return;
+  // Load any custom duplicated stories from localStorage
+  var customWeek = { label:'Personalizadas', ids:[], custom:true };
+  var customs = lsGet('sfre_custom_stories',[]);
+  customs.forEach(function(cs){ if (!STORIES[cs.id]) STORIES[cs.id]=cs.data; customWeek.ids.push(cs.id); });
+  var allWeeks = STORY_WEEKS.slice();
+  if (customWeek.ids.length) allWeeks.push(customWeek);
+
+  var html = '';
+  allWeeks.forEach(function(week){
+    html += '<div class="st-week-label">'+esc(week.label)+'</div><div class="st-list">';
+    week.ids.forEach(function(id){
+      var d = STORIES[id]; if (!d) return;
+      var tc = ST_TIPO_CLS[d.tipo]||'';
+      var tl = ST_TIPO_LABELS[d.tipo]||d.tipo;
+      var estado = getStoryEstado(id);
+      var ecls = ST_ESTADO_CLS[estado]||'se-idea';
+      var el   = ST_ESTADO_LABELS[estado]||estado;
+      html += '<div class="st-card" id="stc-'+id+'" onclick="openStory(\''+id+'\')">' +
+        '<div class="st-card-badge"><div class="st-card-date">'+esc(d.dia)+'</div><div class="st-card-tipo '+tc+'">'+esc(tl)+'</div></div>' +
+        '<div class="st-card-body"><div class="st-card-title">'+esc(d.titulo)+'</div><div class="st-card-sub">'+esc(d.tema)+' · '+esc(d.cta)+'</div></div>' +
+        '<div class="st-card-right"><span class="st-estado-badge '+ecls+'">'+esc(el)+'</span></div>' +
+      '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+var activeStory = null;
+var stHintTimer;
+
+function openStory(id) {
+  var d = STORIES[id]; if (!d) return;
+  if (activeStory) { var prev=document.getElementById('stc-'+activeStory); if(prev) prev.classList.remove('sc-active'); }
+  activeStory = id;
+  var card = document.getElementById('stc-'+id); if (card) card.classList.add('sc-active');
+
+  var tc = ST_TIPO_CLS[d.tipo]||'';
+  var tl = ST_TIPO_LABELS[d.tipo]||d.tipo;
+  var badge = document.getElementById('stp-tipo-badge');
+  badge.textContent = tl; badge.className = 'stp-tipo-badge '+tc;
+  document.getElementById('stp-titulo').textContent     = d.titulo;
+  document.getElementById('stp-fecha-chip').textContent = d.fecha;
+  document.getElementById('stp-tema-chip').textContent  = d.tema;
+  document.getElementById('stp-estado').value   = getStoryEstado(id);
+  document.getElementById('stp-objetivo').value = d.objetivo;
+  document.getElementById('stp-cta').value      = d.cta;
+  document.getElementById('stp-angulo').value   = d.angulo;
+  document.getElementById('stp-notas').value    = getStoryNotas(id);
+  document.getElementById('stp-notas').dataset.stid = id;
+
+  var slides = getStorySlides(id);
+  document.getElementById('stp-slides-container').innerHTML = slides.map(function(s,i){
+    return '<div class="stp-slide">' +
+      '<div class="stp-slide-header"><div class="stp-slide-num">'+(i+1)+'</div><div class="stp-slide-func">'+esc(s.funcion)+'</div></div>' +
+      '<textarea rows="3" data-slide="'+i+'" data-field="texto" oninput="stSlideInput(this,\''+id+'\')">'+esc(s.texto)+'</textarea>' +
+      '<div class="stp-slide-nota"><input type="text" placeholder="Nota visual (opcional)..." data-slide="'+i+'" data-field="nota" oninput="stSlideInput(this,\''+id+'\')" value="'+esc(s.nota)+'"></div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('stp-hint').style.opacity = '0';
+  document.getElementById('stp-overlay').classList.add('open');
+  document.getElementById('stp-panel').classList.add('open');
+  document.getElementById('stp-panel').querySelector('.stp-body').scrollTop = 0;
+}
+
+function closeStoryPanel() {
+  document.getElementById('stp-overlay').classList.remove('open');
+  document.getElementById('stp-panel').classList.remove('open');
+  if (activeStory) { var c=document.getElementById('stc-'+activeStory); if(c) c.classList.remove('sc-active'); activeStory=null; }
+}
+
+function stSlideInput(el, id) {
+  var slides = getStorySlides(id);
+  var idx = parseInt(el.dataset.slide,10);
+  slides[idx][el.dataset.field] = el.value;
+  setStorySlides(id, slides);
+  showStpHint();
+}
+
+function stSaveStory() {
+  if (!activeStory) return;
+  setStoryEstado(activeStory, document.getElementById('stp-estado').value);
+  setStoryNotas(activeStory, document.getElementById('stp-notas').value);
+  renderStories();
+  showStpHint();
+}
+
+function stMarkPublicado() {
+  if (!activeStory) return;
+  document.getElementById('stp-estado').value = 'publicado';
+  stSaveStory();
+}
+
+function stReset() {
+  if (!activeStory) return;
+  if (!confirm('¿Resetear los slides a la plantilla base? Se perderán los cambios.')) return;
+  lsSet('sfre_st_slides_'+activeStory, null);
+  openStory(activeStory);
+}
+
+function stDuplicate() {
+  if (!activeStory) return;
+  var id = activeStory;
+  var d = STORIES[id];
+  var newId = id+'_dup'+Date.now().toString().slice(-5);
+  var newData = Object.assign({}, d, { titulo: d.titulo+' (copia)', fecha: d.fecha+' *' });
+  STORIES[newId] = newData;
+  setStorySlides(newId, JSON.parse(JSON.stringify(getStorySlides(id))));
+  setStoryEstado(newId,'idea');
+  var customs = lsGet('sfre_custom_stories',[]);
+  customs.push({ id:newId, data:newData });
+  lsSet('sfre_custom_stories', customs);
+  renderStories();
+  openStory(newId);
+}
+
+function showStpHint() {
+  var h = document.getElementById('stp-hint');
+  h.style.opacity = '1';
+  clearTimeout(stHintTimer);
+  stHintTimer = setTimeout(function(){ h.style.opacity='0'; }, 2500);
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
