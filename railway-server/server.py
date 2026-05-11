@@ -281,15 +281,7 @@ def wa_send_internal(text: str) -> None:
     # 1. Evolution API — sin restricción de 24hs (si está configurado)
     if _evolution_send(phone, clean):
         return
-    # 2. Respond.io — sin restricción de 24hs (si está configurado)
-    if RESPOND_API_TOKEN:
-        try:
-            _respond_send(phone, clean)
-            print(f"[Internal Respond.io → {phone}] OK")
-            return
-        except Exception as e:
-            print(f"[Internal Respond.io error] {e}")
-    # 3. Wati session message — puede fallar si la ventana de 24hs expiró
+    # 2. Wati session message — puede fallar si la ventana de 24hs expiró
     if WATI_API_URL and WATI_API_TOKEN:
         try:
             resp = http_requests.post(
@@ -301,9 +293,14 @@ def wa_send_internal(text: str) -> None:
             print(f"[Internal Wati → {phone}] {resp.status_code}")
             if resp.ok:
                 return
-            print(f"[Internal Wati ERROR] {resp.status_code} — {resp.text[:200]}")
+            body = resp.text[:300]
+            print(f"[Internal Wati ERROR] {resp.status_code} — {body}")
+            raise RuntimeError(f"Wati session error {resp.status_code}: {body}")
+        except RuntimeError:
+            raise
         except Exception as e:
-            print(f"[Internal Wati error] {e}")
+            raise RuntimeError(f"Wati internal error: {e}")
+    raise RuntimeError("[Internal] Sin canal configurado — EVOLUTION_API_URL o WATI_API_URL requeridos")
 
 def tg_send(text: str) -> None:
     wa_send_internal(text)
@@ -1063,6 +1060,14 @@ def _process_meta_lead(leadgen_id: str, form_id: str) -> None:
             res     = sb.table("chat_leads").insert(insert_data).execute()
             lead_id = res.data[0]["id"]
             print(f"[LeadAds] Nuevo lead {lead_id} — {nombre} ({phone}) — {propiedad}")
+            if phone:
+                try:
+                    msg = sofia_reply([], "[primer contacto — enviá tu mensaje de bienvenida]", lead_notas=notas)
+                    wa_send(phone, msg, fallback_name=nombre or "")
+                    message_save(lead_id, "assistant", msg)
+                    print(f"[LeadAds] Bienvenida enviada a {phone}")
+                except Exception as wa_err:
+                    print(f"[LeadAds] Error enviando bienvenida a {phone}: {wa_err}")
 
         # El contexto del formulario ya queda en lead.notas — no hace falta guardarlo como mensaje.
         # Sofía lo recibe en el system prompt vía lead_notas en _handle_message().
@@ -1273,9 +1278,13 @@ def wati_receive():
             media_url = (data.get("data") or {}).get("url", "")
             if OPENAI_KEY and media_url:
                 try:
-                    audio_resp = http_requests.get(media_url, timeout=15)
+                    wati_headers = {"Authorization": f"Bearer {WATI_API_TOKEN}"} if WATI_API_TOKEN else {}
+                    audio_resp = http_requests.get(media_url, headers=wati_headers, timeout=15)
                     user_text  = transcribe_audio(audio_resp.content) if audio_resp.ok else ""
-                except Exception:
+                    if not user_text:
+                        print(f"[Wati audio] descarga falló: {audio_resp.status_code}")
+                except Exception as e:
+                    print(f"[Wati audio] error: {e}")
                     user_text = ""
             else:
                 user_text = ""
@@ -1895,6 +1904,27 @@ def notify_santiago():
     except RuntimeError as e:
         print(f"[notify/santiago] FALLO: {e}")
         return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/wati/templates", methods=["GET"])
+def wati_templates():
+    """Lista los templates aprobados en WATI."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    if not WATI_API_URL or not WATI_API_TOKEN:
+        return jsonify({"ok": False, "error": "WATI_API_URL o WATI_API_TOKEN no configurados"})
+    resp = http_requests.get(
+        f"{WATI_API_URL.rstrip('/')}/api/v1/getMessageTemplates?pageSize=50",
+        headers={"Authorization": f"Bearer {WATI_API_TOKEN}"},
+        timeout=10,
+    )
+    templates = resp.json().get("messageTemplates", [])
+    return jsonify({
+        "status": resp.status_code,
+        "templates": [
+            {"name": t.get("elementName"), "status": t.get("status"), "body": t.get("body", "")[:100]}
+            for t in templates
+        ]
+    })
 
 @app.route("/evo/debug", methods=["GET"])
 def evo_debug():
