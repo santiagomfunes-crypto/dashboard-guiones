@@ -584,6 +584,100 @@
   }
   .reel-label { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
   .reel-desc { font-size: 12px; color: var(--muted); }
+  /* SCRIPT PANEL */
+  #sp-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(3px);
+  }
+  #sp-overlay.open { display: block; }
+  #sp-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 201;
+    width: 520px; max-width: 100vw;
+    background: #111113;
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+  }
+  #sp-panel.open { transform: translateX(0); }
+  .sp-header {
+    padding: 20px 22px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .sp-fecha {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+  }
+  .sp-titulo {
+    font-size: 16px; font-weight: 800; color: var(--white);
+    line-height: 1.3; margin-bottom: 10px; max-width: 380px;
+  }
+  .sp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sp-close {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--muted); cursor: pointer;
+    font-size: 14px; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-left: 12px; transition: all 0.15s;
+  }
+  .sp-close:hover { color: var(--white); border-color: var(--border-light); }
+  .sp-body {
+    flex: 1; overflow-y: auto; padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .sp-body::-webkit-scrollbar { width: 4px; }
+  .sp-body::-webkit-scrollbar-track { background: transparent; }
+  .sp-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sp-block-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted2); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sp-block-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .sp-script-section {
+    background: var(--bg-card2); border-radius: var(--radius-sm);
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .sp-section-tag {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+  }
+  .sp-section-text {
+    font-size: 13px; color: var(--muted); line-height: 1.65;
+    white-space: pre-wrap;
+  }
+  .sp-slide {
+    background: var(--bg-card2); border-left: 2px solid var(--gold-dim);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 10px 14px; margin-bottom: 6px;
+  }
+  .sp-slide-num {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted2); margin-bottom: 3px;
+  }
+  .sp-slide-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  #sp-textarea {
+    width: 100%; min-height: 220px;
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--white);
+    font-size: 13px; line-height: 1.7; padding: 14px;
+    resize: vertical; font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  #sp-textarea:focus { outline: none; border-color: var(--gold-dim); }
+  .sp-textarea-hint {
+    font-size: 11px; color: var(--muted2); margin-top: 6px;
+  }
+  /* Rows clickable */
+  .cal-row { cursor: pointer; transition: background 0.12s; }
+  .cal-row:hover td { background: rgba(201,168,76,0.06) !important; }
+  .cal-row.active td { background: rgba(201,168,76,0.1) !important; }
 </style>
 </head>
 <body>
@@ -1562,7 +1656,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1105')">
           <td style="color:var(--muted2);">Lun</td>
           <td><strong style="color:var(--white);">11/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Qué cambia para Tandil cuando se mueve el crédito</td>
@@ -1573,7 +1667,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1205')">
           <td style="color:var(--muted2);">Mar</td>
           <td><strong style="color:var(--white);">12/05</strong></td>
           <td style="color:var(--white);font-weight:600;">El error de vender como si publicar fuera suficiente</td>
@@ -1584,7 +1678,7 @@
           <td><span class="tag tag-green">Conversión</span></td>
           <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1305')">
           <td style="color:var(--muted2);">Mié</td>
           <td><strong style="color:var(--white);">13/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Mirar propiedades sueltas te hace comparar mal</td>
@@ -1595,7 +1689,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1405')">
           <td style="color:var(--muted2);">Jue</td>
           <td><strong style="color:var(--white);">14/05</strong></td>
           <td style="color:var(--white);font-weight:600;">El problema no es que falten propiedades</td>
@@ -1606,7 +1700,7 @@
           <td><span class="tag tag-blue">Alcance</span></td>
           <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1505')">
           <td style="color:var(--muted2);">Vie</td>
           <td><strong style="color:var(--white);">15/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Esta propiedad puede tener lógica de inversión</td>
@@ -1617,7 +1711,7 @@
           <td><span class="tag tag-green">Conversión</span></td>
           <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1605')">
           <td style="color:var(--muted2);">Sáb</td>
           <td><strong style="color:var(--white);">16/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Así pensamos una propiedad antes de publicarla</td>
@@ -1628,7 +1722,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
         </tr>
-        <tr style="background:rgba(201,168,76,0.04);">
+        <tr class="cal-row" style="background:rgba(201,168,76,0.04);" onclick="openScript('1705')">
           <td style="color:var(--muted2);">Dom</td>
           <td><strong style="color:var(--white);">17/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Por qué volví a Tandil a hacer real estate</td>
@@ -1639,7 +1733,7 @@
           <td><span class="tag tag-blue">Alcance</span></td>
           <td style="color:var(--muted2);">—</td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1805')">
           <td style="color:var(--muted2);">Lun</td>
           <td><strong style="color:var(--white);">18/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Dónde puede aparecer valor hoy en Tandil</td>
@@ -1650,7 +1744,7 @@
           <td><span class="tag tag-blue">Alcance</span></td>
           <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('1905')">
           <td style="color:var(--muted2);">Mar</td>
           <td><strong style="color:var(--white);">19/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Tu propiedad también tiene que cerrar como inversión</td>
@@ -1661,7 +1755,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('2005')">
           <td style="color:var(--muted2);">Mié</td>
           <td><strong style="color:var(--white);">20/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Por qué no mandamos oportunidades sueltas</td>
@@ -1672,7 +1766,7 @@
           <td><span class="tag tag-green">Conversión</span></td>
           <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('2105')">
           <td style="color:var(--muted2);">Jue</td>
           <td><strong style="color:var(--white);">21/05</strong></td>
           <td style="color:var(--white);font-weight:600;">¿El crédito mueve todo el mercado?</td>
@@ -1683,7 +1777,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">CRÉDITO</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('2205')">
           <td style="color:var(--muted2);">Vie</td>
           <td><strong style="color:var(--white);">22/05</strong></td>
           <td style="color:var(--white);font-weight:600;">El error de llamar oportunidad a todo lo barato</td>
@@ -1694,7 +1788,7 @@
           <td><span class="tag tag-gold">Autoridad</span></td>
           <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
         </tr>
-        <tr>
+        <tr class="cal-row" onclick="openScript('2305')">
           <td style="color:var(--muted2);">Sáb</td>
           <td><strong style="color:var(--white);">23/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Una buena propiedad se puede vender mal</td>
@@ -1705,7 +1799,7 @@
           <td><span class="tag tag-green">Conversión</span></td>
           <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
         </tr>
-        <tr style="background:rgba(201,168,76,0.04);">
+        <tr class="cal-row" style="background:rgba(201,168,76,0.04);" onclick="openScript('2405')">
           <td style="color:var(--muted2);">Dom</td>
           <td><strong style="color:var(--white);">24/05</strong></td>
           <td style="color:var(--white);font-weight:600;">Lo que pienso de hacer las cosas como siempre</td>
@@ -2063,6 +2157,30 @@
 
 </main>
 
+<!-- SCRIPT PANEL -->
+<div id="sp-overlay" onclick="closePanel()"></div>
+<div id="sp-panel">
+  <div class="sp-header">
+    <div style="flex:1;min-width:0;">
+      <div class="sp-fecha" id="sp-fecha"></div>
+      <div class="sp-titulo" id="sp-titulo"></div>
+      <div class="sp-chips" id="sp-chips"></div>
+    </div>
+    <button class="sp-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="sp-body">
+    <div>
+      <div class="sp-block-label">Guión de referencia</div>
+      <div id="sp-script-display"></div>
+    </div>
+    <div>
+      <div class="sp-block-label">Tu versión</div>
+      <textarea id="sp-textarea" placeholder="Editá el guión acá..."></textarea>
+      <div class="sp-textarea-hint">Solo se guarda mientras la página esté abierta.</div>
+    </div>
+  </div>
+</div>
+
 <script>
 function show(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -2077,6 +2195,280 @@ function toggleTopic(header) {
   body.classList.toggle('open', !isOpen);
   header.classList.toggle('open', !isOpen);
 }
+
+// ─── DATOS DE GUIONES ────────────────────────────────────────────────────────
+
+const SCRIPTS = {
+
+'1105': {
+  fecha: 'Lunes 11/05', dia: 'Lun',
+  titulo: 'Qué cambia para Tandil cuando se mueve el crédito',
+  chips: [{t:'Mercado',c:''},{t:'Actualidad + opinión',c:''},{t:'Oportunidad',c:'green'},{t:'Frente a cámara',c:''},{t:'Autoridad',c:'gold'},{t:'ANÁLISIS',c:'kw'}],
+  formato: 'camara',
+  secciones: [
+    { label: 'HOOK', text: 'Cuando el crédito hipotecario se mueve en Argentina, en Tandil pasan tres cosas que casi nadie está viendo.' },
+    { label: 'DESARROLLO', text: 'Primero: compradores que estaban esperando ahora pueden moverse. Muchos tenían el ahorro pero no querían usar todo el capital. El crédito les da la palanca.\n\nSegundo: propiedades apto crédito que no tenían consultas empiezan a recibirlas. Eso cambia la dinámica de precio y tiempo de mercado.\n\nTercero: propietarios que no estaban pensando en vender empiezan a calcular. Si hay compradores activos, puede ser buen momento para salir al mercado.' },
+    { label: 'CRITERIO PROPIO', text: 'Lo que yo veo es que el crédito no mueve el mercado completo. Mueve un segmento específico: el comprador de primera vivienda o el que quiere mejorar lo que tiene. Para ese perfil, las propiedades apto crédito bien posicionadas son las que más van a moverse en los próximos meses.' },
+    { label: 'CTA', text: 'Si querés saber si tu propiedad está en ese segmento, o si estás mirando una que podría serlo, escribime ANÁLISIS.' },
+  ]
+},
+
+'1205': {
+  fecha: 'Martes 12/05', dia: 'Mar',
+  titulo: 'El error de vender como si publicar fuera suficiente',
+  chips: [{t:'Propietarios',c:''},{t:'Querer vender sin estrategia',c:''},{t:'Error',c:'red'},{t:'Frente a cámara',c:''},{t:'Conversión',c:'green'},{t:'TASACIÓN',c:'kw'}],
+  formato: 'camara',
+  secciones: [
+    { label: 'HOOK', text: 'El error más caro que comete un propietario cuando quiere vender no es poner el precio mal. Es creer que vender es publicar y esperar.' },
+    { label: 'DESARROLLO', text: 'Publicar es el paso cuatro de un proceso de cinco. Antes de publicar hay que:\n\n1. Entender el valor real de la propiedad dentro del mercado actual.\n2. Definir para quién es esa propiedad: qué perfil de comprador tiene sentido.\n3. Preparar cómo se presenta: fotos, descripción, narrativa comercial.\n4. Definir el precio de salida con estrategia, no con intuición.\n\nSi arrancás por la publicación sin haber hecho esos pasos, estás poniendo la propiedad en el mercado sin posición. Y sin posición, no hay consultas calificadas.' },
+    { label: 'CRITERIO PROPIO', text: 'Una publicación sin estrategia genera ruido, no ventas. Y el ruido cansa al propietario, quema la propiedad y le da ventaja a la competencia que sí está bien posicionada.' },
+    { label: 'CTA', text: 'Si estás pensando en vender, antes de publicar escribime TASACIÓN y arrancamos por el principio.' },
+  ]
+},
+
+'1305': {
+  fecha: 'Miércoles 13/05', dia: 'Mié',
+  titulo: 'Mirar propiedades sueltas te hace comparar mal',
+  chips: [{t:'Inversores',c:''},{t:'Querer invertir sin estrategia',c:''},{t:'Problema',c:'red'},{t:'Pizarra',c:''},{t:'Autoridad',c:'gold'},{t:'INVERSIÓN',c:'kw'}],
+  formato: 'pizarra',
+  secciones: [
+    { label: 'HOOK', text: 'Si estás buscando una inversión inmobiliaria y lo que hacés es entrar a portales y comparar propiedades sueltas, el problema no es que no encontrás nada bueno. El problema es cómo estás mirando.' },
+    { label: 'EN PIZARRA — El error', text: 'Propiedad A: USD 180.000 — 2 ambientes — zona X\nPropiedad B: USD 160.000 — 2 ambientes — zona Y\n\n¿Cuál es mejor?\n→ No se puede saber con esa información.' },
+    { label: 'EN PIZARRA — Lo que falta mirar', text: '1. Demanda de alquiler en esa zona específica\n2. Renta potencial bruta y neta\n3. Liquidez: cuánto tardás en vender si necesitás salir\n4. Estado documental y gastos ocultos\n5. Quién sería el inquilino y qué estabilidad tiene esa demanda' },
+    { label: 'CRITERIO PROPIO', text: 'Cuando mirás propiedades sueltas, comparás por precio. Cuando mirás con criterio, comparás por objetivo. Son dos procesos completamente distintos.' },
+    { label: 'CTA', text: 'Si querés empezar a mirar con criterio en lugar de comparar por precio, escribime INVERSIÓN.' },
+  ]
+},
+
+'1405': {
+  fecha: 'Jueves 14/05', dia: 'Jue',
+  titulo: 'El problema no es que falten propiedades',
+  chips: [{t:'Mercado',c:''},{t:'Errores/problemas del mercado',c:''},{t:'Problema',c:'red'},{t:'Carruseles',c:''},{t:'Alcance',c:'blue'},{t:'ANÁLISIS',c:'kw'}],
+  formato: 'carrusel',
+  secciones: [
+    { label: 'SLIDE 1 — Portada', text: 'El problema no es que falten propiedades en Tandil.' },
+    { label: 'SLIDE 2', text: 'El problema es que sobran propiedades mal posicionadas.' },
+    { label: 'SLIDE 3', text: 'Precio que no refleja el valor real de mercado → el comprador calificado lo descarta en los primeros segundos.' },
+    { label: 'SLIDE 4', text: 'Fotos que no muestran lo mejor de la propiedad → nadie pide visita aunque la ubicación sea buena.' },
+    { label: 'SLIDE 5', text: 'Descripción genérica sin narrativa → no conecta con el comprador correcto ni le explica por qué esa propiedad le conviene.' },
+    { label: 'SLIDE 6', text: 'Sin estrategia de precio → la propiedad queda publicada meses, pierde vigencia y se "quema" en el mercado.' },
+    { label: 'SLIDE 7 — Frase', text: 'La propiedad existe. El comprador existe. El problema es el puente entre los dos.' },
+    { label: 'SLIDE 8 — CTA', text: 'Si tu propiedad está publicada y no recibe consultas calificadas, el problema probablemente no es la propiedad. Escribime ANÁLISIS y lo revisamos.' },
+  ]
+},
+
+'1505': {
+  fecha: 'Viernes 15/05', dia: 'Vie',
+  titulo: 'Esta propiedad puede tener lógica de inversión',
+  chips: [{t:'Inversores',c:''},{t:'Análisis de oportunidades',c:''},{t:'Oportunidad',c:'green'},{t:'Propiedades',c:''},{t:'Conversión',c:'green'},{t:'INVERSIÓN',c:'kw'}],
+  formato: 'propiedad',
+  secciones: [
+    { label: '1 — PARA QUIÉN ES', text: 'Inversor que busca renta en Tandil con ticket medio. Ideal para perfil familiar o estudiante universitario. No es para quien necesita liquidez inmediata ni para quien busca reventa rápida.' },
+    { label: '2 — PUNTO FUERTE', text: 'Ubicación con demanda sostenida de alquiler. Distribución práctica que maximiza el espacio. Precio por m² dentro del mercado para esta zona. Buen estado general, sin reformas urgentes.' },
+    { label: '3 — QUÉ REVISAR', text: 'Estado de expensas y si el reglamento permite alquiler temporario.\nAptitud para crédito (amplía el universo de compradores si querés vender después).\nAntigüedad de instalaciones eléctricas y sanitarias.\nDemanda real de alquiler en esa cuadra específica, no solo en el barrio.' },
+    { label: '4 — POR QUÉ TIENE SENTIDO', text: 'Zona con demanda comprobada y baja vacancia histórica. Tipo de unidad que se alquila bien en Tandil. Ticket de entrada razonable para el retorno potencial. Salida futura clara si el mercado lo requiere.' },
+    { label: '5 — CTA', text: 'Si querés analizar si esta propiedad tiene lógica para tu objetivo de inversión, escribime INVERSIÓN y lo vemos juntos.' },
+  ]
+},
+
+'1605': {
+  fecha: 'Sábado 16/05', dia: 'Sáb',
+  titulo: 'Así pensamos una propiedad antes de publicarla',
+  chips: [{t:'Propietarios',c:''},{t:'Por qué elegirnos',c:''},{t:'Prueba / autoridad',c:'gold'},{t:'Propiedades',c:''},{t:'Autoridad',c:'gold'},{t:'TASACIÓN',c:'kw'}],
+  formato: 'propiedad',
+  secciones: [
+    { label: '1 — PARA QUIÉN ES', text: 'Propietario que quiere entender cómo pensamos una propiedad antes de publicarla. Muestra el proceso interno, no solo el resultado.' },
+    { label: '2 — EL PROCESO', text: 'Antes de publicar cualquier propiedad, hacemos esto:\n\n· Recorrida real para evaluar estado, distribución, luz natural, puntos fuertes y mejorables.\n· Análisis de comparables directos en la zona: qué hay publicado, a qué precio, cuánto tiempo llevan.\n· Definición del precio de salida estratégico: no el más alto ni el más bajo, el que genera movimiento.\n· Decisión sobre presentación: qué mostrar primero, cómo narrar la propiedad, qué mejorar antes de fotografiar.' },
+    { label: '3 — QUÉ REVISAMOS SIEMPRE', text: 'Documentación y aptitud para crédito.\nExpensas y gastos de mantenimiento.\nPuntos que pueden generar objeciones en la visita (y cómo anticiparlos).\nPerfil del comprador más probable y cómo comunicarle a ese perfil.' },
+    { label: '4 — POR QUÉ IMPORTA', text: 'Una propiedad bien preparada y bien posicionada genera consultas más calificadas, se visita con mejores expectativas y se negocia con más respaldo.' },
+    { label: '5 — CTA', text: 'Si tenés una propiedad y querés que la miremos con este criterio antes de publicarla, escribime TASACIÓN.' },
+  ]
+},
+
+'1705': {
+  fecha: 'Domingo 17/05', dia: 'Dom',
+  titulo: 'Por qué volví a Tandil a hacer real estate',
+  chips: [{t:'Vida Santi',c:''},{t:'Historia y camino emprendedor',c:''},{t:'Historia / proceso',c:'blue'},{t:'Frente a cámara',c:''},{t:'Alcance',c:'blue'}],
+  formato: 'camara',
+  secciones: [
+    { label: 'HOOK', text: 'No llegué al real estate de forma lineal. Y creo que eso es exactamente lo que me hace diferente.' },
+    { label: 'HISTORIA', text: 'Estudié varias carreras en Buenos Aires. Trabajé en Tandil desde chico. Después me fui a Costa Rica dos años: lideré equipos en gastronomía, aprendí a trabajar bajo presión real, en contextos que no controlás, con decisiones que no podés postergar.\n\nEl surf me enseñó algo que después apliqué a los negocios: hay momentos para esperar y momentos para tomar la ola. La clave es saber cuándo es cuándo.' },
+    { label: 'LA DECISIÓN', text: 'Cuando volví a Tandil, vi algo claro: el mercado inmobiliario local necesitaba lo que no existía. Alguien que explicara con criterio. Que no presionara. Que ayudara a decidir con información real en lugar de intuición o urgencia artificial.' },
+    { label: 'CIERRE', text: 'No quería ser uno más que vende propiedades. Quería ser la persona a la que llaman antes de tomar una decisión importante.\n\nEso es lo que estoy construyendo acá.' },
+  ]
+},
+
+'1805': {
+  fecha: 'Lunes 18/05', dia: 'Lun',
+  titulo: 'Dónde puede aparecer valor hoy en Tandil',
+  chips: [{t:'Mercado',c:''},{t:'Oportunidades reales del mercado',c:''},{t:'Oportunidad',c:'green'},{t:'Carruseles',c:''},{t:'Alcance',c:'blue'},{t:'ANÁLISIS',c:'kw'}],
+  formato: 'carrusel',
+  secciones: [
+    { label: 'SLIDE 1 — Portada', text: 'Dónde puede aparecer valor hoy en Tandil.' },
+    { label: 'SLIDE 2', text: 'Propiedades apto crédito bien posicionadas.\nHay compradores activos con acceso al crédito buscando este tipo de unidades. La demanda existe. Falta oferta bien presentada.' },
+    { label: 'SLIDE 3', text: 'Unidades de 2 ambientes en zonas con demanda sostenida de alquiler.\nRenta estable, baja vacancia, perfil de inquilino claro. Ticket de entrada razonable para el retorno.' },
+    { label: 'SLIDE 4', text: 'Propiedades con tiempo largo en el mercado.\nPublicadas alto, sin movimiento. El propietario puede estar más dispuesto a negociar. Ahí puede haber margen real.' },
+    { label: 'SLIDE 5', text: 'Fideicomisos y pozos de desarrolladoras con trayectoria.\nPrecio de entrada más bajo, tiempo de espera, pero potencial de valorización al finalizar la obra.' },
+    { label: 'SLIDE 6', text: 'Propiedades con estado mejorable en buena ubicación.\nPrecio de entrada más bajo, costo de mejora conocido, valor final potencialmente más alto.' },
+    { label: 'SLIDE 7 — Frase', text: 'El valor no siempre está donde todos miran. A veces está donde nadie sabe leer.' },
+    { label: 'SLIDE 8 — CTA', text: 'Si querés saber si una propiedad que estás mirando tiene valor real o solo parece interesante, escribime ANÁLISIS.' },
+  ]
+},
+
+'1905': {
+  fecha: 'Martes 19/05', dia: 'Mar',
+  titulo: 'Tu propiedad también tiene que cerrar como inversión',
+  chips: [{t:'Propietarios',c:''},{t:'Análisis de inversiones',c:''},{t:'Prueba / autoridad',c:'gold'},{t:'Pizarra',c:''},{t:'Autoridad',c:'gold'},{t:'TASACIÓN',c:'kw'}],
+  formato: 'pizarra',
+  secciones: [
+    { label: 'HOOK', text: 'Cuando un propietario me pide una tasación, hay algo que siempre le digo: tu propiedad también tiene que cerrar como inversión para quien compra.' },
+    { label: 'EN PIZARRA — Dos miradas distintas', text: 'Lo que el propietario mira:\n→ Cuánto quiere cobrar\n→ Cuánto invirtió o pagó\n→ Cuánto necesita para lo que viene\n\nLo que el comprador mira:\n→ Precio por m² vs mercado\n→ Zona y demanda futura\n→ Salida posible si decide vender\n→ Potencial de renta si decide alquilar' },
+    { label: 'EN PIZARRA — El puente', text: 'Precio estratégico = donde el propietario maximiza su resultado\ny el comprador encuentra lógica en la decisión.\n\nSi el precio no tiene sentido para quien compra → no hay cierre.\nSi el precio es demasiado bajo → el propietario deja plata sobre la mesa.' },
+    { label: 'CRITERIO PROPIO', text: 'Una tasación no es un número. Es una posición dentro del mercado. Si ese número no tiene lógica para quien compra, la propiedad no va a moverse aunque el propietario esté convencido de que es el precio correcto.' },
+    { label: 'CTA', text: 'Si querés que analicemos tu propiedad con este criterio, escribime TASACIÓN.' },
+  ]
+},
+
+'2005': {
+  fecha: 'Miércoles 20/05', dia: 'Mié',
+  titulo: 'Por qué no mandamos oportunidades sueltas',
+  chips: [{t:'Inversores',c:''},{t:'Por qué elegirnos',c:''},{t:'Prueba / autoridad',c:'gold'},{t:'Frente a cámara',c:''},{t:'Conversión',c:'green'},{t:'INVERSIÓN',c:'kw'}],
+  formato: 'camara',
+  secciones: [
+    { label: 'HOOK', text: 'Una de las cosas que más nos diferencia es que no mandamos propiedades sueltas.' },
+    { label: 'DESARROLLO', text: 'Cuando alguien me dice "quiero invertir en Tandil", lo primero que hago no es buscar propiedades. Lo primero es entender al inversor.\n\n¿Cuánto capital tenés disponible?\n¿Para qué querés invertir: renta mensual, reventa, resguardo de valor?\n¿Qué horizonte tenés: 2 años, 5 años, indefinido?\n¿Qué tan fácil necesitás poder salir si cambia tu situación?\n¿Tolerancia al riesgo?\n\nSin esas respuestas, cualquier propiedad puede parecer una oportunidad. Con esas respuestas, podemos filtrar bien y encontrar lo que realmente tiene sentido para ese objetivo.' },
+    { label: 'CRITERIO PROPIO', text: 'Mandar oportunidades sueltas es fácil. Cualquiera puede hacer eso. Lo que cuesta es el proceso previo: entender qué necesita cada inversor y buscar específicamente eso.' },
+    { label: 'CTA', text: 'Si querés empezar ese proceso, escribime INVERSIÓN y arrancamos por tu perfil.' },
+  ]
+},
+
+'2105': {
+  fecha: 'Jueves 21/05', dia: 'Jue',
+  titulo: '¿El crédito mueve todo el mercado?',
+  chips: [{t:'Mercado',c:''},{t:'Actualidad + opinión',c:''},{t:'Problema',c:'red'},{t:'POV preguntas',c:''},{t:'Autoridad',c:'gold'},{t:'CRÉDITO',c:'kw'}],
+  formato: 'pov',
+  secciones: [
+    { label: 'PREGUNTA', text: '¿El crédito hipotecario mueve todo el mercado inmobiliario?' },
+    { label: 'RESPUESTA DIRECTA', text: 'No. Mueve un segmento específico.' },
+    { label: 'DESARROLLO', text: 'El crédito activa principalmente al comprador de primera vivienda y al que quiere mejorar lo que tiene. No activa al inversor, que suele operar en efectivo y piensa diferente.\n\nTampoco mueve todas las zonas igual. Las zonas con perfil residencial consolidado responden más rápido. Las zonas más nuevas o con menor infraestructura, menos.\n\nY no mueve todos los productos igual. Las propiedades apto crédito con documentación en orden y estado adecuado son las que más se benefician. Las que tienen problemas documentales o estado irregular, prácticamente nada.' },
+    { label: 'CRITERIO PROPIO', text: 'El crédito es una herramienta para un perfil específico de comprador. Si no entendés para quién es esa herramienta, vas a creer que todo el mercado sube cuando en realidad solo se mueve una parte.' },
+    { label: 'CTA', text: 'Si estás pensando en comprar con crédito o tenés una propiedad apto crédito y querés saber si está bien posicionada, escribime CRÉDITO.' },
+  ]
+},
+
+'2205': {
+  fecha: 'Viernes 22/05', dia: 'Vie',
+  titulo: 'El error de llamar oportunidad a todo lo barato',
+  chips: [{t:'Inversores',c:''},{t:'Querer invertir sin estrategia',c:''},{t:'Error',c:'red'},{t:'Carruseles',c:''},{t:'Autoridad',c:'gold'},{t:'INVERSIÓN',c:'kw'}],
+  formato: 'carrusel',
+  secciones: [
+    { label: 'SLIDE 1 — Portada', text: 'El error de llamar oportunidad a todo lo que es barato.' },
+    { label: 'SLIDE 2', text: 'Barato puede significar: zona con baja demanda.\nSi nadie quiere vivir ahí, nadie va a querer alquilar, y nadie va a querer comprarte después.' },
+    { label: 'SLIDE 3', text: 'Barato puede significar: problema documental.\nEscritura sin regularizar, deuda de expensas, inhibiciones. El precio refleja el riesgo.' },
+    { label: 'SLIDE 4', text: 'Barato puede significar: baja liquidez.\nPodés entrar fácil, pero salir puede llevar años si el mercado de ese producto es pequeño.' },
+    { label: 'SLIDE 5', text: 'Barato puede significar: altos costos ocultos.\nExpensas elevadas, mantenimiento caro, instalaciones que requieren inversión inmediata.' },
+    { label: 'SLIDE 6', text: 'Barato puede significar: poca demanda de alquiler.\nSi no podés alquilar a buen precio, la ecuación de renta no cierra.' },
+    { label: 'SLIDE 7 — Frase', text: 'Una buena inversión no empieza por el precio. Empieza por el objetivo.' },
+    { label: 'SLIDE 8 — CTA', text: 'Si estás mirando algo que parece barato y querés saber si tiene lógica real, escribime INVERSIÓN.' },
+  ]
+},
+
+'2305': {
+  fecha: 'Sábado 23/05', dia: 'Sáb',
+  titulo: 'Una buena propiedad se puede vender mal',
+  chips: [{t:'Propietarios',c:''},{t:'Querer vender sin estrategia',c:''},{t:'Problema',c:'red'},{t:'Propiedades',c:''},{t:'Conversión',c:'green'},{t:'TASACIÓN',c:'kw'}],
+  formato: 'propiedad',
+  secciones: [
+    { label: '1 — LA PROPIEDAD', text: 'Buena ubicación. Buenos metros. Estado aceptable. Zona con demanda. Todo para venderse bien.' },
+    { label: '2 — EL PROBLEMA', text: 'Fotos tomadas con el teléfono, con poca luz y en desorden.\nDescripción genérica que no explica qué tiene de especial.\nPrecio publicado por encima del mercado "para ver qué pasa".\nSin estrategia de a quién se le habla ni cómo se la presenta.' },
+    { label: '3 — QUÉ ESTÁ PASANDO', text: 'Lleva 4 meses publicada. Pocas consultas. Las que entran son de curiosos, no compradores reales. El propietario está empezando a bajar el precio sin entender por qué no funciona.' },
+    { label: '4 — POR QUÉ IMPORTA', text: 'La propiedad en sí no tiene el problema. El problema es cómo fue puesta en el mercado. Una buena propiedad mal presentada y mal posicionada se comporta peor que una propiedad promedio bien trabajada.' },
+    { label: '5 — CTA', text: 'Si tu propiedad tiene lo necesario para venderse bien pero no está generando el movimiento que esperabas, escribime TASACIÓN y lo miramos desde el principio.' },
+  ]
+},
+
+'2405': {
+  fecha: 'Domingo 24/05', dia: 'Dom',
+  titulo: 'Lo que pienso de hacer las cosas como siempre',
+  chips: [{t:'Vida Santi',c:''},{t:'Opiniones de Santi',c:''},{t:'Historia / proceso',c:'blue'},{t:'Frente a cámara',c:''},{t:'Alcance',c:'blue'}],
+  formato: 'camara',
+  secciones: [
+    { label: 'HOOK', text: 'Hay algo que me cuesta entender del mercado inmobiliario: por qué tantos siguen haciendo exactamente lo mismo que hace veinte años.' },
+    { label: 'DESARROLLO', text: 'El comprador de hoy tiene más información que nunca. Entra a los portales, compara, investiga, pregunta. Ya no llega a la primera reunión sin saber el precio de mercado.\n\nY sin embargo la respuesta del sector sigue siendo la misma: publicar más propiedades, poner precio alto para negociar, mandar fotos generadas con el teléfono y esperar que alguien llame.\n\nNo funciona. Y saben que no funciona. Pero es lo que siempre se hizo.' },
+    { label: 'CRITERIO PROPIO', text: 'Yo creo que el problema no es falta de tecnología ni de presupuesto. Es falta de criterio.\n\nEl criterio se construye con datos reales, con un método, con honestidad sobre lo que funciona y lo que no. Y eso requiere cuestionarse cómo se hacen las cosas, no repetirlas.' },
+    { label: 'CIERRE', text: 'No creo que hacer las cosas como siempre sea una opción cuando el mercado ya no es el mismo.' },
+  ]
+},
+
+}; // fin SCRIPTS
+
+// ─── LÓGICA DEL PANEL ────────────────────────────────────────────────────────
+
+let activeRow = null;
+
+function openScript(id) {
+  const d = SCRIPTS[id];
+  if (!d) return;
+
+  // Highlight row
+  if (activeRow) activeRow.classList.remove('active');
+  activeRow = document.querySelector(`[onclick="openScript('${id}')"]`);
+  if (activeRow) activeRow.classList.add('active');
+
+  // Header
+  document.getElementById('sp-fecha').textContent = d.fecha;
+  document.getElementById('sp-titulo').textContent = d.titulo;
+
+  // Chips
+  const chipMap = {
+    '': 'tag',
+    'green': 'tag tag-green',
+    'red': 'tag tag-red',
+    'gold': 'tag tag-gold',
+    'blue': 'tag tag-blue',
+    'kw': 'cta-kw',
+  };
+  document.getElementById('sp-chips').innerHTML = d.chips
+    .map(c => `<span class="${chipMap[c.c] || 'tag'}" style="font-size:11px;">${c.t}</span>`)
+    .join('');
+
+  // Script display
+  const display = document.getElementById('sp-script-display');
+  if (d.formato === 'carrusel') {
+    display.innerHTML = d.secciones.map(s => `
+      <div class="sp-slide">
+        <div class="sp-slide-num">${s.label}</div>
+        <div class="sp-slide-text">${s.text.replace(/\n/g,'<br>')}</div>
+      </div>`).join('');
+  } else {
+    display.innerHTML = d.secciones.map(s => `
+      <div class="sp-script-section">
+        <div class="sp-section-tag">${s.label}</div>
+        <div class="sp-section-text">${s.text}</div>
+      </div>`).join('');
+  }
+
+  // Textarea — pre-fill with plain text version
+  const plain = d.secciones.map(s => `[${s.label}]\n${s.text}`).join('\n\n');
+  const ta = document.getElementById('sp-textarea');
+  if (!ta.dataset['edited_' + id]) {
+    ta.value = plain;
+  }
+  ta.dataset.currentId = id;
+  ta.oninput = () => { ta.dataset['edited_' + id] = '1'; };
+
+  // Open
+  document.getElementById('sp-overlay').classList.add('open');
+  document.getElementById('sp-panel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('sp-overlay').classList.remove('open');
+  document.getElementById('sp-panel').classList.remove('open');
+  if (activeRow) { activeRow.classList.remove('active'); activeRow = null; }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
 </script>
 
 </body>
