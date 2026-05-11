@@ -73,6 +73,23 @@ Insertar al terminar:
 | `agente` | "Macro Analyst" |
 | `contenido` | El reporte completo del paso 4 + cantidad de entradas insertadas en newsletter |
 
+## 8. Notificar a Santiago por WhatsApp
+
+Después de guardar en Supabase, mandar un resumen compacto (máx 800 caracteres):
+
+```
+POST https://sofia-bot-production-e17d.up.railway.app/notify/santiago
+Headers:
+  Content-Type: application/json
+  x-api-key: altavista-n8n-2026
+Body:
+{
+  "text": "📊 Briefing macro — [dd/mm]\n\n💵 Dólar blue: $X (brecha X%)\n📈 IPC: X% mensual\n🏠 UVA: +X% (30d)\n📉 Tasas: [sin cambios / banco X cambió a Y%]\n\n[1-2 oraciones sobre impacto en vivienda y oportunidad de contenido si la hay]"
+}
+```
+
+Si el endpoint devuelve error, ignorar y cerrar el issue igual — la notificación es best-effort.
+
 ## Frecuencia
 
 Semanal (lunes). Alerta inmediata si hay cambio brusco.
