@@ -294,12 +294,18 @@ def wa_send_internal(text: str) -> None:
             if resp.ok:
                 return
             body = resp.text[:300]
-            print(f"[Internal Wati ERROR] {resp.status_code} — {body}")
-            raise RuntimeError(f"Wati session error {resp.status_code}: {body}")
-        except RuntimeError:
-            raise
+            print(f"[Internal Wati session ERROR] {resp.status_code} — {body}")
         except Exception as e:
-            raise RuntimeError(f"Wati internal error: {e}")
+            print(f"[Internal Wati session error] {e}")
+        # 3. Fallback: template notificacion_interna (sin restricción de 24hs)
+        truncated = clean[:900]  # WATI limita parámetros de template
+        sent = _wati_send_template(phone, "notificacion_interna", [
+            {"name": "1", "value": truncated}
+        ])
+        if sent:
+            print(f"[Internal] Notificación enviada vía template a {phone}")
+            return
+        raise RuntimeError("[Internal] Wati session y template fallaron — verificar aprobación del template notificacion_interna")
     raise RuntimeError("[Internal] Sin canal configurado — EVOLUTION_API_URL o WATI_API_URL requeridos")
 
 def tg_send(text: str) -> None:
@@ -544,7 +550,7 @@ Forma de pago: reserva USD 5.000 + 30% de anticipo + saldo en cuotas mensuales e
 
 Por qué conviene: comprás a precio de pozo, pagás el saldo en pesos (te protege de la inflación), fideicomiso al costo — máxima transparencia. Centro de Tandil con alta demanda de alquiler.
 
-El PDF llega solo de forma automática — no lo prometás ni lo mencionés. No mezclar con Garibaldi 431 (son proyectos distintos). Si preguntan cómo comprar, explicá el esquema reserva + 30% + cuotas CAC y empujá hacia una reunión con Santiago para ver los planos.
+No mezclar con Garibaldi 431 (son proyectos distintos). Si preguntan cómo comprar, explicá el esquema reserva + 30% + cuotas CAC y empujá hacia una reunión con Santiago para ver los planos.
 
 ## EDIFICIO CHACABUCO 977 — A estrenar
 
@@ -894,16 +900,6 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
             reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
             message_save(lead_id, "assistant", reply)
             wa_send(from_phone, reply, fallback_name=lead_name)
-
-            # Auto-enviar PDF del fideicomiso Roca 36
-            roca_keywords = ["roca 36", "proyecto roca", "fideicomiso roca", "fideicomiso", "roca"]
-            if any(k in user_text.lower() for k in roca_keywords) and "garibaldi" not in user_text.lower():
-                wa_send_doc(
-                    from_phone,
-                    "https://bsvcorcwcijpvwzxjzgu.supabase.co/storage/v1/object/public/propiedades/proyecto-roca.pdf",
-                    "Proyecto-Roca-Altavista.pdf"
-                )
-                message_save(lead_id, "assistant", "📄 [PDF enviado: Proyecto-Roca-Altavista.pdf]")
 
             # Urgencia detectada: notificar a Santiago y pausar Sofía
             if is_urgent:
@@ -1265,6 +1261,8 @@ def wati_receive():
         msg_type   = (data.get("type") or "").lower()
         from_phone = data.get("waId", "")
         contact    = data.get("messageContact") or {}
+        if isinstance(contact, str):
+            contact = {}
         wa_profile = contact.get("fullName") or contact.get("firstName") or ""
 
         if not from_phone:
@@ -1275,7 +1273,12 @@ def wati_receive():
             if not user_text:
                 return "ok", 200
         elif msg_type == "audio":
-            media_url = (data.get("data") or {}).get("url", "")
+            raw_data = data.get("data") or {}
+            print(f"[Wati audio raw] type={type(raw_data).__name__} value={str(raw_data)[:200]}")
+            if isinstance(raw_data, str):
+                media_url = raw_data
+            else:
+                media_url = raw_data.get("url", "")
             if OPENAI_KEY and media_url:
                 try:
                     wati_headers = {"Authorization": f"Bearer {WATI_API_TOKEN}"} if WATI_API_TOKEN else {}
@@ -1311,7 +1314,9 @@ def wati_receive():
             t.start()
 
     except Exception as e:
+        import traceback
         print(f"[Wati Error] {e}")
+        traceback.print_exc()
 
     return "ok", 200
 
