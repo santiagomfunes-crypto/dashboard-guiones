@@ -584,6 +584,133 @@
   }
   .reel-label { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
   .reel-desc { font-size: 12px; color: var(--muted); }
+  /* GUIONES TAB */
+  .guiones-toolbar {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 20px;
+  }
+  .g-filter-select {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--muted);
+    font-size: 12px; padding: 7px 12px; cursor: pointer;
+    font-family: inherit;
+  }
+  .g-filter-select:focus { outline: none; border-color: var(--gold-dim); color: var(--white); }
+  .g-search {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--white);
+    font-size: 12px; padding: 7px 12px; font-family: inherit;
+    flex: 1; min-width: 160px;
+  }
+  .g-search:focus { outline: none; border-color: var(--gold-dim); }
+  .g-search::placeholder { color: var(--muted2); }
+  .g-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+  .g-stat {
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .g-stat-filmar { background: rgba(76,173,122,0.12); color: var(--green); }
+  .g-stat-no { background: rgba(224,80,80,0.1); color: var(--red); }
+  .g-stat-pending { background: var(--bg-card2); color: var(--muted); }
+  .guiones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 14px;
+  }
+  .guion-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    display: flex; flex-direction: column;
+  }
+  .guion-card:hover { border-color: var(--border-light); transform: translateY(-1px); }
+  .guion-card.vote-filmar { border-color: var(--green); border-left-width: 3px; }
+  .guion-card.vote-no { opacity: 0.42; }
+  .guion-card.gc-active { border-color: var(--gold-dim); box-shadow: 0 0 0 1px rgba(201,168,76,0.2); }
+  .gc-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .gc-fecha { font-size: 11px; font-weight: 700; color: var(--gold); }
+  .status-select {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); font-size: 10px;
+    padding: 3px 6px; cursor: pointer; font-family: inherit;
+    font-weight: 600;
+  }
+  .status-select:focus { outline: none; }
+  .gc-title {
+    font-size: 13.5px; font-weight: 700; color: var(--white);
+    margin-bottom: 7px; line-height: 1.35;
+  }
+  .gc-hook {
+    font-size: 11.5px; color: var(--muted); margin-bottom: 10px;
+    line-height: 1.55; font-style: italic; flex: 1;
+  }
+  .gc-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+  .gc-footer {
+    display: flex; gap: 5px;
+    border-top: 1px solid var(--border); padding-top: 11px; margin-top: auto;
+  }
+  .vote-btn {
+    flex: 1; background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); font-size: 11px;
+    font-weight: 700; padding: 6px 4px; cursor: pointer;
+    font-family: inherit; transition: all 0.12s;
+    letter-spacing: 0.02em;
+  }
+  .vote-btn:hover { border-color: var(--border-light); color: var(--white); }
+  .vb-filmar.vb-active { background: rgba(76,173,122,0.15); border-color: var(--green); color: var(--green); }
+  .vb-no.vb-active { background: rgba(224,80,80,0.12); border-color: var(--red); color: var(--red); }
+  .vb-skip.vb-active { background: var(--bg-card3); border-color: var(--border-light); color: var(--white); }
+
+  /* DISPARADORES IN PANEL */
+  .disp-hook-main {
+    background: var(--gold-bg); border: 1px solid rgba(201,168,76,0.2);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-size: 14px; color: var(--white); font-weight: 600;
+    line-height: 1.55; margin-bottom: 12px; font-style: italic;
+  }
+  .disp-vars { display: flex; flex-direction: column; gap: 8px; }
+  .disp-var {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 14px;
+    cursor: pointer; transition: all 0.12s;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .disp-var:hover { border-color: var(--border-light); }
+  .disp-var.disp-selected {
+    background: rgba(201,168,76,0.08); border-color: var(--gold-dim);
+  }
+  .disp-var-num {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--border); display: flex; align-items: center;
+    justify-content: center; font-size: 10px; font-weight: 700; color: var(--muted2);
+    margin-top: 1px;
+  }
+  .disp-var.disp-selected .disp-var-num { background: var(--gold); color: #09090b; }
+  .disp-var-text { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .disp-var.disp-selected .disp-var-text { color: var(--white); }
+
+  /* PANEL VOTE ROW */
+  .sp-vote-row {
+    display: flex; gap: 6px; padding: 12px 22px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+    background: var(--bg-card2);
+  }
+  .sp-vote-btn {
+    flex: 1; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); font-size: 11px; font-weight: 700;
+    padding: 7px 4px; cursor: pointer; font-family: inherit; transition: all 0.12s;
+  }
+  .sp-vote-btn:hover { border-color: var(--border-light); color: var(--white); }
+  .sp-vote-btn[data-vote="filmar"].sp-vb-active { background: rgba(76,173,122,0.15); border-color: var(--green); color: var(--green); }
+  .sp-vote-btn[data-vote="no"].sp-vb-active { background: rgba(224,80,80,0.12); border-color: var(--red); color: var(--red); }
+  .sp-vote-btn[data-vote="pending"].sp-vb-active { background: var(--bg-card3); border-color: var(--border-light); color: var(--white); }
+
   /* SCRIPT PANEL */
   #sp-overlay {
     display: none;
@@ -691,6 +818,7 @@
   <button class="nav-btn" onclick="show('servicios',this)">Servicios</button>
   <button class="nav-btn" onclick="show('ctas',this)">CTAs</button>
   <button class="nav-btn" onclick="show('instagram',this)">Instagram</button>
+  <button class="nav-btn" onclick="show('guiones',this);renderGuiones()">Guiones</button>
   <button class="nav-btn" onclick="show('comunicacion',this)">Comunicación</button>
   <button class="nav-btn" onclick="show('personaje',this)">Personaje</button>
   <button class="nav-btn" onclick="show('portfolio',this)">Portfolio</button>
@@ -2155,6 +2283,32 @@
 
 </div><!-- /portfolio -->
 
+<!-- SECCIÓN GUIONES -->
+<div id="guiones" class="section">
+  <div class="sec-title">Guiones</div>
+  <div class="sec-headline">Calendario mayo 2026 — votá y gestioná cada pieza</div>
+
+  <div class="guiones-toolbar">
+    <select class="g-filter-select" id="g-filter-vote" onchange="renderGuiones()">
+      <option value="all">Todos los votos</option>
+      <option value="filmar">✓ A filmar</option>
+      <option value="no">✗ Descartados</option>
+      <option value="pending">? Sin decidir</option>
+    </select>
+    <select class="g-filter-select" id="g-filter-tema" onchange="renderGuiones()">
+      <option value="all">Todos los temas</option>
+      <option value="Mercado">Mercado</option>
+      <option value="Propietarios">Propietarios</option>
+      <option value="Inversores">Inversores</option>
+      <option value="Vida Santi">Vida Santi</option>
+    </select>
+    <input class="g-search" id="g-search" type="text" placeholder="Buscar guión..." oninput="renderGuiones()">
+    <div class="g-stats" id="g-stats"></div>
+  </div>
+
+  <div class="guiones-grid" id="guiones-grid"></div>
+</div>
+
 </main>
 
 <!-- SCRIPT PANEL -->
@@ -2168,7 +2322,17 @@
     </div>
     <button class="sp-close" onclick="closePanel()">✕</button>
   </div>
+  <div class="sp-vote-row">
+    <button class="sp-vote-btn" data-vote="filmar" onclick="spVote('filmar')">✓ Filmar</button>
+    <button class="sp-vote-btn" data-vote="no" onclick="spVote('no')">✗ No</button>
+    <button class="sp-vote-btn" data-vote="pending" onclick="spVote('pending')">? Pendiente</button>
+  </div>
   <div class="sp-body">
+    <div>
+      <div class="sp-block-label">Disparador (hook)</div>
+      <div id="sp-disp-main" class="disp-hook-main"></div>
+      <div class="disp-vars" id="sp-disp-vars"></div>
+    </div>
     <div>
       <div class="sp-block-label">Guión de referencia</div>
       <div id="sp-script-display"></div>
@@ -2176,7 +2340,7 @@
     <div>
       <div class="sp-block-label">Tu versión</div>
       <textarea id="sp-textarea" placeholder="Editá el guión acá..."></textarea>
-      <div class="sp-textarea-hint">Solo se guarda mientras la página esté abierta.</div>
+      <div class="sp-textarea-hint">Se guarda automáticamente en este browser.</div>
     </div>
   </div>
 </div>
@@ -2402,73 +2566,299 @@ const SCRIPTS = {
 
 }; // fin SCRIPTS
 
+// ─── HOOKS / DISPARADORES ────────────────────────────────────────────────────
+
+const HOOKS = {
+'1105': [
+  'Cuando el crédito hipotecario se mueve, en Tandil pasan tres cosas que casi nadie está viendo.',
+  '¿El crédito cambia algo para Tandil? Sí. Pero no lo que la mayoría cree.',
+  'Todos dicen que el crédito reactiva el mercado. Yo digo que reactiva un segmento específico. La diferencia importa.'
+],
+'1205': [
+  'El error más caro que comete un propietario cuando quiere vender no es poner el precio mal. Es creer que vender es publicar y esperar.',
+  'Publicar es el paso cuatro de un proceso de cinco. Si arrancás por ahí, arrancás mal.',
+  '¿Publicaste tu propiedad y no recibís consultas calificadas? Probablemente no sea el precio el problema.'
+],
+'1305': [
+  'Si buscás una inversión comparando propiedades sueltas en portales, el problema no es que no encontrás nada. Es cómo estás mirando.',
+  'Dos departamentos, mismo precio, misma zona. ¿Cuál es mejor inversión? Sin más datos, es imposible saberlo.',
+  '¿Cuándo fue la última vez que comparaste dos propiedades y realmente entendiste cuál era la mejor decisión?'
+],
+'1405': [
+  'El problema no es que falten propiedades en Tandil. Sobran. El problema es que casi todas están mal posicionadas.',
+  'Una propiedad bien posicionada genera consultas en las primeras 72hs. La mayoría lleva meses sin moverse. Eso no es el mercado. Es la estrategia.',
+  '¿Por qué hay propiedades en Tandil que llevan meses publicadas sin recibir consultas calificadas?'
+],
+'1505': [
+  'Esta propiedad puede tener lógica de inversión. Te explico para quién tiene sentido y para quién no.',
+  'Antes de recomendar esta propiedad como inversión, miré cinco cosas. Dos me gustaron. Una hay que revisarla bien.',
+  '¿Tiene sentido invertir en esta propiedad? Depende de tu objetivo. Te lo desgloso.'
+],
+'1605': [
+  'Antes de publicar cualquier propiedad, hacemos esto. La mayoría se salta todos estos pasos.',
+  'Publicar una propiedad sin este proceso previo es como mandar un CV sin releerlo. Puede funcionar. Pero generalmente no.',
+  '¿Cuántos pasos hacés antes de publicar una propiedad? Nosotros hacemos cinco. Acá los muestro.'
+],
+'1705': [
+  'No llegué al real estate de forma lineal. Y creo que eso es exactamente lo que me hace diferente.',
+  'Podría haber seguido en Costa Rica. Elegí volver a Tandil. Acá te cuento el por qué.',
+  'Dos años en Costa Rica, surf, liderazgo de equipos. Después Tandil y real estate. Te cuento cómo se conecta.'
+],
+'1805': [
+  'Hay cinco tipos de propiedad en Tandil donde puede aparecer valor real hoy. No todos están donde la mayoría mira.',
+  'El valor no siempre está en la propiedad más nueva ni en la mejor ubicación. A veces está donde nadie sabe leer.',
+  '¿Dónde puede aparecer valor real en Tandil en este momento del mercado?'
+],
+'1905': [
+  'Cuando tasamos una propiedad, siempre le decimos lo mismo al propietario: tu precio tiene que cerrar como inversión para quien compra.',
+  'Un propietario mira cuánto quiere cobrar. El comprador mira si tiene lógica. Si no coinciden, no hay cierre.',
+  '¿Tu propiedad tiene sentido como inversión para quien la compra? Si no, el precio no va a cerrar aunque bajes.'
+],
+'2005': [
+  'Una de las cosas que más nos diferencia: no mandamos propiedades sueltas. Primero entendemos al inversor.',
+  'Mandar oportunidades sueltas es fácil. Cualquiera puede hacer eso. Lo que cuesta es el proceso previo.',
+  '¿Qué hago antes de mostrarle una propiedad a un inversor? Esto.'
+],
+'2105': [
+  '¿El crédito hipotecario mueve todo el mercado inmobiliario? La respuesta corta es no.',
+  'Todos dicen que el crédito reactiva todo. Yo digo que reactiva un segmento. Y esa diferencia cambia cómo posicionás una propiedad.',
+  'El crédito activa a un perfil específico de comprador. Si no sabés cuál, estás perdiendo tiempo con todos los demás.'
+],
+'2205': [
+  'El error más común de los inversores: confundir barato con oportunidad. No es lo mismo.',
+  'Barato puede significar seis cosas distintas. Solo una de ellas es una oportunidad real.',
+  'Una propiedad cara puede ser mejor inversión que una barata. Depende de lo que mirés.'
+],
+'2305': [
+  'Una buena propiedad se puede vender mal. Y pasa más seguido de lo que creés.',
+  'Esta propiedad tiene todo para venderse bien. Lleva cuatro meses sin consultas calificadas. El problema no es la propiedad.',
+  'No alcanza con tener una buena propiedad. Hay que saber ponerla en el mercado.'
+],
+'2405': [
+  'Hay algo que me cuesta entender del mercado inmobiliario: por qué tantos siguen haciendo exactamente lo mismo que hace veinte años.',
+  'El mercado cambió. El comprador cambió. La información cambió. La forma de vender, no.',
+  'Hacer las cosas como siempre es una decisión. Solo que nadie la llama así.'
+],
+};
+
+// ─── LOCALSTORAGE ────────────────────────────────────────────────────────────
+
+function lsGet(key, def) {
+  try { var v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : def; } catch(e) { return def; }
+}
+function lsSet(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+}
+function getVote(id)       { return lsGet('sfre_vote_' + id, 'pending'); }
+function setVote(id, val)  { lsSet('sfre_vote_' + id, val); }
+function getStatus(id)     { return lsGet('sfre_status_' + id, 'pendiente'); }
+function setStatus(id, val){ lsSet('sfre_status_' + id, val); }
+function getSavedText(id)  { return lsGet('sfre_text_' + id, null); }
+function setSavedText(id, val){ lsSet('sfre_text_' + id, val); }
+function getSelHook(id)    { return lsGet('sfre_hook_' + id, 0); }
+function setSelHook(id, i) { lsSet('sfre_hook_' + id, i); }
+
+// ─── GUIONES TAB ─────────────────────────────────────────────────────────────
+
+const STATUS_LABELS = { pendiente: 'Pendiente', a_filmar: 'A filmar', filmado: 'Filmado' };
+const CHIP_MAP = { '':'tag', green:'tag tag-green', red:'tag tag-red', gold:'tag tag-gold', blue:'tag tag-blue', kw:'cta-kw' };
+
+function renderGuiones() {
+  var filterVote  = (document.getElementById('g-filter-vote')  || {}).value || 'all';
+  var filterTema  = (document.getElementById('g-filter-tema')  || {}).value || 'all';
+  var query       = ((document.getElementById('g-search')      || {}).value || '').toLowerCase();
+
+  var ids = Object.keys(SCRIPTS);
+
+  // Stats always over all
+  var counts = { filmar:0, no:0, pending:0 };
+  ids.forEach(function(id){ var v = getVote(id); counts[v] = (counts[v]||0) + 1; });
+  var stats = document.getElementById('g-stats');
+  if (stats) stats.innerHTML =
+    '<span class="g-stat g-stat-filmar">✓ ' + counts.filmar + ' a filmar</span>' +
+    '<span class="g-stat g-stat-no">✗ ' + counts.no + ' descartados</span>' +
+    '<span class="g-stat g-stat-pending">? ' + counts.pending + ' sin decidir</span>';
+
+  var filtered = ids.filter(function(id){
+    var d = SCRIPTS[id];
+    var vote = getVote(id);
+    if (filterVote === 'filmar'  && vote !== 'filmar')  return false;
+    if (filterVote === 'no'      && vote !== 'no')      return false;
+    if (filterVote === 'pending' && vote !== 'pending') return false;
+    if (filterTema !== 'all') {
+      if ((d.chips[0]||{}).t !== filterTema) return false;
+    }
+    if (query) {
+      var text = (d.titulo + ' ' + d.chips.map(function(c){return c.t;}).join(' ')).toLowerCase();
+      if (text.indexOf(query) < 0) return false;
+    }
+    return true;
+  });
+
+  var grid = document.getElementById('guiones-grid');
+  if (!grid) return;
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="color:var(--muted);text-align:center;padding:48px;grid-column:1/-1;">No hay guiones con ese filtro.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(function(id){
+    var d      = SCRIPTS[id];
+    var vote   = getVote(id);
+    var status = getStatus(id);
+    var hook   = (HOOKS[id] || [''])[getSelHook(id)] || '';
+
+    var cardCls = 'guion-card' + (vote==='filmar'?' vote-filmar':'') + (vote==='no'?' vote-no':'');
+
+    var chipsHtml = d.chips.slice(0,3).map(function(c){
+      return '<span class="' + (CHIP_MAP[c.c]||'tag') + '" style="font-size:10px;">' + esc(c.t) + '</span>';
+    }).join('');
+
+    var statusOpts = Object.keys(STATUS_LABELS).map(function(s){
+      return '<option value="' + s + '"' + (status===s?' selected':'') + '>' + STATUS_LABELS[s] + '</option>';
+    }).join('');
+
+    return '<div class="' + cardCls + '" id="gc-' + id + '" onclick="openScript(\'' + id + '\')">' +
+      '<div class="gc-top">' +
+        '<span class="gc-fecha">' + esc(d.fecha) + '</span>' +
+        '<select class="status-select" onclick="event.stopPropagation()" onchange="doStatus(event,\'' + id + '\',this.value)">' + statusOpts + '</select>' +
+      '</div>' +
+      '<div class="gc-title">' + esc(d.titulo) + '</div>' +
+      '<div class="gc-hook">"' + esc(hook.length > 90 ? hook.substring(0,90)+'…' : hook) + '"</div>' +
+      '<div class="gc-chips">' + chipsHtml + '</div>' +
+      '<div class="gc-footer">' +
+        '<button class="vote-btn vb-filmar' + (vote==='filmar'?' vb-active':'') + '" onclick="doVote(event,\'' + id + '\',\'filmar\')">✓ Filmar</button>' +
+        '<button class="vote-btn vb-no' + (vote==='no'?' vb-active':'') + '" onclick="doVote(event,\'' + id + '\',\'no\')">✗ No</button>' +
+        '<button class="vote-btn vb-skip' + (vote==='pending'?' vb-active':'') + '" onclick="doVote(event,\'' + id + '\',\'pending\')">? Pendiente</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function doVote(e, id, val) {
+  e.stopPropagation();
+  setVote(id, getVote(id) === val ? 'pending' : val);
+  renderGuiones();
+  refreshPanelVote(id);
+}
+
+function doStatus(e, id, val) {
+  e.stopPropagation();
+  setStatus(id, val);
+  renderGuiones();
+}
+
+function spVote(val) {
+  var id = document.getElementById('sp-textarea').dataset.currentId;
+  if (!id) return;
+  setVote(id, getVote(id) === val ? 'pending' : val);
+  refreshPanelVote(id);
+  renderGuiones();
+}
+
+function refreshPanelVote(id) {
+  var cur = document.getElementById('sp-textarea').dataset.currentId;
+  if (cur !== id) return;
+  var vote = getVote(id);
+  document.querySelectorAll('.sp-vote-btn').forEach(function(b){
+    b.classList.toggle('sp-vb-active', b.dataset.vote === vote);
+  });
+}
+
+function selectHook(id, idx) {
+  setSelHook(id, idx);
+  renderGuiones();
+  // Re-render disp section in panel
+  var hooks = HOOKS[id] || [];
+  document.getElementById('sp-disp-main').textContent = hooks[idx] || '';
+  document.querySelectorAll('.disp-var').forEach(function(el, i){
+    el.classList.toggle('disp-selected', i === idx);
+  });
+}
+
 // ─── LÓGICA DEL PANEL ────────────────────────────────────────────────────────
 
-let activeRow = null;
+var activeRow = null;
+var activeCard = null;
 
 function openScript(id) {
-  const d = SCRIPTS[id];
+  var d = SCRIPTS[id];
   if (!d) return;
 
-  // Highlight row
+  // Highlight calendar row (if visible)
   if (activeRow) activeRow.classList.remove('active');
-  activeRow = document.querySelector(`[onclick="openScript('${id}')"]`);
-  if (activeRow) activeRow.classList.add('active');
+  activeRow = document.querySelector('[onclick="openScript(\'' + id + '\')"]');
+  if (activeRow && activeRow.tagName === 'TR') activeRow.classList.add('active');
+
+  // Highlight guion card (if visible)
+  if (activeCard) activeCard.classList.remove('gc-active');
+  activeCard = document.getElementById('gc-' + id);
+  if (activeCard) activeCard.classList.add('gc-active');
 
   // Header
   document.getElementById('sp-fecha').textContent = d.fecha;
   document.getElementById('sp-titulo').textContent = d.titulo;
 
   // Chips
-  const chipMap = {
-    '': 'tag',
-    'green': 'tag tag-green',
-    'red': 'tag tag-red',
-    'gold': 'tag tag-gold',
-    'blue': 'tag tag-blue',
-    'kw': 'cta-kw',
-  };
-  document.getElementById('sp-chips').innerHTML = d.chips
-    .map(c => `<span class="${chipMap[c.c] || 'tag'}" style="font-size:11px;">${c.t}</span>`)
-    .join('');
+  document.getElementById('sp-chips').innerHTML = d.chips.map(function(c){
+    return '<span class="' + (CHIP_MAP[c.c]||'tag') + '" style="font-size:11px;">' + esc(c.t) + '</span>';
+  }).join('');
+
+  // Vote row
+  var vote = getVote(id);
+  document.querySelectorAll('.sp-vote-btn').forEach(function(b){
+    b.classList.toggle('sp-vb-active', b.dataset.vote === vote);
+  });
+
+  // Disparadores
+  var hooks = HOOKS[id] || [];
+  var selIdx = getSelHook(id);
+  document.getElementById('sp-disp-main').textContent = hooks[selIdx] || hooks[0] || '';
+  document.getElementById('sp-disp-vars').innerHTML = hooks.map(function(h, i){
+    return '<div class="disp-var' + (i===selIdx?' disp-selected':'') + '" onclick="selectHook(\'' + id + '\',' + i + ')">' +
+      '<div class="disp-var-num">' + (i+1) + '</div>' +
+      '<div class="disp-var-text">' + esc(h) + '</div>' +
+    '</div>';
+  }).join('');
 
   // Script display
-  const display = document.getElementById('sp-script-display');
+  var display = document.getElementById('sp-script-display');
   if (d.formato === 'carrusel') {
-    display.innerHTML = d.secciones.map(s => `
-      <div class="sp-slide">
-        <div class="sp-slide-num">${s.label}</div>
-        <div class="sp-slide-text">${s.text.replace(/\n/g,'<br>')}</div>
-      </div>`).join('');
+    display.innerHTML = d.secciones.map(function(s){
+      return '<div class="sp-slide"><div class="sp-slide-num">' + esc(s.label) + '</div><div class="sp-slide-text">' + esc(s.text).replace(/\n/g,'<br>') + '</div></div>';
+    }).join('');
   } else {
-    display.innerHTML = d.secciones.map(s => `
-      <div class="sp-script-section">
-        <div class="sp-section-tag">${s.label}</div>
-        <div class="sp-section-text">${s.text}</div>
-      </div>`).join('');
+    display.innerHTML = d.secciones.map(function(s){
+      return '<div class="sp-script-section"><div class="sp-section-tag">' + esc(s.label) + '</div><div class="sp-section-text">' + esc(s.text) + '</div></div>';
+    }).join('');
   }
 
-  // Textarea — pre-fill with plain text version
-  const plain = d.secciones.map(s => `[${s.label}]\n${s.text}`).join('\n\n');
-  const ta = document.getElementById('sp-textarea');
-  if (!ta.dataset['edited_' + id]) {
-    ta.value = plain;
-  }
+  // Textarea — saved text or generate from secciones
+  var ta = document.getElementById('sp-textarea');
+  var saved = getSavedText(id);
+  ta.value = saved !== null ? saved : d.secciones.map(function(s){ return '[' + s.label + ']\n' + s.text; }).join('\n\n');
   ta.dataset.currentId = id;
-  ta.oninput = () => { ta.dataset['edited_' + id] = '1'; };
+  ta.oninput = function(){ setSavedText(id, ta.value); };
 
   // Open
   document.getElementById('sp-overlay').classList.add('open');
   document.getElementById('sp-panel').classList.add('open');
+
+  // Scroll panel to top
+  document.querySelector('#sp-panel .sp-body').scrollTop = 0;
 }
 
 function closePanel() {
   document.getElementById('sp-overlay').classList.remove('open');
   document.getElementById('sp-panel').classList.remove('open');
-  if (activeRow) { activeRow.classList.remove('active'); activeRow = null; }
+  if (activeRow)  { activeRow.classList.remove('active');   activeRow = null; }
+  if (activeCard) { activeCard.classList.remove('gc-active'); activeCard = null; }
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePanel(); });
 </script>
 
 </body>
