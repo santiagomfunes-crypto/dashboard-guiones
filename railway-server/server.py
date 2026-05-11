@@ -171,10 +171,7 @@ def _respond_send(phone_digits: str, text: str) -> None:
 
 def wa_send(to: str, text: str, fallback_name: str = "") -> None:
     phone = re.sub(r"[^\d]", "", to)
-    if RESPOND_API_TOKEN:
-        # Respond.io BSP — prioridad máxima
-        _respond_send(phone, text)
-    elif WATI_API_URL and WATI_API_TOKEN:
+    if WATI_API_URL and WATI_API_TOKEN:
         # Wati BSP — messageText va como query param
         resp = http_requests.post(
             f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
@@ -1862,16 +1859,6 @@ def send_digest(hours: int = 2) -> None:
     except Exception as e:
         print(f"[Digest] Error: {e}")
 
-@app.route("/telegram/webhook", methods=["POST"])
-def telegram_webhook():
-    data = request.get_json(silent=True) or {}
-    msg  = data.get("message", {})
-    chat_id = str(msg.get("chat", {}).get("id", ""))
-    text    = msg.get("text", "").strip()
-    if not text or chat_id != TELEGRAM_CHAT_ID:
-        return "ok", 200
-    threading.Thread(target=_handle_manager, args=[text], daemon=True).start()
-    return "ok", 200
 
 @app.route("/admin/digest", methods=["POST"])
 def trigger_digest():
