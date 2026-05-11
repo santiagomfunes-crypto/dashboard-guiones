@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tandil Market Intelligence</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -353,6 +352,94 @@
       border-radius: 12px;
       padding: 3px 10px;
     }
+
+    /* COMPARABLES */
+    .comp-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .comp-panel .section-title {
+      margin-bottom: 16px;
+    }
+    .comp-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .comp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .comp-field label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .comp-field input[type="number"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+    .comp-field input[type="number"]:hover,
+    .comp-field input[type="number"]:focus { border-color: var(--accent); }
+    .comp-field input[type="number"]::placeholder { color: var(--text-muted); }
+    .comp-field select { width: 100%; }
+
+    .comp-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .comp-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .comp-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .comp-stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .comp-stat.accent .comp-stat-value { color: var(--accent); }
+    .comp-stat.green .comp-stat-value { color: var(--green); }
+    .comp-stat.orange .comp-stat-value { color: var(--accent2); }
+
+    .comp-empty {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    td.titulo-cell {
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -389,6 +476,7 @@
     <button class="tab active" onclick="switchTab('resumen', this)">Resumen</button>
     <button class="tab" onclick="switchTab('comparativa', this)">Por Zona</button>
     <button class="tab" onclick="switchTab('distribucion', this)">Distribucion</button>
+    <button class="tab" onclick="switchTab('comparables', this)">Comparables</button>
     <button class="tab" onclick="switchTab('evolucion', this)">Evolucion</button>
   </div>
 
@@ -484,6 +572,110 @@
       </div>
     </div>
 
+    <!-- VIEW: COMPARABLES -->
+    <div class="view" id="v-comparables">
+      <div class="comp-panel">
+        <div class="section-title">Buscador de comparables para tasacion</div>
+        <div class="comp-form">
+          <div class="comp-field">
+            <label>Zona</label>
+            <select id="comp-zona" onchange="renderComparables()">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="comp-field">
+            <label>Tipologia</label>
+            <select id="comp-tipo" onchange="renderComparables()">
+              <option value="">Todas</option>
+            </select>
+          </div>
+          <div class="comp-field">
+            <label>Operacion</label>
+            <select id="comp-op" onchange="renderComparables()">
+              <option value="">Todas</option>
+              <option value="venta">Venta</option>
+              <option value="alquiler">Alquiler</option>
+            </select>
+          </div>
+          <div class="comp-field">
+            <label>Metros min</label>
+            <input type="number" id="comp-met-min" placeholder="ej: 60" min="0" oninput="renderComparables()">
+          </div>
+          <div class="comp-field">
+            <label>Metros max</label>
+            <input type="number" id="comp-met-max" placeholder="ej: 150" min="0" oninput="renderComparables()">
+          </div>
+          <div class="comp-field">
+            <label>Dormitorios</label>
+            <select id="comp-dorm" onchange="renderComparables()">
+              <option value="">Todos</option>
+              <option value="1">1 dorm</option>
+              <option value="2">2 dorm</option>
+              <option value="3">3 dorm</option>
+              <option value="4">4 dorm</option>
+              <option value="5">5+ dorm</option>
+            </select>
+          </div>
+          <div class="comp-field">
+            <label>Precio max USD</label>
+            <input type="number" id="comp-precio-max" placeholder="sin limite" min="0" oninput="renderComparables()">
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-stats">
+        <div class="comp-stat accent">
+          <div class="comp-stat-label">Comparables</div>
+          <div class="comp-stat-value" id="comp-count">—</div>
+        </div>
+        <div class="comp-stat green">
+          <div class="comp-stat-label">Mediana USD</div>
+          <div class="comp-stat-value" id="comp-med-precio">—</div>
+        </div>
+        <div class="comp-stat orange">
+          <div class="comp-stat-label">Mediana USD/m2</div>
+          <div class="comp-stat-value" id="comp-med-m2">—</div>
+        </div>
+        <div class="comp-stat">
+          <div class="comp-stat-label">Rango de precios</div>
+          <div class="comp-stat-value" style="font-size:15px" id="comp-rango">—</div>
+        </div>
+        <div class="comp-stat">
+          <div class="comp-stat-label">USD/m2 rango</div>
+          <div class="comp-stat-value" style="font-size:15px" id="comp-m2-rango">—</div>
+        </div>
+      </div>
+
+      <div class="comp-empty" id="comp-empty" style="display:none">
+        No hay comparables para los filtros seleccionados.
+      </div>
+
+      <div id="comp-results" style="display:none">
+        <div class="table-controls" style="margin-bottom:12px">
+          <span class="count-badge" id="comp-table-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="comp-table">
+            <thead>
+              <tr>
+                <th onclick="sortComp('titulo')">Titulo</th>
+                <th onclick="sortComp('zona_det')">Zona</th>
+                <th onclick="sortComp('tipologia')">Tipo</th>
+                <th onclick="sortComp('operacion')">Op.</th>
+                <th onclick="sortComp('precio_usd')" class="sort-asc">Precio USD</th>
+                <th onclick="sortComp('metros_totales')">m2</th>
+                <th onclick="sortComp('usd_m2')">USD/m2</th>
+                <th onclick="sortComp('dormitorios')">Dorm</th>
+                <th onclick="sortComp('cochera')">Coch.</th>
+                <th>Fuente</th>
+              </tr>
+            </thead>
+            <tbody id="comp-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- VIEW: EVOLUCION -->
     <div class="view" id="v-evolucion">
       <div class="placeholder">
@@ -496,27 +688,93 @@
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
-  // Service key guardado en localStorage para no hardcodearlo en el repo
-  const LS_KEY = 'tmid_supabase_key';
-
-  function getStoredKey() {
-    return localStorage.getItem(LS_KEY);
+  async function sbFetch(table, fields, offset, limit, extraFilter = '') {
+    const url = `/api/${table}?select=${fields}&limit=${limit}&offset=${offset}${extraFilter}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
   }
 
-  function promptForKey() {
-    const k = window.prompt(
-      'Tandil Market Intelligence\n\nIngresa el Supabase service key (se guarda en localStorage de este browser):\n\nEncontrarlo en: .env → SUPABASE_SERVICE_KEY'
-    );
-    if (!k || !k.trim()) { alert('Key requerido para cargar datos.'); return null; }
-    localStorage.setItem(LS_KEY, k.trim());
-    return k.trim();
+  // ─── ZONE DETECTION CLIENT-SIDE ──────────────────────────────────────────
+  function norm(s) {
+    return (s || '').toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ');
   }
 
-  const SUPABASE_KEY = getStoredKey() || promptForKey();
-  if (!SUPABASE_KEY) { document.getElementById('load-detail').textContent = 'Sin key. Recarga la pagina.'; throw new Error('no key'); }
+  // Palabras que indican NO es Tandil (ciudad o partido explícito en la cadena)
+  const NON_TANDIL_KW = [
+    'olivos','vicente lopez','capital federal','bs.as. g.b.a','gba norte','gba sur','gba oeste',
+    'palermo','almagro','recoleta','caballito','villa crespo','coghlan','saavedra lamas',
+    'san isidro','tigre','pilar','moron','quilmes','lomas de zamora','lanus','avellaneda partido',
+    'mar del plata','bahia blanca','olavarria','benito juarez','necochea','lincoln','ayacucho',
+    'azul','azul, buenos aires','25 de mayo, 25 de mayo','partido de'
+  ];
 
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Calles → zona (accent-free, lowercase). Orden: más específico primero.
+  const STREET_ZONES = [
+    ['Corredor Avellaneda', ['avellaneda']],
+    ['Corredor Brasil',     ['brasil']],
+    ['Corredor Santamarina',['santamarina']],
+    ['Corredor Juan B. Justo',['juan b justo','juan b. justo']],
+    ['Countries',          ['country','valle escondido','sierras de tandil','club edal','entre las sierras','barrio golf']],
+    ['Barrio Dique',       ['dique']],
+    ['Sierras / Cerros',   ['cerro leones','penasco','sierra chica','cerro']],
+    ['La Mata',            ['la mata']],
+    ['Barrio Galicia',     ['villa galicia','bulewski','barrio galicia']],
+    ['Barrio Graduados',   ['graduados']],
+    ['Barrio 4 de Abril',  ['4 de abril','4deabril','14 de julio','jose cabral','linstow','intendente dufau','vigil','roser','basilico','nigro','jurado']],
+    ['Zona Norte',         ['av buzon','buzon','ceferino','namuncura','las malvas','ezeiza','montiel']],
+    // Centro: calles del casco histórico central
+    ['Centro', [
+      'fuerte independencia','pinto','chacabuco','san lorenzo','rodriguez',
+      '9 de julio','rivadavia','spiro','don bosco','mitre','san martin',
+      'rivera','gral paz','general paz','general pinto','alem','leandro alem',
+      'leandro n alem','roca','juarez','irigoyen','yrigoyen'
+    ]],
+    // Semicentro: anillo perimetral al centro
+    ['Semicentro', [
+      'paz','pellegrini','espana','uriburu','o higgins','ohiggins','reconquista',
+      'caseros','moreno','alberdi','alsina','sarmiento','machado','maipu','garibaldi',
+      'burgos','falucho','belgrano','suiza','italia','portugal','montevideo',
+      'neuquen','constitucion','11 de septiembre','colon','necochea','parana',
+      'corrientes','tucuman','entre rios','mendoza','catamarca','jujuy','chaco',
+      'formosa','misiones','corrientes','La Rioja','san juan','san luis',
+      'santiago del estero','la pampa','rio negro','neuquen','chubut','sta cruz',
+      'tierra del fuego','islas malvinas'
+    ]],
+  ];
+
+  function detectZonaCliente(d) {
+    // 1. Si tiene zona_normalizada útil, usarla
+    const zn = d.zona_normalizada;
+    if (zn && zn !== 'Otros Tandil' && zn !== 'NULL') return zn;
+
+    const zonaRaw = norm(d.zona || '');
+    const titulo = norm(d.titulo || '');
+    const combined = zonaRaw + ' ' + titulo;
+
+    // 2. Detectar no-Tandil explícito → null (se filtrará)
+    if (d.fuera_de_tandil) return null;
+    for (const kw of NON_TANDIL_KW) {
+      if (combined.includes(kw) && !combined.includes('tandil')) return null;
+    }
+    // Si menciona otra ciudad argentina sin mencionar Tandil → descartar
+    if (combined.includes('buenos aires interior') && !combined.includes('tandil')) return null;
+
+    // 3. Buscar zona por calle
+    for (const [zone, keywords] of STREET_ZONES) {
+      for (const kw of keywords) {
+        if (combined.includes(kw)) return zone;
+      }
+    }
+
+    // 4. Si menciona Tandil explícitamente → Otros Tandil (prop real sin zona asignada)
+    if (combined.includes('tandil')) return 'Otros Tandil';
+
+    // 5. Ambiguo pero vino del scraper de Tandil → Otros Tandil
+    return 'Otros Tandil';
+  }
 
   // ─── STATE ───────────────────────────────────────────────────────────────
   let allData = [];
@@ -540,28 +798,28 @@
     let offset = 0;
 
     // Check if zona_normalizada exists
-    const colCheck = await client.from('propiedades_mercado')
-      .select('zona_normalizada').limit(1);
-    hasZonaNorm = !colCheck.error;
+    try {
+      await sbFetch('propiedades_mercado', 'zona_normalizada', 0, 1);
+      hasZonaNorm = true;
+    } catch(e) { hasZonaNorm = false; }
 
     const fields = hasZonaNorm
-      ? 'tipologia,operacion,zona,zona_normalizada,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto'
-      : 'tipologia,operacion,zona,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto';
+      ? 'titulo,tipologia,operacion,zona,zona_normalizada,fuera_de_tandil,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto'
+      : 'titulo,tipologia,operacion,zona,fuera_de_tandil,precio_usd,metros_totales,dormitorios,cochera,fuente,primera_vez_visto';
 
-    while (true) {
-      detail.textContent = `Cargando... ${allData.length} propiedades`;
-      const { data, error } = await client
-        .from('propiedades_mercado')
-        .select(fields)
-        .range(offset, offset + PAGE - 1);
-
-      if (error || !data) { detail.textContent = 'Error: ' + (error?.message || 'sin datos'); break; }
-      allData = allData.concat(data);
-      if (data.length < PAGE) break;
-      offset += PAGE;
+    try {
+      while (true) {
+        detail.textContent = `Cargando... ${allData.length} propiedades`;
+        const data = await sbFetch('propiedades_mercado', fields, offset, PAGE, '&fuera_de_tandil=eq.false');
+        allData = allData.concat(data);
+        if (data.length < PAGE) break;
+        offset += PAGE;
+      }
+    } catch(e) {
+      detail.textContent = 'Error: ' + e.message;
+      console.error(e);
     }
 
-    // Populate filter options
     populateFilters();
     applyFilters();
 
@@ -693,14 +951,14 @@
 
   // ─── ZONA TABLE ───────────────────────────────────────────────────────────
   function getZona(d) {
-    if (hasZonaNorm && d.zona_normalizada) return d.zona_normalizada;
-    return d.zona || 'Sin zona';
+    return detectZonaCliente(d) || 'Sin zona';
   }
 
   function buildZonaData() {
     const map = {};
     filtered.forEach(d => {
       const z = getZona(d);
+      if (z === null) return; // skip non-Tandil detectados client-side
       if (!map[z]) map[z] = [];
       map[z].push(d);
     });
@@ -896,6 +1154,146 @@
     });
   }
 
+  // ─── COMPARABLES ──────────────────────────────────────────────────────────
+  let compInitialized = false;
+  let compSortKey = 'precio_usd';
+  let compSortDir = 1; // 1 asc, -1 desc
+  let compResults = [];
+
+  function initComparables() {
+    if (!compInitialized) {
+      // Populate zone dropdown from detected zones
+      const allZones = new Set();
+      allData.forEach(d => {
+        const z = detectZonaCliente(d);
+        if (z && z !== 'Otros Tandil') allZones.add(z);
+      });
+      allZones.add('Otros Tandil');
+
+      const sel = document.getElementById('comp-zona');
+      [...allZones].sort((a, b) => a.localeCompare(b)).forEach(z => {
+        sel.add(new Option(z, z));
+      });
+
+      // Populate tipo dropdown
+      const tipos = [...new Set(allData.map(d => d.tipologia).filter(Boolean))].sort();
+      const selTipo = document.getElementById('comp-tipo');
+      tipos.forEach(t => selTipo.add(new Option(capitalize(t), t)));
+
+      compInitialized = true;
+    }
+    renderComparables();
+  }
+
+  function renderComparables() {
+    const zona = document.getElementById('comp-zona').value;
+    const tipo = document.getElementById('comp-tipo').value;
+    const op = document.getElementById('comp-op').value;
+    const metMin = parseFloat(document.getElementById('comp-met-min').value) || 0;
+    const metMax = parseFloat(document.getElementById('comp-met-max').value) || Infinity;
+    const dormSel = document.getElementById('comp-dorm').value;
+    const precioMax = parseFloat(document.getElementById('comp-precio-max').value) || Infinity;
+
+    compResults = allData.filter(d => {
+      if (!d.precio_usd || d.precio_usd <= 0) return false;
+      if (zona) {
+        const dz = detectZonaCliente(d);
+        if (dz !== zona) return false;
+      }
+      if (tipo && d.tipologia !== tipo) return false;
+      if (op && d.operacion !== op) return false;
+      if (metMin && (!d.metros_totales || d.metros_totales < metMin)) return false;
+      if (metMax < Infinity && (!d.metros_totales || d.metros_totales > metMax)) return false;
+      if (dormSel) {
+        const dv = parseInt(dormSel);
+        if (dormSel === '5') {
+          if (!d.dormitorios || parseInt(d.dormitorios) < 5) return false;
+        } else {
+          if (parseInt(d.dormitorios) !== dv) return false;
+        }
+      }
+      if (precioMax < Infinity && d.precio_usd > precioMax) return false;
+      return true;
+    });
+
+    // enrich with computed usd_m2
+    compResults = compResults.map(d => ({
+      ...d,
+      usd_m2: (d.metros_totales > 0) ? d.precio_usd / d.metros_totales : null,
+      zona_det: detectZonaCliente(d) || '—',
+    }));
+
+    // summary stats
+    const precios = compResults.map(d => d.precio_usd);
+    const m2vals = compResults.filter(d => d.usd_m2 != null).map(d => d.usd_m2);
+
+    const medPrecio = median(precios);
+    const medM2 = median(m2vals);
+    const minP = precios.length ? Math.min(...precios) : null;
+    const maxP = precios.length ? Math.max(...precios) : null;
+    const minM2 = m2vals.length ? Math.min(...m2vals) : null;
+    const maxM2 = m2vals.length ? Math.max(...m2vals) : null;
+
+    document.getElementById('comp-count').textContent = compResults.length.toLocaleString('es-AR');
+    document.getElementById('comp-med-precio').textContent = medPrecio ? '$' + fmt(medPrecio) : '—';
+    document.getElementById('comp-med-m2').textContent = medM2 ? '$' + fmt(medM2) : '—';
+    document.getElementById('comp-rango').textContent = (minP && maxP) ? '$' + fmtK(minP) + ' – $' + fmtK(maxP) : '—';
+    document.getElementById('comp-m2-rango').textContent = (minM2 && maxM2) ? '$' + fmt(minM2) + ' – $' + fmt(maxM2) : '—';
+
+    document.getElementById('comp-empty').style.display = compResults.length ? 'none' : 'block';
+    document.getElementById('comp-results').style.display = compResults.length ? 'block' : 'none';
+
+    if (compResults.length) renderCompTable();
+  }
+
+  function renderCompTable() {
+    // sort
+    const sorted = [...compResults].sort((a, b) => {
+      let av = a[compSortKey];
+      let bv = b[compSortKey];
+      if (av == null) av = compSortDir > 0 ? Infinity : -Infinity;
+      if (bv == null) bv = compSortDir > 0 ? Infinity : -Infinity;
+      if (typeof av === 'string') return compSortDir * av.localeCompare(bv);
+      return compSortDir * (av - bv);
+    });
+
+    document.getElementById('comp-table-count').textContent = `${sorted.length.toLocaleString('es-AR')} comparables`;
+
+    const tbody = document.getElementById('comp-tbody');
+    tbody.innerHTML = sorted.map(r => {
+      const titulo = r.titulo || r.zona_det;
+      return `
+        <tr>
+          <td class="titulo-cell" title="${esc(r.titulo || '')}">${esc(titulo)}</td>
+          <td>${esc(r.zona_det)}</td>
+          <td>${esc(capitalize(r.tipologia || ''))}</td>
+          <td>${esc(capitalize(r.operacion || ''))}</td>
+          <td class="num">$${fmt(r.precio_usd)}</td>
+          <td class="num">${r.metros_totales ? fmt(r.metros_totales) : '—'}</td>
+          <td class="num">${r.usd_m2 ? '$' + fmt(r.usd_m2) : '—'}</td>
+          <td class="num">${r.dormitorios != null ? r.dormitorios : '—'}</td>
+          <td>${r.cochera ? 'Si' : '—'}</td>
+          <td>${esc(capitalize(r.fuente || ''))}</td>
+        </tr>
+      `;
+    }).join('');
+
+    // update sort headers
+    const keys = ['titulo','zona_det','tipologia','operacion','precio_usd','metros_totales','usd_m2','dormitorios','cochera','fuente'];
+    document.querySelectorAll('#comp-table th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (keys[i] === compSortKey) {
+        th.classList.add(compSortDir > 0 ? 'sort-asc' : 'sort-desc');
+      }
+    });
+  }
+
+  function sortComp(key) {
+    if (compSortKey === key) compSortDir *= -1;
+    else { compSortKey = key; compSortDir = 1; }
+    renderCompTable();
+  }
+
   // ─── TABS ─────────────────────────────────────────────────────────────────
   function switchTab(name, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -905,6 +1303,7 @@
 
     if (name === 'distribucion') renderDistribucion();
     if (name === 'comparativa') renderZonaTable();
+    if (name === 'comparables') initComparables();
   }
 
   // ─── UTILS ────────────────────────────────────────────────────────────────
