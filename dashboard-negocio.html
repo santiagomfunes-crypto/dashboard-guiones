@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santiago Funes Real Estate — Dashboard Estratégico</title>
+<style>
+  :root {
+    --bg: #09090b;
+    --bg-card: #111113;
+    --bg-card2: #18181b;
+    --bg-card3: #1f1f23;
+    --border: #2a2a30;
+    --border-light: #353540;
+    --gold: #c9a84c;
+    --gold-dim: #a8893d;
+    --gold-bg: rgba(201,168,76,0.08);
+    --gold-bg2: rgba(201,168,76,0.14);
+    --white: #f0f0f2;
+    --muted: #8a8a96;
+    --muted2: #5a5a68;
+    --red: #e05050;
+    --green: #4cad7a;
+    --blue: #5b87e0;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(9,9,11,0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    display: flex; align-items: center;
+    padding: 0 24px;
+    height: 52px;
+    gap: 2px;
+    overflow-x: auto;
+  }
+  nav::-webkit-scrollbar { height: 0; }
+  .nav-brand {
+    font-size: 13px; font-weight: 700; color: var(--gold);
+    letter-spacing: 0.04em; white-space: nowrap;
+    margin-right: 16px; flex-shrink: 0;
+  }
+  .nav-sep { width: 1px; height: 24px; background: var(--border); margin: 0 10px; flex-shrink: 0; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 12px; font-weight: 500;
+    padding: 6px 12px; border-radius: 6px;
+    white-space: nowrap; flex-shrink: 0;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .nav-btn:hover { color: var(--white); background: var(--bg-card2); }
+  .nav-btn.active { color: var(--gold); background: var(--gold-bg); }
+
+  /* LAYOUT */
+  main { padding-top: 52px; }
+  .section { display: none; padding: 32px 28px 60px; max-width: 1200px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* HEADER SECTION */
+  .hero {
+    background: linear-gradient(135deg, #0f0f12 0%, #1a1510 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 44px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .hero-name {
+    font-size: 32px; font-weight: 800; color: var(--white);
+    line-height: 1.1; margin-bottom: 6px;
+  }
+  .hero-name span { color: var(--gold); }
+  .hero-sub {
+    font-size: 15px; color: var(--muted); margin-bottom: 24px; max-width: 560px;
+  }
+  .hero-contacts {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .contact-chip {
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .contact-chip .icon { color: var(--gold); }
+
+  /* SECTION TITLES */
+  .sec-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .sec-headline {
+    font-size: 22px; font-weight: 700; color: var(--white);
+    margin-bottom: 20px; line-height: 1.25;
+  }
+  .sec-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .card-gold {
+    background: var(--gold-bg);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+  }
+  .card-text { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
+
+  /* GRID HELPERS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    nav { padding: 0 12px; }
+    .hero { padding: 28px 24px; }
+    .section { padding: 24px 16px 60px; }
+  }
+  @media (max-width: 1100px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* QUOTE BLOCK */
+  .quote-block {
+    border-left: 3px solid var(--gold);
+    padding: 14px 20px;
+    background: var(--gold-bg);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 16px 0;
+    font-size: 14px; font-style: italic; color: var(--white);
+    line-height: 1.6;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--bg-card2);
+    color: var(--gold); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg-card2); color: var(--white); }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    background: var(--bg-card2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    margin: 2px;
+  }
+  .tag-gold {
+    background: var(--gold-bg); border-color: rgba(201,168,76,0.3);
+    color: var(--gold);
+  }
+  .tag-green {
+    background: rgba(76,173,122,0.1); border-color: rgba(76,173,122,0.3);
+    color: var(--green);
+  }
+  .tag-red {
+    background: rgba(224,80,80,0.1); border-color: rgba(224,80,80,0.25);
+    color: var(--red);
+  }
+  .tag-blue {
+    background: rgba(91,135,224,0.1); border-color: rgba(91,135,224,0.3);
+    color: var(--blue);
+  }
+
+  /* CTA KEYWORD */
+  .cta-kw {
+    display: inline-block;
+    background: var(--gold); color: #09090b;
+    font-size: 12px; font-weight: 800;
+    padding: 3px 10px; border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* AVATAR CARD */
+  .avatar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .avatar-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .avatar-num {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+  }
+  .avatar-name {
+    font-size: 18px; font-weight: 800; color: var(--white);
+    margin-bottom: 6px;
+  }
+  .avatar-desc { font-size: 13px; color: var(--muted); }
+  .avatar-body { padding: 20px 24px; }
+  .sub-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted2); margin-bottom: 8px;
+  }
+  .bullet-list { list-style: none; padding: 0; margin-bottom: 16px; }
+  .bullet-list li {
+    padding: 4px 0; color: var(--muted); font-size: 13px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .bullet-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+  /* VARIABLE CARDS */
+  .var-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+  .var-num {
+    font-size: 28px; font-weight: 900; color: var(--gold);
+    opacity: 0.3; line-height: 1; margin-bottom: 4px;
+  }
+  .var-title {
+    font-size: 14px; font-weight: 700; color: var(--white);
+    margin-bottom: 8px;
+  }
+  .var-items { list-style: none; padding: 0; margin-bottom: 12px; }
+  .var-items li {
+    font-size: 12px; color: var(--muted); padding: 2px 0;
+    display: flex; gap: 6px;
+  }
+  .var-items li::before { content: '·'; color: var(--gold-dim); }
+  .var-q {
+    font-size: 12px; font-style: italic; color: var(--gold);
+    border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px;
+  }
+
+  /* LEVEL LADDER */
+  .level-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .level-num {
+    width: 32px; height: 32px; flex-shrink: 0;
+    background: var(--gold-bg); border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--gold);
+  }
+
+  /* INSTAGRAM TOPIC */
+  .ig-topic {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .ig-topic-header {
+    padding: 16px 20px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  .ig-topic-header:hover { background: var(--bg-card3); }
+  .ig-topic-title {
+    font-size: 14px; font-weight: 700; color: var(--white);
+  }
+  .ig-topic-title span { color: var(--gold); margin-right: 8px; }
+  .ig-topic-body {
+    padding: 20px; display: none;
+  }
+  .ig-topic-body.open { display: block; }
+  .chevron { color: var(--muted2); font-size: 12px; transition: transform 0.2s; }
+  .ig-topic-header.open .chevron { transform: rotate(180deg); }
+
+  /* ANGLE PILLS */
+  .angle-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .angle-row {
+    background: var(--bg-card2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+  .angle-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+  }
+  .angle-desc { font-size: 12.5px; color: var(--muted); }
+
+  /* FORMAT CARDS */
+  .format-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .format-num {
+    font-size: 11px; font-weight: 700; color: var(--gold);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .format-name {
+    font-size: 16px; font-weight: 800; color: var(--white); margin-bottom: 8px;
+  }
+  .format-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+
+  /* TONE BLOCKS */
+  .tone-row {
+    display: flex; gap: 16px;
+  }
+  .tone-col {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .tone-col.yes { border-top: 3px solid var(--green); }
+  .tone-col.no { border-top: 3px solid var(--red); }
+  .tone-title {
+    font-size: 13px; font-weight: 800; margin-bottom: 12px;
+  }
+  .tone-col.yes .tone-title { color: var(--green); }
+  .tone-col.no .tone-title { color: var(--red); }
+
+  /* VALUE PILLAR */
+  .value-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .value-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--gold-bg); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .value-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .value-expr { font-size: 12px; color: var(--muted); font-style: italic; }
+
+  /* PORTFOLIO */
+  .prop-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+  .prop-card:hover { border-color: var(--gold-dim); }
+  .prop-type {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted2); margin-bottom: 6px;
+  }
+  .prop-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+  .prop-price {
+    font-size: 20px; font-weight: 900; color: var(--gold); margin-bottom: 10px;
+  }
+  .prop-specs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .tone-row { flex-direction: column; }
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .stat-val { font-size: 26px; font-weight: 900; color: var(--gold); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* PHRASE BANK */
+  .phrase-grid { display: flex; flex-direction: column; gap: 8px; }
+  .phrase-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 16px;
+    font-size: 13px; color: var(--white);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .phrase-item::before { content: '"'; color: var(--gold); font-size: 18px; flex-shrink: 0; line-height: 1.2; }
+
+  /* MANIFESTO */
+  .manifesto {
+    background: linear-gradient(135deg, #141210 0%, #0f0d10 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: var(--radius);
+    padding: 36px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .manifesto::before {
+    content: '"';
+    position: absolute; top: -10px; left: 24px;
+    font-size: 160px; color: var(--gold); opacity: 0.06;
+    font-family: Georgia, serif; line-height: 1;
+    pointer-events: none;
+  }
+  .manifesto p {
+    font-size: 15px; color: var(--muted); line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  .manifesto p:last-child { margin-bottom: 0; }
+  .manifesto strong { color: var(--white); font-weight: 600; }
+
+  /* SERVICE DETAIL */
+  .service-step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .step-num {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: #09090b;
+  }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .step-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+  /* COMPARISON TABLE */
+  .comp-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 12px;
+  }
+  .comp-col {
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .comp-col.bad { border-left: 2px solid var(--red); }
+  .comp-col.good { border-left: 2px solid var(--green); }
+  .comp-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .comp-col.bad .comp-label { color: var(--red); }
+  .comp-col.good .comp-label { color: var(--green); }
+  .comp-text { font-size: 13px; color: var(--muted); }
+
+  /* SCROLLABLE TABLE WRAPPER */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+  .table-wrap table { min-width: 580px; }
+
+  /* CALENDAR ROWS */
+  tr[style*="rgba(201,168,76"] td { color: var(--muted); }
+
+  /* OBJECION */
+  .obj-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .obj-q {
+    padding: 12px 16px;
+    background: var(--bg-card2);
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-style: italic;
+  }
+  .obj-q::before { content: '❝ '; color: var(--muted2); }
+  .obj-a {
+    padding: 12px 16px;
+    font-size: 12.5px; color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* IG STORIES */
+  .stories-block {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 12px;
+  }
+  @media (max-width: 800px) {
+    .stories-block { grid-template-columns: 1fr 1fr; }
+  }
+  .story-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .story-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gold-bg); border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--gold);
+    margin: 0 auto 10px;
+  }
+  .story-name { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .story-desc { font-size: 11.5px; color: var(--muted); }
+
+  /* AVATAR TRANSFORMATION */
+  .transform-block {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center;
+    margin: 16px 0;
+  }
+  .transform-col { background: var(--bg-card2); border-radius: var(--radius-sm); padding: 14px; }
+  .transform-col.before { border-left: 2px solid var(--red); }
+  .transform-col.after { border-left: 2px solid var(--green); }
+  .transform-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .transform-col.before .transform-label { color: var(--red); }
+  .transform-col.after .transform-label { color: var(--green); }
+  .transform-arrow { text-align: center; font-size: 20px; color: var(--gold); }
+  @media (max-width: 700px) {
+    .transform-block { grid-template-columns: 1fr; }
+    .transform-arrow { transform: rotate(90deg); }
+  }
+
+  /* REEL STRUCTURE */
+  .reel-step {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .reel-step:last-child { border-bottom: none; }
+  .reel-badge {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--gold); color: #09090b;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+  }
+  .reel-label { font-size: 12px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .reel-desc { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">SFRE</span>
+  <div class="nav-sep"></div>
+  <button class="nav-btn active" onclick="show('negocio',this)">Negocio</button>
+  <button class="nav-btn" onclick="show('avatares',this)">Avatares</button>
+  <button class="nav-btn" onclick="show('sistema',this)">Sistema</button>
+  <button class="nav-btn" onclick="show('servicios',this)">Servicios</button>
+  <button class="nav-btn" onclick="show('ctas',this)">CTAs</button>
+  <button class="nav-btn" onclick="show('instagram',this)">Instagram</button>
+  <button class="nav-btn" onclick="show('comunicacion',this)">Comunicación</button>
+  <button class="nav-btn" onclick="show('personaje',this)">Personaje</button>
+  <button class="nav-btn" onclick="show('portfolio',this)">Portfolio</button>
+</nav>
+
+<main>
+
+<!-- ============================
+     SECCIÓN 1 — NEGOCIO
+============================= -->
+<div id="negocio" class="section active">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Centro de operaciones estratégicas</div>
+    <div class="hero-name">Santiago Funes <span>Real Estate</span></div>
+    <div class="hero-sub">Decisiones inmobiliarias inteligentes en Tandil · Grupo Altavista Otero</div>
+    <div class="hero-contacts">
+      <div class="contact-chip"><span class="icon">📍</span> Av. Avellaneda 1140, Tandil, BA</div>
+      <div class="contact-chip"><span class="icon">📲</span> +54 9 249 420-9464</div>
+      <div class="contact-chip"><span class="icon">🌐</span> propiedades.santiagofunes.com.ar</div>
+      <div class="contact-chip"><span class="icon">⚖️</span> Mat. 1966 · Dep. Judicial Azul</div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">2</div><div class="stat-label">Avatares</div></div>
+    <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Servicios activos</div></div>
+    <div class="stat-card"><div class="stat-val">5</div><div class="stat-label">Niveles de escalonamiento</div></div>
+    <div class="stat-card"><div class="stat-val">~USD 365K</div><div class="stat-label">Ticket promedio cartera</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card-gold">
+      <div class="card-title">El Nicho Correcto</div>
+      <div style="display:flex;gap:12px;margin-bottom:12px;">
+        <div style="flex:1;background:rgba(224,80,80,0.08);border:1px solid rgba(224,80,80,0.2);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">NO es</div>
+          <div style="font-size:13px;color:var(--muted);">Inmuebles en Tandil</div>
+        </div>
+        <div style="flex:1;background:rgba(76,173,122,0.08);border:1px solid rgba(76,173,122,0.2);border-radius:8px;padding:10px 12px;">
+          <div style="font-size:10px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">ES</div>
+          <div style="font-size:13px;color:var(--white);font-weight:600;">Decisiones inmobiliarias inteligentes en Tandil</div>
+        </div>
+      </div>
+      <div class="card-text">Santiago no compite por publicar más propiedades. <strong style="color:var(--white);">Compite por explicar mejor el mercado.</strong></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Posicionamiento Central</div>
+      <div class="quote-block" style="margin-top:0;">"Santiago Funes es un asesor inmobiliario local que entiende el mercado de Tandil y ayuda a propietarios, inversores y compradores a decidir con más información, estrategia y criterio."</div>
+      <div class="card-text">Se separa del vendedor, la inmobiliaria genérica y el influencer. Ocupa otro lugar: <strong style="color:var(--white);">el referente local que traduce el mercado.</strong></div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Propuestas de Valor</div>
+
+  <div class="quote-block" style="font-size:15px;font-weight:600;">"Santiago Funes Real Estate ayuda a propietarios, inversores y compradores a tomar decisiones inmobiliarias inteligentes en Tandil, combinando análisis real de mercado, estrategia comercial, criterio local y acompañamiento profesional."</div>
+
+  <div class="grid-3" style="margin-top:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title">Instagram</div><div class="card-text">"Propiedades, barrios e inversión inmobiliaria en Tandil explicados con criterio."</div></div>
+    <div class="card"><div class="card-title">Para Propietarios</div><div class="card-text">"Antes de vender tu propiedad, te ayudo a entender cuánto vale, cómo conviene presentarla y qué estrategia usar para vender mejor."</div></div>
+    <div class="card"><div class="card-title">Para Inversores</div><div class="card-text">"Antes de invertir o comprar en Tandil, te ayudo a analizar si la oportunidad tiene sentido por precio, zona, renta, liquidez, riesgo y salida futura."</div></div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">La Gran Idea Comercial</div>
+  <div style="background:var(--gold-bg);border:1px solid rgba(201,168,76,0.25);border-radius:var(--radius);padding:28px 32px;margin-bottom:20px;text-align:center;">
+    <div style="font-size:22px;font-weight:900;color:var(--gold);margin-bottom:8px;">"Tomá mejores decisiones inmobiliarias en Tandil."</div>
+    <div style="font-size:13px;color:var(--muted);">Los contenidos la instalan · Las propiedades la demuestran · Los CTAs llevan a eso · Los servicios la entregan</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">El Enemigo de la Marca</div>
+      <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:10px;">La mala decisión inmobiliaria.</div>
+      <div class="card-text">No la competencia. La marca se posiciona en contra de vender por intuición, tasar mirando portales, publicar sin estrategia, comprar por impulso, invertir solo porque parece barato.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Mensaje Raíz</div>
+      <div class="quote-block" style="margin:0;">"Comprar, vender o invertir en Tandil requiere más que mirar propiedades. Requiere criterio."</div>
+      <div class="card-text" style="margin-top:10px;"><strong style="color:var(--white);">Lo que se recuerda:</strong> "Santiago te ayuda a tomar mejores decisiones inmobiliarias en Tandil."</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">La Oferta en Una Oración</div>
+  <div class="manifesto">
+    <p>"Santiago Funes Real Estate te ayuda a <strong>vender, invertir o comprar en Tandil</strong> con análisis real de mercado, estrategia comercial y criterio local, para que no tomes una de las decisiones económicas más importantes de tu vida con intuición, presión o información incompleta."</p>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Regla de Oro del Contenido</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div class="phrase-item">¿Esto ayuda a un propietario a vender mejor?</div>
+    <div class="phrase-item">¿Esto ayuda a un inversor a decidir con más criterio?</div>
+    <div class="phrase-item">¿Esto ayuda a un comprador a evitar un error?</div>
+    <div class="phrase-item">¿Esto muestra a Santiago como alguien local, confiable y profesional?</div>
+    <div class="phrase-item">¿Esto puede abrir una conversación comercial?</div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Diferencial vs Inmobiliaria Tradicional</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div class="comp-row">
+      <div class="comp-col bad"><div class="comp-label">Inmobiliaria tradicional</div><div class="comp-text">Publica propiedades</div></div>
+      <div class="comp-col good"><div class="comp-label">SFRE</div><div class="comp-text">Analiza propiedades</div></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-col bad"><div class="comp-label">Inmobiliaria tradicional</div><div class="comp-text">Muestra características</div></div>
+      <div class="comp-col good"><div class="comp-label">SFRE</div><div class="comp-text">Explica para quién tienen sentido</div></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-col bad"><div class="comp-label">Inmobiliaria tradicional</div><div class="comp-text">Espera consultas</div></div>
+      <div class="comp-col good"><div class="comp-label">SFRE</div><div class="comp-text">Genera conversaciones calificadas</div></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-col bad"><div class="comp-label">Inmobiliaria tradicional</div><div class="comp-text">Habla de metros, ambientes y precio</div></div>
+      <div class="comp-col good"><div class="comp-label">SFRE</div><div class="comp-text">Habla de decisión, contexto, oportunidad y estrategia</div></div>
+    </div>
+    <div class="comp-row">
+      <div class="comp-col bad"><div class="comp-label">Inmobiliaria tradicional</div><div class="comp-text">Se enfoca en cerrar</div></div>
+      <div class="comp-col good"><div class="comp-label">SFRE</div><div class="comp-text">Se enfoca en guiar</div></div>
+    </div>
+  </div>
+
+</div><!-- /negocio -->
+
+
+<!-- ============================
+     SECCIÓN 2 — AVATARES
+============================= -->
+<div id="avatares" class="section">
+
+  <div class="sec-title">Los 2 Avatares del Negocio</div>
+  <div class="sec-headline">Nicho comercial principal</div>
+
+  <div class="quote-block" style="font-size:15px;font-weight:600;margin-bottom:28px;">"Antes de vender o invertir en Tandil, quiero hablar con Santiago."</div>
+
+  <!-- AVATAR 1 -->
+  <div class="avatar-card" style="margin-bottom:20px;">
+    <div class="avatar-header">
+      <div class="avatar-num">Avatar 01</div>
+      <div class="avatar-name">Propietario Vendedor</div>
+      <div class="avatar-desc">Tiene una propiedad en Tandil y está evaluando vender, tasar o entender cuánto vale realmente.</div>
+    </div>
+    <div class="avatar-body">
+      <div class="grid-2">
+        <div>
+          <div class="sub-title">Sus dolores principales</div>
+          <ul class="bullet-list">
+            <li>No saber cuánto vale realmente su propiedad</li>
+            <li>Miedo a vender barato</li>
+            <li>Miedo a publicar mal y perder oportunidades</li>
+            <li>Creer que el precio más alto es la mejor estrategia</li>
+            <li>No entender por qué no recibe consultas</li>
+            <li>No saber cómo presentar el inmueble</li>
+            <li>Confundir precio publicado con precio vendible</li>
+          </ul>
+          <div class="sub-title" style="margin-top:4px;">Mensajes clave</div>
+          <ul class="bullet-list">
+            <li>"El precio correcto no siempre es el precio más alto."</li>
+            <li>"Una mala tasación puede hacerte perder plata o tiempo."</li>
+            <li>"Publicar alto sin estrategia puede quemar una propiedad."</li>
+            <li>"Antes de vender, necesitás diagnóstico, no intuición."</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-title">Transformación</div>
+          <div class="transform-block">
+            <div class="transform-col before">
+              <div class="transform-label">Antes</div>
+              <ul class="bullet-list" style="margin-bottom:0;">
+                <li>No sabe el valor real</li>
+                <li>Mira portales y compara mal</li>
+                <li>Publica alto "para probar"</li>
+                <li>No recibe consultas calificadas</li>
+                <li>No tiene plan de venta</li>
+              </ul>
+            </div>
+            <div class="transform-arrow">→</div>
+            <div class="transform-col after">
+              <div class="transform-label">Después</div>
+              <ul class="bullet-list" style="margin-bottom:0;">
+                <li>Entiende el valor real de mercado</li>
+                <li>Tiene estrategia de precio</li>
+                <li>Sabe cómo presentarla mejor</li>
+                <li>Recibe consultas más filtradas</li>
+                <li>Negocia con respaldo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="sec-divider" style="margin:16px 0;">
+      <div class="grid-2">
+        <div>
+          <div class="sub-title">Conversión ideal</div>
+          <div class="card-text">Propietario interesado → diagnóstico → reunión/tasación → captación de propiedad</div>
+          <div style="margin-top:14px;">
+            <div class="sub-title">CTA principal</div>
+            <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--white);margin-top:6px;">
+              "Si querés vender o entender cuánto vale tu propiedad, escribime <span class="cta-kw">TASACIÓN</span> y armamos un diagnóstico."
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sub-title">Objeciones frecuentes</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+            <div class="obj-item">
+              <div class="obj-q">Quiero probar un precio más alto.</div>
+              <div class="obj-a">Probemos con estrategia, no por intuición. Primero entendamos contra qué propiedades competís y qué margen real tiene el mercado.</div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-q">No tengo apuro.</div>
+              <div class="obj-a">Justamente por eso conviene diagnosticar antes. No tener apuro no significa publicar mal o perder meses de exposición.</div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-q">Ya me tasaron.</div>
+              <div class="obj-a">Más que un número, buscamos entender precio, presentación, competencia y estrategia.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVATAR 2 -->
+  <div class="avatar-card">
+    <div class="avatar-header">
+      <div class="avatar-num">Avatar 02</div>
+      <div class="avatar-name">Inversor / Comprador</div>
+      <div class="avatar-desc">Persona con capital que quiere comprar en Tandil para renta, reventa, resguardo o para vivir. Necesita criterio para tomar la mejor decisión.</div>
+    </div>
+    <div class="avatar-body">
+      <div style="margin-bottom:12px;">
+        <div class="sub-title">Tipos de inversor</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="tag">Inversor local con dólares</span>
+          <span class="tag">Buenos Aires mirando Tandil</span>
+          <span class="tag">Renta mensual</span>
+          <span class="tag">Compara con otros instrumentos</span>
+          <span class="tag">Dpto chico / lotes</span>
+          <span class="tag">Familia que busca mudarse</span>
+          <span class="tag">Primera vivienda</span>
+          <span class="tag">Crédito hipotecario</span>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="sub-title">Sus dolores principales</div>
+          <ul class="bullet-list">
+            <li>No saber qué se alquila mejor</li>
+            <li>No saber qué zonas tienen liquidez</li>
+            <li>Confundir barato con oportunidad</li>
+            <li>No calcular renta, vacancia y salida</li>
+            <li>No distinguir renta vs reventa vs resguardo</li>
+            <li>Enamorarse de fotos sin revisar documentación</li>
+            <li>No entender gastos, escritura, boleto</li>
+          </ul>
+          <div class="sub-title" style="margin-top:4px;">Mensajes clave</div>
+          <ul class="bullet-list">
+            <li>"Una propiedad barata no siempre es una buena inversión."</li>
+            <li>"Antes de invertir, hay que mirar renta, liquidez y salida."</li>
+            <li>"En Tandil, la zona cambia completamente la inversión."</li>
+            <li>"La mejor propiedad no siempre es la más linda."</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-title">Transformación</div>
+          <div class="transform-block">
+            <div class="transform-col before">
+              <div class="transform-label">Antes</div>
+              <ul class="bullet-list" style="margin-bottom:0;">
+                <li>Mira propiedades sueltas</li>
+                <li>Confunde barato con oportunidad</li>
+                <li>No calcula renta ni salida</li>
+                <li>Se deja llevar por promesas vagas</li>
+              </ul>
+            </div>
+            <div class="transform-arrow">→</div>
+            <div class="transform-col after">
+              <div class="transform-label">Después</div>
+              <ul class="bullet-list" style="margin-bottom:0;">
+                <li>Entiende qué tipo de inversión busca</li>
+                <li>Compara con criterios claros</li>
+                <li>Mira precio, renta, liquidez y riesgo</li>
+                <li>Decide con más criterio y seguridad</li>
+              </ul>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="sub-title">CTAs principales</div>
+            <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--white);margin-top:6px;line-height:1.8;">
+              Inversor: <span class="cta-kw">INVERSIÓN</span><br>
+              Comprador: <span class="cta-kw">COMPRA</span> / <span class="cta-kw">BUSCO</span><br>
+              Lead caliente: <span class="cta-kw">ANÁLISIS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="sec-divider" style="margin:16px 0;">
+      <div class="sub-title">Objeciones frecuentes</div>
+      <div class="grid-3" style="margin-top:8px;">
+        <div class="obj-item">
+          <div class="obj-q">Estoy buscando una oportunidad.</div>
+          <div class="obj-a">Primero definamos qué significa oportunidad para vos: renta, reventa, resguardo o potencial de valorización.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-q">Vi algo barato.</div>
+          <div class="obj-a">Veamos si es barato por oportunidad o barato por baja demanda, mala ubicación o poca liquidez.</div>
+        </div>
+        <div class="obj-item">
+          <div class="obj-q">Quiero algo para alquilar.</div>
+          <div class="obj-a">Miremos quién sería el inquilino, qué demanda tiene la zona y qué salida futura puede tener la unidad.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /avatares -->
+
+
+<!-- ============================
+     SECCIÓN 3 — SISTEMA
+============================= -->
+<div id="sistema" class="section">
+
+  <div class="sec-title">Sistema de Decisión Inmobiliaria</div>
+  <div class="sec-headline">Las 5 variables que Santiago analiza en toda operación</div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <div class="var-card">
+      <div class="var-num">01</div>
+      <div class="var-title">Valor Real de Mercado</div>
+      <ul class="var-items">
+        <li>Precio de publicación vs propiedades comparables</li>
+        <li>Estado real · Ubicación · Metros · Demanda · Competencia actual</li>
+        <li>Margen de negociación · Valor de cierre estimado</li>
+      </ul>
+      <div class="var-q">Pregunta clave: ¿Esta propiedad está en precio o solo está publicada a ese valor?</div>
+    </div>
+
+    <div class="var-card">
+      <div class="var-num">02</div>
+      <div class="var-title">Zona y Demanda</div>
+      <ul class="var-items">
+        <li>Conectividad · Cercanía a servicios · Perfil del barrio</li>
+        <li>Demanda de compradores · Demanda de alquiler · Proyección</li>
+        <li>Liquidez · Tipo de público que busca esa zona</li>
+      </ul>
+      <div class="var-q">Pregunta clave: ¿Esta zona tiene sentido para el objetivo del cliente?</div>
+    </div>
+
+    <div class="var-card">
+      <div class="var-num">03</div>
+      <div class="var-title">Estado, Presentación y Percepción de Valor</div>
+      <ul class="var-items">
+        <li>Estado general · Distribución · Luz · Mantenimiento</li>
+        <li>Detalles mejorables · Fotos · Video · Orden visual</li>
+        <li>Narrativa comercial · Primera impresión</li>
+      </ul>
+      <div class="var-q">Pregunta clave: ¿La propiedad está siendo presentada de manera que el mercado entienda su valor?</div>
+    </div>
+
+    <div class="var-card">
+      <div class="var-num">04</div>
+      <div class="var-title">Riesgo Operativo y Documental</div>
+      <ul class="var-items">
+        <li>Documentación · Aptitud para crédito · Estado de escritura</li>
+        <li>Boleto/cesión/fideicomiso · Costos asociados</li>
+        <li>Tiempos · Gastos de cierre · Posibles trabas</li>
+      </ul>
+      <div class="var-q">Pregunta clave: ¿Qué hay que revisar antes de avanzar?</div>
+    </div>
+
+    <div class="var-card">
+      <div class="var-num">05</div>
+      <div class="var-title">Estrategia de Salida</div>
+      <ul class="var-items">
+        <li>Comprador objetivo · Liquidez · Demanda futura</li>
+        <li>Renta potencial · Reventa · Tiempo probable de mercado</li>
+        <li>Estrategia de publicación · Negociación · Próximos pasos</li>
+      </ul>
+      <div class="var-q">Pregunta clave: ¿Qué estrategia hace que esta decisión tenga más sentido?</div>
+    </div>
+
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Promesa General del Servicio</div>
+  <div class="quote-block" style="font-size:15px;font-weight:600;">"No te prometo una decisión perfecta. Te prometo ayudarte a decidir con más información, más criterio y menos improvisación."</div>
+
+  <div class="grid-4" style="margin-top:16px;">
+    <div class="card"><div class="card-title">Claridad</div><div class="card-text">El cliente debe entender qué se está haciendo y por qué.</div></div>
+    <div class="card"><div class="card-title">Criterio</div><div class="card-text">Santiago explica las decisiones con fundamentos, no con intuición.</div></div>
+    <div class="card"><div class="card-title">Honestidad</div><div class="card-text">No todo precio tiene sentido. No toda propiedad es oportunidad.</div></div>
+    <div class="card"><div class="card-title">Seguimiento</div><div class="card-text">Cada cliente debe tener un próximo paso. Nunca un "cualquier cosa avisame".</div></div>
+  </div>
+
+</div><!-- /sistema -->
+
+
+<!-- ============================
+     SECCIÓN 4 — SERVICIOS
+============================= -->
+<div id="servicios" class="section">
+
+  <div class="sec-title">Oferta y Servicios</div>
+  <div class="sec-headline">La marca no vende propiedades. Vende criterio.</div>
+
+  <div class="table-wrap" style="margin-bottom:28px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Servicio</th>
+          <th>Avatar</th>
+          <th>Promesa</th>
+          <th>CTA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--white);">Diagnóstico de Valor Inmobiliario</strong></td>
+          <td><span class="tag">Propietario</span></td>
+          <td>Entender valor, presentación y estrategia antes de publicar</td>
+          <td><span class="cta-kw">TASACIÓN</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white);">Estrategia de Venta Inmobiliaria</strong></td>
+          <td><span class="tag">Propietario</span></td>
+          <td>Proceso completo de 5 etapas para vender mejor</td>
+          <td><span class="cta-kw">TASACIÓN</span> / <span class="cta-kw">DIAGNÓSTICO</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white);">Radar de Inversión en Tandil</strong></td>
+          <td><span class="tag">Inversor</span></td>
+          <td>Comparar oportunidades por precio, renta, zona, riesgo y salida</td>
+          <td><span class="cta-kw">INVERSIÓN</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white);">Asesoría de Compra en Tandil</strong></td>
+          <td><span class="tag">Comprador</span></td>
+          <td>Ordenar búsqueda, comparar y revisar antes de avanzar</td>
+          <td><span class="cta-kw">COMPRA</span> / <span class="cta-kw">BUSCO</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white);">Análisis Express de Propiedad</strong></td>
+          <td><span class="tag">Lead caliente</span></td>
+          <td>Saber qué mirar antes de señar o avanzar</td>
+          <td><span class="cta-kw">ANÁLISIS</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white);">Diagnóstico Inmobiliario Inicial</strong></td>
+          <td><span class="tag">Todos</span></td>
+          <td>Primera conversación para ordenar situación y definir próximo paso</td>
+          <td><span class="cta-kw">DIAGNÓSTICO</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Escalonamiento de Oferta</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+    <div class="level-item">
+      <div class="level-num">1</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;">Contenido Gratuito</div>
+        <div style="font-size:12.5px;color:var(--muted);">Atraer audiencia calificada y construir autoridad. Reels, análisis, propiedades explicadas, contenidos para propietarios e inversores.</div>
+      </div>
+    </div>
+    <div class="level-item">
+      <div class="level-num">2</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;">Lead Magnets</div>
+        <div style="font-size:12.5px;color:var(--muted);">Convertir seguidores en conversaciones. Checklist para vender, guía de tasación, mapa de barrios, mini guía para invertir en Tandil.</div>
+      </div>
+    </div>
+    <div class="level-item">
+      <div class="level-num">3</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;">Diagnóstico Inicial</div>
+        <div style="font-size:12.5px;color:var(--muted);">Calificar el lead y entender su situación. Diagnóstico de valor, análisis express, radar inicial de inversión, asesoría inicial de compra.</div>
+      </div>
+    </div>
+    <div class="level-item">
+      <div class="level-num">4</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;">Servicio Principal</div>
+        <div style="font-size:12.5px;color:var(--muted);">Acompañar la operación inmobiliaria. Venta de propiedad, compra asistida, inversión inmobiliaria, captación y gestión.</div>
+      </div>
+    </div>
+    <div class="level-item">
+      <div class="level-num">5</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:3px;">Relación de Largo Plazo</div>
+        <div style="font-size:12.5px;color:var(--muted);">Santiago como referente inmobiliario para futuras decisiones. Seguimiento, oportunidades futuras, referidos, nuevas operaciones.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Servicio 1 — Estrategia de Venta Inmobiliaria</div>
+  <div class="quote-block" style="margin-bottom:16px;">"Ayudarte a entender el valor real de tu propiedad y diseñar una estrategia de venta clara para salir al mercado con mejor precio, mejor presentación y mejor seguimiento comercial."</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+    <div class="service-step">
+      <div class="step-num">1</div>
+      <div><div class="step-title">Diagnóstico Inicial</div><div class="step-desc">Tipo de propiedad, ubicación, metros, estado, antigüedad, documentación, motivo de venta, plazo, expectativa de precio, historial de publicación.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">2</div>
+      <div><div class="step-title">Tasación Estratégica</div><div class="step-desc">No es decir un número. Lectura estratégica del valor dentro del mercado real de Tandil: zona, tipo, metros, estado, demanda, comparables, precio vs precio vendible, margen de negociación.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">3</div>
+      <div><div class="step-title">Estrategia de Venta</div><div class="step-desc">Precio de salida, rango de negociación, público objetivo, puntos fuertes/débiles, mejoras recomendadas, narrativa de la propiedad, estrategia de ajuste.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">4</div>
+      <div><div class="step-title">Comercialización</div><div class="step-desc">Fotos, videos, recorrido, ficha comercial, descripción profesional, publicación en web/Instagram/portales, historias, WhatsApp, base de datos, pauta cuando corresponde.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">5</div>
+      <div><div class="step-title">Seguimiento, Negociación y Acompañamiento</div><div class="step-desc">Consultas recibidas, calidad de interesados, visitas, feedback, objeciones, señales de interés, ajuste de estrategia, negociación, avance documental.</div></div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Servicio 2 — Asesoría de Inversión Inmobiliaria</div>
+  <div class="quote-block" style="margin-bottom:16px;">"Ayudarte a analizar oportunidades inmobiliarias en Tandil según tu capital, objetivo, zona, renta potencial, riesgo y salida futura."</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+    <div class="service-step">
+      <div class="step-num">1</div>
+      <div><div class="step-title">Perfil del Inversor</div><div class="step-desc">Capital, forma de pago, objetivo, horizonte, tolerancia al riesgo, necesidad de liquidez, preferencia renta/reventa, zona de interés.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Estrategia de Inversión</div>
+        <div class="step-desc">Renta · Reventa · Resguardo de valor · Pozo/fideicomiso · Propiedad con potencial.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+          <span class="tag tag-blue">Renta</span>
+          <span class="tag tag-blue">Reventa</span>
+          <span class="tag tag-blue">Resguardo</span>
+          <span class="tag tag-blue">Pozo/Fideicomiso</span>
+          <span class="tag tag-blue">Potencial</span>
+        </div>
+      </div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">3</div>
+      <div><div class="step-title">Búsqueda / Análisis de Oportunidades</div><div class="step-desc">Precio, ubicación, valor por m², estado, renta potencial, gastos, expensas, mantenimiento, liquidez, perfil del inquilino/comprador, riesgo, competencia, salida futura.</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">4</div>
+      <div><div class="step-title">Comparación y Recomendación</div><div class="step-desc">Matriz: precio / zona / tipo / renta potencial / liquidez / riesgo / estado / salida futura / recomendación. Santiago puede decir: "Esta propiedad puede ser interesante, pero no para tu objetivo."</div></div>
+    </div>
+    <div class="service-step">
+      <div class="step-num">5</div>
+      <div><div class="step-title">Acompañamiento en Compra</div><div class="step-desc">Coordinación de visita, análisis de condiciones, negociación, reserva, articulación con martillero, revisión documental, boleto o escritura.</div></div>
+    </div>
+  </div>
+
+</div><!-- /servicios -->
+
+
+<!-- ============================
+     SECCIÓN 5 — CTAs
+============================= -->
+<div id="ctas" class="section">
+
+  <div class="sec-title">CTAs y Palabras Clave</div>
+  <div class="sec-headline">8 keywords que activan conversaciones</div>
+
+  <div class="table-wrap" style="margin-bottom:32px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Para quién</th>
+          <th>Acción que activa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cta-kw">TASACIÓN</span></td>
+          <td>Propietario que quiere vender o entender valor</td>
+          <td>Diagnóstico de Valor Inmobiliario</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">DIAGNÓSTICO</span></td>
+          <td>Propietario en etapa inicial</td>
+          <td>Primera reunión de análisis</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">INVERSIÓN</span></td>
+          <td>Inversor con capital disponible</td>
+          <td>Radar de Inversión Inmobiliaria</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">COMPRA</span></td>
+          <td>Comprador residencial</td>
+          <td>Asesoría de Compra en Tandil</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">BUSCO</span></td>
+          <td>Comprador que quiere recibir opciones</td>
+          <td>Filtro de necesidad y presupuesto</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">ANÁLISIS</span></td>
+          <td>Lead caliente que ya vio una propiedad puntual</td>
+          <td>Análisis Express de Propiedad</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">BARRIO</span></td>
+          <td>Audiencia local que quiere entender zonas</td>
+          <td>Información sobre zona específica</td>
+        </tr>
+        <tr>
+          <td><span class="cta-kw">CRÉDITO</span></td>
+          <td>Comprador que evalúa propiedades apto crédito</td>
+          <td>Orientación sobre financiamiento</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Bio de Instagram</div>
+  <div class="card-gold" style="margin-bottom:20px;">
+    <div style="font-size:15px;color:var(--white);line-height:1.9;">
+      Real estate en Tandil, explicado con criterio.<br>
+      Te ayudo a vender, invertir y comprar mejor.<br>
+      Escribime <span class="cta-kw">TASACIÓN</span>, <span class="cta-kw">INVERSIÓN</span> o <span class="cta-kw">COMPRA</span>.
+    </div>
+  </div>
+
+  <div class="sec-title">Mensaje de WhatsApp Inicial</div>
+  <div class="card">
+    <div style="font-size:14px;color:var(--white);line-height:1.7;">"Hola, soy Santiago. Contame si estás buscando vender, invertir o comprar en Tandil y te ayudo a ordenar el próximo paso con criterio."</div>
+  </div>
+
+</div><!-- /ctas -->
+
+
+<!-- ============================
+     SECCIÓN 6 — INSTAGRAM
+============================= -->
+<div id="instagram" class="section">
+
+  <div class="sec-title">Estrategia de Instagram</div>
+  <div class="sec-headline">4 Temas · 3 Ángulos cada uno · 4 Formatos · Estructura de contenido</div>
+
+  <!-- TEMAS -->
+  <div style="margin-bottom:8px;">
+    <div class="ig-topic">
+      <div class="ig-topic-header" onclick="toggleTopic(this)">
+        <div class="ig-topic-title"><span>TEMA 1</span> Mercado de Tandil y Argentina</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="ig-topic-body">
+        <div class="card-text" style="margin-bottom:14px;"><strong style="color:var(--white);">Objetivo:</strong> Posicionar a Santiago como traductor del mercado. <strong style="color:var(--white);">Rol:</strong> Construir autoridad y demostrar que entiende el mercado, no solo publica propiedades.</div>
+        <div class="angle-grid">
+          <div class="angle-row"><div class="angle-label">Ángulo 1 — Actualidad + opinión</div><div class="angle-desc">Novedades del mercado, crédito, dólar, CAC, costo de construcción, alquileres, cambios en demanda. Siempre con bajada local: "qué significa esto para Tandil". No es repetir noticias. Es interpretar.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 2 — Errores/problemas del mercado en Tandil</div><div class="angle-desc">Tasaciones sin datos. Publicaciones sin estrategia. Propiedades mal posicionadas. Comparaciones incorrectas. Decisiones con información incompleta. Falta de criterio en el sector.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 3 — Oportunidades reales del mercado</div><div class="angle-desc">Dónde puede aparecer valor real. Propiedades apto crédito. Tickets con más demanda. Zonas o productos con potencial. Fideicomisos, pozo, terminados, propiedades mal posicionadas. Separar oportunidad real de "humo".</div></div>
+        </div>
+        <div class="sub-title" style="margin-top:12px;">Contenidos posibles</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="tag">Precios en Tandil</span><span class="tag">Qué se consigue con X presupuesto</span><span class="tag">Crédito hipotecario</span><span class="tag">Zonas que se mueven</span><span class="tag">Precio publicado vs valor real</span><span class="tag">Señales de demanda real</span><span class="tag">Cómo leer publicaciones</span>
+        </div>
+        <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--white);">
+          <strong style="color:var(--gold);">CTA:</strong> "Si querés entender si una propiedad está en precio, escribime <span class="cta-kw" style="font-size:11px;">ANÁLISIS</span>"
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-topic" style="margin-top:8px;">
+      <div class="ig-topic-header" onclick="toggleTopic(this)">
+        <div class="ig-topic-title"><span>TEMA 2</span> Para Propietarios</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="ig-topic-body">
+        <div class="card-text" style="margin-bottom:14px;"><strong style="color:var(--white);">Objetivo:</strong> Captar vendedores. <strong style="color:var(--white);">Rol:</strong> Generar consultas de tasación y captación de propiedades.</div>
+        <div class="angle-grid">
+          <div class="angle-row"><div class="angle-label">Ángulo 1 — Querer vender sin estrategia</div><div class="angle-desc">Error de creer que vender es publicar y esperar. Incluye precio, presentación, publicación, seguimiento, competencia, percepción, consultas. Frase madre: "Vender bien no es publicar. Es tener estrategia."</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 2 — Por qué elegirnos</div><div class="angle-desc">Diferenciar a Santiago de una inmobiliaria tradicional. Mostrar método, criterio, diagnóstico, seguimiento, presentación y acompañamiento. Vender confianza y proceso.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 3 — Análisis de inversiones</div><div class="angle-desc">Mirar la propiedad del propietario también desde el valor para quien compra o invierte. Analizar para qué perfil puede tener sentido. Pensar la salida comercial y el tipo de comprador/inversor.</div></div>
+        </div>
+        <div class="sub-title" style="margin-top:12px;">Contenidos posibles</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="tag">Errores al vender</span><span class="tag">Cómo saber si está bien tasada</span><span class="tag">Por qué publicar alto cuesta caro</span><span class="tag">Qué mira un comprador</span><span class="tag">Publicar vs comercializar</span><span class="tag">Cuándo ajustar precio</span>
+        </div>
+        <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--white);">
+          <strong style="color:var(--gold);">CTA:</strong> "Si querés saber si tu propiedad está bien tasada, escribime <span class="cta-kw" style="font-size:11px;">TASACIÓN</span>"
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-topic" style="margin-top:8px;">
+      <div class="ig-topic-header" onclick="toggleTopic(this)">
+        <div class="ig-topic-title"><span>TEMA 3</span> Para Inversores</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="ig-topic-body">
+        <div class="card-text" style="margin-bottom:14px;"><strong style="color:var(--white);">Objetivo:</strong> Atraer personas con capital. <strong style="color:var(--white);">Rol:</strong> Construir autoridad, atraer capital y generar operaciones con lógica de inversión.</div>
+        <div class="angle-grid">
+          <div class="angle-row"><div class="angle-label">Ángulo 1 — Querer invertir sin estrategia</div><div class="angle-desc">Error de mirar propiedades sueltas. Comprar porque parece barato. No definir objetivo: renta, reventa, resguardo, pozo, terminado, liquidez, riesgo.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 2 — Por qué elegirnos</div><div class="angle-desc">Mostrar por qué Santiago no manda propiedades sueltas. Primero entiende capital, objetivo, horizonte, riesgo. Luego filtra, compara y analiza oportunidades. Posiciona a Santiago como asesor que cuida la decisión.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 3 — Análisis de oportunidades</div><div class="angle-desc">Analizar oportunidades concretas: departamentos, fideicomisos, pozo, terminado, casas con potencial, apto crédito. Evaluar precio, zona, renta, liquidez, riesgo y salida futura.</div></div>
+        </div>
+        <div class="sub-title" style="margin-top:12px;">Contenidos posibles</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="tag">Renta vs reventa vs resguardo</span><span class="tag">Dpto chico para alquiler</span><span class="tag">Zonas con demanda</span><span class="tag">Apto crédito como oportunidad</span><span class="tag">Fideicomisos</span><span class="tag">Cómo comparar dos inversiones</span>
+        </div>
+        <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--white);">
+          <strong style="color:var(--gold);">CTA:</strong> "Si querés invertir en Tandil con criterio, escribime <span class="cta-kw" style="font-size:11px;">INVERSIÓN</span>"
+        </div>
+      </div>
+    </div>
+
+    <div class="ig-topic" style="margin-top:8px;">
+      <div class="ig-topic-header" onclick="toggleTopic(this)">
+        <div class="ig-topic-title"><span>TEMA 4</span> Vida Santiago</div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="ig-topic-body">
+        <div class="card-text" style="margin-bottom:14px;"><strong style="color:var(--white);">Objetivo:</strong> Construir marca personal, confianza y cercanía. <strong style="color:var(--white);">Rol:</strong> Humanizar la marca y hacer que Santiago sea recordado como referente local.</div>
+        <div class="angle-grid">
+          <div class="angle-row"><div class="angle-label">Ángulo 1 — Historia y camino emprendedor</div><div class="angle-desc">Su recorrido. Vuelta a Tandil. Trabajo desde chico. Costa Rica. Surf, adrenalina, liderazgo. Búsqueda de camino propio. Decisión de construir una marca personal inmobiliaria.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 2 — Opiniones de Santi</div><div class="angle-desc">Lo que piensa sobre trabajo, negocios, plata, disciplina, riesgo, juventud, ambición, tecnología, redes, Tandil, emprender. Puede no ser necesariamente real estate, pero construye personaje.</div></div>
+          <div class="angle-row"><div class="angle-label">Ángulo 3 — Día a día en la oficina</div><div class="angle-desc">Cómo trabaja. Reuniones, llamadas, visitas, organización del día. Cómo toma decisiones. Cómo habla con clientes. Cómo piensa una publicación. Recorridas y detrás de escena real.</div></div>
+        </div>
+        <div class="sub-title" style="margin-top:12px;">Ideas de Reels</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="tag">"No llegué al real estate por un camino lineal"</span><span class="tag">"El surf me cambió la vida"</span><span class="tag">"Por qué volví a Tandil"</span><span class="tag">"Lo que no me gusta del mercado tradicional"</span><span class="tag">"Adrenalina y negocios"</span>
+        </div>
+        <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--white);">
+          <strong style="color:var(--gold);">CTA:</strong> "Si estás mirando una decisión inmobiliaria, escribime y vemos tu caso."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Los 5 Formatos de Contenido</div>
+  <div class="grid-2" style="margin-bottom:28px;">
+    <div class="format-card">
+      <div class="format-num">Formato 01</div>
+      <div class="format-name">Frente a Cámara</div>
+      <div class="format-desc">Instalar ideas, explicar errores, dar opinión y construir autoridad personal.</div>
+      <div class="tag tag-gold">Errores de propietarios</div>
+      <div class="tag tag-gold">Análisis de mercado</div>
+      <div class="tag tag-gold">Creencias fuertes de marca</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">"El error más común al vender una propiedad en Tandil es creer que probar alto no tiene costo."</div>
+    </div>
+    <div class="format-card">
+      <div class="format-num">Formato 02</div>
+      <div class="format-name">POV / Preguntas</div>
+      <div class="format-desc">Responder dudas reales y convertir objeciones en contenido.</div>
+      <div class="tag tag-gold">¿Bien tasada?</div>
+      <div class="tag tag-gold">¿Conviene con crédito?</div>
+      <div class="tag tag-gold">¿Dpto o casa para invertir?</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">"Me preguntaron si conviene comprar un departamento chico para alquilar en Tandil..."</div>
+    </div>
+    <div class="format-card">
+      <div class="format-num">Formato 03</div>
+      <div class="format-name">Pizarra</div>
+      <div class="format-desc">Explicar conceptos con estructura visual y lógica simple.</div>
+      <div class="tag tag-gold">Precio publicado vs vendible</div>
+      <div class="tag tag-gold">Cálculo de rentabilidad</div>
+      <div class="tag tag-gold">Las 5 variables</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">"Para saber si una propiedad está en precio, no miro solo los metros. Miro estas cinco variables."</div>
+    </div>
+    <div class="format-card">
+      <div class="format-num">Formato 04</div>
+      <div class="format-name">Propiedades</div>
+      <div class="format-desc">Vender sin sonar a ficha fría. Estructura de 5 pasos: para quién es → punto fuerte → qué revisar → por qué tiene sentido → CTA.</div>
+      <div class="tag tag-gold">Para quién es</div>
+      <div class="tag tag-gold">Punto fuerte</div>
+      <div class="tag tag-gold">Qué revisar</div>
+      <div class="tag tag-gold">Por qué tiene sentido</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">"Esta propiedad no es para cualquiera. Tiene sentido para una familia que busca espacio y margen para mejorarla."</div>
+    </div>
+    <div class="format-card">
+      <div class="format-num">Formato 05</div>
+      <div class="format-name">Carruseles</div>
+      <div class="format-desc">Explicar ideas con mayor orden, generar guardados, mostrar autoridad, reutilizar ideas fuertes, educar sin hacer tutorial largo.</div>
+      <div class="tag tag-gold">Ideas estructuradas</div>
+      <div class="tag tag-gold">Autoridad y criterio</div>
+      <div class="tag tag-gold">Genera guardados</div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);font-style:italic;">Ideal para: errores con estructura, comparaciones, análisis de oportunidades, listas de criterios.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Estructura de Reels</div>
+  <div class="card" style="margin-bottom:24px;">
+    <div class="reel-step">
+      <div class="reel-badge">1</div>
+      <div>
+        <div class="reel-label">Hook claro (primeros 2 segundos)</div>
+        <div class="reel-desc">"El error más caro al vender una propiedad no es ponerla barata. Es ponerla mal." / "Una propiedad barata no siempre es una oportunidad." / "Si estás por vender tu casa, no arranques por las fotos. Arrancá por esto."</div>
+      </div>
+    </div>
+    <div class="reel-step">
+      <div class="reel-badge">2</div>
+      <div>
+        <div class="reel-label">Desarrollo simple</div>
+        <div class="reel-desc">Una sola idea, sin resolver todo en un video.</div>
+      </div>
+    </div>
+    <div class="reel-step">
+      <div class="reel-badge">3</div>
+      <div>
+        <div class="reel-label">Criterio propio</div>
+        <div class="reel-desc">"Yo antes de recomendar una propiedad miro precio, zona, demanda y salida futura."</div>
+      </div>
+    </div>
+    <div class="reel-step">
+      <div class="reel-badge">4</div>
+      <div>
+        <div class="reel-label">Cierre con CTA</div>
+        <div class="reel-desc">"Si querés vender y no sabés si tu propiedad está bien tasada, escribime <strong>TASACIÓN</strong>." / "Si querés invertir en Tandil, escribime <strong>INVERSIÓN</strong>."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Estructura de Stories (4 bloques diarios)</div>
+  <div class="stories-block">
+    <div class="story-card">
+      <div class="story-num">1</div>
+      <div class="story-name">Presencia Humana</div>
+      <div class="story-desc">Recorridas, camino a propiedades, reuniones, detrás de escena.</div>
+    </div>
+    <div class="story-card">
+      <div class="story-num">2</div>
+      <div class="story-name">Valor Rápido</div>
+      <div class="story-desc">Un tip, una idea, una observación o mini análisis inmobiliario.</div>
+    </div>
+    <div class="story-card">
+      <div class="story-num">3</div>
+      <div class="story-name">Interacción</div>
+      <div class="story-desc">Encuesta, pregunta, caja de preguntas, sticker.</div>
+    </div>
+    <div class="story-card">
+      <div class="story-num">4</div>
+      <div class="story-name">CTA</div>
+      <div class="story-desc">Invitar a TASACIÓN, INVERSIÓN, COMPRA, ANÁLISIS o BARRIO.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">5 Tipos de Contenido</div>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Transversales a todos los temas. Cada publicación tiene exactamente uno.</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+    <div class="value-item">
+      <div class="value-icon" style="background:rgba(224,80,80,0.1);">⚡</div>
+      <div>
+        <div class="value-name">1 — Problema</div>
+        <div class="value-expr">Muestra una tensión o dolor que la audiencia siente o debería detectar. Más peso en la distribución mensual: abre tensión y conecta con dolores reales.</div>
+      </div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon" style="background:rgba(224,80,80,0.1);">✗</div>
+      <div>
+        <div class="value-name">2 — Error</div>
+        <div class="value-expr">Señala una decisión equivocada o creencia peligrosa. Aparece menos para no sonar excesivamente negativo.</div>
+      </div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon" style="background:rgba(76,173,122,0.1);">◆</div>
+      <div>
+        <div class="value-name">3 — Oportunidad</div>
+        <div class="value-expr">Muestra dónde puede haber valor, demanda, mejora o posibilidad comercial. Peso medio: vende y posiciona.</div>
+      </div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon" style="background:rgba(201,168,76,0.1);">★</div>
+      <div>
+        <div class="value-name">4 — Prueba / Autoridad</div>
+        <div class="value-expr">Muestra criterio, método, proceso, casos, análisis, experiencia o forma de trabajo. Peso medio: posiciona.</div>
+      </div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon" style="background:rgba(91,135,224,0.1);">◎</div>
+      <div>
+        <div class="value-name">5 — Historia / Proceso</div>
+        <div class="value-expr">Construye personaje, muestra camino, valores, detrás de escena, oficina, aprendizaje o evolución. ~1 vez por semana.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Objetivos de Contenido</div>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Cada pieza tiene exactamente uno de estos 3 objetivos.</div>
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-title" style="color:var(--gold);">Autoridad</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Posicionar</div>
+      <div class="card-text">Posiciona a Santiago como referente local con criterio. Construye reputación sin pedir acción directa.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--green);">Conversión</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Activar</div>
+      <div class="card-text">Busca que la persona escriba un CTA o tome acción comercial. Tiene llamado claro a TASACIÓN, INVERSIÓN, ANÁLISIS, etc.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--blue);">Alcance</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Amplificar</div>
+      <div class="card-text">Busca nuevas audiencias, compartidos, viralidad segmentada. Contenido que la gente manda a alguien más.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Frecuencia de Publicación</div>
+  <div class="card-gold" style="margin-bottom:18px;text-align:center;">
+    <div style="font-size:28px;font-weight:900;color:var(--gold);">1 publicación / día</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px;">Instagram · Todos los días</div>
+  </div>
+  <div class="grid-2" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-title">Por Tema — mensual (~21 posts)</div>
+      <table style="margin-top:8px;">
+        <thead><tr><th>Tema</th><th>Posts</th></tr></thead>
+        <tbody>
+          <tr><td>Mercado de Tandil y Argentina</td><td><strong style="color:var(--white);">6</strong></td></tr>
+          <tr><td>Para propietarios</td><td><strong style="color:var(--white);">6</strong></td></tr>
+          <tr><td>Para inversores</td><td><strong style="color:var(--white);">6</strong></td></tr>
+          <tr><td>Vida Santiago</td><td><strong style="color:var(--white);">3</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Por Tipo — peso relativo</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-card2);border-radius:6px;"><span style="color:var(--muted);font-size:12.5px;">Problema</span><span class="tag tag-red">Más peso</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-card2);border-radius:6px;"><span style="color:var(--muted);font-size:12.5px;">Oportunidad + Prueba/autoridad</span><span class="tag tag-gold">Peso medio</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-card2);border-radius:6px;"><span style="color:var(--muted);font-size:12.5px;">Error</span><span class="tag">Menos</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-card2);border-radius:6px;"><span style="color:var(--muted);font-size:12.5px;">Historia/proceso</span><span class="tag tag-blue">~1 por semana</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Calendario Aprobado — Mayo 2026 (semanas 1 y 2)</div>
+  <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Contenido aprobado. No modificar.</div>
+  <div class="table-wrap">
+    <table style="min-width:900px;">
+      <thead>
+        <tr>
+          <th>Día</th>
+          <th>Fecha</th>
+          <th>Título</th>
+          <th>Tema</th>
+          <th>Ángulo</th>
+          <th>Tipo</th>
+          <th>Formato</th>
+          <th>Objetivo</th>
+          <th>CTA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--muted2);">Lun</td>
+          <td><strong style="color:var(--white);">11/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Qué cambia para Tandil cuando se mueve el crédito</td>
+          <td><span class="tag">Mercado</span></td>
+          <td style="color:var(--muted);">Actualidad + opinión</td>
+          <td><span class="tag tag-green">Oportunidad</span></td>
+          <td><span class="tag">Frente a cámara</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Mar</td>
+          <td><strong style="color:var(--white);">12/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">El error de vender como si publicar fuera suficiente</td>
+          <td><span class="tag">Propietarios</span></td>
+          <td style="color:var(--muted);">Querer vender sin estrategia</td>
+          <td><span class="tag tag-red">Error</span></td>
+          <td><span class="tag">Frente a cámara</span></td>
+          <td><span class="tag tag-green">Conversión</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Mié</td>
+          <td><strong style="color:var(--white);">13/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Mirar propiedades sueltas te hace comparar mal</td>
+          <td><span class="tag">Inversores</span></td>
+          <td style="color:var(--muted);">Querer invertir sin estrategia</td>
+          <td><span class="tag tag-red">Problema</span></td>
+          <td><span class="tag">Pizarra</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Jue</td>
+          <td><strong style="color:var(--white);">14/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">El problema no es que falten propiedades</td>
+          <td><span class="tag">Mercado</span></td>
+          <td style="color:var(--muted);">Errores/problemas del mercado</td>
+          <td><span class="tag tag-red">Problema</span></td>
+          <td><span class="tag">Carruseles</span></td>
+          <td><span class="tag tag-blue">Alcance</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Vie</td>
+          <td><strong style="color:var(--white);">15/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Esta propiedad puede tener lógica de inversión</td>
+          <td><span class="tag">Inversores</span></td>
+          <td style="color:var(--muted);">Análisis de oportunidades</td>
+          <td><span class="tag tag-green">Oportunidad</span></td>
+          <td><span class="tag">Propiedades</span></td>
+          <td><span class="tag tag-green">Conversión</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Sáb</td>
+          <td><strong style="color:var(--white);">16/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Así pensamos una propiedad antes de publicarla</td>
+          <td><span class="tag">Propietarios</span></td>
+          <td style="color:var(--muted);">Por qué elegirnos</td>
+          <td><span class="tag tag-gold">Prueba / autoridad</span></td>
+          <td><span class="tag">Propiedades</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.04);">
+          <td style="color:var(--muted2);">Dom</td>
+          <td><strong style="color:var(--white);">17/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Por qué volví a Tandil a hacer real estate</td>
+          <td><span class="tag">Vida Santi</span></td>
+          <td style="color:var(--muted);">Historia y camino emprendedor</td>
+          <td><span class="tag tag-blue">Historia / proceso</span></td>
+          <td><span class="tag">Frente a cámara</span></td>
+          <td><span class="tag tag-blue">Alcance</span></td>
+          <td style="color:var(--muted2);">—</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Lun</td>
+          <td><strong style="color:var(--white);">18/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Dónde puede aparecer valor hoy en Tandil</td>
+          <td><span class="tag">Mercado</span></td>
+          <td style="color:var(--muted);">Oportunidades reales del mercado</td>
+          <td><span class="tag tag-green">Oportunidad</span></td>
+          <td><span class="tag">Carruseles</span></td>
+          <td><span class="tag tag-blue">Alcance</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">ANÁLISIS</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Mar</td>
+          <td><strong style="color:var(--white);">19/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Tu propiedad también tiene que cerrar como inversión</td>
+          <td><span class="tag">Propietarios</span></td>
+          <td style="color:var(--muted);">Análisis de inversiones</td>
+          <td><span class="tag tag-gold">Prueba / autoridad</span></td>
+          <td><span class="tag">Pizarra</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Mié</td>
+          <td><strong style="color:var(--white);">20/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Por qué no mandamos oportunidades sueltas</td>
+          <td><span class="tag">Inversores</span></td>
+          <td style="color:var(--muted);">Por qué elegirnos</td>
+          <td><span class="tag tag-gold">Prueba / autoridad</span></td>
+          <td><span class="tag">Frente a cámara</span></td>
+          <td><span class="tag tag-green">Conversión</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Jue</td>
+          <td><strong style="color:var(--white);">21/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">¿El crédito mueve todo el mercado?</td>
+          <td><span class="tag">Mercado</span></td>
+          <td style="color:var(--muted);">Actualidad + opinión</td>
+          <td><span class="tag tag-red">Problema</span></td>
+          <td><span class="tag">POV preguntas</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">CRÉDITO</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Vie</td>
+          <td><strong style="color:var(--white);">22/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">El error de llamar oportunidad a todo lo barato</td>
+          <td><span class="tag">Inversores</span></td>
+          <td style="color:var(--muted);">Querer invertir sin estrategia</td>
+          <td><span class="tag tag-red">Error</span></td>
+          <td><span class="tag">Carruseles</span></td>
+          <td><span class="tag tag-gold">Autoridad</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">INVERSIÓN</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted2);">Sáb</td>
+          <td><strong style="color:var(--white);">23/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Una buena propiedad se puede vender mal</td>
+          <td><span class="tag">Propietarios</span></td>
+          <td style="color:var(--muted);">Querer vender sin estrategia</td>
+          <td><span class="tag tag-red">Problema</span></td>
+          <td><span class="tag">Propiedades</span></td>
+          <td><span class="tag tag-green">Conversión</span></td>
+          <td><span class="cta-kw" style="font-size:10px;">TASACIÓN</span></td>
+        </tr>
+        <tr style="background:rgba(201,168,76,0.04);">
+          <td style="color:var(--muted2);">Dom</td>
+          <td><strong style="color:var(--white);">24/05</strong></td>
+          <td style="color:var(--white);font-weight:600;">Lo que pienso de hacer las cosas como siempre</td>
+          <td><span class="tag">Vida Santi</span></td>
+          <td style="color:var(--muted);">Opiniones de Santi</td>
+          <td><span class="tag tag-blue">Historia / proceso</span></td>
+          <td><span class="tag">Frente a cámara</span></td>
+          <td><span class="tag tag-blue">Alcance</span></td>
+          <td style="color:var(--muted2);">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /instagram -->
+
+
+<!-- ============================
+     SECCIÓN 7 — COMUNICACIÓN
+============================= -->
+<div id="comunicacion" class="section">
+
+  <div class="sec-title">Tono y Comunicación</div>
+  <div class="sec-headline">Cómo habla la marca SFRE</div>
+
+  <div class="tone-row" style="margin-bottom:20px;">
+    <div class="tone-col yes">
+      <div class="tone-title">✓ Debe sonar</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag tag-green">claro</span>
+        <span class="tag tag-green">directo</span>
+        <span class="tag tag-green">local</span>
+        <span class="tag tag-green">profesional</span>
+        <span class="tag tag-green">cercano</span>
+        <span class="tag tag-green">honesto</span>
+        <span class="tag tag-green">didáctico</span>
+        <span class="tag tag-green">criterioso</span>
+        <span class="tag tag-green">sin exageraciones</span>
+        <span class="tag tag-green">sin presión</span>
+      </div>
+    </div>
+    <div class="tone-col no">
+      <div class="tone-title">✗ No debe sonar</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag tag-red">vendedor pesado</span>
+        <span class="tag tag-red">influencer de lujo</span>
+        <span class="tag tag-red">gurú financiero</span>
+        <span class="tag tag-red">inmobiliaria genérica</span>
+        <span class="tag tag-red">catálogo de propiedades</span>
+        <span class="tag tag-red">soberbio</span>
+        <span class="tag tag-red">desesperado por vender</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Forma Correcta</div>
+      <div class="phrase-item">"Te explico qué veo, qué miraría y qué decisión puede tener sentido."</div>
+      <div class="phrase-item">"Esta propiedad puede tener sentido para…"</div>
+      <div class="phrase-item">"Este precio hay que analizarlo contra…"</div>
+      <div class="phrase-item">"Antes de vender, miraría esto."</div>
+      <div class="phrase-item">"Antes de invertir, calcularía esto."</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Forma Incorrecta</div>
+      <div class="phrase-item" style="opacity:0.5;">"Esta oportunidad no se puede dejar pasar."</div>
+      <div class="phrase-item" style="opacity:0.5;">"La casa de tus sueños."</div>
+      <div class="phrase-item" style="opacity:0.5;">"Oportunidad única."</div>
+      <div class="phrase-item" style="opacity:0.5;">"Invertí y ganá seguro."</div>
+      <div class="phrase-item" style="opacity:0.5;">"Rentabilidad asegurada."</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Frases Rectoras de la Marca</div>
+  <div class="phrase-grid" style="margin-bottom:24px;">
+    <div class="phrase-item">"Comprar, vender o invertir en Tandil requiere más que mirar propiedades. Requiere criterio."</div>
+    <div class="phrase-item">"No se trata de publicar más. Se trata de decidir mejor."</div>
+    <div class="phrase-item">"El precio publicado no siempre es el valor real de mercado."</div>
+    <div class="phrase-item">"Vender bien no es subir fotos a internet. Es tener una estrategia."</div>
+    <div class="phrase-item">"Una propiedad barata no siempre es una oportunidad."</div>
+    <div class="phrase-item">"Una buena operación inmobiliaria empieza antes de la visita."</div>
+    <div class="phrase-item">"Mi trabajo no es presionarte. Es ayudarte a pensar mejor una decisión importante."</div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Banco de Frases del Personaje</div>
+  <div class="grid-2">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;">Para contenido general</div>
+      <div class="phrase-grid">
+        <div class="phrase-item">"No te muestro solo propiedades. Te ayudo a entender si tienen sentido."</div>
+        <div class="phrase-item">"Si una propiedad no es para vos, también hay que decirlo."</div>
+        <div class="phrase-item">"En Tandil, la zona cambia completamente la decisión."</div>
+        <div class="phrase-item">"Antes de invertir, hay que mirar renta, liquidez y salida."</div>
+        <div class="phrase-item">"Vender bien no empieza con una publicación. Empieza con un diagnóstico."</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;">Frases de historia personal</div>
+      <div class="phrase-grid">
+        <div class="phrase-item">"Nunca me cerró seguir un camino solo porque era el camino esperado."</div>
+        <div class="phrase-item">"Volví a Tandil con ganas de construir algo propio."</div>
+        <div class="phrase-item">"En el mercado inmobiliario vi una oportunidad: hacía falta más criterio y mejor comunicación."</div>
+        <div class="phrase-item">"El surf y los negocios tienen algo en común: hay que leer el momento y animarse a tomar la ola."</div>
+        <div class="phrase-item">"Para mí, la presencia importa. Nunca hay una segunda oportunidad para generar una primera impresión."</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Manifiesto de Marca</div>
+  <div class="manifesto">
+    <p>"No creo que una operación inmobiliaria sea solo mostrar una propiedad. Creo que vender, comprar o invertir implica entender el mercado, mirar los números, leer la zona, revisar riesgos y tomar decisiones con criterio.</p>
+    <p>El mercado inmobiliario en Tandil tiene particularidades que no se aprenden en un manual: <strong>zonas que suben, propiedades que parecen negocio pero no lo son, precios que no reflejan valor real y oportunidades que se pierden por falta de criterio.</strong></p>
+    <p>Mi trabajo es darte ese criterio.</p>
+    <p>No te prometo una decisión perfecta. <strong>Te prometo ayudarte a decidir con más información, más criterio y menos improvisación."</strong></p>
+  </div>
+
+</div><!-- /comunicacion -->
+
+
+<!-- ============================
+     SECCIÓN 8 — PERSONAJE
+============================= -->
+<div id="personaje" class="section">
+
+  <div class="sec-title">El Personaje de Marca</div>
+  <div class="sec-headline">Santiago Funes — Historia, valores y roles en redes</div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Historia — Narrativa Pública</div>
+    <div class="card-text" style="line-height:1.85;">
+      Santi no llegó al real estate desde un camino lineal. Estudió distintas carreras en Buenos Aires (Administración UADE, Marketing, Diseño Industrial), trabajó desde muy joven en Tandil (Óxido, Parque Industrial), pasó temporadas en Chapadmalal vinculado al turismo, el surf y los eventos, y vivió dos años en Costa Rica, donde asumió roles de liderazgo en gastronomía y gestión de equipos en Nosara y Santa Teresa.<br><br>
+      El surf, el deporte y la adrenalina le enseñaron a moverse en contextos de presión, convivir con el riesgo, tomar decisiones rápido y animarse a salir del molde.<br><br>
+      Al volver a Tandil en 2025, se vinculó al Estudio Pascua —arquitectura y desarrollos familiares— donde vio una oportunidad clara: el mercado inmobiliario local necesitaba una forma más moderna, clara y estratégica de vender, tasar y comunicar propiedades.
+    </div>
+  </div>
+
+  <div class="quote-block" style="margin-bottom:24px;">"Después de años trabajando, viajando, surfeando y liderando equipos afuera, volví a Tandil para construir una forma distinta de hacer real estate: más clara, más estratégica y con más criterio."</div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Los 3 Roles en Redes</div>
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-title">Rol 1</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Traductor del Mercado</div>
+      <div class="card-text">Convierte datos complejos en criterio accionable. Explica qué está pasando con los precios, qué zonas tienen demanda, qué mirar en una propiedad, cómo afecta el crédito.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rol 2</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Curador de Oportunidades</div>
+      <div class="card-text">No muestra todo. Selecciona y presenta lo que vale la pena. Explica para quién tiene sentido cada propiedad y para quién no.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rol 3</div>
+      <div style="font-size:16px;font-weight:800;color:var(--white);margin-bottom:8px;">Acompañante de Decisión</div>
+      <div class="card-text">Presente en el momento más importante. El objetivo no es mostrar propiedades sino ayudar a decidir mejor.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Los 4 Pilares de su Historia</div>
+  <div class="grid-2" style="margin-bottom:28px;">
+    <div class="value-item">
+      <div class="value-icon">💪</div>
+      <div><div class="value-name">Trabajo y Constancia</div><div class="value-expr">Se diferencia por hacer, sostener y dar el máximo.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">⚡</div>
+      <div><div class="value-name">Adrenalina y Acción</div><div class="value-expr">Su energía viene del desafío, el deporte, la presión y la velocidad de ejecución.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🎯</div>
+      <div><div class="value-name">Criterio y Presencia</div><div class="value-expr">La primera impresión importa. Las decisiones se toman con análisis.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🚀</div>
+      <div><div class="value-name">Independencia y Ambición</div><div class="value-expr">Quiere construir una marca propia, seria y local.</div></div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Valores y Expresión en la Marca</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">
+    <div class="value-item">
+      <div class="value-icon">🔨</div>
+      <div><div class="value-name">Trabajo</div><div class="value-expr">"Me diferencia trabajar más, sostener más y dejar más energía que el resto."</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">⚡</div>
+      <div><div class="value-name">Acción</div><div class="value-expr">"Criterio para pensar. Velocidad para ejecutar."</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🏄</div>
+      <div><div class="value-name">Adrenalina</div><div class="value-expr">"Me gustan los desafíos porque me obligan a crecer."</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">⚖️</div>
+      <div><div class="value-name">Justicia</div><div class="value-expr">No aprovecharse de la desinformación del cliente. Explicar, ordenar, ayudar a decidir.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">👁️</div>
+      <div><div class="value-name">Presencia</div><div class="value-expr">"Nunca hay una segunda oportunidad para generar una primera impresión."</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">📈</div>
+      <div><div class="value-name">Ambición</div><div class="value-expr">"Me gusta pensar en grande, incluso cuando parece demasiado. Y después trabajar para acercarme."</div></div>
+    </div>
+  </div>
+
+  <div class="card-gold" style="text-align:center;padding:28px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Frase Personal Central</div>
+    <div style="font-size:24px;font-weight:900;color:var(--white);">"Be delusional"</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:8px;">Animarse a creer en objetivos que para otros parecen demasiado grandes, acompañado de trabajo desmedido.</div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Rasgos del Personaje en Redes</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Rasgo</th><th>Cómo aparece</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong style="color:var(--white);">Criterioso</strong></td><td>"No lo veo tan claro. Hay que mirarlo con cuidado."</td></tr>
+        <tr><td><strong style="color:var(--white);">Local</strong></td><td>Recorridas por Tandil, barrios reales, referencias concretas de la ciudad.</td></tr>
+        <tr><td><strong style="color:var(--white);">Didáctico</strong></td><td>Explica con estructura: el problema → qué mirás → la conclusión.</td></tr>
+        <tr><td><strong style="color:var(--white);">Honesto</strong></td><td>"Si no tiene sentido para vos, prefiero decírtelo antes."</td></tr>
+        <tr><td><strong style="color:var(--white);">Profesional</strong></td><td>"Primero entendamos tu objetivo. No alcanza con mirar precio. Hay que mirar contexto."</td></tr>
+        <tr><td><strong style="color:var(--white);">Humano</strong></td><td>Visitas, reuniones, detrás de escena, cara visible en todo el contenido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /personaje -->
+
+
+<!-- ============================
+     SECCIÓN 9 — PORTFOLIO
+============================= -->
+<div id="portfolio" class="section">
+
+  <div class="sec-title">Portfolio Activo</div>
+  <div class="sec-headline">Cartera de propiedades — Mayo 2026</div>
+
+  <div class="stats-row" style="margin-bottom:24px;">
+    <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Propiedades activas</div></div>
+    <div class="stat-card"><div class="stat-val">~USD 365K</div><div class="stat-label">Ticket promedio</div></div>
+    <div class="stat-card"><div class="stat-val">USD 265K</div><div class="stat-label">Mínimo cartera</div></div>
+    <div class="stat-card"><div class="stat-val">USD 440K</div><div class="stat-label">Máximo cartera</div></div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:28px;">
+
+    <div class="prop-card">
+      <div class="prop-type">Casa</div>
+      <div class="prop-name">Barrio La Mata, Tandil</div>
+      <div class="prop-price">USD 440.000</div>
+      <div class="prop-specs">
+        <span class="tag">3 dorm.</span>
+        <span class="tag">3 baños</span>
+        <span class="tag">220 m²</span>
+      </div>
+    </div>
+
+    <div class="prop-card">
+      <div class="prop-type">Departamento</div>
+      <div class="prop-name">Edificio Urbano — Chacabuco 454</div>
+      <div class="prop-price">USD 440.000</div>
+      <div class="prop-specs">
+        <span class="tag">3 dorm.</span>
+        <span class="tag">2 baños</span>
+        <span class="tag">150 m²</span>
+      </div>
+    </div>
+
+    <div class="prop-card">
+      <div class="prop-type">Casa</div>
+      <div class="prop-name">Roser 1200, Tandil</div>
+      <div class="prop-price">USD 420.000</div>
+      <div class="prop-specs">
+        <span class="tag">4 dorm.</span>
+        <span class="tag">5 baños</span>
+        <span class="tag">650 m²</span>
+      </div>
+    </div>
+
+    <div class="prop-card">
+      <div class="prop-type">Departamento</div>
+      <div class="prop-name">Chacabuco 572, Tandil</div>
+      <div class="prop-price">USD 314.000</div>
+      <div class="prop-specs">
+        <span class="tag">2 dorm.</span>
+        <span class="tag">2 baños</span>
+        <span class="tag">106 m²</span>
+      </div>
+    </div>
+
+    <div class="prop-card">
+      <div class="prop-type">Departamento</div>
+      <div class="prop-name">Chacabuco 454, Tandil</div>
+      <div class="prop-price">USD 310.000</div>
+      <div class="prop-specs">
+        <span class="tag">2 dorm.</span>
+        <span class="tag">114 m²</span>
+      </div>
+    </div>
+
+    <div class="prop-card">
+      <div class="prop-type">Departamento</div>
+      <div class="prop-name">Paz 343, Tandil</div>
+      <div class="prop-price">USD 265.000</div>
+      <div class="prop-specs">
+        <span class="tag">2 dorm.</span>
+        <span class="tag">2 baños</span>
+        <span class="tag">96 m²</span>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Cómo comunicar propiedades (principio SFRE)</div>
+  <div class="card-gold" style="margin-bottom:16px;">
+    <div class="card-text" style="font-size:14px;">La comunicación de propiedades <strong style="color:var(--white);">no debe ser ficha fría.</strong> Debe explicar: para quién tiene sentido, qué problema resuelve, cuál es su punto fuerte, qué habría que revisar.</div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Para quién es</div>
+      <div class="card-text">"Esta propiedad no es para cualquiera. Tiene sentido para una familia que busca espacio, buena ubicación y margen para mejorarla con el tiempo."</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Qué habría que revisar</div>
+      <div class="card-text">Estado de documentación, aptitud para crédito, gastos de cierre, expensas, mantenimiento estimado, salida futura probable.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Punto fuerte de la unidad</div>
+      <div class="card-text">Zona, distribución, estado, precio vs mercado, potencial de renta, liquidez del barrio, acceso a servicios.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+  <div class="sec-title">Respaldo Legal</div>
+  <div class="card" style="display:flex;align-items:center;gap:20px;">
+    <div style="font-size:28px;">⚖️</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px;">Juan I. Otero — Martillero y Corredor Público</div>
+      <div style="font-size:13px;color:var(--muted);">Matrícula 1966 · Departamento Judicial Azul · Av. Avellaneda 1140, Tandil, Buenos Aires</div>
+    </div>
+  </div>
+
+</div><!-- /portfolio -->
+
+</main>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleTopic(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+</script>
+
+</body>
+</html>
