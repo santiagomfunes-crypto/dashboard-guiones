@@ -58,6 +58,12 @@ EVOLUTION_URL      = os.environ.get("EVOLUTION_API_URL", "")
 EVOLUTION_KEY      = os.environ.get("EVOLUTION_API_KEY", "")
 EVOLUTION_INSTANCE = os.environ.get("EVOLUTION_INSTANCE", "santiago")
 
+# Template de re-engagement para cuando la sesión de 24hs expiró
+WATI_REENGAGEMENT_TEMPLATE = os.environ.get("WATI_REENGAGEMENT_TEMPLATE", "reengagement_altavista_01")
+
+# Token secreto para validar que el webhook viene de Wati (no de cualquiera)
+WATI_WEBHOOK_SECRET = os.environ.get("WATI_WEBHOOK_SECRET", "")
+
 # Anthropic
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -163,23 +169,32 @@ def _respond_send(phone_digits: str, text: str) -> None:
         raise RuntimeError(f"Respond.io API error {resp.status_code}: {body}")
 
 
-def wa_send(to: str, text: str) -> None:
+def wa_send(to: str, text: str, fallback_name: str = "") -> None:
     phone = re.sub(r"[^\d]", "", to)
     if RESPOND_API_TOKEN:
         # Respond.io BSP — prioridad máxima
         _respond_send(phone, text)
     elif WATI_API_URL and WATI_API_TOKEN:
-        # Wati BSP
+        # Wati BSP — messageText va como query param
         resp = http_requests.post(
             f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
-            json={"messageText": text},
-            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            params={"messageText": text},
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}"},
             timeout=10,
         )
         print(f"[Wati send → {phone}] {resp.status_code}")
         if not resp.ok:
             body = resp.text[:500]
             print(f"[Wati ERROR] {resp.status_code} — {body}")
+            # Sesión de 24hs expirada → intentar con template de re-engagement
+            if "131047" in body or resp.status_code == 400:
+                name = fallback_name or "ahí"
+                sent = _wati_send_template(phone, WATI_REENGAGEMENT_TEMPLATE, [
+                    {"name": "1", "value": name}
+                ])
+                if sent:
+                    print(f"[Wati] Re-engagement template enviado a {phone}")
+                    return
             raise RuntimeError(f"Wati API error {resp.status_code}: {body}")
     elif WA_TOKEN and WA_PHONE_ID:
         # Fallback: Meta Cloud API directa
@@ -197,26 +212,98 @@ def wa_send(to: str, text: str) -> None:
     else:
         raise RuntimeError("[WhatsApp] Sin credenciales — configurar RESPOND_API_TOKEN, WATI_API_URL/WATI_API_TOKEN, o WHATSAPP_TOKEN/WHATSAPP_PHONE_ID")
 
+def wati_update_contact_attrs(phone: str, attrs: dict) -> None:
+    """Actualiza atributos del contacto en Wati CRM. Corre en background thread."""
+    if not WATI_API_URL or not WATI_API_TOKEN:
+        return
+    phone = re.sub(r"[^\d]", "", phone)
+    params = [{"name": k, "value": str(v)} for k, v in attrs.items()]
+    try:
+        resp = http_requests.post(
+            f"{WATI_API_URL.rstrip('/')}/api/v1/updateContactAttributes/{phone}",
+            json={"customParams": params},
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[Wati attrs → {phone}] {resp.status_code} {list(attrs.keys())}")
+    except Exception as e:
+        print(f"[Wati attrs error] {e}")
+
+def _evolution_send(phone: str, text: str) -> bool:
+    """Envía mensaje directo a Santiago vía Evolution API (sin restricción de 24hs)."""
+    if not EVOLUTION_URL or not EVOLUTION_KEY or not EVOLUTION_INSTANCE:
+        return False
+    try:
+        resp = http_requests.post(
+            f"{EVOLUTION_URL.rstrip('/')}/message/sendText/{EVOLUTION_INSTANCE}",
+            json={"number": phone, "text": text},
+            headers={"apikey": EVOLUTION_KEY, "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[Evolution → {phone}] {resp.status_code}")
+        return resp.ok
+    except Exception as e:
+        print(f"[Evolution error] {e}")
+        return False
+
+def _wati_send_template(phone: str, template_name: str, params: list) -> bool:
+    """Envía un template de Wati. Útil cuando la sesión de 24hs está cerrada."""
+    if not WATI_API_URL or not WATI_API_TOKEN:
+        return False
+    try:
+        resp = http_requests.post(
+            f"{WATI_API_URL.rstrip('/')}/api/v1/sendTemplateMessage",
+            params={"whatsappNumber": phone},
+            json={
+                "template_name": template_name,
+                "broadcast_name": f"auto_{template_name}",
+                "parameters": params,
+            },
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            timeout=10,
+        )
+        print(f"[Wati template {template_name} → {phone}] {resp.status_code}")
+        return resp.ok
+    except Exception as e:
+        print(f"[Wati template error] {e}")
+        return False
+
 def wa_send_internal(text: str) -> None:
-    """Notificación interna a Santiago vía Evolution API (sin restricción 24hs de Meta)."""
+    """Notifica a Santiago. Prueba canales en orden hasta que uno funcione."""
+    if not SANTIAGO_PHONE:
+        print("[Internal] SANTIAGO_PHONE no configurado")
+        return
+    phone = re.sub(r"[^\d]", "", SANTIAGO_PHONE)
     clean = (text
         .replace("\\.", ".").replace("\\(", "(").replace("\\)", ")")
         .replace("\\-", "-").replace("\\!", "!").replace("\\=", "=")
     )
-    if not EVOLUTION_URL or not EVOLUTION_KEY:
-        raise RuntimeError("[Evolution] EVOLUTION_API_URL o EVOLUTION_API_KEY no configurados")
-    url = f"{EVOLUTION_URL.rstrip('/')}/message/sendText/{EVOLUTION_INSTANCE}"
-    resp = http_requests.post(
-        url,
-        json={"number": SANTIAGO_WA, "text": clean},
-        headers={"apikey": EVOLUTION_KEY, "Content-Type": "application/json"},
-        timeout=10,
-    )
-    print(f"[Evolution send → {SANTIAGO_WA}] {resp.status_code}")
-    if not resp.ok:
-        body = resp.text[:500]
-        print(f"[Evolution ERROR] {resp.status_code} — {body}")
-        raise RuntimeError(f"Evolution API error {resp.status_code}: {body}")
+    # 1. Evolution API — sin restricción de 24hs (si está configurado)
+    if _evolution_send(phone, clean):
+        return
+    # 2. Respond.io — sin restricción de 24hs (si está configurado)
+    if RESPOND_API_TOKEN:
+        try:
+            _respond_send(phone, clean)
+            print(f"[Internal Respond.io → {phone}] OK")
+            return
+        except Exception as e:
+            print(f"[Internal Respond.io error] {e}")
+    # 3. Wati session message — puede fallar si la ventana de 24hs expiró
+    if WATI_API_URL and WATI_API_TOKEN:
+        try:
+            resp = http_requests.post(
+                f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
+                params={"messageText": clean},
+                headers={"Authorization": f"Bearer {WATI_API_TOKEN}"},
+                timeout=10,
+            )
+            print(f"[Internal Wati → {phone}] {resp.status_code}")
+            if resp.ok:
+                return
+            print(f"[Internal Wati ERROR] {resp.status_code} — {resp.text[:200]}")
+        except Exception as e:
+            print(f"[Internal Wati error] {e}")
 
 def tg_send(text: str) -> None:
     wa_send_internal(text)
@@ -327,14 +414,14 @@ def properties_context() -> str:
 
 def sofia_system_prompt() -> str:
     props = properties_context()
-    return f"""Sos Sofía, la secretaria personal de Santiago Funes, corredor inmobiliario en Altavista Otero, Tandil.
+    return f"""Sos Sofía, la secretaria de Santiago Funes.
 
 ## IDENTIDAD
 
 Trabajás directamente con Santiago. Sos una persona real — nunca digas que sos un bot, IA o asistente virtual.
 Si alguien te pregunta si sos robot o IA: "Para nada, soy Sofía, la secretaria de Santiago."
 Si preguntan quién sos: "Soy Sofía, trabajo con Santiago en todo lo que es atención y coordinación."
-Santiago Funes es el corredor inmobiliario (NUNCA lo llames arquitecto, desarrollador ni ningún otro título — es corredor inmobiliario). Juan Ignacio Otero es Martillero Público (Mat. 1966, Dep. Judicial Azul).
+Santiago Funes es corredor inmobiliario (NUNCA lo llames arquitecto, desarrollador ni ningún otro título). Juan Ignacio Otero es Martillero Público (Mat. 1966, Dep. Judicial Azul).
 Oficina: Av. Avellaneda 1140, Tandil. Tel: +54 9 2494 20-9464.
 
 ## CÓMO ESCRIBÍS
@@ -360,14 +447,14 @@ Tu trabajo es entender qué busca el lead, darle información útil, y construir
 ### Etapa 1 — Primer contacto
 REGLA OBLIGATORIA DE PRESENTACIÓN: En el PRIMER mensaje siempre decís EXACTAMENTE "soy Sofía, la secretaria de Santiago" — nunca solo "soy Sofía" ni otra variante. Esta frase es innegociable.
 
-Saludá con el nombre si lo tenés. Presentate con la frase obligatoria. Mencioná brevemente de qué propiedad o proyecto viene la consulta si lo sabés por el formulario. Si no sabés de qué propiedad viene, preguntá por cuál de los proyectos de Altavista Otero le escriben. Hacé UNA SOLA pregunta — la más importante que falta saber.
+Saludá con el nombre si lo tenés. Presentate con la frase obligatoria. Mencioná brevemente de qué propiedad o proyecto viene la consulta si lo sabés por el formulario. Si no sabés de qué propiedad viene, preguntá con qué los podés ayudar. Hacé UNA SOLA pregunta — la más importante que falta saber.
 No hagas más de una pregunta en el primer mensaje.
 
 Ejemplo cuando viene de formulario:
-"Hola [nombre], soy Sofía, la secretaria de Santiago en Altavista Otero. Vi que te interesó el proyecto Roca 36. ¿Lo estás pensando para vivir o como inversión?"
+"Hola [nombre], soy Sofía, la secretaria de Santiago. Vi que te interesó el proyecto Roca 36. ¿Lo estás pensando para vivir o como inversión?"
 
 Ejemplo cuando escribe directo sin contexto:
-"Hola, soy Sofía, la secretaria de Santiago en Altavista Otero. ¿Por cuál de nuestras propiedades me escribís?"
+"Hola, soy Sofía, la secretaria de Santiago. ¿Con qué te podemos ayudar?"
 
 ### Etapa 2 — Dar información
 Una vez que respondió, mandá información concreta y útil sobre la opción más relevante para ese perfil. Incluí el link de la propiedad. Terminá con UNA sola pregunta de seguimiento para seguir el diálogo.
@@ -415,17 +502,32 @@ Los precios publicados tienen ~15% de margen sobre el valor real de cierre. Nunc
 No mencionés otras inmobiliarias ni comparés precios de mercado.
 Si una propiedad tiene precio "A consultar": "El precio varía según la unidad y la cochera, te lo confirmo con Santiago."
 
+## SANTIAGO TRABAJA CON TODO EL MERCADO
+
+Santiago es corredor inmobiliario y opera en todo el mercado de Tandil, no solo en los proyectos propios listados abajo. Si alguien busca algo que no tenemos en cartera, no lo des por perdido — podemos buscárselo.
+
+Si lo que piden no está en PROPIEDADES DISPONIBLES HOY:
+NUNCA decís "no tenemos nada disponible" y cerrás la conversación.
+En cambio: "En este momento no lo tenemos en nuestros proyectos, pero Santiago trabaja con todo el mercado de Tandil y puede buscarte opciones. Para avisarle bien, contame un poco más: ¿qué zona te interesa? ¿Cuál es tu presupuesto aproximado? ¿Es para vivir o invertir?"
+Hacé las preguntas necesarias para entender bien qué busca.
+Cuando tengas la info suficiente: "Perfecto. Le aviso a Santiago para que busque opciones y se ponga en contacto con vos."
+
+## REGLA — NUNCA CERRAR LA CONVERSACIÓN
+
+Cada mensaje que enviás termina con una pregunta abierta o una invitación a seguir hablando. Nunca cerrás el diálogo.
+Después de "te anoto y te aviso", siempre agregás algo como: "Mientras tanto, ¿hay algo de lo que tenemos disponible ahora que quizás te sirva?" o "¿Querés que te cuente las opciones que hay en este momento?"
+
 ## CUÁNDO ESCALAR A SANTIAGO
 
 Si no podés responder algo, hay que negociar, o el lead quiere avanzar:
 "Esto te lo consulto con Santiago y te aviso en breve."
-Nunca inventés información. Solo mencionás propiedades que están en PROPIEDADES DISPONIBLES HOY.
+Nunca inventés información. Solo mencionás propiedades que están en PROPIEDADES DISPONIBLES HOY o aclarás que Santiago va a buscar opciones en el mercado.
 
 ## PROPIEDADES DISPONIBLES HOY
 
 {props}
 
-Si no hay nada que calcen: "Ahora mismo no tenemos algo así disponible. Te anoto y te aviso cuando entre algo que te sirva."
+Si no hay nada que calcen en cartera: aplicá la regla de SANTIAGO TRABAJA CON TODO EL MERCADO — preguntá más, y avisale a Santiago para que busque.
 
 ## BARRIOS Y PROYECTOS DE TANDIL
 
@@ -590,7 +692,7 @@ def manager_reply(user_text: str) -> str:
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=500,
-        system=f"""Sos Sofía, secretaria de Santiago Funes (corredor inmobiliario en Altavista Otero, Tandil).
+        system=f"""Sos Sofía, la secretaria de Santiago Funes.
 Santiago te escribe directo para preguntarte sobre el estado de los leads. Respondele de forma clara, breve y útil.
 Podés responder preguntas como "¿cómo va?", "¿qué está pasando?", "¿quién es el más caliente?", "¿qué quiere Fulano?", etc.
 Hoy es {now} (hora Argentina).
@@ -703,6 +805,24 @@ def notify_escalation(lead: dict, last_user_message: str) -> None:
         f"Escribile: https://wa.me/{phone}"
     )
 
+# ── Deduplicación Wati ────────────────────────────────────────────────────────
+
+_seen_wati_msgs: dict = {}  # whatsappMessageId → timestamp
+_DEDUP_TTL = 7200           # 2 horas
+
+def _wati_is_duplicate(msg_id: str) -> bool:
+    """True si el mensaje ya fue procesado. Limpia entradas viejas en cada llamada."""
+    if not msg_id:
+        return False
+    now = time.time()
+    stale = [k for k, t in _seen_wati_msgs.items() if now - t > _DEDUP_TTL]
+    for k in stale:
+        del _seen_wati_msgs[k]
+    if msg_id in _seen_wati_msgs:
+        return True
+    _seen_wati_msgs[msg_id] = now
+    return False
+
 # ── Debounce: agrupa mensajes en ráfaga ───────────────────────────────────────
 
 _pending: dict = {}        # phone → {'timer': Timer, 'texts': [str], 'profile_name': str}
@@ -745,6 +865,7 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
             return
         history    = messages_get(lead_id, limit=20)
         lead_notas = lead.get("notas") or ""
+        is_new_lead = len(history) <= 1
 
         # Tasación: propietario que quiere vender — prioridad sobre urgencia normal
         is_tasacion = detect_tasacion(user_text)
@@ -756,19 +877,26 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
             and len(history) <= 1
         )
 
+        lead_name = lead.get("name") or profile_name or ""
+
         if is_tasacion:
             reply = sofia_reply(history, user_text, lead_notas, tasacion=True)
             message_save(lead_id, "assistant", reply)
-            wa_send(from_phone, reply)
+            wa_send(from_phone, reply, fallback_name=lead_name)
             notify_tasacion(lead, user_text)
             lead_set_paused(lead_id, True)
+            threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
+                "temperatura": "caliente",
+                "lead_stage": "Qualified",
+                "tipo_lead": "tasacion",
+            }), daemon=True).start()
         else:
             # No detectar urgencia en el primer mensaje de formulario (falsos positivos)
             is_urgent, urgency_summary = (False, "") if is_form_first_message else detect_urgency(user_text, history)
 
             reply = sofia_reply(history, user_text, lead_notas, escalate=is_urgent)
             message_save(lead_id, "assistant", reply)
-            wa_send(from_phone, reply)
+            wa_send(from_phone, reply, fallback_name=lead_name)
 
             # Auto-enviar PDF del fideicomiso Roca 36
             roca_keywords = ["roca 36", "proyecto roca", "fideicomiso roca", "fideicomiso", "roca"]
@@ -785,8 +913,23 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
                 print(f"[WA] Lead caliente detectado: {from_phone} — {urgency_summary}")
                 notify_urgency(lead, user_text, urgency_summary)
                 lead_set_paused(lead_id, True)
+                threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
+                    "temperatura": "caliente",
+                    "lead_stage": "Qualified",
+                    "tipo_lead": "comprador",
+                    "resumen": urgency_summary[:200],
+                }), daemon=True).start()
             elif needs_escalation(reply):
                 notify_escalation(lead, user_text)
+                threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
+                    "temperatura": "tibio",
+                    "lead_stage": "Contacted",
+                }), daemon=True).start()
+            elif is_new_lead:
+                threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
+                    "temperatura": "nuevo",
+                    "lead_stage": "New lead",
+                }), daemon=True).start()
     except Exception as e:
         print(f"[WA Error] {e}")
 
@@ -798,8 +941,8 @@ def wa_send_doc(to: str, doc_url: str, filename: str) -> None:
         phone = re.sub(r"[^\d]", "", to)
         resp = http_requests.post(
             f"{WATI_API_URL.rstrip('/')}/api/v1/sendSessionMessage/{phone}",
-            json={"messageText": f"📄 {filename}\n{doc_url}"},
-            headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+            params={"messageText": f"📄 {filename}\n{doc_url}"},
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}"},
             timeout=10,
         )
         print(f"[Wati doc → {phone}] {resp.status_code}")
@@ -1083,16 +1226,35 @@ def wa_receive():
 @app.route("/wati/webhook", methods=["POST"])
 def wati_receive():
     """Recibe mensajes entrantes de WhatsApp vía Wati BSP."""
+    # Validación de token secreto — rechazar requests no autorizados
+    if WATI_WEBHOOK_SECRET:
+        token = request.args.get("token") or request.headers.get("X-Wati-Token", "")
+        if token != WATI_WEBHOOK_SECRET:
+            print(f"[Wati webhook] Token inválido — rechazado")
+            return "unauthorized", 401
+
     data = request.get_json(silent=True) or {}
     try:
-        # Ignorar mensajes propios del bot (owner=True) y no-mensajes
+        # Ignorar mensajes propios del bot (owner=True)
         if data.get("owner"):
             return "ok", 200
-        if data.get("eventType") != "message":
-            # Ack de entrega/lectura — solo loguear
-            event = data.get("eventType", "?")
-            waid  = data.get("waId", "?")
-            print(f"[Wati event] {event} — {waid}")
+
+        # Solo procesar mensajes entrantes (Wati puede mandar "message" o "messageReceived")
+        event_type = data.get("eventType", "")
+        if event_type not in ("message", "messageReceived"):
+            waid = data.get("waId", "?")
+            print(f"[Wati event] {event_type} — {waid}")
+            return "ok", 200
+
+        # Deduplicación — Wati reintenta hasta 144 veces si no responde en 5s
+        msg_id = data.get("whatsappMessageId") or data.get("id", "")
+        if _wati_is_duplicate(msg_id):
+            print(f"[Wati dedup] {msg_id} ya procesado")
+            return "ok", 200
+
+        # Operator takeover — silenciar bot cuando un humano tomó la conversación
+        if data.get("operatorEmail") or data.get("operatorName"):
+            print(f"[Wati] Operador activo ({data.get('operatorName')}) — bot silenciado")
             return "ok", 200
 
         msg_type   = (data.get("type") or "").lower()
@@ -2029,7 +2191,7 @@ _TEST_SCENARIOS = [
     },
 ]
 
-_RUBRICA_EVALUACION = """Evaluá esta conversación entre Sofía (secretaria inmobiliaria de Altavista Otero, Tandil) y un lead de WhatsApp.
+_RUBRICA_EVALUACION = """Evaluá esta conversación entre Sofía (secretaria de Santiago Funes, Tandil) y un lead de WhatsApp.
 
 REGLAS QUE SOFÍA DEBE CUMPLIR:
 1. En los primeros 2 mensajes NO propone visita ni llamada ("¿cuándo venís?", "¿cuándo te viene bien?", "coordinamos", "agendemos").
@@ -2121,6 +2283,39 @@ def _waba_health_check() -> None:
     except Exception as e:
         print(f"[WABA health] {e}")
 
+_template_status_cache: dict = {}
+
+def _check_template_status() -> None:
+    global _template_status_cache
+    if not WATI_API_URL or not WATI_API_TOKEN:
+        return
+    templates_to_watch = {"recontacto_propiedad", "recontacto_general"}
+    try:
+        resp = http_requests.get(
+            f"{WATI_API_URL.rstrip('/')}/api/v1/getMessageTemplates?pageSize=50",
+            headers={"Authorization": f"Bearer {WATI_API_TOKEN}"},
+            timeout=10,
+        )
+        if not resp.ok:
+            return
+        templates = resp.json().get("messageTemplates", [])
+        for t in templates:
+            name = t.get("elementName", "")
+            status = t.get("status", "")
+            if name not in templates_to_watch:
+                continue
+            prev = _template_status_cache.get(name)
+            if prev is None:
+                _template_status_cache[name] = status
+                continue
+            if status != prev:
+                _template_status_cache[name] = status
+                emoji = "✅" if status == "APPROVED" else "❌"
+                tg_send(f"{emoji} Template *{name}* cambió a *{status}*.\n{'Listo para mandar el broadcast.' if status == 'APPROVED' else 'Revisar en Wati.'}")
+                print(f"[Template check] {name}: {prev} → {status}")
+    except Exception as e:
+        print(f"[Template check] Error: {e}")
+
 def _start_scheduler() -> None:
     from apscheduler.schedulers.background import BackgroundScheduler
     scheduler = BackgroundScheduler(timezone="America/Argentina/Buenos_Aires")
@@ -2130,13 +2325,19 @@ def _start_scheduler() -> None:
     scheduler.add_job(sofia_auto_test, "cron", hour="7,11,15,19,23", minute=0, id="sofia_autotest_4h")
     # Re-suscripción WABA cada hora — previene caída silenciosa de mensajes
     scheduler.add_job(_waba_health_check, "interval", minutes=60, id="waba_health")
-    # Al arrancar: digest inmediato + re-suscripción WABA
+    # Check estado templates cada 30 minutos — alerta cuando Meta aprueba/rechaza
+    scheduler.add_job(_check_template_status, "interval", minutes=30, id="template_status")
+    # Al arrancar: digest inmediato + re-suscripción WABA + check templates
     threading.Thread(target=lambda: send_digest(hours=6), daemon=True).start()
     threading.Thread(target=_waba_health_check, daemon=True).start()
+    threading.Thread(target=_check_template_status, daemon=True).start()
     scheduler.start()
-    print("[Scheduler] Digest + reconciliación Meta + prueba automática + WABA health cada 60min")
+    print("[Scheduler] Digest + reconciliación Meta + prueba automática + WABA health + template check cada 30min")
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
+
+# Arrancar scheduler siempre — tanto con Gunicorn (importa el módulo) como con python server.py
+_start_scheduler()
 
 if __name__ == "__main__":
     print("=== Altavista Otero — Servidor Railway ===")
@@ -2149,5 +2350,4 @@ if __name__ == "__main__":
         print(f"Sofía WhatsApp: SIN CREDENCIALES — bot inactivo")
     print(f"Anthropic: {'configurado' if ANTHROPIC_KEY else 'NO CONFIGURADO'}")
     print(f"Supabase sfre-web: {'OK' if SFRE_SUPABASE_URL else 'NO CONFIGURADO'}")
-    _start_scheduler()
     app.run(host="0.0.0.0", port=PORT)
