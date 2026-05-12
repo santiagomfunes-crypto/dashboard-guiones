@@ -194,6 +194,18 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
 
     imagen_url = (thumbnail_map or {}).get(fuente_id)
 
+    descripcion = ""
+    desc_comp = comp_by_type.get("description", {}).get("description", {})
+    if isinstance(desc_comp, dict):
+        descripcion = desc_comp.get("text", "") or ""
+    if not descripcion:
+        # Fallback: buscar en attributes_list textos más largos (posibles descripciones)
+        for attr in attrs:
+            if len(attr) > 60:
+                descripcion = attr
+                break
+    descripcion = descripcion[:500]
+
     return {
         "fuente": "mercadolibre",
         "fuente_id": fuente_id,
@@ -209,6 +221,7 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,
+        "descripcion": descripcion,
     }
 
 
@@ -380,6 +393,7 @@ def _parse_preloaded_item(item, tipologia, operacion):
         "cochera": False,
         "titulo": item.get("title", ""),
         "imagen_url": item.get("thumbnail", ""),
+        "descripcion": "",
     }
 
 
@@ -407,6 +421,7 @@ def _parse_ld_item(item, tipologia, operacion):
         "cochera": False,
         "titulo": item.get("name", ""),
         "imagen_url": item.get("image", ""),
+        "descripcion": "",
     }
 
 

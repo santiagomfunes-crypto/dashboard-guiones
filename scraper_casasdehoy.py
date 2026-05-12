@@ -195,6 +195,21 @@ def parse_card(card_html, tipologia_default, operacion_default):
         except ValueError:
             pass
 
+    # ── Descripción ──
+    descripcion = ""
+    desc_m = re.search(
+        r'<p[^>]*class="[^"]*desc[^"]*"[^>]*>(.*?)</p>',
+        card_html, re.DOTALL | re.IGNORECASE
+    )
+    if not desc_m:
+        desc_m = re.search(
+            r'<div[^>]*class="[^"]*descripcion[^"]*"[^>]*>(.*?)</div>',
+            card_html, re.DOTALL | re.IGNORECASE
+        )
+    if desc_m:
+        descripcion = re.sub(r'<[^>]+>', '', desc_m.group(1))
+        descripcion = re.sub(r'\s+', ' ', descripcion).strip()[:500]
+
     return {
         "fuente": "casasdehoy",
         "fuente_id": prop_id,
@@ -210,6 +225,7 @@ def parse_card(card_html, tipologia_default, operacion_default):
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,
+        "descripcion": descripcion,
     }
 
 

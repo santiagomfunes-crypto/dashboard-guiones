@@ -257,6 +257,15 @@ def parse_item(chunk, tipologia_default, operacion_default):
     tipologia = tipologia_default
     operacion = operacion_default
 
+    # ── Descripción ──
+    descripcion = ""
+    desc_m = re.search(
+        r'class="card__description[^"]*"[^>]*>(.*?)</(?:p|div|span)>',
+        chunk, re.DOTALL | re.IGNORECASE
+    )
+    if desc_m:
+        descripcion = _clean_text(re.sub(r'<[^>]+>', '', desc_m.group(1)))[:500]
+
     return {
         "fuente": "argenprop",
         "fuente_id": fuente_id,
@@ -272,6 +281,7 @@ def parse_item(chunk, tipologia_default, operacion_default):
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,
+        "descripcion": descripcion,
     }
 
 
@@ -407,7 +417,7 @@ def enrich_with_zona(props):
         zona_norm, fuera = normalizar_zona(
             p.get("zona") or "",
             p.get("titulo") or "",
-            "",
+            p.get("descripcion") or "",
         )
         p["zona_normalizada"] = zona_norm
         p["fuera_de_tandil"] = fuera
