@@ -22,6 +22,13 @@ import html as html_module
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Normalización de zonas
+try:
+    from zona_utils import normalizar_zona
+except ImportError:
+    def normalizar_zona(zona, titulo, descripcion):
+        return "Otros Tandil", False
+
 # ── Configuración ─────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = Path(__file__).parent
@@ -392,6 +399,20 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
     return inserted, errors
 
 
+# ── Zona normalizada ───────────────────────────────────────────────────────────
+
+def enrich_with_zona(props):
+    """Agrega zona_normalizada y fuera_de_tandil a cada propiedad."""
+    for p in props:
+        zona_norm, fuera = normalizar_zona(
+            p.get("zona") or "",
+            p.get("titulo") or "",
+            "",
+        )
+        p["zona_normalizada"] = zona_norm
+        p["fuera_de_tandil"] = fuera
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -429,6 +450,9 @@ def main():
         print(f"Propiedades convertidas ARS→USD: {convertidas}")
     else:
         print("Advertencia: cotización blue no disponible, precios ARS no convertidos")
+
+    # Enriquecer con zona_normalizada
+    enrich_with_zona(props)
 
     inserted, errors = upsert_supabase(props, supabase_url, service_key, dry_run=args.dry_run)
 
