@@ -53,6 +53,9 @@ SEARCH_CONFIGS = [
     ("Lotes",          "terreno",       "venta"),
     ("Locales",        "local",         "alquiler"),
     ("PH",             "ph",            "venta"),
+    ("Quintas",        "quinta",        "venta"),
+    ("Campos",         "campo",         "venta"),
+    ("Galpones",       "galpón",        "alquiler"),
 ]
 
 MAX_PAGES_DEFAULT = 5    # páginas por combinación (~24 items/página)
@@ -166,16 +169,26 @@ def parse_card(card_html, tipologia_default, operacion_default):
 
     # ── Atributos de la propiedad (comodidades) ──
     metros_totales = None
+    superficie_cubierta = None
     dormitorios = None
     cochera = False
 
-    # Metros cuadrados: icono fa-arrows-alt + "m²: XXX"
+    # Metros cuadrados: icono fa-arrows-alt + "m²: XXX" (superficie total)
     m2_m = re.search(r'fa-arrows-alt[^>]*>.*?m²:\s*([\d.,]+)', card_html, re.DOTALL)
     if m2_m:
         try:
             metros_totales = float(m2_m.group(1).replace(",", "."))
             if metros_totales == 0:
                 metros_totales = None  # 0 significa "no informado"
+        except ValueError:
+            pass
+
+    # Superficie cubierta: icono fa-home + "m²: XXX" (área construida)
+    cub_m = re.search(r'fa-home[^>]*>.*?m²:\s*([\d.,]+)', card_html, re.DOTALL)
+    if cub_m:
+        try:
+            val = float(cub_m.group(1).replace(",", "."))
+            superficie_cubierta = val if val > 0 else None
         except ValueError:
             pass
 
@@ -222,6 +235,7 @@ def parse_card(card_html, tipologia_default, operacion_default):
         "tipo_cambio_usd": None,
         "dormitorios": dormitorios,
         "metros_totales": metros_totales,
+        "superficie_cubierta": superficie_cubierta,
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,

@@ -55,6 +55,8 @@ SEARCH_CONFIGS = [
     ("terreno",      "venta",    "/terrenos/venta/partido-de-tandil"),
     ("ph",           "venta",    "/ph/venta/partido-de-tandil"),
     ("local",        "alquiler", "/locales/alquiler/partido-de-tandil"),
+    ("oficina",      "alquiler", "/oficinas/alquiler/partido-de-tandil"),
+    ("cochera",      "venta",    "/cocheras/venta/partido-de-tandil"),
 ]
 
 MAX_PAGES_DEFAULT = 10    # páginas por combinación (~20 items/página)
@@ -198,17 +200,35 @@ def parse_item(chunk, tipologia_default, operacion_default):
 
     # ── Metros cuadrados ──
     metros_totales = None
-    m2_m = re.search(
+    superficie_cubierta = None
+
+    # Superficie cubierta (interior construido)
+    cub_m = re.search(
         r'basico1-icon-superficie_cubierta[^<]*</i>\s*<span>\s*([\d,\.]+)\s*m',
         chunk, re.IGNORECASE
     )
-    if m2_m:
+    if cub_m:
         try:
-            metros_totales = float(m2_m.group(1).replace(',', '.'))
-            if metros_totales == 0:
-                metros_totales = None
+            val = float(cub_m.group(1).replace(',', '.'))
+            if val > 0:
+                superficie_cubierta = val
         except ValueError:
             pass
+
+    # Superficie total (lote + construcción); fallback a cubierta si no está
+    tot_m = re.search(
+        r'basico1-icon-superficie_total[^<]*</i>\s*<span>\s*([\d,\.]+)\s*m',
+        chunk, re.IGNORECASE
+    )
+    if tot_m:
+        try:
+            val = float(tot_m.group(1).replace(',', '.'))
+            if val > 0:
+                metros_totales = val
+        except ValueError:
+            pass
+    if metros_totales is None:
+        metros_totales = superficie_cubierta
 
     # ── Cochera ── (buscar en imagen alts y features, no en descripción libre)
     # ArgEnProp genera alts como "Departamento en Venta con 1 cocheras" para propiedades con cochera
@@ -278,6 +298,7 @@ def parse_item(chunk, tipologia_default, operacion_default):
         "tipo_cambio_usd": None,
         "dormitorios": dormitorios,
         "metros_totales": metros_totales,
+        "superficie_cubierta": superficie_cubierta,
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,

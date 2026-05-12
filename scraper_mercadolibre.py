@@ -42,7 +42,7 @@ SEARCH_URLS = [
     ("oficina",      "alquiler", "https://inmuebles.mercadolibre.com.ar/oficinas/alquiler/tandil/"),
 ]
 
-MAX_PAGES = 3          # máximo de páginas por combinación (48 items/página)
+MAX_PAGES = 5          # máximo de páginas por combinación (48 items/página)
 PAGE_SIZE = 48
 DELAY_BETWEEN_REQUESTS = 3  # segundos entre requests (más tiempo para JS)
 PAGE_LOAD_TIMEOUT = 20000   # ms timeout para carga inicial
@@ -165,6 +165,7 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
 
     dormitorios = None
     metros_totales = None
+    superficie_cubierta = None
     cochera = False
 
     attrs = comp_by_type.get("attributes_list", {}).get("attributes_list", {}).get("texts", [])
@@ -177,9 +178,17 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
         m = re.search(r"(\d+)\s+dorm", attr_lower)
         if m:
             dormitorios = int(m.group(1))
-        m = re.search(r"([\d,.]+)\s*m²", attr_lower)
-        if m:
-            val_str = m.group(1).replace(",", ".")
+        # superficie cubierta: buscar "m² cub" o "cubiertos" antes de genérico
+        mc = re.search(r"([\d,.]+)\s*m²\s*cub", attr_lower)
+        if mc:
+            val_str = mc.group(1).replace(",", ".")
+            try:
+                superficie_cubierta = float(val_str)
+            except ValueError:
+                pass
+        elif re.search(r"([\d,.]+)\s*m²", attr_lower) and metros_totales is None:
+            m2 = re.search(r"([\d,.]+)\s*m²", attr_lower)
+            val_str = m2.group(1).replace(",", ".")
             try:
                 metros_totales = float(val_str)
             except ValueError:
@@ -218,6 +227,7 @@ def parse_polycard(polycard, tipologia_default, operacion_default, thumbnail_map
         "tipo_cambio_usd": None,
         "dormitorios": dormitorios,
         "metros_totales": metros_totales,
+        "superficie_cubierta": superficie_cubierta,
         "cochera": cochera,
         "titulo": titulo,
         "imagen_url": imagen_url,
