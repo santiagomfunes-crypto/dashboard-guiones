@@ -1,24 +1,12 @@
-[build]
-builder = "nixpacks"
-
 [deploy]
 # Gunicorn: 1 worker + 4 threads
-#   - 1 worker = estado en memoria (_pending, _seen_wati_msgs) compartido — evita duplicados
-#   - 4 threads = 4 webhooks simultáneos sin bloquear (Claude tarda ~3s por request)
-#   - gthread = threading nativo, compatible con APScheduler y threading.Timer
-#   - timeout 120 = mata workers colgados
 startCommand = "gunicorn --workers 1 --threads 4 --worker-class gthread --timeout 120 --bind 0.0.0.0:$PORT server:app"
 
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 
-# Zero-downtime: el deploy viejo sigue vivo 30s después de que el nuevo está activo
-# Cubre cualquier webhook en vuelo + respuesta de Claude durante un redeploy
 overlapSeconds = "30"
 drainingSeconds = "15"
 
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 0
-
-[[services]]
-name = "scraper-fichas"

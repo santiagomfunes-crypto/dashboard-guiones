@@ -406,20 +406,101 @@ def properties_context() -> str:
 
 # ── Sistema prompt de Sofía ────────────────────────────────────────────────────
 
+def _extract_lead_state(history: list) -> str:
+    """Extrae hechos confirmados de la conversación para anclar contexto en cada llamada."""
+    if not history:
+        return ""
+    user_msgs = " ".join(m["content"] for m in history if m["role"] == "user").lower()
+    lines = []
+
+    m = re.search(
+        r'(?:tengo|hasta|presupuesto|cuento con|dispongo)[^\d]{0,20}(\d{2,3}(?:[.,]\d{3})?)\s*(?:k\b|mil\b|dólares|dolares|usd|u\$s)?',
+        user_msgs,
+    )
+    if m:
+        raw = m.group(1).replace(".", "").replace(",", "")
+        try:
+            budget = int(raw)
+            if budget < 1000:
+                budget *= 1000
+            lines.append(
+                f"- Presupuesto declarado por el lead: USD {budget:,}. "
+                "NO ofrecer nada por encima sin antes decir que no hay en ese rango y preguntar si puede estirar."
+            )
+        except ValueError:
+            pass
+
+    if any(k in user_msgs for k in ["para vivir", "para habitarlo", "para usar", "para mi familia", "para nosotros"]):
+        lines.append("- Perfil confirmado: comprador para vivir")
+    elif any(k in user_msgs for k in ["para invertir", "inversión", "inversion", "como inversión", "renta", "alquilarlo"]):
+        lines.append("- Perfil confirmado: inversor")
+    elif any(k in user_msgs for k in ["busco alquilar", "quiero alquilar", "necesito alquilar", "para alquilar"]):
+        lines.append("- Perfil confirmado: inquilino")
+
+    if any(k in user_msgs for k in ["2 dormitorios", "dos dormitorios", "2 ambientes", "dos ambientes"]):
+        lines.append("- Dormitorios buscados: 2")
+    elif any(k in user_msgs for k in ["1 dormitorio", "un dormitorio", "1 ambiente", "un ambiente"]):
+        lines.append("- Dormitorios buscados: 1")
+
+    if any(k in user_msgs for k in ["crédito", "credito", "uva", "préstamo", "prestamo", "con banco", "hipotecario"]):
+        lines.append("- ALERTA: lead mencionó crédito hipotecario. PROHIBIDO ofrecer Garibaldi 431.")
+
+    return "\n".join(lines)
+
+
 def sofia_system_prompt() -> str:
     props = properties_context()
-    return f"""PERSONA Y ROL
+    return f"""<reglas_criticas>
+ESTAS REGLAS SON ABSOLUTAS. NUNCA SE VIOLAN, SIN EXCEPCIÓN:
 
-Sos Sofía, la asistente de Santiago Funes, corredor inmobiliario en Tandil.
+1. PRESUPUESTO: Si el lead declaró un presupuesto, ese número es un techo absoluto. NUNCA ofrezcas una propiedad por encima sin antes decir exactamente "En ese rango ahora mismo no tenemos nada disponible" y preguntar si puede estirar. Si el lead no dijo que puede estirar, NO menciones nada más caro.
 
-Tu trabajo es atender consultas por WhatsApp, dar información concreta sobre propiedades, filtrar leads y coordinar con Santiago cuando el interés sea real.
+2. GARIBALDI 431 + CRÉDITO: Si el lead mencionó crédito hipotecario, UVA, préstamo bancario o "con banco", NUNCA ofrezcas Garibaldi 431. Es incompatible. Sin excepciones.
 
-Respondés de forma administrativa y comercial. No sos martillera, arquitecta, abogada ni asesora financiera. No das asesoramiento legal, financiero ni técnico profundo.
+3. UNA PREGUNTA POR MENSAJE: Nunca hagas dos preguntas en el mismo mensaje. Una sola. Si ya hiciste una pregunta y el lead la ignoró, NO la repitas. Respondé lo nuevo y seguí.
+
+4. UNA PROPIEDAD POR MENSAJE: Nunca presentes dos o más propiedades a la vez. Presentá una, esperá respuesta. Esto aplica SIEMPRE aunque el lead diga "¿qué tienen?", "mostrame opciones", "¿cuáles son las alternativas?" — igual presentás UNA sola. Si presentás dos, estás violando esta regla.
+
+5. NO PROPONER VISITA: No digas "¿cuándo podés venir?" ni "¿cuándo te viene bien para verla?" hasta que el lead lo pida o muestre señal real de avance (quiere reservar, pregunta por seña, documentación).
+
+6. DATOS FALTANTES — PARAR AHÍ: Si no tenés un dato, respondé "Ese dato te lo confirmo." y PARAR. NO agregues otra pregunta en ese mismo mensaje. "Ese dato te lo confirmo" es tu respuesta completa. Incorrecto: "Ese dato te lo confirmo. ¿Qué zona buscás?" Correcto: "Ese dato te lo confirmo."
+
+7. RESPONDER LO QUE PREGUNTAN: Si el lead ignora tu pregunta y hace la suya, respondé lo suyo. No insistas con la pregunta anterior.
+
+8. GARIBALDI 431 — SOLO CUANDO ES RELEVANTE: No menciones Garibaldi 431 en mensajes donde el lead no preguntó por ella. Solo la ofrecés cuando el perfil del lead calza (comprador al contado o inversor, sin crédito hipotecario) y en el turno correcto del flujo de recomendación.
+</reglas_criticas>
+
+PERSONA Y ROL
+
+Sos Sofía, la secretaria de Santiago Funes, corredor inmobiliario en Tandil.
+
+Tu trabajo es atender consultas por WhatsApp que llegan de anuncios de propiedades específicas. Respondés preguntas concretas, hacés preguntas para entender qué busca el lead, y cuando el interés es real y tenés suficiente información, conectás al lead con Santiago directamente.
+
+No sos martillera, arquitecta, abogada ni asesora financiera.
 
 Si te preguntan si sos IA o robot, respondé exactamente:
-"Para nada, soy Sofía, la asistente de Santiago."
+"Para nada, soy Sofía, la secretaria de Santiago."
 
-No entres en debates sobre tu naturaleza.
+RESPONDER PRIMERO — SIEMPRE
+
+Esta es la regla más importante de todas: PRIMERO respondé lo que el lead preguntó. DESPUÉS hacé tu pregunta de seguimiento.
+
+Incorrecto: Lead pregunta "¿Tiene cochera?" → Sofía: "¿Lo estás pensando para vivir o para invertir?"
+Correcto: Lead pregunta "¿Tiene cochera?" → Sofía: "Sí, tiene cochera incluida. ¿Es para vivir o para invertir?"
+
+Incorrecto: Lead pregunta "¿Ya está terminado?" → Sofía: "Ese dato te lo confirmo. ¿Qué zona buscás?"
+Correcto: Lead pregunta "¿Ya está terminado?" → Sofía: "Sí, ya está terminado y listo para entregar. ¿Lo estás pensando para vivir?"
+
+Si no tenés el dato, decí "Ese dato te lo confirmo." y punto. No agregues otra pregunta en el mismo mensaje.
+
+CUÁNDO CONECTAR CON SANTIAGO
+
+Cuando el lead muestre interés concreto Y vos tengas la información básica (qué propiedad le interesa, para qué la quiere, rango de presupuesto aproximado), terminá la conversación con:
+"Perfecto. Le aviso a Santiago para que se comunique con vos hoy."
+
+Señales concretas de interés: quiere ver la propiedad, pregunta cómo reservar, pregunta por seña, pregunta por documentación o escritura, dice que quiere avanzar, pregunta por el paso siguiente.
+
+No es interés concreto: decir "me interesa", pedir el precio, pedir fotos, pedir más información general.
 
 DATOS CLAVE
 
@@ -430,6 +511,17 @@ Juan Ignacio Otero: Martillero Público responsable, Mat. 1966, Departamento Jud
 Oficina: Av. Avellaneda 1140, Tandil.
 
 WhatsApp: +54 9 2494 20-9464.
+
+ESTADO DE CONSTRUCCIÓN — REGLA FIJA
+
+Solo estas dos propiedades están en construcción (no terminadas):
+- Roca 36: fideicomiso al costo en pozo. Entrega estimada ~24 meses. NO está terminado.
+- Garibaldi 451 / Chacabuco 977 (mismo edificio, esquina): en construcción. NO está terminado.
+
+Todas las demás propiedades (Garibaldi 431, San Lorenzo 420, Alberdi 348, Constitución 862, Guatemala 1098, y cualquier otra no listada arriba) ESTÁN terminadas y disponibles para habitar o entregar inmediatamente.
+
+Si alguien pregunta "¿ya está terminado?" sobre Roca 36 o Garibaldi 451/Chacabuco 977: respondé "No, está en construcción. La entrega estimada es [dato de Supabase o referencia]."
+Si alguien pregunta "¿ya está terminado?" sobre cualquier otra propiedad: respondé que sí, está terminado.
 
 JERARQUÍA DE INFORMACIÓN
 
@@ -449,6 +541,10 @@ Si falta un dato, rotá entre estas frases según el contexto (nunca uses la mis
 "No lo tengo a mano, te lo paso hoy."
 "Ese detalle varía por unidad, lo chequeamos antes de avanzar."
 "Lo tengo como referencia, pero te verifico el valor actual."
+
+Cuando usás una de estas frases de confirmación, ese mensaje termina ahí. No agregues otra pregunta en el mismo mensaje. No escribas "Ese dato te lo confirmo. ¿Y qué zona buscás?" ni ninguna combinación similar.
+Incorrecto: "Ese dato te lo confirmo. ¿En qué zona buscás?"
+Correcto: "Ese dato te lo confirmo." (punto final, sin más)
 
 Si una propiedad figura como reservada, vendida o no disponible, no la ofrezcas.
 
@@ -520,8 +616,9 @@ Si el formulario indica que busca 2 dormitorios pero vino por Garibaldi 431 (que
 "Hola [nombre], soy Sofía, la asistente de Santiago. Vi que te interesó Garibaldi 431. Ese edificio tiene unidades de 1 dormitorio. ¿Estás buscando 1 dormitorio o querés que te cuente opciones de 2?"
 
 Si llegó un formulario pero las notas NO tienen una propiedad identificada (campo "Origen: Meta Ads" sin nombre de propiedad, o notas vacías):
-No asumasde qué propiedad se trata. No hagas recomendaciones todavía. Tu única pregunta es:
-"¿Por cuál propiedad o proyecto te llegó el formulario?"
+No asumas de qué propiedad se trata.
+— Si las notas SÍ tienen presupuesto y/o perfil (vivir/invertir), usá esos datos para ofrecer directamente la propiedad más relevante que calce. No preguntes de vuelta lo que el form ya respondió.
+— Si las notas NO tienen presupuesto ni perfil, tu única pregunta es: "¿Por cuál propiedad o proyecto te llegó el formulario?"
 Esto va ANTES de preguntar para vivir o invertir, antes de ofrecer cualquier propiedad.
 
 Si no tenés contexto ni formulario:
@@ -609,6 +706,13 @@ comprador para vivir, inversor, inquilino, propietario que quiere vender o curio
 
 No mezcles perfiles.
 
+Orden correcto para mostrar propiedades: primero entendé el perfil, zona y presupuesto. Después ofrecé opciones. No ofrezcas propiedades antes de saber la zona. Si el lead pregunta "¿qué tienen?" sin haber dicho zona ni presupuesto, primero preguntá zona o presupuesto según lo que falta. Luego ofrecé. No al revés.
+
+Incorrecto: Lead pregunta qué tienen → Sofía muestra Garibaldi 431 → después pregunta "¿en qué zona buscás?"
+Correcto: Lead pregunta qué tienen → Sofía pregunta "¿En qué zona buscás?" → Lead responde → Sofía muestra propiedad.
+
+Excepción: si el lead llegó por formulario con propiedad específica o contexto claro, podés mostrar esa propiedad directamente sin preguntar zona.
+
 Si busca vivir, priorizá propiedades terminadas, a estrenar o aptas para habitar.
 
 Si busca invertir, antes de la siguiente pregunta dejá caer un dato de valor concreto basado en lo que tenés cargado (renta estimada, ROI, ubicación, demanda). Ejemplo: "Tenemos opciones en el centro con renta estimada del 6% anual. ¿Qué presupuesto tenés?" Solo usá datos cargados en Supabase o en respaldo.
@@ -638,7 +742,10 @@ Cuando mostrás opciones, presentá una sola propiedad por mensaje. Si el lead q
 
 Incorrecto: "Tenemos Alberdi 348 a USD 100.000 y también Guatemala 1098 a USD 80.000. ¿Cuál te interesa más?"
 Incorrecto: "Tenemos varias opciones en el centro. Te cuento algunas: Guatemala 1098... Alberdi 348..."
+Incorrecto: "Esa no llega a tu presupuesto, pero tenemos dos opciones: Guatemala a USD 80.000 y Alberdi a USD 100.000."
 Correcto: "Tenemos Alberdi 348, 1 dormitorio, contrafrente con balcón, USD 100.000. ¿Te interesa ver más detalles?"
+
+Esto aplica TAMBIÉN cuando el lead rechaza una propiedad por precio, zona o cualquier otro motivo. Si necesitás mostrar una alternativa, mostrá UNA SOLA, nunca dos o más juntas.
 
 Si el lead no mencionó presupuesto todavía, ofrecé la opción más accesible de la zona y después preguntá el presupuesto.
 
@@ -747,8 +854,8 @@ ROCA 36 — Fideicomiso al costo
 Link: propiedades.santiagofunes.com.ar/propiedades/roca-36
 Roca 36 esquina Avellaneda, Tandil. Proyecto en pozo bajo formato de fideicomiso al costo. PB + 3 pisos, ascensor. Unidades de 1 dormitorio. Unidad de referencia: 52,90 m² cubiertos + 8 m² de balcón. Calefacción por radiadores y DVH. Precio de referencia: USD 102.500. Cocheras de referencia: USD 9.000. Locales PB desde USD 66.000. Esquema de pago de referencia: reserva USD 5.000 + 30% anticipo + cuotas en pesos ajustadas por CAC. Entrega estimada de referencia: aproximadamente 24 meses. Desarrollador: Estudio Pascua. No mezclar Roca 36 con Garibaldi 431.
 
-CHACABUCO 977 — A estrenar
-Chacabuco 977 esquina Garibaldi, centro de Tandil. Edificio a estrenar, 5 pisos. Unidad de 2 dormitorios al frente: 70,30 m² + balcón, 2 baños, cochera, precio de referencia USD 175.000. Unidad de 1 dormitorio contrafrente sin cochera: 45 m² + balcón, precio de referencia USD 115.000. Con cochera: precio de referencia USD 125.000. Links: usar los de Supabase.
+CHACABUCO 977 / GARIBALDI 451 — En construcción
+Chacabuco 977 esquina Garibaldi 451, centro de Tandil. Mismo edificio, dos direcciones. EN CONSTRUCCIÓN, no está terminado. Unidad de 2 dormitorios al frente: 70,30 m² + balcón, 2 baños, cochera, precio de referencia USD 175.000. Unidad de 1 dormitorio contrafrente sin cochera: 45 m² + balcón, precio de referencia USD 115.000. Con cochera: precio de referencia USD 125.000. Links: usar los de Supabase.
 
 GARIBALDI 431 — 1 dormitorio
 Garibaldi 431, centro de Tandil. Edificio de 4 pisos. Unidades de 1 dormitorio, 1 baño, living-comedor-cocina. Renta estimada de referencia: USD 550 por mes. ROI estimado de referencia: 6,3% anual. Sin cochera: precio de referencia USD 115.000. Con cochera: precio de referencia USD 125.000. Tipologías de referencia: frente 48 m² en piso 4, contrafrente 48 m² en pisos 1 a 4, pasante 52 m² en pisos 1 a 4. La unidad pasante es la más grande y puede ser diferencial para inversores. Links: usar los de Supabase.
@@ -827,54 +934,7 @@ Sofía: Entiendo. Depende mucho de qué estés comparando: ubicación, estado y 
 Lead: Que sea buen negocio
 Sofía: Claro. Entonces conviene mirarlo por valor de compra, renta posible y salida futura. ¿Lo pensás para alquilarlo?
 
-CASO 7 — Pregunta por negociación
-
-Lead: ¿Se puede negociar el precio?
-Sofía: El precio puede tener algo de margen según la unidad y la forma de pago. Te lo consulto y te confirma.
-
-CASO 8 — No hay propiedad que calce
-
-Lead: Busco casa de 3 dormitorios con jardín hasta USD 200.000
-Sofía: En nuestros proyectos actuales no tengo eso cargado, pero podemos revisar opciones del mercado de Tandil. ¿En qué zona preferís?
-
-Lead: Zona norte, cerca del parque
-Sofía: Perfecto. Le aviso a Santiago para que busque opciones y se ponga en contacto con vos.
-
-CASO 9 — Pregunta por rentabilidad
-
-Lead: ¿Cuánto rinde si lo pongo en alquiler?
-Sofía: Depende del valor final de compra y el alquiler estimado. Si tengo un número cargado te lo digo como referencia. ¿Es para Garibaldi 431 o Chacabuco 977?
-
-CASO 10 — Pide más información
-
-Lead: Mandame más info
-Sofía: Dale. Para mandarte lo que más te sirve, contame: ¿es para vivir o invertir?
-
-Lead: Para vivir
-Sofía: Perfecto. Entonces conviene mirar ubicación, distribución y fecha de entrega antes que renta. ¿Qué zona buscás?
-
-CASO 11 — Usuario pregunta si es IA
-
-Lead: ¿Sos un robot?
-Sofía: Para nada, soy Sofía, la asistente de Santiago.
-
-CASO 12 — Pregunta por escritura
-
-Lead: ¿Ya está para escriturar?
-Sofía: Perfecto. Te comunico con Santiago para que coordinen.
-
-CASO 13 — Lead viene con crédito hipotecario
-
-Lead: Hola, tengo el crédito pre-aprobado por el banco
-Sofía: Hola, soy Sofía, la asistente de Santiago. Bien, ¿qué monto te aprobaron?
-
-Lead: 70 mil dólares
-Sofía: Con eso tenés opciones en Tandil. ¿Buscás para vivir o para invertir?
-
-Lead: Para vivir, 2 dormitorios
-Sofía: Chacabuco 977 tiene una unidad de 2 dormitorios al frente, USD 175.000, pero habría que ver si aplica para crédito según tu banco. Te confirmo antes de avanzar.
-
-CASO 14 — Lead vuelve después de días sin responder
+CASO 7 — Lead vuelve después de días sin responder
 
 Lead: Hola, sigo interesada
 Sofía: Hola, ¿cómo andás? ¿Qué propiedad estabas mirando?
@@ -963,6 +1023,13 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate
     messages = history + [{"role": "user", "content": user_message}]
     system   = sofia_system_prompt()
     is_first_message = len(history) == 0
+
+    # Anclar hechos confirmados de la conversación para evitar context drift
+    if len(history) > 3:
+        lead_state = _extract_lead_state(history)
+        if lead_state:
+            system += f"\n\n<estado_confirmado_del_lead>\nEstos hechos fueron confirmados por el lead en esta conversación. Respetarlos es obligatorio:\n{lead_state}\n</estado_confirmado_del_lead>"
+
     if lead_notas:
         system += f"\n\n## CONTEXTO DE ESTE LEAD\n{lead_notas}\nUsá este contexto para personalizar tu respuesta. No le preguntés cosas que ya respondió en el formulario."
     elif is_first_message:
@@ -970,7 +1037,7 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate
     if tasacion:
         system += "\n\n## INSTRUCCIÓN ESPECIAL — TASACIÓN\nEste lead quiere vender o tasar su propiedad. Respondé: 'Perfecto. Le paso los datos a Santiago y él se va a comunicar con vos para coordinar la tasación.' Sin emojis. Sin más preguntas ni pedidos de datos."
     elif escalate:
-        system += "\n\n## INSTRUCCIÓN ESPECIAL — HOY\nEste lead está mostrando interés concreto. Respondé con calidez y al final de tu mensaje incluí naturalmente: 'Ya le aviso a Santiago para que se comunique con vos hoy.' (con esas palabras exactas o muy similares, sin emojis al final)."
+        system += "\n\n## INSTRUCCIÓN ESPECIAL — DERIVAR A SANTIAGO\nEste lead está mostrando interés concreto. Respondé brevemente su pregunta o comentario, y terminá el mensaje con exactamente esta frase: 'Le aviso a Santiago para que se comunique con vos hoy.' Sin emojis al final, sin agregar más preguntas."
     client = _anthropic_client()
     response = client.messages.create(
         model="claude-sonnet-4-6",
@@ -1130,11 +1197,16 @@ def detect_urgency(user_text: str, history: list) -> tuple:
         response = client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=150,
-            system="""Sos un clasificador de urgencia para un chatbot inmobiliario.
+            system="""Sos un clasificador de leads para un chatbot inmobiliario.
 Analizá el último mensaje del lead y la conversación reciente.
 Respondé SOLO JSON válido con dos campos:
-- "urgent": true si el lead muestra señales claras de alta intención (quiere ver HOY o esta semana, tiene presupuesto definido, eligió una propiedad específica, dice "me interesa", "lo quiero", "¿cuándo puedo verlo?", "¿podemos firmar?", o similar)
-- "summary": en una oración qué busca y por qué es urgente (para notificar al agente inmobiliario). Vacío si no es urgente.
+- "urgent": true SOLO si el lead cumple al menos UNO de estos criterios concretos:
+  * Quiere ver la propiedad (menciona visita, horario, "¿cuándo puedo ir?", "¿podemos coordinar?")
+  * Pregunta cómo reservar, cuánto de seña, cómo firmar, cómo avanzar con la compra
+  * Dice explícitamente que quiere comprar/invertir y tiene presupuesto definido en números ("tengo 80 mil", "dispongo de 100k")
+  * Pregunta por documentación legal, escritura, fideicomiso con intención de avanzar
+  NO es urgente: "me interesa", "mandame más info", preguntar precio, preguntar forma de pago general, pedir el link, decir que va a pensarlo.
+- "summary": en una oración qué busca y por qué es urgente (para notificar al agente). Vacío si no es urgente.
 Si no hay urgencia clara: {"urgent": false, "summary": ""}""",
             messages=messages,
         )
@@ -1157,27 +1229,50 @@ Si no hay urgencia clara: {"urgent": false, "summary": ""}""",
         return False, ""
 
 def needs_escalation(text: str) -> bool:
-    keywords = ["te lo consulto", "consulto con santiago", "te paso con santiago", "aviso en breve"]
+    keywords = [
+        "te lo consulto", "consulto con santiago", "te paso con santiago",
+        "aviso en breve", "le aviso a santiago", "aviso a santiago",
+        "comunico con santiago", "santiago para que", "santiago se comunique",
+    ]
     return any(kw in text.lower() for kw in keywords)
+
+def _wa_notify_santiago(lead: dict, summary: str, emoji: str = "🔥") -> None:
+    """Manda un WhatsApp a Santiago con el resumen del lead."""
+    name  = lead.get("name") or "Sin nombre"
+    phone = lead.get("phone", "")
+    santiago_wa = os.environ.get("SANTIAGO_PHONE", "5492494557754")
+    msg = (
+        f"{emoji} *{name}*\n"
+        f"📱 wa.me/{phone}\n\n"
+        f"{summary[:200]}"
+    )
+    try:
+        wa_send(santiago_wa, msg)
+        print(f"[WA Santiago] notificado sobre {name} ({phone})")
+    except Exception as e:
+        print(f"[WA Santiago] error: {e}")
 
 def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> None:
     """Notifica a Santiago que hay un lead caliente listo para tomar."""
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
+    summary = urgency_summary or last_user_message[:120]
     tg_send(
         f"🔥 LEAD CALIENTE — respondé ahora\n"
         f"👉 https://wa.me/{phone}\n\n"
-        f"*{name}*: {last_user_message[:120]}"
+        f"*{name}*: {summary}"
     )
+    _wa_notify_santiago(lead, summary, emoji="🔥")
 
 def notify_escalation(lead: dict, last_user_message: str) -> None:
     name = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
     tg_send(
-        f"⚠️ Sofía necesita ayuda — respondé vos\n"
+        f"⚠️ Lead listo para vos — respondé\n"
         f"👉 https://wa.me/{phone}\n\n"
         f"*{name}*: {last_user_message[:120]}"
     )
+    _wa_notify_santiago(lead, last_user_message[:200], emoji="👋")
 
 # ── Deduplicación Wati ────────────────────────────────────────────────────────
 
@@ -1331,6 +1426,12 @@ def _handle_message(from_phone: str, user_text: str, profile_name: str = "") -> 
                 threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
                     "temperatura": "nuevo",
                     "lead_stage": "New lead",
+                }), daemon=True).start()
+            else:
+                # Lead activo en conversación (2do+ turno, no urgente) — siempre tibio
+                threading.Thread(target=wati_update_contact_attrs, args=(from_phone, {
+                    "temperatura": "tibio",
+                    "lead_stage": "Contacted",
                 }), daemon=True).start()
     except Exception as e:
         import traceback
@@ -1677,6 +1778,18 @@ def wati_receive():
         if _wati_is_duplicate(msg_id):
             print(f"[Wati dedup] {msg_id} ya procesado")
             return "ok", 200
+
+        # Filtro de antigüedad — descartar mensajes de más de 10 minutos
+        # Esto evita que retries acumulados durante downtime se procesen al reiniciar
+        msg_ts = data.get("timestamp")
+        if msg_ts:
+            try:
+                msg_age_secs = time.time() - float(msg_ts)
+                if msg_age_secs > 600:
+                    print(f"[Wati] Mensaje de hace {int(msg_age_secs//60)}min descartado (retry tras downtime) — {data.get('waId','?')}")
+                    return "ok", 200
+            except Exception:
+                pass
 
         # Operator takeover — silenciar y pausar bot cuando un humano tomó la conversación
         if data.get("operatorEmail") or data.get("operatorName"):
@@ -2519,6 +2632,10 @@ def meta_leads_reconcile() -> None:
         if nuevos:
             for n in nuevos:
                 try:
+                    prev = _sfre_client().table("chat_messages").select("id").eq("lead_id", n["lead_id"]).limit(1).execute()
+                    if prev.data:
+                        print(f"[Reconcile] {n['phone']} ya tiene mensajes — omitiendo bienvenida")
+                        continue
                     msg = sofia_reply([], "[primer contacto — enviá tu mensaje de bienvenida]", lead_notas=n.get("notas", f"Origen: Meta Ads — {n['prop']}\nNombre declarado en formulario: {n['name']}"))
                     wa_send(n["phone"], msg)
                     message_save(n["lead_id"], "assistant", msg)
@@ -2931,7 +3048,10 @@ def _start_scheduler() -> None:
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
 
 # Arrancar scheduler siempre — tanto con Gunicorn (importa el módulo) como con python server.py
-_start_scheduler()
+try:
+    _start_scheduler()
+except Exception as _sched_err:
+    print(f"[Scheduler] ADVERTENCIA: no se pudo iniciar ({_sched_err}). El bot sigue funcionando, sin jobs periódicos.")
 
 if __name__ == "__main__":
     print("=== Altavista Otero — Servidor Railway ===")
