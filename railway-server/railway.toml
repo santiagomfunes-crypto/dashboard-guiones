@@ -2,9 +2,6 @@
 builder = "DOCKERFILE"
 
 [deploy]
-# Gunicorn: 1 worker + 4 threads
-startCommand = "gunicorn --workers 1 --threads 4 --worker-class gthread --timeout 120 --bind 0.0.0.0:$PORT server:app"
-
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 
