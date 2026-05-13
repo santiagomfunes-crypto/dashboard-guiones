@@ -121,6 +121,10 @@ _HAIKU_OUTPUT_COST_PER_TOKEN = 4.00 / 1_000_000   # $4.00 / MTok
 # OpenAI Whisper — $0.006/min; asumimos ~30s promedio por audio de WhatsApp
 _WHISPER_COST_PER_CALL = 0.003
 
+# Modelo de Sofía — overridable vía env var para cambiar sin redeploy.
+# Por defecto Sonnet 4.6; si se llega al rate limit, set SOFIA_MODEL=claude-haiku-4-5-20251001 en Railway.
+SOFIA_MODEL = os.getenv("SOFIA_MODEL", "claude-sonnet-4-6")
+
 
 def _log_api_usage(model: str, tokens_input: int = 0, tokens_output: int = 0,
                    cost_usd: float = 0.0, source: str = 'sofia') -> None:
@@ -296,7 +300,24 @@ def wa_send_internal(text: str) -> None:
             print(f"[Internal Wati session ERROR] {resp.status_code} — {body}")
         except Exception as e:
             print(f"[Internal Wati session error] {e}")
-        print(f"[Internal] Ventana 24hs expirada — notificación logueada: {clean[:200]}")
+        # 3. Fallback: template de alerta si existe, si no usa reengagement con resumen en param {{1}}
+        alert_template = os.environ.get("SANTIAGO_ALERT_TEMPLATE", "")
+        if alert_template:
+            # Template dedicado para Santiago — body es {{1}} con el texto completo
+            sent = _wati_send_template(phone, alert_template, [{"name": "1", "value": clean[:1000]}],
+                                       broadcast_name="alerta_santiago_auto")
+            if sent:
+                print(f"[Internal] Alert template '{alert_template}' enviado a Santiago")
+                return
+        # 4. Último recurso: reengagement template con resumen en el campo nombre
+        summary_line = clean.split("\n")[0][:60]
+        sent = _wati_send_template(phone, WATI_REENGAGEMENT_TEMPLATE,
+                                   [{"name": "1", "value": summary_line}],
+                                   broadcast_name="alerta_interna_fallback")
+        if sent:
+            print(f"[Internal] Reengagement fallback enviado a Santiago con: {summary_line}")
+            return
+        print(f"[Internal] Todos los canales fallaron — notificación logueada: {clean[:200]}")
     raise RuntimeError("[Internal] Sin canal configurado — EVOLUTION_API_URL o WATI_API_URL requeridos")
 
 def tg_send(text: str) -> None:
@@ -1040,14 +1061,14 @@ def sofia_reply(history: list, user_message: str, lead_notas: str = "", escalate
         system += "\n\n## INSTRUCCIÓN ESPECIAL — DERIVAR A SANTIAGO\nEste lead está mostrando interés concreto. Respondé brevemente su pregunta o comentario, y terminá el mensaje con exactamente esta frase: 'Le aviso a Santiago para que se comunique con vos hoy.' Sin emojis al final, sin agregar más preguntas."
     client = _anthropic_client()
     response = client.messages.create(
-        model="claude-sonnet-4-6",
+        model=SOFIA_MODEL,
         max_tokens=400,
         system=system,
         messages=messages,
         timeout=25.0,
     )
     _log_api_usage(
-        model="claude-sonnet-4-6",
+        model=SOFIA_MODEL,
         tokens_input=response.usage.input_tokens,
         tokens_output=response.usage.output_tokens,
         cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
@@ -1091,7 +1112,7 @@ def manager_reply(user_text: str) -> str:
     now = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M")
     client = _anthropic_client()
     response = client.messages.create(
-        model="claude-sonnet-4-6",
+        model=SOFIA_MODEL,
         max_tokens=500,
         system=f"""Sos Sofía, la secretaria de Santiago Funes.
 Santiago te escribe directo para preguntarte sobre el estado de los leads. Respondele de forma clara, breve y útil.
@@ -1104,7 +1125,7 @@ Respondé en español rioplatense, sin markdown. Sé directa y concisa.""",
         messages=[{"role": "user", "content": user_text}],
     )
     _log_api_usage(
-        model="claude-sonnet-4-6",
+        model=SOFIA_MODEL,
         tokens_input=response.usage.input_tokens,
         tokens_output=response.usage.output_tokens,
         cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
@@ -1195,7 +1216,7 @@ def detect_urgency(user_text: str, history: list) -> tuple:
     try:
         client = _anthropic_client()
         response = client.messages.create(
-            model="claude-sonnet-4-6",
+            model=SOFIA_MODEL,
             max_tokens=150,
             system="""Sos un clasificador de leads para un chatbot inmobiliario.
 Analizá el último mensaje del lead y la conversación reciente.
@@ -1211,7 +1232,7 @@ Si no hay urgencia clara: {"urgent": false, "summary": ""}""",
             messages=messages,
         )
         _log_api_usage(
-            model="claude-sonnet-4-6",
+            model=SOFIA_MODEL,
             tokens_input=response.usage.input_tokens,
             tokens_output=response.usage.output_tokens,
             cost_usd=(response.usage.input_tokens * _HAIKU_INPUT_COST_PER_TOKEN
@@ -1240,14 +1261,13 @@ def _wa_notify_santiago(lead: dict, summary: str, emoji: str = "🔥") -> None:
     """Manda un WhatsApp a Santiago con el resumen del lead."""
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
-    santiago_wa = os.environ.get("SANTIAGO_PHONE", "5492494557754")
     msg = (
         f"{emoji} *{name}*\n"
         f"📱 wa.me/{phone}\n\n"
         f"{summary[:200]}"
     )
     try:
-        wa_send(santiago_wa, msg)
+        wa_send_internal(msg)
         print(f"[WA Santiago] notificado sobre {name} ({phone})")
     except Exception as e:
         print(f"[WA Santiago] error: {e}")
@@ -1257,21 +1277,11 @@ def notify_urgency(lead: dict, last_user_message: str, urgency_summary: str) -> 
     name  = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
     summary = urgency_summary or last_user_message[:120]
-    tg_send(
-        f"🔥 LEAD CALIENTE — respondé ahora\n"
-        f"👉 https://wa.me/{phone}\n\n"
-        f"*{name}*: {summary}"
-    )
     _wa_notify_santiago(lead, summary, emoji="🔥")
 
 def notify_escalation(lead: dict, last_user_message: str) -> None:
     name = lead.get("name") or "Sin nombre"
     phone = lead.get("phone", "")
-    tg_send(
-        f"⚠️ Lead listo para vos — respondé\n"
-        f"👉 https://wa.me/{phone}\n\n"
-        f"*{name}*: {last_user_message[:120]}"
-    )
     _wa_notify_santiago(lead, last_user_message[:200], emoji="👋")
 
 # ── Deduplicación Wati ────────────────────────────────────────────────────────
@@ -2491,6 +2501,29 @@ def wati_templates():
         ]
     })
 
+@app.route("/wati/proxy", methods=["GET", "POST", "PUT", "PATCH"])
+def wati_proxy():
+    """Proxy genérico hacia la API de Wati. Pasar _path en query string para el endpoint."""
+    if API_KEY and request.headers.get("x-api-key", "") != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    if not WATI_API_URL or not WATI_API_TOKEN:
+        return jsonify({"ok": False, "error": "WATI_API_URL o WATI_API_TOKEN no configurados"})
+    wati_path = request.args.get("_path", "")
+    if not wati_path:
+        return jsonify({"error": "_path requerido"}), 400
+    body = request.get_json(silent=True) or {}
+    method = request.method
+    url = f"{WATI_API_URL.rstrip('/')}/{wati_path.lstrip('/')}"
+    params = {k: v for k, v in request.args.items() if k != "_path"}
+    fn = http_requests.post if method == "POST" else http_requests.get
+    resp = fn(url, json=body if method != "GET" else None, params=params,
+              headers={"Authorization": f"Bearer {WATI_API_TOKEN}", "Content-Type": "application/json"},
+              timeout=15)
+    try:
+        return jsonify({"status": resp.status_code, "body": resp.json()})
+    except Exception:
+        return jsonify({"status": resp.status_code, "body": resp.text[:1000]})
+
 @app.route("/evo/debug", methods=["GET"])
 def evo_debug():
     """Verifica que la instancia de Evolution API está conectada."""
@@ -2931,7 +2964,7 @@ def sofia_auto_test() -> None:
         conversation = "\n\n".join(log_lines)
 
         eval_r = cl.messages.create(
-            model="claude-sonnet-4-6",
+            model=SOFIA_MODEL,
             max_tokens=600,
             messages=[{"role": "user", "content": f"{_RUBRICA_EVALUACION}\n\nCONVERSACIÓN:\n{conversation}"}],
         )
