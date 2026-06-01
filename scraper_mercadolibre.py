@@ -1,20 +1,29 @@
 #!/usr/bin/env python3
 """
 Scraper diario MercadoLibre Inmuebles → Supabase
-Extrae propiedades en Tandil desde MercadoLibre con Playwright (renderiza JS)
-y hace upsert en la tabla propiedades_mercado.
+
+Dos modos de extracción (auto-seleccionado):
+  1. API oficial de ML (si ML_CLIENT_ID + ML_CLIENT_SECRET en .env) — sin anti-bot
+  2. HTML scraping con curl + PoW solver (fallback) — soporta proxy vía ML_PROXY_URL
 
 Uso: python3 scraper_mercadolibre.py
      python3 scraper_mercadolibre.py --dry-run
+     python3 scraper_mercadolibre.py --mode api     # forzar modo API
+     python3 scraper_mercadolibre.py --mode html    # forzar modo HTML
 """
 
 import sys
 import re
 import json
 import time
+import random
+import hashlib
 import argparse
+import subprocess
+import tempfile
 import urllib.request
 import urllib.error
+import urllib.parse
 from datetime import datetime, timezone, date
 from pathlib import Path
 
@@ -42,11 +51,42 @@ SEARCH_URLS = [
     ("oficina",      "alquiler", "https://inmuebles.mercadolibre.com.ar/oficinas/alquiler/tandil/"),
 ]
 
-MAX_PAGES = 5          # máximo de páginas por combinación (48 items/página)
+MAX_PAGES = 3          # máximo de páginas por combinación (48 items/página)
 PAGE_SIZE = 48
-DELAY_BETWEEN_REQUESTS = 3  # segundos entre requests (más tiempo para JS)
-PAGE_LOAD_TIMEOUT = 20000   # ms timeout para carga inicial
-PAGE_JS_WAIT = 8            # segundos de espera para que el JS renderice los resultados
+DELAY_BETWEEN_PAGES = 5     # segundos entre páginas dentro de una categoría
+DELAY_BETWEEN_CATEGORIES = 10  # segundos entre categorías (sesión nueva)
+CURL_TIMEOUT = 20           # segundos timeout para curl
+
+# ── ML API config ────────────────────────────────────────────────────────────
+# Categorías ML para inmuebles en Argentina
+ML_API_BASE = "https://api.mercadolibre.com"
+ML_TOKEN_URL = f"{ML_API_BASE}/oauth/token"
+ML_SEARCH_URL = f"{ML_API_BASE}/sites/MLA/search"
+ML_API_LIMIT = 50  # max items por request API
+
+# Mapeo tipologia → category_id de ML (subcategorías de MLA1459 Inmuebles)
+ML_CATEGORY_MAP = {
+    ("departamento", "venta"):    "MLA401685",   # Departamentos Venta
+    ("departamento", "alquiler"): "MLA401695",   # Departamentos Alquiler
+    ("casa",         "venta"):    "MLA401684",   # Casas Venta
+    ("casa",         "alquiler"): "MLA401694",   # Casas Alquiler
+    ("terreno",      "venta"):    "MLA401686",   # Terrenos Venta
+    ("ph",           "venta"):    "MLA401687",   # PH Venta
+    ("local",        "alquiler"): "MLA401700",   # Locales Alquiler
+    ("oficina",      "alquiler"): "MLA401701",   # Oficinas Alquiler
+}
+# State ID para Buenos Aires (Tandil)
+ML_STATE_BUENOS_AIRES = "TUxBUEJVRU5PNzZhOA"
+# City ID para Tandil
+ML_CITY_TANDIL = "TUxBQ1RBTmRhOQ"
+
+USER_AGENTS = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+]
 
 
 # ── Tipo de cambio ────────────────────────────────────────────────────────────
@@ -76,6 +116,171 @@ def load_env():
                     k, v = line.split("=", 1)
                     env[k.strip()] = v.strip()
     return env
+
+
+# ── ML API — Token management & search ────────────────────────────────────────
+
+_ml_token_cache = {"access_token": None, "expires_at": 0}
+
+
+def ml_get_token(client_id, client_secret):
+    """Obtiene access_token via client_credentials grant. Cachea hasta expiración."""
+    now = time.time()
+    if _ml_token_cache["access_token"] and now < _ml_token_cache["expires_at"] - 60:
+        return _ml_token_cache["access_token"]
+
+    data = urllib.parse.urlencode({
+        "grant_type": "client_credentials",
+        "client_id": client_id,
+        "client_secret": client_secret,
+    }).encode()
+    req = urllib.request.Request(
+        ML_TOKEN_URL, data=data,
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            body = json.loads(resp.read())
+            _ml_token_cache["access_token"] = body["access_token"]
+            _ml_token_cache["expires_at"] = now + body.get("expires_in", 21600)
+            print(f"  ML API token obtenido (expira en {body.get('expires_in', '?')}s)")
+            return body["access_token"]
+    except urllib.error.HTTPError as e:
+        err = e.read().decode()[:300]
+        print(f"  Error obteniendo ML token: HTTP {e.code} — {err}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"  Error obteniendo ML token: {e}", file=sys.stderr)
+        return None
+
+
+def ml_api_search(token, category_id, offset=0):
+    """Busca inmuebles en Tandil via ML API. Retorna (results, total) o ([], 0)."""
+    params = urllib.parse.urlencode({
+        "category": category_id,
+        "state": ML_STATE_BUENOS_AIRES,
+        "city": ML_CITY_TANDIL,
+        "limit": ML_API_LIMIT,
+        "offset": offset,
+    })
+    url = f"{ML_SEARCH_URL}?{params}"
+    req = urllib.request.Request(url, headers={
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read())
+            results = data.get("results", [])
+            total = data.get("paging", {}).get("total", 0)
+            return results, total
+    except urllib.error.HTTPError as e:
+        err = e.read().decode()[:300]
+        print(f"  Error ML API search: HTTP {e.code} — {err}", file=sys.stderr)
+        return [], 0
+    except Exception as e:
+        print(f"  Error ML API search: {e}", file=sys.stderr)
+        return [], 0
+
+
+def parse_api_result(item, tipologia_default, operacion_default):
+    """Convierte un resultado de la API de ML en dict para Supabase."""
+    fuente_id = item.get("id", "")
+    if not fuente_id or not fuente_id.startswith("MLA"):
+        return None
+
+    currency = item.get("currency_id", "")
+    price = item.get("price")
+
+    dormitorios = None
+    metros_totales = None
+    superficie_cubierta = None
+    cochera = False
+
+    for attr in item.get("attributes", []):
+        attr_id = attr.get("id", "")
+        val = attr.get("value_name", "") or ""
+        if attr_id == "BEDROOMS" and val.isdigit():
+            dormitorios = int(val)
+        elif attr_id == "TOTAL_AREA":
+            m = re.search(r"([\d,.]+)", val)
+            if m:
+                try:
+                    metros_totales = float(m.group(1).replace(",", "."))
+                except ValueError:
+                    pass
+        elif attr_id == "COVERED_AREA":
+            m = re.search(r"([\d,.]+)", val)
+            if m:
+                try:
+                    superficie_cubierta = float(m.group(1).replace(",", "."))
+                except ValueError:
+                    pass
+        elif attr_id == "HAS_PARKING" and val.lower() in ("sí", "si", "yes"):
+            cochera = True
+
+    location = item.get("location", {})
+    zona = location.get("neighborhood", {}).get("name") or location.get("city", {}).get("name") or "Tandil"
+
+    return {
+        "fuente": "mercadolibre",
+        "fuente_id": fuente_id,
+        "url": item.get("permalink", ""),
+        "tipologia": tipologia_default,
+        "operacion": operacion_default,
+        "zona": zona,
+        "precio_usd": price if currency == "USD" else None,
+        "precio_ars": price if currency == "ARS" else None,
+        "tipo_cambio_usd": None,
+        "dormitorios": dormitorios,
+        "metros_totales": metros_totales,
+        "superficie_cubierta": superficie_cubierta,
+        "cochera": cochera,
+        "titulo": item.get("title", ""),
+        "imagen_url": item.get("thumbnail", ""),
+        "descripcion": "",
+    }
+
+
+def scrape_all_api(client_id, client_secret):
+    """Extrae todas las propiedades via ML API oficial."""
+    token = ml_get_token(client_id, client_secret)
+    if not token:
+        print("  No se pudo obtener token ML. Abortando modo API.", file=sys.stderr)
+        return None  # None = señal para caer al fallback HTML
+
+    all_props = {}
+    search_items = list(ML_CATEGORY_MAP.items())
+    random.shuffle(search_items)
+
+    for cat_idx, ((tipologia, operacion), cat_id) in enumerate(search_items):
+        print(f"\n→ API [{cat_idx + 1}/{len(search_items)}] {tipologia}/{operacion} (cat={cat_id})")
+
+        offset = 0
+        for page in range(MAX_PAGES):
+            results, total = ml_api_search(token, cat_id, offset=offset)
+            if not results:
+                break
+
+            print(f"  Página {page + 1}: {len(results)} resultados (total={total})")
+
+            for item in results:
+                prop = parse_api_result(item, tipologia, operacion)
+                if prop:
+                    all_props[prop["fuente_id"]] = prop
+
+            offset += ML_API_LIMIT
+            if offset >= total:
+                break
+
+            time.sleep(random.uniform(0.5, 1.5))
+
+        # Pausa corta entre categorías (la API tiene rate limit ~30 req/min)
+        if cat_idx < len(search_items) - 1:
+            time.sleep(random.uniform(1, 3))
+
+    print(f"\n  API: {len(all_props)} propiedades extraídas en total")
+    return list(all_props.values())
 
 
 # ── Extracción de datos del HTML ───────────────────────────────────────────────
@@ -239,103 +444,233 @@ def has_next_page(html, next_offset):
     return f"_Desde_{next_offset}" in html
 
 
-# ── Scraping con Playwright ────────────────────────────────────────────────────
+# ── Scraping con curl + PoW solver ───────────────────────────────────────────
 
-def fetch_html_playwright(page, url):
-    """Usa una página Playwright ya abierta para navegar y obtener el HTML."""
+MAX_RETRIES = 3
+
+
+def _solve_pow(hash_prefix, difficulty):
+    """Resuelve el proof-of-work SHA-256 de ML. Retorna el nonce."""
+    target = "0" * difficulty
+    for n in range(50_000_000):
+        h = hashlib.sha256((hash_prefix + str(n)).encode()).hexdigest()
+        if h.startswith(target):
+            return n
+    return 0
+
+
+def _parse_bmstate(cookie_file):
+    """Lee _bmstate del archivo de cookies curl y retorna (hash_prefix, difficulty)."""
     try:
-        page.goto(url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT)
-        # Esperar que el JS renderice los resultados (supera el micro-landing challenge)
-        time.sleep(PAGE_JS_WAIT)
-        # set_default_timeout garantiza que page.content() no cuelgue indefinidamente
-        page.set_default_timeout(PAGE_LOAD_TIMEOUT)
-        return page.content()
-    except Exception as e:
-        print(f"  Error Playwright en {url}: {e}", file=sys.stderr)
-        return None
+        with open(cookie_file) as f:
+            for line in f:
+                if "_bmstate" in line:
+                    parts = line.strip().split("\t")
+                    if len(parts) >= 7:
+                        decoded = urllib.parse.unquote(parts[-1])
+                        bm_parts = decoded.split(";")
+                        if len(bm_parts) >= 2:
+                            return bm_parts[0], int(bm_parts[1])
+    except Exception:
+        pass
+    return None, None
 
 
-def scrape_all():
-    """Scrapea todas las URLs configuradas y retorna lista de propiedades."""
-    from playwright.sync_api import sync_playwright
-    try:
-        from playwright_stealth import Stealth
-        _stealth = Stealth(
-            navigator_webdriver=True,
-            navigator_platform_override="MacIntel",
+def _append_solved_cookies(cookie_file, hash_prefix, nonce):
+    """Agrega las cookies resueltas al archivo de cookies curl."""
+    bmc_value = urllib.parse.quote(f"{hash_prefix};{nonce}", safe="")
+    with open(cookie_file, "a") as f:
+        f.write(f".mercadolibre.com.ar\tTRUE\t/\tTRUE\t0\t_bmc\t{bmc_value}\n")
+        f.write(f".mercadolibre.com.ar\tTRUE\t/\tTRUE\t0\t_bm_skipml\ttrue\n")
+
+
+def _is_blocked(html):
+    """Detecta si ML nos bloqueó con suspicious-traffic o account-verification."""
+    check = html[:10000].lower()
+    return ("suspicious-traffic" in check
+            or "account-verification" in check
+            or "gz/account-verification" in check)
+
+
+def _build_curl_base(user_agent, proxy_url=None):
+    """Arma el comando curl base con proxy opcional."""
+    cmd = [
+        "curl", "-s", "-L",
+        "-H", f"User-Agent: {user_agent}",
+        "-H", "Accept-Language: es-AR,es;q=0.9,en;q=0.8",
+        "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "--max-time", str(CURL_TIMEOUT),
+    ]
+    if proxy_url:
+        cmd += ["--proxy", proxy_url]
+    return cmd
+
+
+def _create_session(url, user_agent, proxy_url=None):
+    """Crea una sesión fresca: cookie file nuevo + resuelve PoW si aparece."""
+    cookie_file = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".txt", prefix="ml_cookies_", delete=False
+    ).name
+
+    curl_base = _build_curl_base(user_agent, proxy_url)
+
+    # Request inicial para obtener challenge
+    subprocess.run(
+        curl_base + ["-c", cookie_file, url],
+        capture_output=True, text=True, timeout=CURL_TIMEOUT + 10,
+    )
+
+    hash_prefix, difficulty = _parse_bmstate(cookie_file)
+    if hash_prefix and difficulty is not None:
+        print(f"    Session PoW: dificultad={difficulty}", end="")
+        nonce = _solve_pow(hash_prefix, difficulty)
+        print(f", nonce={nonce}")
+        _append_solved_cookies(cookie_file, hash_prefix, nonce)
+        time.sleep(random.uniform(1, 2))
+    else:
+        print("    Session: sin challenge PoW (posible bloqueo IP)")
+
+    return cookie_file
+
+
+def fetch_html_curl(url, cookie_file, user_agent, proxy_url=None):
+    """Fetch HTML via curl con proxy opcional, detectando bloqueos de ML."""
+    curl_base = _build_curl_base(user_agent, proxy_url)
+
+    for attempt in range(MAX_RETRIES):
+        # Backoff exponencial con jitter
+        if attempt > 0:
+            backoff = min(2 ** attempt + random.uniform(0, 2), 30)
+            print(f"  Reintentando en {backoff:.0f}s (intento {attempt + 1}/{MAX_RETRIES})...")
+            time.sleep(backoff)
+
+        result = subprocess.run(
+            curl_base + ["-b", cookie_file, "-c", cookie_file, url],
+            capture_output=True, text=True, timeout=CURL_TIMEOUT + 10,
         )
-    except ImportError:
-        _stealth = None
+        html = result.stdout
+
+        if not html or len(html) < 500:
+            print(f"  ⚠ Respuesta vacía en {url} (intento {attempt + 1}/{MAX_RETRIES})", file=sys.stderr)
+            continue
+
+        # Detectar bloqueo suspicious-traffic (no reintentable con cookies)
+        if _is_blocked(html):
+            print(f"  ⚠ Bloqueado por suspicious-traffic en {url}")
+            return None
+
+        # Si es página de challenge PoW, resolver
+        if "micro-landing" in html[:5000] or ("_bmstate" in html and "verifyChallenge" in html):
+            hash_prefix, difficulty = _parse_bmstate(cookie_file)
+            if hash_prefix and difficulty is not None:
+                print(f"  → Challenge PoW detectado (dificultad={difficulty}), resolviendo...")
+                nonce = _solve_pow(hash_prefix, difficulty)
+                print(f"  → Resuelto: nonce={nonce}")
+                _append_solved_cookies(cookie_file, hash_prefix, nonce)
+                result2 = subprocess.run(
+                    curl_base + ["-b", cookie_file, "-c", cookie_file, url],
+                    capture_output=True, text=True, timeout=CURL_TIMEOUT + 10,
+                )
+                html = result2.stdout
+                if html and len(html) > 5000 and "micro-landing" not in html[:5000] and not _is_blocked(html):
+                    return html
+                print(f"  ⚠ Challenge resuelto pero página sigue bloqueada (intento {attempt + 1})", file=sys.stderr)
+            else:
+                print(f"  ⚠ Challenge detectado pero no se pudo parsear _bmstate", file=sys.stderr)
+            continue
+
+        return html
+
+    return None
+
+
+def scrape_all_html(proxy_url=None):
+    """Scrapea todas las URLs configuradas via HTML + PoW solver.
+
+    Usa sesiones frescas por categoría para evitar detección de suspicious-traffic.
+    ML detecta patrones de navegación cross-categoría con la misma sesión.
+    Soporta proxy vía ML_PROXY_URL en .env.
+    """
+    if proxy_url:
+        print(f"  Usando proxy: {proxy_url.split('@')[-1] if '@' in proxy_url else proxy_url}")
 
     all_props = {}  # fuente_id → prop (dedup)
+    cookie_files = []  # para limpieza al final
+    blocked_count = 0
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--disable-features=IsolateOrigins,site-per-process",
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-            ],
-        )
-        context = browser.new_context(
-            user_agent=(
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/124.0.0.0 Safari/537.36"
-            ),
-            locale="es-AR",
-            timezone_id="America/Argentina/Buenos_Aires",
-            viewport={"width": 1280, "height": 800},
-        )
-        # Ocultar flag WebDriver que ML detecta para el anti-bot challenge
-        context.add_init_script(
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-        )
-        page = context.new_page()
-        if _stealth:
-            _stealth.apply_stealth_sync(page)
-            print("  [stealth mode activo]")
+    # Randomizar orden de categorías para no siempre empezar igual
+    search_urls = list(SEARCH_URLS)
+    random.shuffle(search_urls)
 
-        for tipologia, operacion, base_url in SEARCH_URLS:
-            print(f"\n→ Scrapeando {tipologia}/{operacion}...")
-            for pg_idx in range(MAX_PAGES):
-                offset = pg_idx * PAGE_SIZE
-                url = base_url if offset == 0 else f"{base_url}_Desde_{offset + 1}"
-                print(f"  Página {pg_idx + 1}: {url}")
+    for cat_idx, (tipologia, operacion, base_url) in enumerate(search_urls):
+        # User agent diferente por categoría
+        user_agent = random.choice(USER_AGENTS)
 
-                html = fetch_html_playwright(page, url)
-                if not html:
+        print(f"\n→ HTML [{cat_idx + 1}/{len(search_urls)}] Scrapeando {tipologia}/{operacion}...")
+
+        # Sesión fresca para cada categoría
+        print(f"  Creando sesión fresca...")
+        cookie_file = _create_session(base_url, user_agent, proxy_url)
+        cookie_files.append(cookie_file)
+
+        category_blocked = False
+        for pg_idx in range(MAX_PAGES):
+            offset = pg_idx * PAGE_SIZE
+            url = base_url if offset == 0 else f"{base_url}_Desde_{offset + 1}"
+            print(f"  Página {pg_idx + 1}: {url}")
+
+            html = fetch_html_curl(url, cookie_file, user_agent, proxy_url)
+            if not html:
+                category_blocked = True
+                break
+
+            polycards = extract_polycards(html)
+            print(f"  → {len(polycards)} polycards encontrados")
+
+            if not polycards:
+                alt_count = _try_extract_from_preloaded(html, all_props, tipologia, operacion)
+                if alt_count == 0:
+                    print(f"  Sin resultados en esta página, cortando paginación")
                     break
+                continue
 
-                polycards = extract_polycards(html)
-                print(f"  → {len(polycards)} polycards encontrados")
+            thumbnail_map = extract_thumbnail_map(html)
 
-                if not polycards:
-                    # Intentar extraer via JSON embebido alternativo
-                    # ML a veces embebe los items en window.__PRELOADED_STATE__
-                    alt_count = _try_extract_from_preloaded(html, all_props, tipologia, operacion)
-                    if alt_count == 0:
-                        print(f"  Sin resultados en esta página, cortando paginación")
-                        break
-                    continue
+            for pc in polycards:
+                prop = parse_polycard(pc, tipologia, operacion, thumbnail_map)
+                if prop:
+                    all_props[prop["fuente_id"]] = prop
 
-                thumbnail_map = extract_thumbnail_map(html)
+            next_offset = (pg_idx + 1) * PAGE_SIZE + 1
+            if not has_next_page(html, next_offset):
+                break
 
-                for pc in polycards:
-                    prop = parse_polycard(pc, tipologia, operacion, thumbnail_map)
-                    if prop:
-                        all_props[prop["fuente_id"]] = prop
+            if pg_idx < MAX_PAGES - 1:
+                time.sleep(random.uniform(DELAY_BETWEEN_PAGES, DELAY_BETWEEN_PAGES * 1.8))
 
-                next_offset = (pg_idx + 1) * PAGE_SIZE + 1
-                if not has_next_page(html, next_offset):
-                    break
+        if category_blocked:
+            blocked_count += 1
+            if blocked_count >= 3:
+                print(f"\n⚠ {blocked_count} categorías bloqueadas en total, IP probablemente marcada. Cortando.")
+                break
+        else:
+            blocked_count = max(0, blocked_count - 1)  # éxito reduce la cuenta
 
-                if pg_idx < MAX_PAGES - 1:
-                    time.sleep(DELAY_BETWEEN_REQUESTS)
+        # Pausa entre categorías
+        if cat_idx < len(search_urls) - 1:
+            delay = random.uniform(DELAY_BETWEEN_CATEGORIES, DELAY_BETWEEN_CATEGORIES * 1.5)
+            print(f"  Esperando {delay:.0f}s antes de siguiente categoría...")
+            time.sleep(delay)
 
-        browser.close()
+    # Limpiar cookie files
+    for cf in cookie_files:
+        try:
+            Path(cf).unlink()
+        except Exception:
+            pass
+
+    if blocked_count > 0:
+        print(f"\n⚠ {blocked_count}/{len(search_urls)} categorías fueron bloqueadas por ML")
 
     return list(all_props.values())
 
@@ -600,9 +935,11 @@ def upsert_supabase(props, supabase_url, service_key, dry_run=False):
 def main():
     parser = argparse.ArgumentParser(description="Scraper MercadoLibre Inmuebles → Supabase")
     parser.add_argument("--dry-run", action="store_true", help="No escribir en Supabase")
+    parser.add_argument("--mode", choices=["auto", "api", "html"], default="auto",
+                        help="Modo de extracción: auto (API si hay creds, sino HTML), api, html")
     args = parser.parse_args()
 
-    print(f"=== Scraper MercadoLibre Inmuebles (Playwright) ===")
+    print(f"=== Scraper MercadoLibre Inmuebles ===")
     print(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     env = load_env()
@@ -613,8 +950,44 @@ def main():
         print("ERROR: Faltan SUPABASE_URL o SUPABASE_SERVICE_KEY en .env", file=sys.stderr)
         sys.exit(1)
 
-    props = scrape_all()
+    # Credenciales ML API (opcionales)
+    ml_client_id = env.get("ML_CLIENT_ID")
+    ml_client_secret = env.get("ML_CLIENT_SECRET")
+    ml_proxy_url = env.get("ML_PROXY_URL")  # ej: http://user:pass@proxy.brightdata.com:22225
+    has_api_creds = bool(ml_client_id and ml_client_secret)
+
+    # Decidir modo de extracción
+    mode = args.mode
+    if mode == "auto":
+        mode = "api" if has_api_creds else "html"
+    elif mode == "api" and not has_api_creds:
+        print("ERROR: --mode api requiere ML_CLIENT_ID y ML_CLIENT_SECRET en .env", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Modo: {mode}" + (f" | Proxy: {'sí' if ml_proxy_url else 'no'}" if mode == "html" else ""))
+
+    # ── Extracción ──
+    props = None
+
+    if mode == "api":
+        print("\n── Extrayendo via ML API oficial ──")
+        props = scrape_all_api(ml_client_id, ml_client_secret)
+        if props is None:
+            print("  API falló. Cayendo a modo HTML como fallback...")
+            mode = "html"
+
+    if mode == "html":
+        print("\n── Extrayendo via HTML scraping ──")
+        props = scrape_all_html(proxy_url=ml_proxy_url)
+
+    if props is None:
+        props = []
+
     print(f"\nTotal propiedades scraped: {len(props)}")
+
+    if not props:
+        print("⚠ Sin propiedades extraídas. Abortando sin tocar DB.")
+        sys.exit(1)
 
     # Obtener cotización blue y convertir precios ARS → USD
     dolar_compra, dolar_venta = get_dolar_blue()
@@ -648,6 +1021,7 @@ def main():
         register_price_changes(props, existing_prices, supabase_url, service_key)
 
     print(f"\n=== Resultado ===")
+    print(f"Modo usado: {mode}")
     print(f"Upsertadas: {inserted}")
     print(f"Errores:    {errors}")
 
