@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudio Pascua — Demo de tu nueva web | Altavista Web</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --charcoal: #1A1A1A; --stone: #6B6560; --cream: #F5F0E8;
+      --warm-white: #FAFAF8; --gold: #B8954A; --border: #E5DDD0;
+      --white: #FFFFFF; --navy: #08111C; --yellow: #F4C430;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--warm-white); color: var(--charcoal); }
+
+    /* BARRA AGENCIA */
+    .ab {
+      position: fixed; top:0; left:0; right:0; z-index:1000;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 24px; gap: 16px;
+    }
+    .ab-l { display:flex; align-items:center; gap:10px; }
+    .ab-badge {
+      background: var(--yellow); color: var(--navy);
+      padding: 2px 9px; border-radius:4px;
+      font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase;
+    }
+    .ab-text { color:rgba(255,255,255,.7); font-size:13px; }
+    .ab-text strong { color:#fff; }
+    .ab-cta {
+      background: var(--yellow); color: var(--navy);
+      text-decoration:none; padding:7px 16px; border-radius:20px;
+      font-size:12px; font-weight:700; white-space:nowrap;
+    }
+    .ab-cta:hover { opacity:.85; }
+
+    .demo { padding-top:44px; }
+
+    /* HERO */
+    .hero {
+      position:relative; min-height:100vh;
+      display:flex; flex-direction:column; background:#111; overflow:hidden;
+    }
+    .hero-bg {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      filter:brightness(.38);
+    }
+    .hero-nav {
+      position:relative; z-index:2;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:32px 60px;
+    }
+    .logo {
+      font-family:'Playfair Display',serif; font-size:20px; font-weight:500;
+      color:#fff; letter-spacing:.5px;
+    }
+    .logo small {
+      display:block; font-family:'Inter',sans-serif; font-size:9px; font-weight:400;
+      letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-top:3px;
+    }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a { color:rgba(255,255,255,.6); text-decoration:none; font-size:13px; transition:color .2s; }
+    .nav-links a:hover { color:#fff; }
+    .hero-body {
+      position:relative; z-index:2; flex:1;
+      display:flex; flex-direction:column; justify-content:center;
+      padding:60px 60px 100px; max-width:680px;
+    }
+    .eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+    .hero-title {
+      font-family:'Playfair Display',serif; font-size:clamp(38px,5.5vw,70px);
+      font-weight:400; color:#fff; line-height:1.1; margin-bottom:22px;
+    }
+    .hero-sub { font-size:17px; line-height:1.75; color:rgba(255,255,255,.58); max-width:460px; margin-bottom:38px; }
+    .hero-ctas { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .btn-g { background:var(--gold); color:#fff; padding:13px 26px; border-radius:2px; text-decoration:none; font-size:13px; font-weight:600; transition:background .2s; }
+    .btn-g:hover { background:#9E7D3F; }
+    .btn-txt { color:rgba(255,255,255,.6); text-decoration:none; font-size:13px; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:2px; transition:color .2s; }
+    .btn-txt:hover { color:#fff; border-color:rgba(255,255,255,.7); }
+
+    /* SECCIONES */
+    .sec { padding:96px 60px; }
+    .inner { max-width:1200px; margin:0 auto; }
+    .s-eye { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px; }
+    .s-title { font-family:'Playfair Display',serif; font-size:clamp(26px,3.5vw,46px); font-weight:400; line-height:1.2; color:var(--charcoal); margin-bottom:16px; }
+    .s-body { font-size:16px; line-height:1.8; color:var(--stone); max-width:520px; }
+
+    /* SERVICIOS */
+    .services { background:var(--warm-white); }
+    .svc-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; gap:40px; }
+    .svc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+    .svc { background:var(--charcoal); padding:48px 28px 40px; color:#fff; position:relative; }
+    .svc:nth-child(2){background:#252525} .svc:nth-child(3){background:#2C2C2C} .svc:nth-child(4){background:#333}
+    .svc-n { position:absolute; top:14px; right:18px; font-family:'Playfair Display',serif; font-size:52px; color:rgba(255,255,255,.05); font-weight:700; line-height:1; }
+    .svc-icon { font-size:26px; margin-bottom:16px; display:block; }
+    .svc-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:500; margin-bottom:10px; line-height:1.3; }
+    .svc-desc { font-size:13px; color:rgba(255,255,255,.44); line-height:1.6; }
+
+    /* PORTFOLIO */
+    .portfolio { background:#fff; }
+    .pf-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:44px; }
+    .lk { color:var(--stone); text-decoration:none; font-size:14px; border-bottom:1px solid rgba(107,101,96,.4); padding-bottom:1px; transition:color .2s; }
+    .lk:hover { color:var(--charcoal); border-color:var(--charcoal); }
+    .pf-grid { display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:280px 280px; gap:10px; }
+    .pf { position:relative; overflow:hidden; background:#E0DAD3; }
+    .pf:first-child { grid-row:1/3; }
+    .pf img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+    .pf:hover img { transform:scale(1.05); }
+    .pf-ov {
+      position:absolute; inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%);
+      opacity:0; transition:opacity .3s;
+      display:flex; flex-direction:column; justify-content:flex-end; padding:20px;
+    }
+    .pf:hover .pf-ov { opacity:1; }
+    .pf-ov h3 { font-family:'Playfair Display',serif; color:#fff; font-size:17px; font-weight:500; }
+    .pf-ov p { color:rgba(255,255,255,.6); font-size:12px; margin-top:3px; }
+
+    /* ARQUITECTA */
+    .arq { background:var(--cream); }
+    .arq-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .arq-img { position:relative; }
+    .arq-img img { width:100%; height:480px; object-fit:cover; }
+    .arq-badge {
+      position:absolute; bottom:-20px; right:-20px;
+      background:var(--charcoal); color:#fff; padding:20px 24px; text-align:center;
+    }
+    .arq-badge .big { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; line-height:1.2; display:block; }
+    .arq-badge .sm { font-size:10px; color:rgba(255,255,255,.4); letter-spacing:1px; display:block; margin-top:4px; }
+    .arq-quote {
+      font-family:'Playfair Display',serif; font-style:italic; font-size:19px;
+      color:var(--charcoal); line-height:1.5; margin:24px 0 20px;
+      padding-left:18px; border-left:2px solid var(--gold);
+    }
+    .arq-stats { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:28px; }
+    .arq-stat { border-top:1px solid var(--border); padding-top:12px; }
+    .arq-stat .num { font-family:'Playfair Display',serif; font-size:32px; color:var(--charcoal); }
+    .arq-stat .lbl { font-size:12px; color:var(--stone); margin-top:2px; }
+
+    /* CONTACTO */
+    .contacto { background:var(--charcoal); color:#fff; }
+    .ct-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+    .contacto .s-title { color:#fff; }
+    .contacto .s-body { color:rgba(255,255,255,.44); margin-bottom:36px; }
+    .ct-info { display:flex; flex-direction:column; gap:18px; }
+    .ct-item { display:flex; align-items:flex-start; gap:12px; }
+    .ct-icon { width:36px; height:36px; background:rgba(255,255,255,.07); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .ct-item strong { display:block; font-size:13px; font-weight:600; margin-bottom:1px; }
+    .ct-item span { font-size:13px; color:rgba(255,255,255,.44); }
+    .wa-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#25D366; color:#fff; text-decoration:none;
+      padding:12px 20px; border-radius:4px; font-size:14px; font-weight:600;
+      margin-top:8px; transition:background .2s;
+    }
+    .wa-btn:hover { background:#1BBE5A; }
+    .ct-form { display:flex; flex-direction:column; gap:13px; }
+    .ct-row { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+    .ct-f { display:flex; flex-direction:column; gap:5px; }
+    .ct-f label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.33); }
+    .ct-f input, .ct-f select, .ct-f textarea {
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      color:#fff; padding:11px 14px; font-family:'Inter',sans-serif; font-size:14px;
+      outline:none; border-radius:2px; transition:border-color .2s;
+    }
+    .ct-f input:focus, .ct-f select:focus, .ct-f textarea:focus { border-color:var(--gold); }
+    .ct-f textarea { resize:vertical; min-height:88px; }
+    .ct-f select option { background:#1A1A1A; }
+    .btn-send {
+      background:var(--gold); color:#fff; border:none;
+      padding:12px 22px; font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
+      cursor:pointer; border-radius:2px; align-self:flex-start; transition:background .2s;
+    }
+    .btn-send:hover { background:#9E7D3F; }
+
+    /* DIVISOR PITCH */
+    .divider {
+      background:var(--navy); padding:80px 60px; text-align:center; position:relative; overflow:hidden;
+    }
+    .divider::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%); }
+    .dv { position:relative; z-index:1; max-width:700px; margin:0 auto; }
+    .dv-badge { display:inline-block; background:rgba(244,196,48,.12); color:var(--yellow); border:1px solid rgba(244,196,48,.25); padding:5px 16px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:26px; }
+    .dv h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3.5vw,42px); color:#fff; font-weight:400; line-height:1.3; margin-bottom:14px; }
+    .dv h2 em { color:var(--yellow); font-style:normal; }
+    .dv p { color:rgba(255,255,255,.5); font-size:16px; line-height:1.7; }
+
+    /* FEATURES */
+    .features { background:var(--warm-white); }
+    .feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:52px; }
+    .feat {
+      background:#fff; border:1px solid var(--border); padding:30px 24px; border-radius:4px;
+      position:relative; transition:border-color .2s,box-shadow .2s;
+    }
+    .feat:hover { border-color:var(--gold); box-shadow:0 4px 18px rgba(184,149,74,.08); }
+    .feat-tag { position:absolute; top:13px; right:13px; font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:2px 8px; border-radius:8px; }
+    .t-inc { background:#E8F5E9; color:#2E7D32; }
+    .t-pro { background:rgba(184,149,74,.12); color:var(--gold); }
+    .feat-ico { font-size:26px; margin-bottom:12px; }
+    .feat-t { font-family:'Playfair Display',serif; font-size:16px; font-weight:500; margin-bottom:7px; color:var(--charcoal); }
+    .feat-d { font-size:13px; color:var(--stone); line-height:1.6; }
+
+    /* PRICING */
+    .pricing { background:var(--charcoal); }
+    .pr-hdr { text-align:center; margin-bottom:52px; }
+    .pr-hdr .s-title { color:#fff; }
+    .pr-hdr .s-body { color:rgba(255,255,255,.4); margin:0 auto; text-align:center; }
+    .pr-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; }
+    .pr-card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); padding:34px 26px; border-radius:4px; position:relative; }
+    .pr-card.pop { background:rgba(244,196,48,.07); border-color:rgba(244,196,48,.35); }
+    .pop-lbl { position:absolute; top:-11px; left:50%; transform:translateX(-50%); background:var(--yellow); color:var(--navy); font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 14px; border-radius:10px; white-space:nowrap; }
+    .pr-tier { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:5px; }
+    .pr-card.pop .pr-tier { color:var(--yellow); }
+    .pr-name { font-family:'Playfair Display',serif; font-size:24px; color:#fff; font-weight:500; margin-bottom:18px; }
+    .pr-amt { font-family:'Playfair Display',serif; font-size:36px; font-weight:600; color:#fff; }
+    .pr-amt sup { font-size:16px; vertical-align:super; }
+    .pr-mo { font-size:12px; color:rgba(255,255,255,.38); margin-top:4px; margin-bottom:18px; }
+    .pr-div { border:none; border-top:1px solid rgba(255,255,255,.08); margin:18px 0; }
+    .pr-feats { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:26px; }
+    .pr-feats li { font-size:13px; color:rgba(255,255,255,.58); display:flex; align-items:flex-start; gap:7px; }
+    .pr-feats li::before { content:'✓'; color:var(--gold); font-weight:700; flex-shrink:0; }
+    .btn-pr { display:block; text-align:center; padding:11px; border-radius:2px; font-size:13px; font-weight:600; text-decoration:none; transition:all .2s; }
+    .btn-wh { border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.65); }
+    .btn-wh:hover { border-color:rgba(255,255,255,.45); color:#fff; }
+    .btn-gy { background:var(--yellow); color:var(--navy); }
+    .btn-gy:hover { opacity:.9; }
+
+    /* CTA FINAL */
+    .final { background:var(--warm-white); text-align:center; }
+    .final-in { max-width:580px; margin:0 auto; }
+    .final-in .s-title { margin-bottom:14px; }
+    .final-in .s-body { margin:0 auto 32px; }
+    .final-btns { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+    .btn-wa-big { display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:14px 24px; border-radius:4px; font-size:14px; font-weight:600; transition:background .2s; }
+    .btn-wa-big:hover { background:#1BBE5A; }
+    .btn-mail { display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--charcoal); text-decoration:none; padding:14px 24px; border-radius:4px; border:1px solid var(--border); font-size:14px; font-weight:600; transition:border-color .2s; }
+    .btn-mail:hover { border-color:var(--charcoal); }
+    .final-note { margin-top:24px; font-size:12px; color:var(--stone); }
+
+    /* FOOTER */
+    footer { background:var(--charcoal); padding:26px 60px; display:flex; justify-content:space-between; align-items:center; }
+    .f-brand { font-family:'Playfair Display',serif; font-size:16px; color:var(--yellow); }
+    .f-brand small { font-family:'Inter',sans-serif; font-size:11px; color:rgba(255,255,255,.25); display:block; }
+    .f-copy { font-size:12px; color:rgba(255,255,255,.25); }
+
+    /* RESPONSIVE */
+    @media(max-width:960px){
+      .hero-nav{padding:24px} .nav-links{display:none} .hero-body{padding:40px 24px 80px}
+      .sec{padding:64px 24px} .svc-grid{grid-template-columns:1fr 1fr}
+      .pf-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto} .pf:first-child{grid-row:auto}
+      .arq-inner,.ct-inner{grid-template-columns:1fr;gap:40px}
+      .feat-grid{grid-template-columns:1fr 1fr} .pr-grid{grid-template-columns:1fr}
+      .divider{padding:60px 24px} footer{padding:22px;flex-direction:column;gap:10px;text-align:center}
+    }
+    @media(max-width:580px){
+      .svc-grid,.feat-grid{grid-template-columns:1fr}
+      .pf-grid{grid-template-columns:1fr;grid-template-rows:auto}
+      .arq-stats{grid-template-columns:1fr 1fr} .ct-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- BARRA AGENCIA -->
+<div class="ab">
+  <div class="ab-l">
+    <span class="ab-badge">Demo gratuita</span>
+    <span class="ab-text">Altavista Web preparó esta propuesta para <strong>Estudio Pascua</strong></span>
+  </div>
+  <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
+</div>
+
+<div class="demo">
+
+  <!-- HERO: foto real de Instagram (Vivienda Quequén) -->
+  <section class="hero">
+    <div class="hero-bg" style="background-image:url('assets/estudio-pascua/foto-03.jpg')"></div>
+    <nav class="hero-nav">
+      <div class="logo">
+        Estudio Pascua
+        <small>Arquitectura · Tandil</small>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Proyectos</a></li>
+        <li><a href="#">Servicios</a></li>
+        <li><a href="#">La arquitecta</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+    <div class="hero-body">
+      <p class="eyebrow">Sarmiento 85 · Tandil, Buenos Aires</p>
+      <h1 class="hero-title">Hacemos de la arquitectura<br><em style="color:var(--gold);font-style:normal">un modo de vida.</em></h1>
+      <p class="hero-sub">Acompañamos cada proyecto para que construir sea un proceso transparente y placentero — desde el anteproyecto hasta la entrega de llaves.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-g">Ver proyectos</a>
+        <a href="#" class="btn-txt">Consultar presupuesto →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="sec services">
+    <div class="inner">
+      <div class="svc-header">
+        <div>
+          <p class="s-eye">Lo que hacemos</p>
+          <h2 class="s-title">Nuestros servicios</h2>
+        </div>
+        <p class="s-body">Desde viviendas a medida hasta desarrollos y fideicomisos. Cada proyecto con criterio técnico, diseño cuidado y compromiso real.</p>
+      </div>
+      <div class="svc-grid">
+        <div class="svc"><span class="svc-n">01</span><span class="svc-icon">🏠</span><h3 class="svc-name">Viviendas unifamiliares</h3><p class="svc-desc">Diseño y dirección técnica de casas a medida, pensadas para las personas que las van a habitar.</p></div>
+        <div class="svc"><span class="svc-n">02</span><span class="svc-icon">🔨</span><h3 class="svc-name">Remodelaciones y refacciones</h3><p class="svc-desc">Transformamos espacios existentes con criterio arquitectónico, respetando lo que ya funciona.</p></div>
+        <div class="svc"><span class="svc-n">03</span><span class="svc-icon">🏗️</span><h3 class="svc-name">Desarrollos y fideicomisos</h3><p class="svc-desc">Proyectos de inversión al costo con diseño funcional — como Roca 36 y Alberdi 865.</p></div>
+        <div class="svc"><span class="svc-n">04</span><span class="svc-icon">📐</span><h3 class="svc-name">Dirección de obra</h3><p class="svc-desc">Supervisión técnica desde el inicio hasta la habilitación y entrega final.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO: fotos reales de Instagram -->
+  <section class="sec portfolio">
+    <div class="inner">
+      <div class="pf-header">
+        <div>
+          <p class="s-eye">Trabajo reciente</p>
+          <h2 class="s-title">Proyectos</h2>
+        </div>
+        <a href="https://www.instagram.com/estudio_pascua/" target="_blank" class="lk">Ver en @estudio_pascua →</a>
+      </div>
+      <div class="pf-grid">
+        <div class="pf"><img src="assets/estudio-pascua/proj-01.jpg" alt="Vivienda Quequén"><div class="pf-ov"><h3>Vivienda Quequén</h3><p>Anteproyecto · Tandil, 2025</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-02.jpg" alt="Alberdi 865 — Anteproyecto"><div class="pf-ov"><h3>Alberdi 865</h3><p>Nuevo desarrollo · Tandil, 2025</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-03.jpg" alt="Fideicomiso Roca 36"><div class="pf-ov"><h3>Fideicomiso Roca 36</h3><p>2 y 3 ambientes · Tandil, 2026</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-04.jpg" alt="Alberdi 865 — Obra"><div class="pf-ov"><h3>Alberdi 865 — Obra</h3><p>Seguimiento de obra · Tandil, 2025</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-05.jpg" alt="Garibaldi 170"><div class="pf-ov"><h3>Garibaldi 170</h3><p>Nuevo desarrollo · Tandil, 2024</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-06.jpg" alt="Fideicomiso 25 de Mayo 562"><div class="pf-ov"><h3>25 de Mayo 562</h3><p>Fideicomiso · Tandil, 2023</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-07.jpg" alt="Constitución 530"><div class="pf-ov"><h3>Constitución 530</h3><p>Edificio de oficinas · Tandil, 2023</p></div></div>
+        <div class="pf"><img src="assets/estudio-pascua/proj-08.jpg" alt="Fideicomiso Mitre 173"><div class="pf-ov"><h3>Mitre 173</h3><p>Fideicomiso · Tandil, 2023</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LA ARQUITECTA -->
+  <section class="sec arq">
+    <div class="inner">
+      <div class="arq-inner">
+        <div class="arq-img">
+          <img src="assets/estudio-pascua/foto-02.jpg" alt="Josefina Pascua — Estudio Pascua">
+          <div class="arq-badge">
+            <span class="big">1.949</span>
+            <span class="sm">seguidores · @estudio_pascua</span>
+          </div>
+        </div>
+        <div>
+          <p class="s-eye">La arquitecta</p>
+          <h2 class="s-title">Josefina Pascua</h2>
+          <div class="arq-quote">"Hacemos de la arquitectura un modo de vida."</div>
+          <p class="s-body">Josefina Pascua es arquitecta con base en Tandil, Buenos Aires. Fundó el Estudio Pascua con el objetivo de acompañar y asesorar a sus clientes para que construir sea un proceso transparente y placentero — desde el primer boceto hasta la entrega de llaves.<br><br>Sus proyectos combinan funcionalidad, estética local y compromiso técnico. Hoy el estudio trabaja en viviendas unifamiliares, remodelaciones y desarrollos inmobiliarios en Tandil y la región.</p>
+          <div class="arq-stats">
+            <div class="arq-stat"><div class="num">192</div><div class="lbl">Publicaciones en Instagram</div></div>
+            <div class="arq-stat"><div class="num">Tandil</div><div class="lbl">Raíz y base de trabajo</div></div>
+            <div class="arq-stat"><div class="num">3+</div><div class="lbl">Proyectos activos en 2025-26</div></div>
+            <div class="arq-stat"><div class="num">100%</div><div class="lbl">Habilitaciones en regla</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="sec contacto">
+    <div class="inner">
+      <div class="ct-inner">
+        <div>
+          <p class="s-eye">Hablemos</p>
+          <h2 class="s-title">¿Tenés un proyecto en mente?</h2>
+          <p class="s-body">Contanos qué necesitás y te respondemos en menos de 24 horas. Sin compromiso.</p>
+          <div class="ct-info">
+            <div class="ct-item"><div class="ct-icon">📍</div><div><strong>Dirección</strong><span>Sarmiento 85, Tandil, Buenos Aires</span></div></div>
+            <div class="ct-item"><div class="ct-icon">✉️</div><div><strong>Email</strong><span>arquitecturapascua@outlook.com</span></div></div>
+            <div class="ct-item"><div class="ct-icon">📷</div><div><strong>Instagram</strong><span>@estudio_pascua</span></div></div>
+          </div>
+          <a href="https://wa.me/5492494014550" class="wa-btn" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
+            Escribir a Josefina por WhatsApp (+5492494014550)
+          </a>
+        </div>
+        <form class="ct-form" onsubmit="return false;">
+          <div class="ct-row">
+            <div class="ct-f"><label>Nombre</label><input type="text" placeholder="Tu nombre completo"></div>
+            <div class="ct-f"><label>Teléfono</label><input type="tel" placeholder="+54 249..."></div>
+          </div>
+          <div class="ct-f"><label>Email</label><input type="email" placeholder="hola@ejemplo.com"></div>
+          <div class="ct-f">
+            <label>Tipo de proyecto</label>
+            <select>
+              <option>Vivienda nueva</option>
+              <option>Remodelación o refacción</option>
+              <option>Emprendimiento / inversión</option>
+              <option>Dirección técnica</option>
+              <option>Consulta general</option>
+            </select>
+          </div>
+          <div class="ct-f"><label>Contanos tu proyecto</label><textarea placeholder="Ubicación aproximada, superficie estimada, plazo..."></textarea></div>
+          <button type="submit" class="btn-send">Enviar consulta →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /demo -->
+
+<!-- TRANSICIÓN AL PITCH -->
+<div id="propuesta" class="divider">
+  <div class="dv">
+    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
+    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
+    <p>Encontramos que <strong style="color:rgba(255,255,255,.75)">arquitecturapascua.com.ar</strong> no está activo — clientes que buscan una arquitecta en Tandil no te encuentran en Google. En 5 días podés tener este sitio publicado, con tus fotos reales, tu dominio y todas las funciones activas.</p>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="sec features">
+  <div class="inner">
+    <div style="max-width:560px">
+      <p class="s-eye">Qué incluye</p>
+      <h2 class="s-title">Todo lo que un estudio de arquitectura necesita online</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">🖼️</div><h3 class="feat-t">Portfolio interactivo</h3><p class="feat-d">Galería organizada por categorías con tus fotos reales de @estudio_pascua en alta resolución.</p></div>
+      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">📋</div><h3 class="feat-t">Formulario de consulta</h3><p class="feat-d">Capturá tipo de proyecto, superficie, zona y contacto. Llega directo a tu email y WhatsApp.</p></div>
+      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">🔍</div><h3 class="feat-t">SEO local Tandil</h3><p class="feat-d">"Arquitecta en Tandil", "estudio de arquitectura Tandil". Aparecés cuando los clientes te buscan en Google.</p></div>
+      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">💬</div><h3 class="feat-t">WhatsApp integrado</h3><p class="feat-d">Botón directo a tu WhatsApp en cada página. El cliente te consulta sin barreras.</p></div>
+      <div class="feat"><span class="feat-tag t-pro">Pro</span><div class="feat-ico">📄</div><h3 class="feat-t">Ficha de proyecto</h3><p class="feat-d">Página individual por proyecto — fotos, descripción técnica y CTA. Ideal para presentaciones.</p></div>
+      <div class="feat"><span class="feat-tag t-pro">Pro</span><div class="feat-ico">📊</div><h3 class="feat-t">Analytics + Search Console</h3><p class="feat-d">Sabés cuánta gente te busca, qué proyectos miran más y desde dónde llegaron.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec pricing">
+  <div class="inner">
+    <div class="pr-hdr">
+      <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
+      <h2 class="s-title">Elegí el plan que te conviene</h2>
+      <p class="s-body">Sin contratos largos. Empezás cuando querés y crecés al ritmo de tu estudio.</p>
+    </div>
+    <div class="pr-grid">
+      <div class="pr-card">
+        <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
+        <div class="pr-amt"><sup>USD </sup>450</div>
+        <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
+        <hr class="pr-div">
+        <ul class="pr-feats">
+          <li>Landing page profesional</li><li>Portfolio básico (hasta 8 proyectos)</li>
+          <li>Formulario de contacto</li><li>WhatsApp integrado</li>
+          <li>SEO local básico</li><li>Dominio + hosting incluido</li>
+        </ul>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
+      </div>
+      <div class="pr-card pop">
+        <div class="pop-lbl">Más elegido</div>
+        <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
+        <div class="pr-amt"><sup>USD </sup>900</div>
+        <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
+        <hr class="pr-div">
+        <ul class="pr-feats">
+          <li>Todo el plan Presencia</li><li>Portfolio completo con filtros</li>
+          <li>Página individual por proyecto</li><li>Sección "La arquitecta"</li>
+          <li>Google Analytics + Search Console</li><li>SEO completo optimizado</li>
+        </ul>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
+      </div>
+      <div class="pr-card">
+        <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
+        <div class="pr-amt"><sup>USD </sup>1.800</div>
+        <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
+        <hr class="pr-div">
+        <ul class="pr-feats">
+          <li>Todo el Sitio Completo</li><li>Fichas PDF por proyecto</li>
+          <li>Panel de consultas / leads</li><li>Actualizaciones ilimitadas</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="sec final">
+  <div class="inner">
+    <div class="final-in">
+      <p class="s-eye" style="text-align:center">¿Hablamos?</p>
+      <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
+      <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — vivo en Tandil y armé esta propuesta especialmente para ustedes. Si les interesa avanzar, charlamos sin ningún compromiso.</p>
+      <div class="final-btns">
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Estudio+Pascua+y+me+interesa+saber+m%C3%A1s" class="btn-wa-big" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
+          Hablar con Santiago
+        </a>
+        <a href="mailto:santiagomfunes@gmail.com?subject=Demo Estudio Pascua — me interesa" class="btn-mail">✉️ Enviar email</a>
+      </div>
+      <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
+  <p class="f-copy">© 2025 · Demo para Estudio Pascua · @estudio_pascua · Sarmiento 85, Tandil</p>
+</footer>
+
+</body>
+</html>

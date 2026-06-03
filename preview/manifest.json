@@ -1,0 +1,362 @@
+[
+  {
+    "nombre": "Alfa Gym",
+    "slug": "alfa-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/alfa-gym.html"
+  },
+  {
+    "nombre": "Bello Abril",
+    "slug": "bello-abril",
+    "categoria": "Gastronomía",
+    "url": "preview/bello-abril.html"
+  },
+  {
+    "nombre": "Belu Fitness",
+    "slug": "belu-fitness",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/belu-fitness.html"
+  },
+  {
+    "nombre": "Biodent Odontologia Tandil - Dra Valeria Guzzanti",
+    "slug": "biodent-odontologia-tandil---dra-valeria-guzzanti",
+    "categoria": "Salud / Odontología",
+    "url": "preview/biodent-odontologia-tandil---dra-valeria-guzzanti.html"
+  },
+  {
+    "nombre": "Bodegón Del Fuerte",
+    "slug": "bodegon-del-fuerte",
+    "categoria": "Gastronomía",
+    "url": "preview/bodegon-del-fuerte.html"
+  },
+  {
+    "nombre": "Centrica Dental House",
+    "slug": "centrica-dental-house",
+    "categoria": "Salud / Odontología",
+    "url": "preview/centrica-dental-house.html"
+  },
+  {
+    "nombre": "Circulo Odontologico de Tandil",
+    "slug": "circulo-odontologico-de-tandil",
+    "categoria": "Salud / Odontología",
+    "url": "preview/circulo-odontologico-de-tandil.html"
+  },
+  {
+    "nombre": "Clínica Odontológica Giovannetti",
+    "slug": "clinica-odontologica-giovannetti",
+    "categoria": "Salud / Odontología",
+    "url": "preview/clinica-odontologica-giovannetti.html"
+  },
+  {
+    "nombre": "Club Gym",
+    "slug": "club-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/club-gym.html"
+  },
+  {
+    "nombre": "COA Consultorios Odontológicos",
+    "slug": "coa-consultorios-odontologicos",
+    "categoria": "Salud / Odontología",
+    "url": "preview/coa-consultorios-odontologicos.html"
+  },
+  {
+    "nombre": "Consultorio Odontológico Dra. Lorena Esain",
+    "slug": "consultorio-odontologico-dra-lorena-esain",
+    "categoria": "Salud / Odontología",
+    "url": "preview/consultorio-odontologico-dra-lorena-esain.html"
+  },
+  {
+    "nombre": "Cristhian Lugones Studio",
+    "slug": "cristhian-lugones-studio",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/cristhian-lugones-studio.html"
+  },
+  {
+    "nombre": "dominican flow barbershop",
+    "slug": "dominican-flow-barbershop",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/dominican-flow-barbershop.html"
+  },
+  {
+    "nombre": "Dr. Marcos Barrionuevo | Od. Manuel Corvalán. Odontologia Estética de Avanzada",
+    "slug": "dr-marcos-barrionuevo-od-manuel-corvalan-odontologia-estetica-de-avanzada",
+    "categoria": "Salud / Odontología",
+    "url": "preview/dr-marcos-barrionuevo-od-manuel-corvalan-odontologia-estetica-de-avanzada.html"
+  },
+  {
+    "nombre": "El Criollo",
+    "slug": "el-criollo",
+    "categoria": "Gastronomía",
+    "url": "preview/el-criollo.html"
+  },
+  {
+    "nombre": "El Primer Hombre 💈💇🏻‍♂️",
+    "slug": "el-primer-hombre",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/el-primer-hombre.html"
+  },
+  {
+    "nombre": "Elle Salón de Belleza",
+    "slug": "elle-salon-de-belleza",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/elle-salon-de-belleza.html"
+  },
+  {
+    "nombre": "Federico Unisex",
+    "slug": "federico-unisex",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/federico-unisex.html"
+  },
+  {
+    "nombre": "Fes3 - Espacio Integral de Entrenamiento y Salud",
+    "slug": "fes3---espacio-integral-de-entrenamiento-y-salud",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/fes3---espacio-integral-de-entrenamiento-y-salud.html"
+  },
+  {
+    "nombre": "FMC Gym & Fit",
+    "slug": "fmc-gym-fit",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/fmc-gym-fit.html"
+  },
+  {
+    "nombre": "Force Gym",
+    "slug": "force-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/force-gym.html"
+  },
+  {
+    "nombre": "Full Gym",
+    "slug": "full-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/full-gym.html"
+  },
+  {
+    "nombre": "Gimnasio Club Nahuel",
+    "slug": "gimnasio-club-nahuel",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/gimnasio-club-nahuel.html"
+  },
+  {
+    "nombre": "Gimnasio El Club",
+    "slug": "gimnasio-el-club",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/gimnasio-el-club.html"
+  },
+  {
+    "nombre": "Grill Argentino",
+    "slug": "grill-argentino",
+    "categoria": "Gastronomía",
+    "url": "preview/grill-argentino.html"
+  },
+  {
+    "nombre": "Gymnos",
+    "slug": "gymnos",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/gymnos.html"
+  },
+  {
+    "nombre": "Hotel Hermitage",
+    "slug": "hotel-hermitage",
+    "categoria": "Turismo / Hotel",
+    "url": "preview/hotel-hermitage.html"
+  },
+  {
+    "nombre": "IMPLANTOLOGIA DEL CENTRO - Dr. Fernando A. Luna / Dra. Mariana C. Pellegrini",
+    "slug": "implantologia-del-centro---dr-fernando-a-luna-dra-mariana-c-pellegrini",
+    "categoria": "Salud / Odontología",
+    "url": "preview/implantologia-del-centro---dr-fernando-a-luna-dra-mariana-c-pellegrini.html"
+  },
+  {
+    "nombre": "Kaizen Gym",
+    "slug": "kaizen-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/kaizen-gym.html"
+  },
+  {
+    "nombre": "Kalű",
+    "slug": "kal",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/kal.html"
+  },
+  {
+    "nombre": "La Roca Gimnasio",
+    "slug": "la-roca-gimnasio",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/la-roca-gimnasio.html"
+  },
+  {
+    "nombre": "Ladran Restaurante",
+    "slug": "ladran-restaurante",
+    "categoria": "Gastronomía",
+    "url": "preview/ladran-restaurante.html"
+  },
+  {
+    "nombre": "Le Groupe GYM",
+    "slug": "le-groupe-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/le-groupe-gym.html"
+  },
+  {
+    "nombre": "Le Gym",
+    "slug": "le-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/le-gym.html"
+  },
+  {
+    "nombre": "Lo de Martín",
+    "slug": "lo-de-martin",
+    "categoria": "Gastronomía",
+    "url": "preview/lo-de-martin.html"
+  },
+  {
+    "nombre": "LUA Peluquería",
+    "slug": "lua-peluqueria",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/lua-peluqueria.html"
+  },
+  {
+    "nombre": "M odontologia Tandil",
+    "slug": "m-odontologia-tandil",
+    "categoria": "Salud / Odontología",
+    "url": "preview/m-odontologia-tandil.html"
+  },
+  {
+    "nombre": "María y Sol Peluquería",
+    "slug": "maria-y-sol-peluqueria",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/maria-y-sol-peluqueria.html"
+  },
+  {
+    "nombre": "Mas Loka Q Tu Madre",
+    "slug": "mas-loka-q-tu-madre",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/mas-loka-q-tu-madre.html"
+  },
+  {
+    "nombre": "Matias Zabala",
+    "slug": "matias-zabala",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/matias-zabala.html"
+  },
+  {
+    "nombre": "Odontóloga Rosana de los Ángeles Flora",
+    "slug": "odontologa-rosana-de-los-angeles-flora",
+    "categoria": "Salud / Odontología",
+    "url": "preview/odontologa-rosana-de-los-angeles-flora.html"
+  },
+  {
+    "nombre": "Odontología Tandil urgencias endodoncia implantes odontólogo dentista",
+    "slug": "odontologia-tandil-urgencias-endodoncia-implantes-odontologo-dentista",
+    "categoria": "Salud / Odontología",
+    "url": "preview/odontologia-tandil-urgencias-endodoncia-implantes-odontologo-dentista.html"
+  },
+  {
+    "nombre": "Odontólogo Dr. Santiago Perazzi",
+    "slug": "odontologo-dr-santiago-perazzi",
+    "categoria": "Salud / Odontología",
+    "url": "preview/odontologo-dr-santiago-perazzi.html"
+  },
+  {
+    "nombre": "OX Sports",
+    "slug": "ox-sports",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/ox-sports.html"
+  },
+  {
+    "nombre": "Peluquería \"Portela\"",
+    "slug": "peluqueria-portela",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/peluqueria-portela.html"
+  },
+  {
+    "nombre": "Peluqueria Natalia Alvarez Barrios",
+    "slug": "peluqueria-natalia-alvarez-barrios",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/peluqueria-natalia-alvarez-barrios.html"
+  },
+  {
+    "nombre": "Piedras del Lago",
+    "slug": "piedras-del-lago",
+    "categoria": "Turismo / Hotel",
+    "url": "preview/piedras-del-lago.html"
+  },
+  {
+    "nombre": "Planet gym",
+    "slug": "planet-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/planet-gym.html"
+  },
+  {
+    "nombre": "Restaurante Barrika Fonda Escondida",
+    "slug": "restaurante-barrika-fonda-escondida",
+    "categoria": "Gastronomía",
+    "url": "preview/restaurante-barrika-fonda-escondida.html"
+  },
+  {
+    "nombre": "Restaurante El Parador del Sol",
+    "slug": "restaurante-el-parador-del-sol",
+    "categoria": "Gastronomía",
+    "url": "preview/restaurante-el-parador-del-sol.html"
+  },
+  {
+    "nombre": "Solange Rodriguez Peluqueria",
+    "slug": "solange-rodriguez-peluqueria",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/solange-rodriguez-peluqueria.html"
+  },
+  {
+    "nombre": "SOLEDAD NAPOLEÓN Hair Salón",
+    "slug": "soledad-napoleon-hair-salon",
+    "categoria": "Belleza / Peluquería",
+    "url": "preview/soledad-napoleon-hair-salon.html"
+  },
+  {
+    "nombre": "Sonia Andrea Fernández odontologa",
+    "slug": "sonia-andrea-fernandez-odontologa",
+    "categoria": "Salud / Odontología",
+    "url": "preview/sonia-andrea-fernandez-odontologa.html"
+  },
+  {
+    "nombre": "Sport Gym",
+    "slug": "sport-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/sport-gym.html"
+  },
+  {
+    "nombre": "Station Gym",
+    "slug": "station-gym",
+    "categoria": "Fitness / Gimnasio",
+    "url": "preview/station-gym.html"
+  },
+  {
+    "nombre": "Tandil",
+    "slug": "tandil",
+    "categoria": "Gastronomía",
+    "url": "preview/tandil.html"
+  },
+  {
+    "nombre": "Tierra de Azafranes",
+    "slug": "tierra-de-azafranes",
+    "categoria": "Gastronomía",
+    "url": "preview/tierra-de-azafranes.html"
+  },
+  {
+    "nombre": "Tosti-Pirovani Odontologos",
+    "slug": "tosti-pirovani-odontologos",
+    "categoria": "Salud / Odontología",
+    "url": "preview/tosti-pirovani-odontologos.html"
+  },
+  {
+    "nombre": "Urgencias odontológicas",
+    "slug": "urgencias-odontologicas",
+    "categoria": "Salud / Odontología",
+    "url": "preview/urgencias-odontologicas.html"
+  },
+  {
+    "nombre": "Zona Sur tl",
+    "slug": "zona-sur-tl",
+    "categoria": "Gastronomía",
+    "url": "preview/zona-sur-tl.html"
+  }
+]
