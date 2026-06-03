@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altavista Web — Páginas para Negocios de Tandil</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08111C;
+            --bg2: #0D1B2A;
+            --primary: #F4C430;
+            --primary-dim: rgba(244,196,48,0.15);
+            --blue: #3B82F6;
+            --blue-dim: rgba(59,130,246,0.15);
+            --text: #FFFFFF;
+            --text-muted: #7A9BB5;
+            --text-secondary: #B0C4DE;
+            --border: rgba(255,255,255,0.08);
+            --card: rgba(255,255,255,0.04);
+            --card-hover: rgba(255,255,255,0.07);
+            --green: #10B981;
+            --orange: #F97316;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .slide-deck {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (min-width: 769px) {
+            .slide-deck {
+                max-width: calc(100vh * 16 / 9);
+                max-height: calc(100vw * 9 / 16);
+                margin: auto;
+                position: absolute;
+                inset: 0;
+            }
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 52px 64px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.45s ease;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; }
+
+        .slide-content {
+            width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+
+        .slide-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .slide-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 5.5vw, 72px);
+            font-weight: 800;
+            line-height: 1.05;
+            color: var(--text);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #F4C430, #FF8C42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-blue {
+            background: linear-gradient(135deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: clamp(16px, 2vw, 22px);
+            color: var(--text-secondary);
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-highlight {
+            background: var(--primary-dim);
+            border-color: rgba(244,196,48,0.3);
+        }
+
+        .card-blue {
+            background: var(--blue-dim);
+            border-color: rgba(59,130,246,0.25);
+        }
+
+        /* Grid layouts */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        /* Metric card */
+        .metric-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 3.5vw, 48px);
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Pricing cards */
+        .pricing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .pricing-card.popular {
+            background: var(--primary-dim);
+            border-color: rgba(244,196,48,0.4);
+            transform: scale(1.04);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .pricing-tier {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        .pricing-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .pricing-setup {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .pricing-monthly {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-divider {
+            height: 1px;
+            background: var(--border);
+        }
+
+        .pricing-feature {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pricing-feature::before {
+            content: "✓";
+            color: var(--green);
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Step flow */
+        .step-flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            width: 100%;
+        }
+
+        .step-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .step-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--primary-dim);
+            border: 2px solid rgba(244,196,48,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .step-connector {
+            flex: 0 0 40px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(244,196,48,0.3), rgba(244,196,48,0.1));
+            margin-bottom: 30px;
+        }
+
+        /* Comparison table */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .compare-table th {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare-table td {
+            padding: 10px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .compare-table td:first-child { text-align: left; color: var(--text); }
+        .compare-table .yes { color: var(--green); font-size: 16px; }
+        .compare-table .no { color: #EF4444; font-size: 16px; }
+        .compare-table .partial { color: var(--orange); font-size: 13px; }
+        .compare-table .highlight-col { background: var(--primary-dim); }
+
+        /* Background decorations */
+        .bg-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .slide-content { position: relative; z-index: 1; }
+
+        /* Navigation */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #F4C430, #FF8C42);
+            transition: width 0.3s;
+            z-index: 1000;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+            background: rgba(8,17,28,0.7);
+            backdrop-filter: blur(12px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .nav-btn:hover { color: var(--primary); }
+
+        .slide-counter {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-family: 'Space Grotesk', sans-serif;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Tag */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-dim);
+            border: 1px solid rgba(244,196,48,0.3);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .tag-blue {
+            background: var(--blue-dim);
+            border-color: rgba(59,130,246,0.3);
+            color: #60A5FA;
+        }
+
+        /* GTM items */
+        .gtm-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .gtm-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            flex-shrink: 0;
+            width: 36px;
+        }
+
+        .gtm-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .gtm-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Animations */
+        .animate-fade-up {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-stagger > * {
+            opacity: 0;
+            animation: fadeUp 0.5s ease-out forwards;
+        }
+        .animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+        .animate-stagger > *:nth-child(2) { animation-delay: 0.15s; }
+        .animate-stagger > *:nth-child(3) { animation-delay: 0.25s; }
+        .animate-stagger > *:nth-child(4) { animation-delay: 0.35s; }
+        .animate-stagger > *:nth-child(5) { animation-delay: 0.45s; }
+
+        /* Stack tech badges */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .tech-badge {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tech-badge .icon {
+            font-size: 18px;
+        }
+
+        /* Problem stat box */
+        .stat-box {
+            text-align: center;
+            padding: 24px;
+            border-radius: 16px;
+        }
+
+        .stat-big {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 6vw, 80px);
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .slide-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(24px, 3vw, 38px);
+            font-weight: 700;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide { padding: 32px 24px; }
+            .grid-3 { grid-template-columns: 1fr; gap: 12px; }
+            .grid-4 { grid-template-columns: repeat(2,1fr); }
+            .step-flow { flex-direction: column; }
+            .step-connector { width: 2px; height: 24px; margin-bottom: 0; margin-right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide-deck">
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — PORTADA
+═══════════════════════════════════════════ -->
+<div class="slide active" id="slide-1">
+    <div class="bg-glow" style="width:600px;height:600px;background:rgba(244,196,48,0.06);top:-200px;right:-100px;"></div>
+    <div class="bg-glow" style="width:400px;height:400px;background:rgba(59,130,246,0.05);bottom:-100px;left:-100px;"></div>
+    <div class="slide-content" style="text-align:center; gap:24px;">
+        <div class="tag animate-fade-up" style="animation-delay:0.1s">Modelo de Negocio · 2026</div>
+        <h1 class="slide-title animate-fade-up" style="animation-delay:0.2s; font-size:clamp(42px,7vw,88px); max-width:800px;">
+            Páginas web para negocios<br>
+            <span class="gradient-text">que Tandil merece</span>
+        </h1>
+        <p class="slide-subtitle animate-fade-up" style="animation-delay:0.35s">
+            Agencia boutique de presencia digital para comercios, profesionales y servicios locales.<br>Entrega en 10 días. SEO local. WhatsApp integrado. Mantenimiento mensual.
+        </p>
+        <div class="animate-fade-up" style="animation-delay:0.5s; display:flex; gap:32px; margin-top:8px;">
+            <div style="text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:800; color:var(--primary)">$25K</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px">Revenue Año 1 (USD)</div>
+            </div>
+            <div style="width:1px; background:var(--border);"></div>
+            <div style="text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:800; color:#60A5FA">500+</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px">Negocios sin web decente</div>
+            </div>
+            <div style="width:1px; background:var(--border);"></div>
+            <div style="text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:800; color:var(--green)">10d</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px">Tiempo de entrega</div>
+            </div>
+        </div>
+        <div style="margin-top:4px; font-size:13px; color:var(--text-muted)">Santiago Funes · Altavista</div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 2 — EL PROBLEMA
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-2">
+    <div class="bg-glow" style="width:500px;height:500px;background:rgba(239,68,68,0.05);top:-100px;left:-100px;"></div>
+    <div class="slide-content" style="gap:28px;">
+        <div style="text-align:center;">
+            <div class="slide-label">El Problema</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Tandil tiene cientos de negocios<br><span style="color:#EF4444;">invisibles en Google</span>
+            </h2>
+        </div>
+        <div class="grid-3 animate-stagger" style="margin-top:4px;">
+            <div class="stat-box card">
+                <div class="stat-big" style="color:#EF4444;">73%</div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.4">de los consumidores buscan un negocio online <strong>antes</strong> de visitarlo físicamente</p>
+            </div>
+            <div class="stat-box card">
+                <div class="stat-big" style="color:var(--orange);">500+</div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.4">negocios en Tandil sin página web profesional o con una desactualizada</p>
+            </div>
+            <div class="stat-box card">
+                <div class="stat-big" style="color:var(--primary);">$0</div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.4">es lo que invierten en SEO local — mientras sus competidores los superan en Google</p>
+            </div>
+        </div>
+        <div class="card" style="width:100%; padding:20px 28px; background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.2);">
+            <p style="font-size:15px; color:var(--text-secondary); text-align:center; line-height:1.6;">
+                Un restaurante, hotel o profesional en Tandil <strong style="color:var(--text);">pierde clientes todos los días</strong> porque cuando alguien busca "psicólogo Tandil" o "hotel Tandil centro", <strong style="color:#EF4444;">no aparece</strong>.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 3 — COSTO DE LA INACCIÓN
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-3">
+    <div class="bg-glow" style="width:600px;height:400px;background:rgba(249,115,22,0.06);center;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="slide-content" style="gap:28px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Costo de la Inacción</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Cada mes sin web es<br><span class="gradient-text">dinero que se va</span>
+            </h2>
+        </div>
+        <div class="grid-2" style="align-items:stretch; gap:24px; margin-top:4px;">
+            <div style="display:flex; flex-direction:column; gap:14px;">
+                <div class="card" style="padding:18px 22px; display:flex; align-items:center; gap:16px;">
+                    <div style="font-size:28px;">🔍</div>
+                    <div>
+                        <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Invisibilidad en búsquedas</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Aparece Instagram, aparece la competencia — vos no.</div>
+                    </div>
+                </div>
+                <div class="card" style="padding:18px 22px; display:flex; align-items:center; gap:16px;">
+                    <div style="font-size:28px;">💬</div>
+                    <div>
+                        <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Sin captura de leads</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Los interesados no tienen dónde dejar sus datos ni contactarte fuera de horario.</div>
+                    </div>
+                </div>
+                <div class="card" style="padding:18px 22px; display:flex; align-items:center; gap:16px;">
+                    <div style="font-size:28px;">😤</div>
+                    <div>
+                        <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Credibilidad en duda</div>
+                        <div style="font-size:12px; color:var(--text-muted);">En 2026, no tener web dice algo. Los clientes eligen al que "parece serio".</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-highlight" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:16px; padding:36px;">
+                <div style="font-size:14px; color:var(--text-muted);">Si un negocio pierde solo</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:64px; font-weight:800; color:var(--primary); line-height:1;">2</div>
+                <div style="font-size:14px; color:var(--text-secondary);">clientes por mes por invisibilidad online...</div>
+                <div style="height:1px; background:rgba(244,196,48,0.2); width:80%;"></div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:var(--text);">$4.800 USD</div>
+                <div style="font-size:12px; color:var(--text-muted);">de ingreso perdido al año<br>(a ticket promedio de $200)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 4 — LA SOLUCIÓN
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-4">
+    <div class="bg-glow" style="width:600px;height:600px;background:rgba(244,196,48,0.07);top:-200px;right:-150px;"></div>
+    <div class="slide-content" style="gap:26px;">
+        <div style="text-align:center;">
+            <div class="slide-label">La Solución</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Tu negocio, en Google,<br><span class="gradient-text">en 10 días</span>
+            </h2>
+        </div>
+        <div class="grid-3 animate-stagger" style="margin-top:4px;">
+            <div class="card" style="text-align:center; padding:28px 20px; gap:12px; display:flex; flex-direction:column; align-items:center;">
+                <div style="font-size:36px;">⚡</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700;">Entrega rápida</div>
+                <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Tu sitio web vivo en 5 a 10 días hábiles. Sin esperas de meses.</div>
+            </div>
+            <div class="card card-highlight" style="text-align:center; padding:28px 20px; gap:12px; display:flex; flex-direction:column; align-items:center;">
+                <div style="font-size:36px;">📍</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700;">SEO local real</div>
+                <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Aparecés cuando buscan "tu rubro + Tandil". Desde el día 1.</div>
+            </div>
+            <div class="card" style="text-align:center; padding:28px 20px; gap:12px; display:flex; flex-direction:column; align-items:center;">
+                <div style="font-size:36px;">📱</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700;">WhatsApp integrado</div>
+                <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Los visitantes te contactan con un click. Sin fricción.</div>
+            </div>
+        </div>
+        <div class="grid-2" style="gap:16px; margin-top:4px;">
+            <div class="card card-blue" style="padding:18px 22px;">
+                <div style="font-size:13px; font-weight:600; margin-bottom:6px;">🔧 Mantenimiento incluido</div>
+                <div style="font-size:12px; color:var(--text-muted);">Cambios de texto, fotos, horarios — vos avisás, nosotros lo hacemos. Sin que toques código nunca.</div>
+            </div>
+            <div class="card card-blue" style="padding:18px 22px;">
+                <div style="font-size:13px; font-weight:600; margin-bottom:6px;">📊 Analytics configurado</div>
+                <div style="font-size:12px; color:var(--text-muted);">Sabés cuántas personas visitan tu web, de dónde vienen y qué hacen ahí.</div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:4px;">
+            <p style="font-size:14px; color:var(--text-secondary);">Stack moderno. Velocidad perfecta. Diseño que convierte. <strong style="color:var(--primary);">A precio de Tandil.</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 5 — DIFERENCIAL
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-5">
+    <div class="slide-content" style="gap:22px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Comparativa</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                ¿Por qué no ir con una agencia<br><span class="gradient-text">o armarla solo?</span>
+            </h2>
+        </div>
+        <div style="width:100%; overflow:hidden; border-radius:14px; border:1px solid var(--border); margin-top:4px;">
+            <table class="compare-table" style="width:100%;">
+                <thead>
+                    <tr style="background:rgba(255,255,255,0.03);">
+                        <th style="text-align:left; width:28%;">Criterio</th>
+                        <th style="width:18%;">Wix / Squarespace</th>
+                        <th style="width:18%;">Freelancer</th>
+                        <th style="width:18%;">Agencia BA</th>
+                        <th style="width:18%; color:var(--primary);">Nosotros</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiempo de entrega</td>
+                        <td class="partial">Vos lo hacés</td>
+                        <td class="partial">2-6 semanas</td>
+                        <td class="no">1-3 meses</td>
+                        <td class="highlight-col" style="color:var(--green); font-weight:600;">5-10 días</td>
+                    </tr>
+                    <tr>
+                        <td>SEO local desde día 1</td>
+                        <td class="no">✗</td>
+                        <td class="partial">± Variable</td>
+                        <td class="yes">✓</td>
+                        <td class="highlight-col"><span class="yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mantenimiento incluido</td>
+                        <td class="no">✗</td>
+                        <td class="no">✗</td>
+                        <td class="partial">± Costoso</td>
+                        <td class="highlight-col"><span class="yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>WhatsApp integrado</td>
+                        <td class="no">✗</td>
+                        <td class="partial">± Depende</td>
+                        <td class="partial">± Extra $</td>
+                        <td class="highlight-col"><span class="yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Conocimiento del mercado local</td>
+                        <td class="no">✗</td>
+                        <td class="no">✗</td>
+                        <td class="no">✗</td>
+                        <td class="highlight-col" style="color:var(--green); font-weight:600;">Soy de Tandil</td>
+                    </tr>
+                    <tr>
+                        <td>Precio setup (USD)</td>
+                        <td class="partial">$0 + tu tiempo</td>
+                        <td class="partial">$400-800</td>
+                        <td class="no">$1.500-3.000</td>
+                        <td class="highlight-col" style="color:var(--primary); font-weight:700;">$450-1.800</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 6 — PRECIOS
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-6">
+    <div class="slide-content" style="gap:22px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Modelo de Precios</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Tres planes. Un solo objetivo:<br><span class="gradient-text">que te encuentren</span>
+            </h2>
+        </div>
+        <div class="grid-3 animate-stagger" style="margin-top:4px; align-items:start;">
+            <!-- Tier 1 -->
+            <div class="pricing-card">
+                <div class="pricing-tier">Tier 1</div>
+                <div class="pricing-name">Presencia</div>
+                <div>
+                    <div class="pricing-setup">$450</div>
+                    <div class="pricing-monthly">setup único + $60/mes</div>
+                </div>
+                <div class="pricing-divider"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="pricing-feature">Landing page 1-3 secciones</div>
+                    <div class="pricing-feature">SEO básico + Google Business</div>
+                    <div class="pricing-feature">Botón WhatsApp + formulario</div>
+                    <div class="pricing-feature">Hosting y dominio incluidos</div>
+                    <div class="pricing-feature">1 actualización/mes</div>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Para profesionales y pequeños comercios</div>
+            </div>
+            <!-- Tier 2 (popular) -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">MÁS POPULAR</div>
+                <div class="pricing-tier">Tier 2</div>
+                <div class="pricing-name">Sitio Completo</div>
+                <div>
+                    <div class="pricing-setup">$900</div>
+                    <div class="pricing-monthly">setup único + $100/mes</div>
+                </div>
+                <div class="pricing-divider"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="pricing-feature">Sitio 5-8 páginas</div>
+                    <div class="pricing-feature">SEO on-page completo</div>
+                    <div class="pricing-feature">Menú / carta digital</div>
+                    <div class="pricing-feature">Blog para SEO</div>
+                    <div class="pricing-feature">Google Analytics</div>
+                    <div class="pricing-feature">3 actualizaciones/mes</div>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Para restaurantes, hoteles, estudios</div>
+            </div>
+            <!-- Tier 3 -->
+            <div class="pricing-card">
+                <div class="pricing-tier">Tier 3</div>
+                <div class="pricing-name">Sitio + Motor</div>
+                <div>
+                    <div class="pricing-setup">$1.800</div>
+                    <div class="pricing-monthly">setup único + $160/mes</div>
+                </div>
+                <div class="pricing-divider"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="pricing-feature">Todo el Tier 2</div>
+                    <div class="pricing-feature">Reservas o pedidos online</div>
+                    <div class="pricing-feature">WhatsApp automático</div>
+                    <div class="pricing-feature">Dashboard para el cliente</div>
+                    <div class="pricing-feature">Soporte prioritario</div>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Para cabañas, clínicas, food delivery</div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:4px;">
+            <p style="font-size:13px; color:var(--text-muted);">Todos los planes incluyen hosting, dominio y SSL · Precios en USD · Facturación mensual</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 7 — PROYECCIÓN FINANCIERA
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-7">
+    <div class="bg-glow" style="width:500px;height:500px;background:rgba(16,185,129,0.05);bottom:-150px;right:-100px;"></div>
+    <div class="slide-content" style="gap:20px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Proyección Financiera</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Año 1: <span class="gradient-text">$25.000-30.000 USD</span>
+            </h2>
+        </div>
+        <div class="grid-4" style="margin-top:4px;">
+            <div class="metric-card">
+                <div class="metric-number gradient-text">38</div>
+                <div class="metric-label">Clientes al mes 12</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" style="color:var(--green);">$2.800</div>
+                <div class="metric-label">MRR mes 12 (USD)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" style="color:#60A5FA;">$5.500</div>
+                <div class="metric-label">Ingreso total mes 12</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number gradient-text-blue">~85%</div>
+                <div class="metric-label">Margen mensual neto</div>
+            </div>
+        </div>
+        <div style="width:100%; height:clamp(160px, 26vh, 240px); background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 20px;">
+            <canvas id="mrrChart"></canvas>
+        </div>
+        <div class="card" style="width:100%; padding:14px 24px; background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.2);">
+            <p style="font-size:13px; color:var(--text-secondary); text-align:center;">
+                💡 <strong style="color:var(--text);">El setup fee cubre el costo del trabajo.</strong> El mensual es casi puro margen — infraestructura cuesta $12-15 por cliente.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 8 — PROCESO
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-8">
+    <div class="slide-content" style="gap:28px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Proceso de Producción</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                De brief a live en<br><span class="gradient-text">5 pasos</span>
+            </h2>
+        </div>
+        <div class="step-flow animate-stagger" style="margin-top:8px;">
+            <div class="step-item">
+                <div class="step-circle">1</div>
+                <div class="step-label">Brief</div>
+                <div class="step-desc">30 min con el cliente. 20 preguntas. Dirección, fotos, servicios, tono.</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">2</div>
+                <div class="step-label">IA + Copy</div>
+                <div class="step-desc">Agente IA genera la estructura y el texto del sitio en 1-2hs.</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">3</div>
+                <div class="step-label">Producción</div>
+                <div class="step-desc">Sitio armado sobre template base. Diseño + SEO + WhatsApp. 4-8hs.</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">4</div>
+                <div class="step-label">Revisión</div>
+                <div class="step-desc">1 ronda de cambios con el cliente. Ajustes finales.</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle">5</div>
+                <div class="step-label">Deploy</div>
+                <div class="step-desc">Live en Vercel + dominio configurado + 30 min de capacitación al cliente.</div>
+            </div>
+        </div>
+        <div class="grid-2" style="gap:16px; margin-top:4px;">
+            <div class="card card-highlight" style="padding:16px 22px; text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:800; color:var(--primary);">6-20hs</div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Tiempo de producción con IA</div>
+            </div>
+            <div class="card" style="padding:16px 22px; text-align:center;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:800; color:#60A5FA;">vs 80hs</div>
+                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Agencia tradicional · mismo resultado</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 9 — GO-TO-MARKET
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-9">
+    <div class="bg-glow" style="width:500px;height:400px;background:rgba(244,196,48,0.05);bottom:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="slide-content" style="gap:22px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Go-To-Market</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                5 canales de adquisición,<br><span class="gradient-text">ordenados por prioridad</span>
+            </h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:4px;" class="animate-stagger">
+            <div class="gtm-item">
+                <div class="gtm-number">1</div>
+                <div>
+                    <div class="gtm-title">Red inmediata — 5 negocios conocidos</div>
+                    <div class="gtm-desc">Precio de lanzamiento (30% off setup) a cambio de testimonio y fotos. Tu inmobiliaria ya es el portafolio #1.</div>
+                </div>
+            </div>
+            <div class="gtm-item">
+                <div class="gtm-number">2</div>
+                <div>
+                    <div class="gtm-title">Audit gratuito personalizado</div>
+                    <div class="gtm-desc">"Busqué tu negocio en Google y encontré esto... te muestro cómo mejorar en 5 minutos." 20 mensajes/semana.</div>
+                </div>
+            </div>
+            <div class="gtm-item">
+                <div class="gtm-number">3</div>
+                <div>
+                    <div class="gtm-title">Referidos activos</div>
+                    <div class="gtm-desc">Cada cliente satisfecho te manda uno. Incentivo: descuento en mensualidad por referido que cierra.</div>
+                </div>
+            </div>
+            <div class="gtm-item">
+                <div class="gtm-number">4</div>
+                <div>
+                    <div class="gtm-title">Contenido en redes — proceso en público</div>
+                    <div class="gtm-desc">"Este restaurante no aparecía en Google. Esto hicimos." Los dueños lo comparten solos.</div>
+                </div>
+            </div>
+            <div class="gtm-item">
+                <div class="gtm-number">5</div>
+                <div>
+                    <div class="gtm-title">Alianzas — contadores y diseñadores</div>
+                    <div class="gtm-desc">10% de comisión sobre el setup por cada cliente referido. Ellos tienen la confianza, vos tenés la solución.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — SEGMENTOS + STACK
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-10">
+    <div class="slide-content" style="gap:22px;">
+        <div style="text-align:center;">
+            <div class="slide-label">Mercado y Stack</div>
+            <h2 class="slide-section-title" style="margin-top:10px;">
+                Quiénes son los clientes y<br><span class="gradient-text">con qué lo construimos</span>
+            </h2>
+        </div>
+        <div class="grid-2" style="gap:24px; align-items:start; margin-top:4px;">
+            <div>
+                <div style="font-size:12px; font-weight:600; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;">Segmentos Objetivo</div>
+                <div style="width:100%; height:clamp(160px, 22vh, 220px);">
+                    <canvas id="segmentoChart"></canvas>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;">
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:#F4C430;flex-shrink:0;"></div>Profesionales (40%)</div>
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:#3B82F6;flex-shrink:0;"></div>Gastronomía (30%)</div>
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:#10B981;flex-shrink:0;"></div>Turismo (15%)</div>
+                    <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted);"><div style="width:10px;height:10px;border-radius:2px;background:#8B5CF6;flex-shrink:0;"></div>Bienestar (15%)</div>
+                </div>
+            </div>
+            <div>
+                <div style="font-size:12px; font-weight:600; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;">Stack Tecnológico</div>
+                <div class="tech-grid">
+                    <div class="tech-badge"><span class="icon">⚛️</span> Next.js 15</div>
+                    <div class="tech-badge"><span class="icon">🎨</span> Tailwind CSS</div>
+                    <div class="tech-badge"><span class="icon">▲</span> Vercel</div>
+                    <div class="tech-badge"><span class="icon">🗃️</span> Supabase</div>
+                    <div class="tech-badge"><span class="icon">🌐</span> Cloudflare</div>
+                    <div class="tech-badge"><span class="icon">📊</span> Analytics</div>
+                    <div class="tech-badge"><span class="icon">💬</span> WhatsApp</div>
+                    <div class="tech-badge"><span class="icon">🤖</span> IA Agentes</div>
+                </div>
+                <div class="card" style="margin-top:14px; padding:14px 18px; background:rgba(244,196,48,0.06); border-color:rgba(244,196,48,0.2);">
+                    <div style="font-size:12px; color:var(--text-secondary); line-height:1.5;">
+                        <strong style="color:var(--primary);">Costo infra/cliente:</strong> ~$12-15/mes<br>
+                        <strong style="color:var(--primary);">Setup infra total (20 clientes):</strong> $50-100/mes
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 11 — PRÓXIMOS PASOS / CTA
+═══════════════════════════════════════════ -->
+<div class="slide" id="slide-11">
+    <div class="bg-glow" style="width:700px;height:700px;background:rgba(244,196,48,0.07);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="slide-content" style="gap:28px; text-align:center;">
+        <div class="slide-label">Próximos Pasos</div>
+        <h2 class="slide-section-title" style="font-size:clamp(28px,4.5vw,52px); max-width:700px;">
+            De 0 a los primeros 3 clientes<br>en <span class="gradient-text">30 días</span>
+        </h2>
+        <div class="grid-3 animate-stagger" style="margin-top:4px;">
+            <div class="card" style="text-align:center; padding:24px 20px;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--primary); letter-spacing:1px; margin-bottom:10px;">SEMANA 1-2</div>
+                <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Armar base</div>
+                <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Template base armado. Brief template listo. 1er cliente piloto (red inmediata, 30% off).</div>
+            </div>
+            <div class="card card-highlight" style="text-align:center; padding:24px 20px;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--primary); letter-spacing:1px; margin-bottom:10px;">SEMANA 2-3</div>
+                <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Primeras entregas</div>
+                <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">2do y 3er cliente cerrado. Casos de éxito documentados. Primeras fotos del proceso.</div>
+            </div>
+            <div class="card" style="text-align:center; padding:24px 20px;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--primary); letter-spacing:1px; margin-bottom:10px;">MES 2-3</div>
+                <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Escalar</div>
+                <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">Sistema de referidos activo. Cold outreach sistematizado. 8-10 clientes activos.</div>
+            </div>
+        </div>
+        <div class="card" style="width:100%; padding:20px 32px; background:rgba(244,196,48,0.07); border-color:rgba(244,196,48,0.25);">
+            <p style="font-size:15px; color:var(--text-secondary); line-height:1.6;">
+                La decisión clave: <strong style="color:var(--text);">¿proyecto independiente o bajo el paraguas de Altavista?</strong><br>
+                <span style="font-size:13px; color:var(--text-muted);">Opción A: "Santiago Funes Web" — cash flow inmediato · Opción B: "Altavista Web" — marca + ecosistema · Opción C: solo real estate</span>
+            </p>
+        </div>
+        <div style="margin-top:4px;">
+            <p style="font-size:13px; color:var(--text-muted);">Tandil · 2026 · <span style="color:var(--primary);">santiagofunes.com.ar</span></p>
+        </div>
+    </div>
+</div>
+
+</div><!-- /.slide-deck -->
+
+<!-- Navigation -->
+<div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <span class="slide-counter"><span id="current">1</span> / <span id="total">11</span></span>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+document.getElementById('total').textContent = total;
+
+function showSlide(n) {
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    current = n;
+    document.querySelectorAll('.slide').forEach((s, i) => {
+        s.classList.toggle('active', i === n - 1);
+    });
+    document.getElementById('current').textContent = n;
+    document.getElementById('progressBar').style.width = (n / total * 100) + '%';
+    if (n === 7) initMrrChart();
+    if (n === 10) initSegmentoChart();
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-controls')) nextSlide();
+});
+
+let mrrInited = false;
+function initMrrChart() {
+    if (mrrInited) return;
+    mrrInited = true;
+    const ctx = document.getElementById('mrrChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'],
+            datasets: [
+                {
+                    label: 'MRR ($)',
+                    data: [60, 200, 350, 500, 650, 800, 1050, 1300, 1550, 1900, 2350, 2800],
+                    backgroundColor: 'rgba(244,196,48,0.75)',
+                    borderColor: '#F4C430',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    order: 2
+                },
+                {
+                    label: 'Setup Revenue ($)',
+                    data: [450, 900, 900, 1350, 1350, 1350, 1800, 1800, 1800, 1800, 2700, 2700],
+                    backgroundColor: 'rgba(59,130,246,0.4)',
+                    borderColor: '#3B82F6',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    order: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: { color: '#7A9BB5', font: { size: 11 }, boxWidth: 12 }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: '#7A9BB5', font: { size: 11 } }
+                },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.04)' },
+                    ticks: { color: '#7A9BB5', font: { size: 11 }, callback: v => '$' + v.toLocaleString() }
+                }
+            }
+        }
+    });
+}
+
+let segInited = false;
+function initSegmentoChart() {
+    if (segInited) return;
+    segInited = true;
+    const ctx = document.getElementById('segmentoChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Profesionales', 'Gastronomía', 'Turismo / Cabañas', 'Bienestar / Estética'],
+            datasets: [{
+                data: [40, 30, 15, 15],
+                backgroundColor: ['#F4C430','#3B82F6','#10B981','#8B5CF6'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` }
+                }
+            }
+        }
+    });
+}
+
+showSlide(1);
+</script>
+</body>
+</html>
