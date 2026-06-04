@@ -1,331 +1,583 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sport Gym — Demo de tu nueva web | Altavista Web</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--char:#1A1A1A;--stone:#6B6560;--cream:#F5F0E8;--warm:#FAFAF8;--gold:#B8954A;--border:#E5DDD0;--white:#fff;--navy:#08111C;--yellow:#F4C430}
-    html{scroll-behavior:smooth}
-    body{font-family:'Inter',sans-serif;background:var(--warm);color:var(--char)}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sport Gym Tandil — Musculación, Spinning y Pilates · Av. Buzón 971</title>
+<meta name="description" content="Sport Gym Tandil: musculación, spinning y pilates con equipamiento premium, vestuarios y duchas. Tu espacio, tus reglas, tus resultados. Av. Buzón 971, Tandil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D; --bg-2:#101216; --bg-3:#181B1F; --card:#14171A;
+    --orange:#F2641E; --orange-2:#FF8038; --orange-600:#CC520F; --orange-100:rgba(242,100,30,.14);
+    --grad:linear-gradient(105deg,#FF8038,#F2641E 55%,#E0480A);
+    --white:#F5F3F0; --gray:#9DA0A5; --gray-2:#62666B;
+    --line:rgba(255,255,255,.1); --line-2:rgba(255,255,255,.055);
+    --navy:#11213F; --amber:#E6AE2E;
+    --font-d:'Space Grotesk',system-ui,sans-serif;
+    --font-b:'Inter',system-ui,sans-serif;
+    --maxw:1280px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-b);color:var(--white);background:var(--bg);line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4,.d{font-family:var(--font-d);font-weight:700;line-height:1.0;letter-spacing:-.015em;text-transform:uppercase}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--orange);color:#fff}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{display:inline-flex;align-items:center;gap:11px;font-family:var(--font-d);font-weight:600;letter-spacing:.24em;text-transform:uppercase;font-size:.74rem;color:var(--orange)}
+  .eyebrow::before{content:"";width:30px;height:2px;background:var(--orange)}
+  /* custom scrollbar */
+  ::-webkit-scrollbar{width:11px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#2a2e33;border-radius:10px;border:3px solid var(--bg)}
+  ::-webkit-scrollbar-thumb:hover{background:var(--orange-600)}
+  /* film grain overlay */
+  .grain{position:fixed;inset:0;z-index:115;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-    /* AGENCY BAR */
-    .ab{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;gap:16px}
-    .ab-l{display:flex;align-items:center;gap:10px}
-    .ab-badge{background:var(--yellow);color:var(--navy);padding:2px 9px;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-    .ab-text{color:rgba(255,255,255,.7);font-size:13px}
-    .ab-text strong{color:#fff}
-    .ab-cta{background:var(--yellow);color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
-    .ab-cta:hover{opacity:.85}
+  /* ===== AGENCY BAR ===== */
+  .agency-bar{position:fixed;top:0;left:0;right:0;z-index:120;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:16px;padding:9px 20px;font-size:.85rem;font-weight:400;border-bottom:2px solid var(--amber)}
+  .agency-bar b{font-weight:700;color:var(--amber)}
+  .agency-bar .sep{opacity:.4}
+  .agency-bar a.see{display:inline-flex;align-items:center;gap:6px;background:var(--amber);color:var(--navy);
+    font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.74rem;padding:6px 14px;border-radius:4px;transition:.2s}
+  .agency-bar a.see:hover{background:#fff;transform:translateY(-1px)}
+  @media(max-width:680px){.agency-bar span.lbl{display:none}}
 
-    /* HERO */
-    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;background:#111;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.38)}
-    .hero-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:32px 60px}
-    .logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff}
-    .logo small{display:block;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:3px}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .2s}
-    .nav-links a:hover{color:#fff}
-    .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 60px 100px;max-width:680px}
-    .eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,66px);font-weight:400;color:#fff;line-height:1.12;margin-bottom:20px}
-    .hero-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.58);max-width:460px;margin-bottom:36px}
-    .hero-ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px}
-    .hero-pill{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:6px 14px;border-radius:20px;font-size:12px;backdrop-filter:blur(4px)}
+  /* ===== NAV ===== */
+  nav{position:fixed;top:43px;left:0;right:0;z-index:100;background:transparent;transition:.35s;padding:16px 0}
+  nav.scrolled{background:rgba(10,11,13,.82);backdrop-filter:blur(14px) saturate(1.2);padding:9px 0;box-shadow:0 1px 0 rgba(255,255,255,.06),0 18px 40px -24px rgba(0,0,0,.9)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;flex-direction:column;line-height:1}
+  .logo .stars{color:var(--orange);font-size:.5rem;letter-spacing:.3em;margin-bottom:3px}
+  .logo .wm{font-family:var(--font-d);font-weight:700;font-size:1.5rem;letter-spacing:.02em}
+  .logo .wm em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .logo small{font-family:var(--font-b);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:.5rem;color:var(--gray);margin-top:2px}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links>a{position:relative;color:rgba(245,243,240,.82);font-weight:500;font-size:.92rem;transition:.2s;padding:4px 0}
+  .nav-links>a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--orange);transition:.25s}
+  .nav-links>a:hover{color:#fff}.nav-links>a:hover::after{width:100%}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.04em;
+    padding:13px 24px;border-radius:7px;font-size:.86rem;cursor:pointer;border:0;transition:.22s;position:relative;overflow:hidden}
+  .btn-wa{background:var(--grad);color:#fff;box-shadow:0 8px 24px -10px rgba(242,100,30,.7)}
+  .btn-wa:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(242,100,30,.85)}
+  .btn-ghost{background:rgba(255,255,255,.04);color:#fff;border:1.5px solid rgba(255,255,255,.28);backdrop-filter:blur(4px)}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+  .hamb{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
+  .hamb span{width:26px;height:2.5px;background:#fff;border-radius:2px;transition:.2s}
+  @media(max-width:940px){
+    .nav-links{position:fixed;inset:0 0 0 auto;width:min(78vw,330px);background:var(--bg-2);flex-direction:column;
+      justify-content:center;gap:26px;transform:translateX(100%);transition:.35s;padding:40px;border-left:1px solid var(--line)}
+    .nav-links.open{transform:translateX(0)}
+    .nav-links>a{font-size:1.3rem;font-family:var(--font-d);text-transform:uppercase}
+    .hamb{display:flex;z-index:101}
+  }
 
-    /* BUTTONS */
-    .btn-g{background:var(--gold);color:#fff;padding:13px 26px;border-radius:2px;text-decoration:none;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-g:hover{background:#9E7D3F}
-    .btn-wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:13px 22px;border-radius:2px;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-wa:hover{background:#1BBE5A}
-    .btn-ghost{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px}
-    .btn-ghost:hover{color:#fff}
+  /* ===== HERO ===== */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;filter:contrast(1.08) saturate(1.05);transform:scale(1.05);animation:heroZoom 18s ease-out forwards}
+  @keyframes heroZoom{to{transform:scale(1)}}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:
+    linear-gradient(180deg,rgba(10,11,13,.74) 0,rgba(10,11,13,.22) 36%,rgba(10,11,13,.97) 100%),
+    linear-gradient(90deg,rgba(10,11,13,.8),transparent 60%)}
+  .hero-glow{position:absolute;z-index:1;right:-8%;top:18%;width:46vw;height:46vw;max-width:680px;max-height:680px;border-radius:50%;
+    background:radial-gradient(circle,rgba(242,100,30,.32),transparent 62%);filter:blur(30px);animation:pulse 6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.9;transform:scale(1.12)}}
+  .hero-inner{position:relative;z-index:2;width:100%;padding-top:150px;padding-bottom:46px}
+  .hero .kick{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid var(--orange);
+    color:#fff;font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.76rem;padding:8px 16px;border-radius:30px;backdrop-filter:blur(6px)}
+  .hero h1{font-size:clamp(3rem,9.2vw,7.6rem);font-weight:700;margin:24px 0 0;letter-spacing:-.03em;line-height:.9}
+  .hero h1 .l2{-webkit-text-stroke:1.6px rgba(255,255,255,.92);color:transparent}
+  .hero h1 .l3{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+  .hero .lead{font-size:1.16rem;color:rgba(245,243,240,.82);max-width:520px;margin:26px 0 34px;font-weight:300}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-strip{position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.13);margin-top:46px}
+  .hero-strip .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:28px}
+  .hs .n{font-family:var(--font-d);font-weight:700;font-size:2.1rem;line-height:1;color:#fff}
+  .hs .n em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hs .l{font-size:.76rem;color:rgba(245,243,240,.64);margin-top:7px;font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+  .scrollcue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:7px;color:rgba(255,255,255,.5);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;font-family:var(--font-d)}
+  .scrollcue span{width:1px;height:34px;background:linear-gradient(var(--orange),transparent);animation:cue 1.8s ease-in-out infinite}
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+  @media(max-width:720px){.hero-strip .wrap{grid-template-columns:repeat(2,1fr);gap:22px}.scrollcue{display:none}}
 
-    /* INFO SECTION */
-    .info-sec{background:var(--white);padding:72px 60px}
-    .info-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-    .s-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px}
-    .s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.2;color:var(--char);margin-bottom:14px}
-    .s-body{font-size:15px;line-height:1.8;color:var(--stone);margin-bottom:24px}
-    .info-list{display:flex;flex-direction:column;gap:16px}
-    .info-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--warm);border-radius:4px}
-    .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-    .info-item strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
-    .info-item span{font-size:13px;color:var(--stone);line-height:1.4}
-    .rating-box{background:var(--char);color:#fff;padding:28px;border-radius:4px;text-align:center}
-    .rating-big{font-family:'Playfair Display',serif;font-size:60px;font-weight:600;line-height:1;color:var(--yellow)}
-    .rating-stars{font-size:20px;margin:8px 0}
-    .rating-label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
+  /* ===== MARQUEE ===== */
+  .marquee{overflow:hidden;background:var(--grad);padding:15px 0;transform:rotate(-1.4deg) scale(1.04);margin:-10px 0}
+  .marquee.flat{transform:none;margin:0;background:transparent;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .mk-track{display:flex;width:max-content;white-space:nowrap;animation:mk 26s linear infinite}
+  .marquee:hover .mk-track{animation-play-state:paused}
+  .mk-track span{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.5rem;letter-spacing:.02em;color:#0A0B0D;display:flex;align-items:center;gap:26px;padding:0 13px}
+  .marquee.flat .mk-track span{color:#fff}
+  .mk-track span i{color:rgba(10,11,13,.55);font-style:normal}
+  .marquee.flat .mk-track span i{color:var(--orange)}
+  @keyframes mk{to{transform:translateX(-50%)}}
 
-    /* FEATURES */
-    .features{background:var(--warm);padding:72px 60px}
-    .feat-header{max-width:560px;margin-bottom:48px}
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1200px;margin:0 auto}
-    .feat{background:#fff;border:1px solid var(--border);padding:28px 22px;border-radius:4px;position:relative;transition:border-color .2s,box-shadow .2s}
-    .feat:hover{border-color:var(--gold);box-shadow:0 4px 18px rgba(184,149,74,.08)}
-    .feat-tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px}
-    .t-inc{background:#E8F5E9;color:#2E7D32}
-    .t-pro{background:rgba(184,149,74,.12);color:var(--gold)}
-    .feat-ico{font-size:26px;margin-bottom:12px}
-    .feat-t{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;margin-bottom:7px;color:var(--char)}
-    .feat-d{font-size:13px;color:var(--stone);line-height:1.6}
+  /* ===== SECTION SHELL ===== */
+  section.pad{padding:104px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:50px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(2.3rem,5.2vw,3.8rem);color:#fff;font-weight:700;letter-spacing:-.02em}
+  .sec-head h2 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sec-head p{color:var(--gray);max-width:430px;font-size:1.02rem;font-weight:300}
+  .ix{font-family:var(--font-d);font-weight:700;color:var(--gray-2);font-size:.8rem;letter-spacing:.1em;margin-bottom:14px}
 
-    /* DIVIDER PITCH */
-    .divider{background:var(--navy);padding:72px 60px;text-align:center;position:relative;overflow:hidden}
-    .divider::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%)}
-    .dv{position:relative;z-index:1;max-width:700px;margin:0 auto}
-    .dv-badge{display:inline-block;background:rgba(244,196,48,.12);color:var(--yellow);border:1px solid rgba(244,196,48,.25);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
-    .dv h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);color:#fff;font-weight:400;line-height:1.3;margin-bottom:12px}
-    .dv h2 em{color:var(--yellow);font-style:normal}
-    .dv p{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7}
+  /* ===== CLASES ===== */
+  #clases{background:var(--bg)}
+  .clase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:900px){.clase-grid{grid-template-columns:1fr}}
+  .clase{position:relative;border-radius:18px;overflow:hidden;min-height:460px;display:flex;flex-direction:column;justify-content:flex-end;padding:32px;border:1px solid var(--line-2);transition:.3s}
+  .clase:hover{border-color:rgba(242,100,30,.5);transform:translateY(-6px)}
+  .clase img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:.6s cubic-bezier(.2,.7,.2,1)}
+  .clase:hover img{transform:scale(1.08)}
+  .clase::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,11,13,.94),rgba(10,11,13,.2) 62%);z-index:1;transition:.3s}
+  .clase:hover::after{background:linear-gradient(to top,rgba(10,11,13,.92),rgba(242,100,30,.12) 70%)}
+  .clase>*{position:relative;z-index:2}
+  .clase .ghost{position:absolute;top:18px;right:24px;z-index:2;font-family:var(--font-d);font-weight:700;font-size:5rem;line-height:1;
+    -webkit-text-stroke:1.5px rgba(255,255,255,.22);color:transparent;transition:.3s}
+  .clase:hover .ghost{-webkit-text-stroke-color:rgba(242,100,30,.6)}
+  .clase .tagk{font-family:var(--font-d);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+  .clase h3{font-size:2.1rem;color:#fff;margin-bottom:10px;font-weight:700}
+  .clase p{color:rgba(245,243,240,.78);font-size:.94rem;font-weight:300;margin-bottom:18px;max-width:90%}
+  .clase .go{font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.82rem;color:#fff;display:inline-flex;gap:8px;align-items:center;transition:.2s}
+  .clase .go::after{content:"→";color:var(--orange);transition:.25s}
+  .clase:hover .go::after{transform:translateX(5px)}
 
-    /* PRICING */
-    .pricing{background:var(--char);padding:72px 60px}
-    .pr-hdr{text-align:center;margin-bottom:48px}
-    .pr-hdr .s-title{color:#fff}
-    .pr-hdr .s-body{color:rgba(255,255,255,.4);margin:0 auto;text-align:center}
-    .pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1100px;margin:0 auto}
-    .pr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);padding:32px 24px;border-radius:4px;position:relative}
-    .pr-card.pop{background:rgba(244,196,48,.07);border-color:rgba(244,196,48,.35)}
-    .pop-lbl{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--yellow);color:var(--navy);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 14px;border-radius:10px;white-space:nowrap}
-    .pr-tier{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
-    .pr-card.pop .pr-tier{color:var(--yellow)}
-    .pr-name{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:500;margin-bottom:16px}
-    .pr-amt{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:#fff}
-    .pr-amt sup{font-size:15px;vertical-align:super}
-    .pr-mo{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px;margin-bottom:16px}
-    .pr-div{border:none;border-top:1px solid rgba(255,255,255,.08);margin:16px 0}
-    .pr-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-    .pr-feats li{font-size:12px;color:rgba(255,255,255,.58);display:flex;align-items:flex-start;gap:6px}
-    .pr-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
-    .btn-pr{display:block;text-align:center;padding:11px;border-radius:2px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s}
-    .btn-wh{border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
-    .btn-wh:hover{border-color:rgba(255,255,255,.45);color:#fff}
-    .btn-gy{background:var(--yellow);color:var(--navy)}
-    .btn-gy:hover{opacity:.9}
+  /* ===== PLANES ===== */
+  #planes{background:var(--bg-2);position:relative}
+  .plan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
+  @media(max-width:980px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.plan-grid{grid-template-columns:1fr}}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 28px;display:flex;flex-direction:column;position:relative;transition:.28s}
+  .plan:hover{transform:translateY(-7px);border-color:rgba(242,100,30,.45)}
+  .plan.feat{background:linear-gradient(180deg,rgba(242,100,30,.16),var(--card) 42%);border-color:var(--orange);box-shadow:0 0 0 1px rgba(242,100,30,.4),0 30px 60px -28px rgba(242,100,30,.5);transform:translateY(-10px)}
+  .plan.feat:hover{transform:translateY(-16px)}
+  .plan .badge{position:absolute;top:-12px;left:28px;background:var(--grad);color:#fff;font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.66rem;padding:5px 13px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(242,100,30,.8)}
+  .plan .pn{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.28rem;color:#fff;letter-spacing:.01em}
+  .plan .pr{font-family:var(--font-d);font-weight:700;font-size:2.6rem;color:#fff;margin:14px 0 2px;line-height:1}
+  .plan.feat .pr{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .plan .pr small{font-family:var(--font-b);font-weight:400;font-size:.8rem;color:var(--gray);text-transform:none;letter-spacing:0}
+  .plan .save{display:inline-block;margin-top:8px;font-size:.72rem;font-weight:600;color:var(--orange);background:var(--orange-100);padding:3px 10px;border-radius:20px}
+  .plan ul{list-style:none;display:grid;gap:12px;margin:22px 0 26px;flex:1}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;color:rgba(245,243,240,.82);font-weight:300}
+  .plan li svg{width:17px;height:17px;color:var(--orange);flex:none;margin-top:3px}
+  .plan .btn{justify-content:center;width:100%}
+  .plan .btn-out{background:transparent;color:#fff;border:1.5px solid var(--line)}
+  .plan .btn-out:hover{border-color:var(--orange);color:var(--orange)}
 
-    /* CTA */
-    .final{background:var(--warm);padding:72px 60px;text-align:center}
-    .final-in{max-width:560px;margin:0 auto}
-    .final-in .s-title{margin-bottom:12px}
-    .final-in .s-body{margin:0 auto 28px;text-align:center}
-    .final-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-    .btn-wa-big{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:14px 22px;border-radius:4px;font-size:14px;font-weight:600;transition:background .2s}
-    .btn-wa-big:hover{background:#1BBE5A}
-    .btn-mail{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--char);text-decoration:none;padding:14px 22px;border-radius:4px;border:1px solid var(--border);font-size:14px;font-weight:600;transition:border-color .2s}
-    .btn-mail:hover{border-color:var(--char)}
-    .final-note{margin-top:22px;font-size:12px;color:var(--stone)}
+  /* ===== HORARIOS ===== */
+  #horarios{background:var(--bg)}
+  .sched{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card)}
+  .sched-row{display:grid;grid-template-columns:1.1fr 2fr 1fr;border-bottom:1px solid var(--line-2);transition:.2s}
+  .sched-row:last-child{border-bottom:0}
+  .sched-row:not(.head):hover{background:rgba(242,100,30,.05)}
+  .sched-row.head{background:var(--bg-3)}
+  .sched-row.head .c{font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;color:var(--gray)}
+  .sched-row .c{padding:22px 26px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+  .sched-row .c+.c{border-left:1px solid var(--line-2)}
+  .sched-row .disc{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.18rem;color:#fff;display:flex;align-items:center;gap:11px}
+  .sched-row .disc .dot{width:10px;height:10px;border-radius:50%;background:var(--orange);flex:none;box-shadow:0 0 0 4px var(--orange-100)}
+  .sched-row .t{color:rgba(245,243,240,.85);font-size:.96rem}
+  .sched-row .t small{color:var(--gray);font-size:.8rem}
+  .sched-note{text-align:center;margin-top:22px;color:var(--gray);font-size:.9rem;font-weight:300}
+  .sched-note a{color:var(--orange);font-weight:500;text-decoration:underline;cursor:pointer}
+  @media(max-width:640px){.sched-row{grid-template-columns:1fr}.sched-row .c+.c{border-left:0;border-top:1px solid var(--line-2)}.sched-row.head{display:none}}
 
-    footer{background:var(--char);padding:24px 60px;display:flex;justify-content:space-between;align-items:center}
-    .f-brand{font-family:'Playfair Display',serif;font-size:16px;color:var(--yellow)}
-    .f-brand small{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,.25);display:block}
-    .f-copy{font-size:12px;color:rgba(255,255,255,.25)}
+  /* ===== INSTALACIONES ===== */
+  #instalaciones{background:var(--bg-2)}
+  .gal{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:205px;gap:14px}
+  @media(max-width:900px){.gal{grid-template-columns:repeat(2,1fr)}}
+  .gal a{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line-2)}
+  .gal a img{width:100%;height:100%;object-fit:cover;transition:.6s cubic-bezier(.2,.7,.2,1)}
+  .gal a::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,11,13,.5),transparent 50%);opacity:0;transition:.3s}
+  .gal a:hover img{transform:scale(1.09)}
+  .gal a:hover::after{opacity:1}
+  .gal .big{grid-column:span 2;grid-row:span 2}
+  .gal .tall{grid-row:span 2}
 
-    @media(max-width:960px){
-      .hero-nav{padding:24px}.nav-links{display:none}.hero-body{padding:40px 24px 80px}
-      .info-sec{padding:56px 24px}.info-inner{grid-template-columns:1fr;gap:40px}
-      .features{padding:56px 24px}.feat-grid{grid-template-columns:1fr 1fr}
-      .divider{padding:56px 24px}.pricing{padding:56px 24px}.pr-grid{grid-template-columns:1fr}
-      .final{padding:56px 24px}footer{padding:20px;flex-direction:column;gap:10px;text-align:center}
-    }
-    @media(max-width:580px){.feat-grid{grid-template-columns:1fr}}
-  </style>
+  /* ===== NOSOTROS ===== */
+  #nosotros{position:relative;overflow:hidden}
+  #nosotros::before{content:"";position:absolute;left:-10%;top:20%;width:40vw;height:40vw;max-width:560px;max-height:560px;border-radius:50%;background:radial-gradient(circle,rgba(242,100,30,.1),transparent 65%);filter:blur(20px)}
+  #nosotros .ab-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  @media(max-width:860px){#nosotros .ab-grid{grid-template-columns:1fr;gap:34px}}
+  #nosotros h2{font-size:clamp(2.3rem,5.2vw,3.8rem);color:#fff;font-weight:700}
+  #nosotros h2 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #nosotros .lead{font-size:1.12rem;color:rgba(245,243,240,.85);margin:20px 0;font-weight:300}
+  #nosotros .lead b{color:#fff;font-weight:600}
+  .ab-photo{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;box-shadow:0 30px 60px -34px rgba(0,0,0,.9)}
+  .ab-photo img{width:100%;height:100%;object-fit:cover}
+  .ab-photo::after{content:"";position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(242,100,30,.25)}
+  .ab-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+  .ab-mini .m{border-top:2px solid var(--orange);padding-top:13px}
+  .ab-mini .m .d{font-family:var(--font-d);font-weight:700;font-size:1.5rem;color:#fff}
+  .ab-mini .m small{color:var(--gray);font-size:.8rem}
+
+  /* ===== CONTACTO ===== */
+  #contacto{background:var(--bg-2)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  @media(max-width:860px){.contact-grid{grid-template-columns:1fr;gap:30px}}
+  .contact-info .row{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-2)}
+  .contact-info .ic{width:48px;height:48px;border-radius:12px;background:var(--orange-100);color:var(--orange);display:grid;place-items:center;flex:none}
+  .contact-info .ic svg{width:22px;height:22px}
+  .contact-info h4{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.02rem;color:#fff}
+  .contact-info p{color:var(--gray);font-weight:300}
+  .contact-cta{background:linear-gradient(165deg,rgba(242,100,30,.18),var(--card) 45%);border:1px solid var(--orange);color:var(--white);border-radius:20px;padding:44px;box-shadow:0 30px 60px -30px rgba(242,100,30,.45)}
+  .contact-cta h3{font-size:2.1rem;color:#fff;font-weight:700}
+  .contact-cta p{color:rgba(245,243,240,.82);margin:14px 0 26px;font-weight:300}
+  .contact-cta .btn-wa{width:100%;justify-content:center;font-size:1.05rem;padding:16px}
+  .map{margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--line-2);height:150px}
+  .map iframe{width:100%;height:100%;border:0;filter:grayscale(.4) invert(.9) hue-rotate(180deg)}
+
+  .bfoot{background:var(--bg);color:var(--gray-2);text-align:center;padding:34px 20px;font-size:.85rem;font-weight:300;border-top:1px solid var(--line-2)}
+
+  /* ===== PROPUESTA (AGENCY) ===== */
+  #propuesta{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+  #propuesta::before{content:"";position:absolute;inset:0;background:radial-gradient(100% 60% at 50% 0,rgba(230,174,46,.12),transparent 60%)}
+  .prop-inner{position:relative;text-align:center;max-width:880px;margin:0 auto}
+  .prop-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(230,174,46,.14);border:1px solid var(--amber);
+    color:var(--amber);font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;padding:7px 16px;border-radius:30px}
+  #propuesta h2{font-size:clamp(2.2rem,5vw,3.7rem);margin:24px 0 18px;color:#fff;font-weight:700}
+  #propuesta h2 em{font-style:normal;color:var(--amber)}
+  #propuesta .sub{font-size:1.1rem;color:rgba(255,255,255,.8);max-width:660px;margin:0 auto 46px;font-weight:300}
+  #propuesta .sub b{color:#fff;font-weight:600}
+  .prop-features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left;margin-bottom:46px}
+  @media(max-width:780px){.prop-features{grid-template-columns:1fr}}
+  .pf{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:26px}
+  .pf .ic{width:46px;height:46px;border-radius:12px;background:var(--amber);color:var(--navy);display:grid;place-items:center;margin-bottom:15px}
+  .pf .ic svg{width:24px;height:24px}
+  .pf h4{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.15rem;margin-bottom:8px;color:#fff}
+  .pf p{color:rgba(255,255,255,.72);font-size:.92rem;font-weight:300}
+  .prop-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:center}
+  .prop-cta .btn-wa{font-size:1.05rem;padding:16px 30px;background:var(--amber);color:var(--navy);box-shadow:0 8px 24px -10px rgba(230,174,46,.7)}
+  .prop-cta .btn-wa:hover{background:#fff}
+  .prop-sign{margin-top:32px;color:rgba(255,255,255,.6);font-size:.94rem;font-weight:300}
+  .prop-sign b{color:#fff;font-weight:600}
+  .afoot{background:#0b1730;color:rgba(255,255,255,.45);text-align:center;padding:26px 20px;font-size:.82rem;font-weight:300}
+
+  .rv{opacity:0;transform:translateY(28px);transition:.75s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .fab{position:fixed;right:20px;bottom:20px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);transition:.2s}
+  .fab:hover{transform:scale(1.08)}.fab svg{width:32px;height:32px;color:#fff}
+</style>
 </head>
 <body>
+<div class="grain"></div>
 
-<div class="ab">
-  <div class="ab-l">
-    <span class="ab-badge">Demo gratuita</span>
-    <span class="ab-text">Altavista Web preparó esta propuesta para <strong>Sport Gym</strong></span>
-  </div>
-  <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
+<!-- ===== AGENCY BAR ===== -->
+<div class="agency-bar">
+  <span class="lbl">Demo creada por <b>Altavista Web</b> para Sport Gym</span>
+  <span class="sep">·</span>
+  <a class="see" href="#propuesta">Ver propuesta ↓</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAHZjCvL4Db2rvdvxinRPknuGyZKTS_60-4pz6Vp5tA_xcY_FbZ0NZ-GorT1ZFpBJ6oOCaBdiNUKDqFoA2dTtiNxDwPaxcnWt4jdDcp6y2ec7mykMPDBVH6c08y4R8zUbYZsOH8FcQ=w408-h306-k-no')"></div>
-  <nav class="hero-nav">
-    <div class="logo">Sport Gym<small>Gimnasio · Tandil</small></div>
-    <ul class="nav-links">
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Servicios</a></li>
-      <li><a href="#">Nosotros</a></li>
-      <li><a href="#">Contacto</a></li>
-    </ul>
-  </nav>
-  <div class="hero-body">
-    <p class="eyebrow">Av. Buzón 971, B7001 Tandil, Provincia de Buenos Aires, Argentina</p>
-    <h1 class="hero-title">Sport Gym</h1>
-    <p class="hero-sub">Tu próximo cliente ya te está buscando en Google.</p>
-    <div class="hero-ctas">
-      <a href="https://wa.me/542494602295" class="btn-wa" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Escribinos
-      </a>
-      <a href="#propuesta" class="btn-ghost">Ver propuesta →</a>
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#" aria-label="Sport Gym Tandil">
+      <span class="stars">★ ★ ★ ★ ★</span>
+      <span class="wm">SPORT<em>GYM</em></span>
+      <small>Fitness & Musculación</small>
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="#clases">Clases</a>
+      <a href="#planes">Planes</a>
+      <a href="#horarios">Horarios</a>
+      <a href="#instalaciones">Instalaciones</a>
+      <a href="#contacto">Contacto</a>
+      <a class="btn btn-wa" data-wa="Hola Sport Gym! Estoy viendo la web y quiero info para sumarme.">Sumate</a>
     </div>
-    <div class="hero-meta">
-      <span class="hero-pill">⭐ 4.9 en Google</span>
-      <span class="hero-pill">📍 Av. Buzón 971, B7001 Tandil, Provin</span>
-      <span class="hero-pill">🕐 miércoles: 6 AM to 11 PM · jueves: 6 AM </span>
-    </div>
+    <button class="hamb" id="hamb" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
-</section>
+</nav>
 
-<!-- INFO -->
-<section class="info-sec">
-  <div class="info-inner">
-    <div>
-      <p class="s-eye">Quiénes somos</p>
-      <h2 class="s-title">Sport Gym</h2>
-      <p class="s-body">En Tandil hay cientos de personas buscando dónde entrenar. Una web profesional es el primer paso para que te elijan a vos — con horarios, clases y planes claros desde el primer vistazo.</p>
-      <div class="info-list">
-        <div class="info-item"><div class="info-icon">📍</div><div><strong>Dirección</strong><span>Av. Buzón 971, B7001 Tandil, Provincia de Buenos Aires, Argentina</span></div></div>
-        <div class="info-item"><div class="info-icon">📞</div><div><strong>Teléfono</strong><span>+54 249 460-2295</span></div></div>
-        <div class="info-item"><div class="info-icon">🕐</div><div><strong>Horario</strong><span>miércoles: 6 AM to 11 PM · jueves: 6 AM to 11 PM</span></div></div>
-        <div class="info-item"><div class="info-icon">📷</div><div><strong>Categoría</strong><span>Gimnasio</span></div></div>
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-bg"><img src="assets/sport-gym/hero.jpg" alt="Interior de Sport Gym Tandil" loading="eager"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <span class="kick rv">⛓️ Musculación · Spinning · Pilates · Tandil</span>
+      <h1 class="rv" style="transition-delay:.05s">Tu espacio.<br><span class="l2">Tus reglas.</span><br><span class="l3">Tus resultados.</span></h1>
+      <p class="lead rv" style="transition-delay:.12s">Cada barra, cada disco y cada máquina están acá con un solo propósito: que llegues a tus metas. Equipamiento premium, vestuarios y duchas. Vos ponés la garra.</p>
+      <div class="hero-cta rv" style="transition-delay:.18s">
+        <a class="btn btn-wa" href="#planes">Ver planes →</a>
+        <a class="btn btn-ghost" data-wa="Hola! Quiero pasar a probar el gimnasio. ¿Cómo es una clase de prueba?">Clase de prueba</a>
       </div>
     </div>
-    <div>
-      <div class="rating-box">
-        <div class="rating-big">4.9</div>
-        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-        <div class="rating-label">Calificación en Google</div>
+    <div class="hero-strip">
+      <div class="wrap">
+        <div class="hs rv"><div class="n"><span class="count" data-pre="+" data-to="6.5" data-dec="1">+0</span><em>K</em></div><div class="l">Comunidad</div></div>
+        <div class="hs rv" style="transition-delay:.06s"><div class="n"><span class="count" data-to="3">0</span></div><div class="l">Disciplinas</div></div>
+        <div class="hs rv" style="transition-delay:.12s"><div class="n">Premium</div><div class="l">Equipamiento</div></div>
+        <div class="hs rv" style="transition-delay:.18s"><div class="n">Lun–Sáb</div><div class="l">Horario full</div></div>
       </div>
     </div>
   </div>
-</section>
+  <div class="scrollcue">Scroll<span></span></div>
+</header>
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="feat-header" style="max-width:1200px;margin:0 auto 48px">
-    <p class="s-eye">Lo que incluiría tu web</p>
-    <h2 class="s-title">Funciones pensadas para tu negocio</h2>
-  </div>
-  <div class="feat-grid">
-    
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">🗓️</div>
-          <h3 class="feat-t">Horarios y clases online</h3>
-          <p class="feat-d">Grilla de actividades actualizable. Tus clientes saben qué hay cada día.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💪</div>
-          <h3 class="feat-t">Planes y precios visibles</h3>
-          <p class="feat-d">Mostrá tus opciones claramente. Reducís consultas repetitivas y acelerás la decisión.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📍</div>
-          <h3 class="feat-t">Ubicación y cómo llegar</h3>
-          <p class="feat-d">Google Maps integrado para que ningún nuevo socio se pierda.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💬</div>
-          <h3 class="feat-t">WhatsApp para inscripciones</h3>
-          <p class="feat-d">El cliente te escribe directo con un clic. Sin formularios complicados.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">🎯</div>
-          <h3 class="feat-t">Galería de instalaciones</h3>
-          <p class="feat-d">Fotos del espacio y equipamiento que generan confianza antes de la visita.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">⭐</div>
-          <h3 class="feat-t">Testimonios de socios</h3>
-          <p class="feat-d">Reseñas reales que convencen a los indecisos de dar el paso.</p>
-        </div>
-  </div>
-</section>
-
-<!-- DIVIDER -->
-<div id="propuesta" class="divider">
-  <div class="dv">
-    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
-    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
-    <p>¿Querés llenar tus clases con menos esfuerzo?<br>En 5 días podés tener este sitio publicado con tu dominio, tus fotos reales y todas las funciones activas.</p>
+<!-- ===== MARQUEE ===== -->
+<div class="marquee">
+  <div class="mk-track" id="mk1">
+    <span>Sin excusas <i>✦</i> Musculación <i>✦</i> Spinning <i>✦</i> Pilates <i>✦</i> Tu progreso es tuyo <i>✦</i> El templo <i>✦</i> </span>
+    <span>Sin excusas <i>✦</i> Musculación <i>✦</i> Spinning <i>✦</i> Pilates <i>✦</i> Tu progreso es tuyo <i>✦</i> El templo <i>✦</i> </span>
   </div>
 </div>
 
-<!-- PRICING -->
-<section class="pricing">
-  <div class="pr-hdr">
-    <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
-    <h2 class="s-title">Elegí el plan que te conviene</h2>
-    <p class="s-body">Sin contratos largos. Empezás cuando querés.</p>
-  </div>
-  <div class="pr-grid">
-    <div class="pr-card">
-      <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
-      <div class="pr-amt"><sup>USD </sup>450</div>
-      <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Landing page profesional</li><li>Galería y servicios</li>
-        <li>Formulario de contacto</li><li>WhatsApp integrado</li>
-        <li>SEO local Tandil</li><li>Dominio + hosting incluido</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Sport+Gym+y+me+interesa+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
+<!-- ===== CLASES ===== -->
+<section class="pad" id="clases">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="ix">/ 01 — Disciplinas</p><p class="eyebrow">Lo que entrenás acá</p><h2 style="margin-top:14px">Nuestras <em>disciplinas</em></h2></div>
+      <p>Tres formas de entrenar bajo un mismo techo. Elegí la tuya o combinalas con el pase full.</p>
     </div>
-    <div class="pr-card pop">
-      <div class="pop-lbl">Más elegido</div>
-      <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
-      <div class="pr-amt"><sup>USD </sup>900</div>
-      <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el plan Presencia</li><li>Secciones completas</li>
-        <li>Blog / novedades</li><li>Google Analytics</li>
-        <li>SEO completo optimizado</li><li>Diseño a medida</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Sport+Gym+y+me+interesa+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
-    </div>
-    <div class="pr-card">
-      <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
-      <div class="pr-amt"><sup>USD </sup>1.800</div>
-      <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el Sitio Completo</li><li>Turnos / reservas online</li>
-        <li>Panel de gestión propio</li><li>Actualizaciones ilimitadas</li>
-        <li>Soporte prioritario</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Sport+Gym+y+me+interesa+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
+    <div class="clase-grid">
+      <article class="clase rv">
+        <span class="ghost">01</span>
+        <img src="assets/sport-gym/clase-musculacion.jpg" alt="Clase de musculación">
+        <span class="tagk">Fuerza & volumen</span><h3>Musculación</h3>
+        <p>Sala completa de máquinas y peso libre para trabajar todos los grupos musculares. Sumamos equipamiento constantemente.</p>
+        <a class="go" data-wa="Hola! Quiero info sobre Musculación en Sport Gym.">Quiero entrenar</a>
+      </article>
+      <article class="clase rv" style="transition-delay:.08s">
+        <span class="ghost">02</span>
+        <img src="assets/sport-gym/clase-spinning.jpg" alt="Clase de spinning">
+        <span class="tagk">Cardio & resistencia</span><h3>Spinning</h3>
+        <p>Clases de ciclismo indoor de alta energía, con instructor. Quemás calorías y mejorás tu resistencia a todo ritmo.</p>
+        <a class="go" data-wa="Hola! Quiero info y horarios de Spinning.">Ver horarios</a>
+      </article>
+      <article class="clase rv" style="transition-delay:.16s">
+        <span class="ghost">03</span>
+        <img src="assets/sport-gym/clase-pilates.jpg" alt="Clase de pilates">
+        <span class="tagk">Postura & flexibilidad</span><h3>Pilates</h3>
+        <p>Encontrá tu equilibrio y mejorá tu flexibilidad y postura. Clases guiadas para fortalecer el cuerpo desde el centro.</p>
+        <a class="go" data-wa="Hola! Quiero info y horarios de Pilates.">Ver horarios</a>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="final">
-  <div class="final-in">
-    <p class="s-eye" style="text-align:center">¿Hablamos?</p>
-    <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
-    <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — soy de Tandil y armé esta propuesta especialmente para Sport Gym. Si te interesa avanzar, charlamos sin compromiso.</p>
-    <div class="final-btns">
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Sport+Gym+y+me+interesa" class="btn-wa-big" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Hablar con Santiago
-      </a>
-      <a href="mailto:santiagomfunes@gmail.com?subject=Demo Sport Gym — me interesa" class="btn-mail">✉️ Enviar email</a>
+<!-- ===== PLANES ===== -->
+<section class="pad" id="planes">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="ix">/ 02 — Membresías</p><p class="eyebrow">Sumate hoy</p><h2 style="margin-top:14px">Elegí tu <em>plan</em></h2></div>
+      <p>Sin matrícula escondida. Cancelás cuando quieras. Pasá a probar antes de decidir.</p>
     </div>
-    <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
+    <div class="plan-grid">
+      <div class="plan rv">
+        <div class="pn">Pase Diario</div>
+        <div class="pr">$5.000<small> / día</small></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Acceso a sala de musculación</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Vestuarios y duchas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Ideal si estás de paso</li>
+        </ul>
+        <a class="btn btn-out" data-wa="Hola! Quiero un pase diario en Sport Gym.">Consultar</a>
+      </div>
+      <div class="plan rv" style="transition-delay:.06s">
+        <div class="pn">3× Semana</div>
+        <div class="pr">$22.000<small> / mes</small></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 3 días por semana</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Musculación libre</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Vestuarios y duchas</li>
+        </ul>
+        <a class="btn btn-out" data-wa="Hola! Me interesa el plan 3x semana ($22.000).">Sumarme</a>
+      </div>
+      <div class="plan feat rv" style="transition-delay:.12s">
+        <span class="badge">★ Más elegido</span>
+        <div class="pn">Pase Full</div>
+        <div class="pr">$34.000<small> / mes</small></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Musculación libre todos los días</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Spinning y Pilates incluidos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Vestuarios y duchas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Acceso en horario full</li>
+        </ul>
+        <a class="btn btn-wa" data-wa="Hola! Me interesa el Pase Full ($34.000/mes). Quiero sumarme.">Sumarme ahora</a>
+      </div>
+      <div class="plan rv" style="transition-delay:.18s">
+        <div class="pn">Trimestral</div>
+        <div class="pr">$90.000<small> / 3 meses</small></div>
+        <span class="save">Ahorrás 12%</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Pase full por 3 meses</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Ahorrás vs. el mensual</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Para los que van en serio</li>
+        </ul>
+        <a class="btn btn-out" data-wa="Hola! Me interesa el plan trimestral ($90.000).">Consultar</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
-  <p class="f-copy">© 2025 · Demo para Sport Gym · Tandil, Buenos Aires</p>
+<!-- ===== HORARIOS ===== -->
+<section class="pad" id="horarios">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="ix">/ 03 — Agenda</p><p class="eyebrow">Organizá tu semana</p><h2 style="margin-top:14px">Horarios</h2></div>
+      <p>Musculación a sala abierta todo el día. Spinning y Pilates en turnos. Sin excusas.</p>
+    </div>
+    <div class="sched rv">
+      <div class="sched-row head">
+        <div class="c">Disciplina</div><div class="c">Lunes a Viernes</div><div class="c">Sábados</div>
+      </div>
+      <div class="sched-row">
+        <div class="c"><span class="disc"><span class="dot"></span>Musculación</span></div>
+        <div class="c"><span class="t">07:00 – 23:00 <small>sala abierta, entrás cuando quieras</small></span></div>
+        <div class="c"><span class="t">09:00 – 14:00</span></div>
+      </div>
+      <div class="sched-row">
+        <div class="c"><span class="disc"><span class="dot"></span>Spinning</span></div>
+        <div class="c"><span class="t">09:00 · 18:00 · 19:00 · 20:00 <small>turnos con instructor</small></span></div>
+        <div class="c"><span class="t">10:00</span></div>
+      </div>
+      <div class="sched-row">
+        <div class="c"><span class="disc"><span class="dot"></span>Pilates</span></div>
+        <div class="c"><span class="t">10:00 · 17:00 · 18:00 <small>cupos limitados</small></span></div>
+        <div class="c"><span class="t">—</span></div>
+      </div>
+    </div>
+    <p class="sched-note rv">Los turnos de Spinning y Pilates tienen cupo. <a data-wa="Hola! Quiero reservar un turno de Spinning/Pilates.">Reservá tu lugar por WhatsApp</a>.</p>
+  </div>
+</section>
+
+<!-- ===== MARQUEE 2 ===== -->
+<div class="marquee flat">
+  <div class="mk-track" id="mk2">
+    <span>Más fuerte que ayer <i>✦</i> Disciplina &gt; motivación <i>✦</i> Construí tu mejor versión <i>✦</i> Tandil <i>✦</i> </span>
+    <span>Más fuerte que ayer <i>✦</i> Disciplina &gt; motivación <i>✦</i> Construí tu mejor versión <i>✦</i> Tandil <i>✦</i> </span>
+  </div>
+</div>
+
+<!-- ===== INSTALACIONES ===== -->
+<section class="pad" id="instalaciones">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="ix">/ 04 — El espacio</p><p class="eyebrow">El templo</p><h2 style="margin-top:14px">Las <em>instalaciones</em></h2></div>
+      <p>Equipamiento que se renueva, espacio amplio y todo lo que necesitás para entrenar tranquilo.</p>
+    </div>
+    <div class="gal rv">
+      <a class="big" data-wa="Hola! Quiero conocer las instalaciones de Sport Gym."><img src="assets/sport-gym/gym-1.jpg" alt="Sala de musculación"></a>
+      <a class="tall" data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/gym-2.jpg" alt="Racks de sentadilla"></a>
+      <a data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/gym-5.jpg" alt="Discos y peso libre"></a>
+      <a data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/gym-4.jpg" alt="Zona de cardio"></a>
+      <a data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/gym-3.jpg" alt="Banco y barra"></a>
+      <a class="tall" data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/cardio.jpg" alt="Equipamiento de cardio"></a>
+      <a data-wa="Hola! Quiero conocer las instalaciones."><img src="assets/sport-gym/gym-6.jpg" alt="Estación de peso"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NOSOTROS ===== -->
+<section class="pad" id="nosotros">
+  <div class="wrap ab-grid">
+    <div class="rv">
+      <p class="ix">/ 05 — Quiénes somos</p>
+      <h2 style="margin-top:6px">Esto es <em>el templo.</em></h2>
+      <p class="lead">En <b>Sport Gym</b> no vendemos fórmulas mágicas ni atajos. Tenemos las herramientas —y <b>las mejoramos todo el tiempo</b>—, vos ponés la constancia. Acá tu progreso es tuyo, sin importar quién entre o salga por la puerta.</p>
+      <p class="lead" style="color:rgba(245,243,240,.7)">Musculación, Spinning y Pilates, con vestuarios y duchas, en pleno Tandil. Un espacio pensado para que vengas, entrenes y vuelvas a casa más fuerte.</p>
+      <div class="ab-mini">
+        <div class="m"><div class="d"><span class="count" data-to="3">0</span></div><small>Disciplinas</small></div>
+        <div class="m"><div class="d"><span class="count" data-pre="+" data-to="6.5" data-dec="1">+0</span>K</div><small>Comunidad fitness</small></div>
+        <div class="m"><div class="d">Tandil</div><small>Av. Buzón 971</small></div>
+      </div>
+    </div>
+    <div class="rv" style="transition-delay:.1s">
+      <div class="ab-photo"><img src="assets/sport-gym/sign.jpg" alt="Sport Gym Tandil" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACTO ===== -->
+<section class="pad" id="contacto">
+  <div class="wrap">
+    <div class="sec-head rv"><div><p class="ix">/ 06 — Te esperamos</p><h2 style="margin-top:6px">Contacto</h2></div></div>
+    <div class="contact-grid">
+      <div class="contact-info rv">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div><h4>Dónde estamos</h4><p>Av. Buzón 971 · Tandil, Buenos Aires</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></span><div><h4>WhatsApp</h4><p>Te respondemos planes, horarios y dudas al toque</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></span><div><h4>Seguinos</h4><p>Instagram @sportgymtandil · +6.500 seguidores</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h4>Horarios</h4><p>Lun a Vie 07:00–23:00 · Sáb 09:00–14:00</p></div></div>
+        <div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Avenida+Buz%C3%B3n+971,+Tandil,+Buenos+Aires&output=embed" title="Mapa Sport Gym Tandil"></iframe></div>
+      </div>
+      <div class="contact-cta rv" style="transition-delay:.1s">
+        <h3 class="d">¿Arrancamos?</h3>
+        <p>Vení a hacer una clase de prueba o escribinos y te pasamos todo: planes, horarios y cómo sumarte hoy mismo.</p>
+        <a class="btn btn-wa" data-wa="Hola Sport Gym! Quiero sumarme / hacer una clase de prueba.">Quiero sumarme</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bfoot">
+  Sport Gym · Musculación · Spinning · Pilates · Av. Buzón 971, Tandil, Buenos Aires.
 </footer>
 
+<!-- ===== PROPUESTA — AGENCY PITCH ===== -->
+<section class="pad" id="propuesta">
+  <div class="wrap prop-inner">
+    <span class="prop-badge">● Esto es una demo</span>
+    <h2>Así de bien puede verse<br><em>Sport Gym</em> en internet.</h2>
+    <p class="sub">Soy Santiago, de <b>Altavista Web</b> (agencia de Tandil). Armé esta demo gratis, sin que la pidieran, para mostrarte el potencial. Hoy Sport Gym vive en Instagram y un Linktree — una web propia con planes, horarios y reservas capta socios incluso mientras dormís.</p>
+
+    <div class="prop-features">
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><h4>Reservas online</h4><p>Tus socios reservan turno de Spinning o Pilates desde el celular. Menos mensajes, menos cupos perdidos.</p></div>
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><h4>Planes claros</h4><p>Precios y beneficios a la vista, con botón directo a WhatsApp. El que entra ya sabe cuánto y cómo sumarse.</p></div>
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><h4>Aparecer en Google</h4><p>SEO para "gimnasio en Tandil". Que cuando alguien busque dónde entrenar, aparezca Sport Gym primero.</p></div>
+    </div>
+
+    <div class="prop-cta">
+      <a class="btn btn-wa" data-wa="Hola Santiago! Vi la demo de Altavista Web para Sport Gym y me interesa. Charlemos.">Quiero mi web →</a>
+      <a class="btn btn-ghost" data-wa="Hola Santiago! Tengo algunas dudas sobre la demo de Sport Gym." style="color:#fff">Tengo dudas</a>
+    </div>
+    <p class="prop-sign">Santiago Funes · <b>Altavista Web</b> · +54 9 2494 55-7754 · Tandil</p>
+  </div>
+</section>
+<footer class="afoot">© Altavista Web — Demo personalizada para Sport Gym. Diseño sin compromiso.</footer>
+
+<!-- ===== FLOATING WA ===== -->
+<a class="fab" data-wa="Hola! Te escribo por la web de Sport Gym." aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</a>
+
+<script>
+  const WA="5492494557754";
+  document.querySelectorAll("[data-wa]").forEach(el=>{
+    el.style.cursor="pointer";
+    el.addEventListener("click",e=>{e.preventDefault();window.open(`https://wa.me/${WA}?text=`+encodeURIComponent(el.dataset.wa),"_blank");});
+  });
+  const nav=document.getElementById("nav");
+  addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>40));
+  const hamb=document.getElementById("hamb"),links=document.getElementById("navlinks");
+  hamb.addEventListener("click",()=>links.classList.toggle("open"));
+  links.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>links.classList.remove("open")));
+
+  // count-up
+  function runCount(el){
+    const to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||"0"), pre=el.dataset.pre||"";
+    const dur=1300; let t0=null;
+    function step(ts){
+      if(!t0)t0=ts; const p=Math.min((ts-t0)/dur,1); const e=1-Math.pow(1-p,3);
+      el.textContent=pre+(to*e).toFixed(dec);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const io=new IntersectionObserver(es=>es.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add("in");
+      en.target.querySelectorAll&&en.target.querySelectorAll(".count").forEach(c=>{if(!c._done){c._done=1;runCount(c);}});
+      io.unobserve(en.target);
+    }
+  }),{threshold:.12});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
