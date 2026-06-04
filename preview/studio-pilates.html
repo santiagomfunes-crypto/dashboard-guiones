@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Pilates Tandil — Reservá tu clase</title>
+<meta name="description" content="Pilates personalizado en Tandil. Reformer, Mat y Stretching, en grupos reducidos y para todas las edades. Reservá tu clase online. Leandro Alem 791.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Studio Pilates Tandil — Reservá tu clase">
+<meta property="og:description" content="Pilates personalizado, grupos reducidos, para todas las edades. Reformer · Mat · Stretching. Reservá tu clase online. Alem 791, Tandil.">
+<meta property="og:image" content="https://santiagomfunes-crypto.github.io/dashboard-guiones/preview/assets/studio-pilates/post09.jpg">
+<meta property="og:url" content="https://santiagomfunes-crypto.github.io/dashboard-guiones/preview/studio-pilates.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://santiagomfunes-crypto.github.io/dashboard-guiones/preview/assets/studio-pilates/post09.jpg">
+<meta name="theme-color" content="#6E7A53">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%236E7A53'/%3E%3Cg fill='none' stroke='%23F4EFE5' stroke-width='1.7' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8.5' r='1.6'/%3E%3Cpath d='M6 18l3-5 4 1 4-5M13 14l2 4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4EFE4; --cream-2:#ECE5D5; --cream-3:#E0D8C4;
+    --ink:#2B2A25; --ink-soft:#5C5A50;
+    --sage:#6E7A53; --sage-d:#525B3C; --sage-l:#8E9A72;
+    --teal:#56B197; --teal-d:#3E8E77; --teal-soft:#DCEBE3;
+    --clay:#C08457; --gold:#B79A5E;
+    --line:rgba(43,42,37,.13); --line-l:rgba(244,239,228,.18);
+    --navy:#0E1B3A; --amber:#E6AE2E; --wa:#25D366;
+    --serif:'Cormorant Garamond',Georgia,serif; --sans:'Jost',system-ui,sans-serif;
+    --maxw:1240px; --ease:cubic-bezier(.22,.8,.2,1); --sh:0 36px 70px -40px rgba(43,42,37,.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:108px}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.05}
+  a{color:inherit;text-decoration:none} img{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .eyebrow{font-family:var(--sans);font-weight:400;letter-spacing:.36em;text-transform:uppercase;font-size:.68rem;color:var(--sage)}
+  ::selection{background:var(--sage);color:#fff}
+  *:focus-visible{outline:1.5px solid var(--sage);outline-offset:3px}
+  ::-webkit-scrollbar{width:11px;height:11px}::-webkit-scrollbar-track{background:var(--cream-2)}
+  ::-webkit-scrollbar-thumb{background:var(--sage);border-radius:10px;border:3px solid var(--cream-2)}
+
+  .agency-bar{position:fixed;top:0;left:0;right:0;z-index:120;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;gap:15px;padding:8px 20px;font-size:.82rem;font-weight:300;border-bottom:1px solid rgba(230,174,46,.5)}
+  .agency-bar b{font-weight:500;color:var(--amber)} .agency-bar .sep{opacity:.4}
+  .agency-bar a.see{background:var(--amber);color:var(--navy);font-weight:500;letter-spacing:.05em;text-transform:uppercase;font-size:.74rem;padding:5px 14px;border-radius:30px;transition:.25s var(--ease)}
+  .agency-bar a.see:hover{transform:translateY(-1px);background:#fff}
+  @media(max-width:680px){.agency-bar .lbl{display:none}}
+
+  nav{position:fixed;top:38px;left:0;right:0;z-index:100;padding:22px 0;transition:.45s var(--ease)}
+  nav.scrolled{background:rgba(244,239,228,.9);backdrop-filter:blur(14px);padding:12px 0;border-bottom:1px solid var(--line);box-shadow:0 6px 30px -18px rgba(43,42,37,.4)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:11px;color:var(--ink)}
+  .logo .ic{width:40px;height:40px;border-radius:50%;background:var(--sage);display:grid;place-items:center;flex:none}
+  .logo .ic svg{width:24px;height:24px;color:var(--cream)}
+  .logo .txt{line-height:.95}
+  .logo .s{font-family:var(--sans);font-weight:300;letter-spacing:.32em;text-transform:uppercase;font-size:.56rem;color:var(--ink-soft);display:block}
+  .logo .p{font-family:var(--sans);font-weight:500;font-size:1.32rem;letter-spacing:.01em}
+  .logo .p b{font-weight:500;color:var(--sage)}
+  nav.scrolled .logo .txt,nav.scrolled .logo .p{color:var(--ink)}
+  .nav-links{display:flex;align-items:center;gap:32px}
+  .nav-links a{color:var(--ink);font-size:.78rem;font-weight:400;letter-spacing:.16em;text-transform:uppercase;transition:.25s;position:relative}
+  .nav-top .nav-links a{color:#fff}
+  .nav-links a:not(.btn)::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1px;background:currentColor;transition:.3s var(--ease)}
+  .nav-links a:not(.btn):hover::after{width:100%}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:.76rem;padding:13px 26px;border-radius:40px;cursor:pointer;border:0;transition:.3s var(--ease);will-change:transform}
+  .btn-sage{background:var(--sage);color:var(--cream);box-shadow:0 10px 26px -12px rgba(110,122,83,.8)}
+  .btn-sage:hover{transform:translateY(-2px);background:var(--sage-d)}
+  .btn-line{border:1px solid currentColor;background:transparent}
+  .btn-line:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+  .nav-top .btn-line{color:#fff} .nav-top .btn-line:hover{background:#fff;color:var(--ink)}
+  .hamb{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px;z-index:101}
+  .hamb span{width:26px;height:1.6px;background:currentColor;color:var(--ink);transition:.2s}
+  .nav-top .hamb span{color:#fff}
+  @media(max-width:960px){.nav-links{position:fixed;inset:0 0 0 auto;width:min(80vw,320px);background:var(--sage-d);backdrop-filter:blur(16px);flex-direction:column;justify-content:center;gap:28px;transform:translateX(100%);transition:.45s var(--ease);padding:40px}
+    .nav-links.open{transform:translateX(0)} .nav-links a,.nav-top .nav-links a{color:#fff;font-size:1.05rem} .hamb{display:flex}}
+
+  /* hero */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+  .hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,42,37,.45) 0%,transparent 30%,rgba(43,42,37,.2) 55%,rgba(43,42,37,.85) 100%)}
+  .hero-inner{position:relative;z-index:2;width:100%;padding:0 0 80px}
+  .hero .eyebrow{color:var(--cream);display:block;margin-bottom:20px}
+  .hero h1{font-size:clamp(3rem,7.5vw,6.4rem);color:#fff;font-weight:400;max-width:13ch}
+  .hero h1 em{font-style:italic;color:#E7E0CE}
+  .hero .lead{font-size:1.12rem;color:rgba(255,255,255,.86);max-width:480px;margin:24px 0 34px;font-weight:300}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-credo{display:flex;gap:14px 34px;margin-top:44px;flex-wrap:wrap}
+  .hero-credo .c{display:flex;align-items:center;gap:10px;font-size:.82rem;letter-spacing:.04em;color:rgba(255,255,255,.9)}
+  .hero-credo .c svg{width:20px;height:20px;color:var(--teal);flex:none}
+
+  /* beneficios strip */
+  .bene{background:var(--sage);color:var(--cream)}
+  .bene .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:18px 46px;padding:30px 32px;align-items:center}
+  .bene span{font-family:var(--sans);font-weight:300;letter-spacing:.04em;font-size:.94rem;display:flex;align-items:center;gap:10px}
+  .bene span svg{width:18px;height:18px;color:var(--cream);opacity:.8}
+
+  section{padding:110px 0;position:relative}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 60px}
+  .sec-head .eyebrow{display:block;margin-bottom:16px}
+  .sec-head h2{font-size:clamp(2.3rem,5vw,3.7rem);font-weight:400}
+  .sec-head p{color:var(--ink-soft);margin-top:14px;font-size:1.02rem}
+
+  /* clases */
+  #clases{background:var(--cream)}
+  .clases{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  @media(max-width:860px){.clases{grid-template-columns:1fr}}
+  .clase{background:var(--cream-2);border:1px solid var(--line);border-radius:18px;padding:38px 32px;transition:.4s var(--ease)}
+  .clase:hover{background:#fff;transform:translateY(-5px);box-shadow:var(--sh)}
+  .clase .ic{width:54px;height:54px;border-radius:50%;background:var(--teal-soft);color:var(--teal-d);display:grid;place-items:center;margin-bottom:20px}
+  .clase .ic svg{width:26px;height:26px}
+  .clase h3{font-size:1.8rem}
+  .clase p{color:var(--ink-soft);font-size:.95rem;margin-top:10px}
+
+  /* AGENDA / reservas */
+  #agenda{background:linear-gradient(180deg,var(--cream-2),var(--cream))}
+  .legend{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-bottom:26px}
+  .legend span{display:flex;align-items:center;gap:8px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+  .legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .i-pil{background:var(--teal)}.i-str{background:#6FA8DC}.i-full{background:var(--cream-3)}
+  .agenda-scroll{overflow-x:auto;padding-bottom:6px}
+  .agenda{min-width:680px;display:grid;grid-template-columns:64px repeat(6,1fr);gap:7px;background:transparent}
+  .agenda .h{font-family:var(--sans);font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:.74rem;text-align:center;padding:10px 0;color:var(--sage-d)}
+  .agenda .t{font-family:var(--sans);font-weight:500;font-size:.82rem;color:var(--ink-soft);display:flex;align-items:center;justify-content:center}
+  .slot{border-radius:8px;min-height:42px;display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:400;letter-spacing:.04em;transition:.2s var(--ease);border:1px solid transparent}
+  .slot.pil{background:var(--teal-soft);color:var(--teal-d);cursor:pointer}
+  .slot.pil:hover{background:var(--teal);color:#fff;transform:scale(1.04);box-shadow:0 8px 18px -8px rgba(86,177,151,.7)}
+  .slot.str{background:#E2EDF8;color:#3D6FA0;cursor:pointer}
+  .slot.str:hover{background:#6FA8DC;color:#fff;transform:scale(1.04)}
+  .slot.full{background:var(--cream-3);color:#9a937f;cursor:not-allowed;text-decoration:line-through}
+  .slot.empty{background:transparent;border:1px dashed var(--line)}
+  .agenda-note{text-align:center;margin-top:24px;color:var(--ink-soft);font-size:.92rem}
+  .agenda-note b{color:var(--sage-d)}
+
+  /* estudio gallery */
+  #estudio{background:var(--sage-d);color:var(--cream)}
+  #estudio .sec-head h2{color:#fff} #estudio .sec-head p{color:rgba(244,239,228,.72)} #estudio .eyebrow{color:var(--cream)}
+  .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:760px){.gal{grid-template-columns:1fr 1fr}}@media(max-width:480px){.gal{grid-template-columns:1fr}}
+  .g-item{position:relative;overflow:hidden;border-radius:14px;cursor:pointer;aspect-ratio:4/5;background:#3a4030}
+  .g-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+  .g-item:hover img{transform:scale(1.07)}
+  .g-item .plus{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.6);border-radius:50%;color:#fff;display:grid;place-items:center;opacity:0;transition:.3s}
+  .g-item:hover .plus{opacity:1}
+
+  /* filosofia */
+  #filosofia{background:var(--cream)}
+  .filo{max-width:880px;margin:0 auto;text-align:center}
+  .filo .quote{font-family:var(--serif);font-style:italic;font-size:clamp(1.9rem,4.4vw,3rem);font-weight:400;color:var(--ink);line-height:1.25}
+  .filo .quote b{color:var(--sage);font-weight:500}
+  .filo .by{margin-top:24px;font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.72rem;color:var(--ink-soft)}
+
+  /* contacto */
+  #contacto{background:var(--cream-2)}
+  .ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  .ct-info .row{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}
+  .ct-info .row:first-child{border-top:1px solid var(--line)}
+  .ct-info .ic{width:44px;height:44px;border-radius:50%;background:var(--sage);color:var(--cream);display:grid;place-items:center;flex:none}
+  .ct-info .ic svg{width:20px;height:20px}
+  .ct-info .e{font-family:var(--sans);letter-spacing:.2em;text-transform:uppercase;font-size:.62rem;color:var(--sage)}
+  .ct-info h4{font-family:var(--serif);font-size:1.4rem;font-weight:500;margin-top:2px}
+  .ct-card{background:var(--sage);color:var(--cream);border-radius:20px;padding:46px;text-align:center}
+  .ct-card h3{font-size:2.1rem;color:#fff;font-weight:400}
+  .ct-card p{color:rgba(244,239,228,.85);margin:14px 0 26px;font-weight:300}
+  .ct-card .btn{width:100%;justify-content:center;padding:16px;background:var(--cream);color:var(--sage-d)}
+  .ct-card .btn:hover{background:#fff;transform:translateY(-2px)}
+  .map{margin-top:18px;height:160px;border-radius:14px;overflow:hidden;filter:saturate(.85)}
+  .map iframe{width:100%;height:100%;border:0}
+  @media(max-width:860px){.ct-grid{grid-template-columns:1fr;gap:32px}}
+
+  .bfoot{background:var(--sage-d);color:rgba(244,239,228,.6);text-align:center;padding:40px 20px;font-size:.85rem;font-weight:300}
+  .bfoot b{color:var(--cream)}
+
+  /* propuesta */
+  #propuesta{background:var(--navy);color:#fff;text-align:center}
+  #propuesta::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 0,rgba(230,174,46,.14),transparent 60%)}
+  .prop-inner{position:relative;max-width:880px;margin:0 auto}
+  .prop-badge{display:inline-block;border:1px solid var(--amber);color:var(--amber);font-family:var(--sans);letter-spacing:.18em;text-transform:uppercase;font-size:.7rem;padding:8px 18px;border-radius:30px}
+  #propuesta h2{font-size:clamp(2.3rem,5vw,3.8rem);margin:24px 0 18px;color:#fff;font-weight:400}
+  #propuesta h2 em{font-style:italic;color:var(--amber)}
+  #propuesta .sub{font-size:1.1rem;color:rgba(255,255,255,.8);max-width:660px;margin:0 auto 44px;font-weight:300}
+  #propuesta .sub b{color:#fff;font-weight:500}
+  .pf-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left;margin-bottom:44px}
+  @media(max-width:780px){.pf-row{grid-template-columns:1fr}}
+  .pf{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px;transition:.35s var(--ease)}
+  .pf:hover{border-color:rgba(230,174,46,.5);background:rgba(230,174,46,.06)}
+  .pf .ic{width:44px;height:44px;border-radius:50%;background:var(--amber);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
+  .pf .ic svg{width:22px;height:22px}
+  .pf h4{font-family:var(--serif);font-size:1.4rem;margin-bottom:7px;font-weight:500}
+  .pf p{color:rgba(255,255,255,.7);font-size:.92rem;font-weight:300}
+  .prop-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .prop-cta .btn-amber{background:var(--amber);color:var(--navy);font-weight:500}
+  .prop-cta .btn-amber:hover{background:#fff;transform:translateY(-2px)}
+  .prop-cta .btn-line{color:#fff}
+  .prop-sign{margin-top:30px;color:rgba(255,255,255,.6);font-size:.92rem;font-weight:300}
+  .prop-sign b{color:#fff}
+  .afoot{background:#091126;color:rgba(255,255,255,.42);text-align:center;padding:26px;font-size:.78rem;font-weight:300}
+
+  .lb{position:fixed;inset:0;z-index:400;display:grid;place-items:center;padding:28px}.lb[hidden]{display:none}
+  .lb-back{position:absolute;inset:0;background:rgba(30,32,24,.9);backdrop-filter:blur(8px);animation:fade .3s}
+  .lb-fig{position:relative;z-index:1;max-width:min(92vw,520px);animation:pop .4s var(--ease)}
+  .lb-fig img{width:100%;max-height:82vh;object-fit:contain;border-radius:12px;box-shadow:var(--sh)}
+  .lb-x{position:absolute;top:-46px;right:0;background:none;border:1px solid rgba(255,255,255,.5);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1.3rem;transition:.2s}
+  .lb-x:hover{background:#fff;color:#000;transform:rotate(90deg)}
+  @keyframes fade{from{opacity:0}}@keyframes pop{from{opacity:0;transform:scale(.95)}}
+
+  .fab{position:fixed;right:22px;bottom:22px;z-index:90;width:60px;height:60px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 14px 32px -8px rgba(37,211,102,.6);transition:.3s var(--ease)}
+  .fab::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--wa);animation:pulse 2.2s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+  .fab:hover{transform:scale(1.08)} .fab svg{width:32px;height:32px;color:#fff;position:relative}
+
+  .rv{opacity:0;transform:translateY(28px);transition:.85s var(--ease)}.rv.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="agency-bar">
+  <span class="lbl">Demo creada por <b>Altavista Web</b> para Studio Pilates Tandil</span>
+  <span class="sep">·</span><a class="see" href="#propuesta">Ver propuesta ↓</a>
+</div>
+
+<nav id="nav" class="nav-top">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="1.8"/><path d="M5 19l3.5-6 4 1.2L17 8M12.5 14.2L15 19"/></svg></span>
+      <span class="txt"><span class="s">Studio</span><span class="p"><b>Pilates</b> Tandil</span></span>
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="#clases">Clases</a>
+      <a href="#agenda">Horarios</a>
+      <a href="#estudio">El estudio</a>
+      <a href="#contacto">Contacto</a>
+      <a class="btn btn-sage magnetic" href="#agenda">Reservar</a>
+    </div>
+    <button class="hamb" id="hamb" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <img class="bg" src="assets/studio-pilates/post09.jpg" alt="Clase de Pilates en Studio Pilates Tandil">
+  <div class="hero-inner wrap">
+    <span class="eyebrow rv">Pilates · Reformer · Stretching</span>
+    <h1 class="rv" style="transition-delay:.05s">Tu cuerpo es único,<br><em>tu entrenamiento también.</em></h1>
+    <p class="lead rv" style="transition-delay:.12s">Pilates personalizado en el centro de Tandil. Grupos reducidos, para todas las edades, hombres y mujeres — pensado para fortalecer tu cuerpo y cuidar tu postura.</p>
+    <div class="hero-cta rv" style="transition-delay:.18s">
+      <a class="btn btn-sage magnetic" href="#agenda">Reservá tu clase</a>
+      <a class="btn btn-line magnetic" href="#clases">Ver clases</a>
+    </div>
+    <div class="hero-credo rv" style="transition-delay:.24s">
+      <span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Grupos reducidos</span>
+      <span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Reformer & Mat</span>
+      <span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Para todas las edades</span>
+    </div>
+  </div>
+</header>
+
+<!-- BENEFICIOS -->
+<div class="bene">
+  <div class="wrap">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>Mejora la flexibilidad</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>Reduce el estrés</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>Previene lesiones</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg>Mejora la postura</span>
+  </div>
+</div>
+
+<!-- CLASES -->
+<section id="clases">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Lo que hacemos</span><h2>Nuestras clases</h2><p>Cada clase es personalizada y en grupos chicos: te acompañamos de cerca para que entrenes seguro y a tu ritmo.</p></div>
+    <div class="clases">
+      <div class="clase rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="9" width="20" height="6" rx="2"/><path d="M6 15v3M18 15v3M9 9V7M15 9V7"/></svg></span><h3>Pilates Reformer</h3><p>Trabajo de fuerza y control sobre la cama Reformer, con resistencia ajustada a tu nivel.</p></div>
+      <div class="clase rv" style="transition-delay:.06s"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="6" r="2"/><path d="M12 8v6M8 11h8M9 20l3-6 3 6"/></svg></span><h3>Pilates personalizado</h3><p>Rutinas a medida de tu cuerpo y tus objetivos, ideales para postura, fuerza y movilidad.</p></div>
+      <div class="clase rv" style="transition-delay:.12s"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18c4-1 6-4 8-9M20 6c-1 4-3 7-6 9"/><circle cx="6" cy="6" r="2"/></svg></span><h3>Stretching</h3><p>Clases de elongación para ganar flexibilidad, soltar tensiones y mejorar tu rango de movimiento.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA / RESERVAS -->
+<section id="agenda">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Reservá online</span><h2>Horarios y cupos</h2><p>Elegí el día y horario que te quede cómodo y reservá tu lugar al instante. Cupos limitados por clase.</p></div>
+    <div class="legend rv"><span><i class="i-pil"></i>Pilates · cupo disponible</span><span><i class="i-str"></i>Stretching</span><span><i class="i-full"></i>Completo</span></div>
+    <div class="agenda-scroll rv">
+      <div class="agenda" id="agenda-grid"></div>
+    </div>
+    <p class="agenda-note rv">Tocá un horario disponible para reservar. <b>Sede Alem 791</b> · ¿Dudas? Escribinos por WhatsApp.</p>
+  </div>
+</section>
+
+<!-- ESTUDIO -->
+<section id="estudio">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Conocé el espacio</span><h2>El estudio</h2><p>Un espacio cálido y equipado con camas Reformer, en pleno centro de Tandil.</p></div>
+    <div class="gal">
+      <figure class="g-item rv" data-img="assets/studio-pilates/post09.jpg"><img src="assets/studio-pilates/post09.jpg" alt="Clase en reformers" loading="lazy"><span class="plus">+</span></figure>
+      <figure class="g-item rv" style="transition-delay:.05s" data-img="assets/studio-pilates/post03.jpg"><img src="assets/studio-pilates/post03.jpg" alt="Interior del estudio" loading="lazy"><span class="plus">+</span></figure>
+      <figure class="g-item rv" style="transition-delay:.1s" data-img="assets/studio-pilates/post23.jpg"><img src="assets/studio-pilates/post23.jpg" alt="Clase con accesorios" loading="lazy"><span class="plus">+</span></figure>
+    </div>
+  </div>
+</section>
+
+<!-- FILOSOFIA -->
+<section id="filosofia">
+  <div class="wrap filo rv">
+    <p class="quote">"Acá no venís a una clase más. Venís a trabajar tu <b>postura, tu fuerza y tu bienestar</b> — con un plan pensado solo para vos."</p>
+    <p class="by">Studio Pilates Tandil · Clases personalizadas para todas las edades</p>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Visitanos</span><h2>Dónde estamos</h2></div>
+    <div class="ct-grid">
+      <div class="ct-info rv">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div><span class="e">Sede</span><h4>Leandro Alem 791, Tandil</h4></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><span class="e">Horarios</span><h4>Lunes a Viernes 7–20h · Sábados 9–10h</h4></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></span><div><span class="e">WhatsApp</span><h4>+54 9 2494 60-7413</h4></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></span><div><span class="e">Instagram</span><h4>@pilatestandil.centro</h4></div></div>
+        <div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Leandro+Alem+791,+Tandil&output=embed" title="Mapa"></iframe></div>
+      </div>
+      <div class="ct-card rv" style="transition-delay:.1s">
+        <h3 class="serif">Reservá tu primera clase</h3>
+        <p>Escribinos y coordinamos una clase de prueba. Cupos limitados por semana.</p>
+        <a class="btn magnetic" data-wa="Hola! Quiero reservar una clase en Studio Pilates Tandil.">Reservar por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bfoot">
+  <b>Studio Pilates Tandil</b> · Leandro Alem 791, Tandil — Pilates personalizado para todas las edades.
+</footer>
+
+<!-- PROPUESTA -->
+<section id="propuesta">
+  <div class="wrap prop-inner">
+    <span class="prop-badge rv">● Esto es una demo</span>
+    <h2 class="rv" style="transition-delay:.05s">Tus alumnos podrían<br>reservar <em>solos.</em></h2>
+    <p class="sub rv" style="transition-delay:.1s">Soy Santiago, de <b>Altavista Web</b> (Tandil). Hoy las reservas son 100% por WhatsApp — un ida y vuelta constante para ver cupos. Armé esta demo gratis para mostrarte cómo se vería tu web con <b>reserva de clases online</b>.</p>
+    <div class="pf-row">
+      <div class="pf rv"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><h4>Reserva con cupos</h4><p>Tus alumnos ven la grilla, eligen el horario y reservan su lugar solos, 24/7.</p></div>
+      <div class="pf rv" style="transition-delay:.07s"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span><h4>Menos WhatsApp</h4><p>Recordatorios automáticos y agenda ordenada: menos ausencias y menos mensajes.</p></div>
+      <div class="pf rv" style="transition-delay:.14s"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><h4>Aparecer en Google</h4><p>Que cuando busquen "pilates en Tandil" te encuentren a vos, con tus horarios.</p></div>
+    </div>
+    <div class="prop-cta rv">
+      <a class="btn btn-amber magnetic" data-wa="Hola Santiago! Vi la demo de Altavista Web para Studio Pilates y me interesa. Charlemos.">Quiero mi web →</a>
+      <a class="btn btn-line magnetic" data-wa="Hola Santiago! Tengo algunas dudas sobre la demo.">Tengo dudas</a>
+    </div>
+    <p class="prop-sign rv">Santiago Funes · <b>Altavista Web</b> · +54 9 2494 55-7754 · Tandil</p>
+  </div>
+</section>
+<footer class="afoot">© Altavista Web — Demo personalizada para Studio Pilates Tandil. Diseño sin compromiso.</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true">
+  <div class="lb-back" data-close></div>
+  <figure class="lb-fig"><button class="lb-x" data-close aria-label="Cerrar">&times;</button><img id="lbImg" alt=""></figure>
+</div>
+
+<a class="fab" data-wa="Hola! Te escribo por la web de Studio Pilates Tandil." aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</a>
+
+<script>
+  const WA="5492494557754";
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function go(msg){window.open(`https://wa.me/${WA}?text=`+encodeURIComponent(msg),"_blank")}
+  function waBind(scope){scope.querySelectorAll("[data-wa]").forEach(el=>{el.style.cursor="pointer";el.onclick=e=>{e.preventDefault();go(el.dataset.wa)}})}
+  waBind(document);
+
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}}),{threshold:.1});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+  setTimeout(()=>document.querySelectorAll(".rv:not(.in)").forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add("in")}),1200);
+
+  const nav=document.getElementById("nav");
+  addEventListener("scroll",()=>{const s=scrollY>40;nav.classList.toggle("scrolled",s);nav.classList.toggle("nav-top",!s)},{passive:true});
+  const hamb=document.getElementById("hamb"),links=document.getElementById("navlinks");
+  hamb.addEventListener("click",()=>links.classList.toggle("open"));
+  links.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>links.classList.remove("open")));
+
+  // === AGENDA (grilla real de @pilatestandil.centro) ===
+  const DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb"];
+  const TIMES=["7:00","8:00","9:00","10:00","11:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
+  // p=Pilates disponible, s=Stretching, f=completo, ""=sin clase
+  const G={
+   "7:00":["p","p","p","p","p",""],
+   "8:00":["p","f","p","f","p",""],
+   "9:00":["f","p","f","p","p","p"],
+   "10:00":["p","p","p","p","p","p"],
+   "11:00":["","p","","s","",""],
+   "14:00":["p","p","p","f","p",""],
+   "15:00":["p","f","p","p","f",""],
+   "16:00":["p","p","p","p","p",""],
+   "17:00":["p","f","p","f","p",""],
+   "18:00":["p","p","p","f","p",""],
+   "19:00":["p","f","p","p","p",""],
+   "20:00":["s","p","p","","",""],
+  };
+  const LABEL={p:"Pilates",s:"Stretch",f:"Completo"};
+  const grid=document.getElementById("agenda-grid");
+  let html='<div class="h"></div>'+DAYS.map(d=>`<div class="h">${d}</div>`).join("");
+  TIMES.forEach(t=>{
+    html+=`<div class="t">${t}</div>`;
+    G[t].forEach((st,i)=>{
+      if(!st){html+='<div class="slot empty"></div>';return}
+      const cls=st==="p"?"pil":st==="s"?"str":"full";
+      const day=DAYS[i];
+      const wa=`Hola! Quiero reservar la clase de ${st==="s"?"Stretching":"Pilates"} del ${day} a las ${t}.`;
+      html+=`<div class="slot ${cls}" ${st!=="f"?`data-book="${wa.replace(/"/g,'&quot;')}"`:""} title="${day} ${t}">${LABEL[st]}</div>`;
+    });
+  });
+  grid.innerHTML=html;
+  grid.querySelectorAll("[data-book]").forEach(s=>s.addEventListener("click",()=>go(s.dataset.book)));
+
+  // lightbox
+  const lb=document.getElementById("lb");
+  function closeLB(){lb.hidden=true;document.body.style.overflow=""}
+  document.querySelectorAll(".g-item").forEach(f=>f.addEventListener("click",()=>{lb.querySelector("#lbImg").src=f.dataset.img;lb.hidden=false;document.body.style.overflow="hidden"}));
+  lb.addEventListener("click",e=>{if(e.target.hasAttribute("data-close"))closeLB()});
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&!lb.hidden)closeLB()});
+
+  if(!reduce)try{
+    document.querySelectorAll(".magnetic").forEach(b=>{
+      b.addEventListener("mousemove",e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.2}px,${(e.clientY-r.top-r.height/2)*.35-2}px)`});
+      b.addEventListener("mouseleave",()=>b.style.transform="");
+    });
+  }catch(e){}
+</script>
+</body>
+</html>
