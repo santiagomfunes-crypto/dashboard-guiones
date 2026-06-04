@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicampo Tandil — Maquinaria agrícola y vial · Michigan, Hanomag, Grosspal, Montecor</title>
+<meta name="description" content="Concesionaria de maquinaria agrícola y vial en Tandil, sobre la Rotonda RN30. Palas cargadoras Michigan, tractores Hanomag, mixers Montecor e implementos Grosspal. Repuestos, posventa y financiación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine-900:#14181B; --wine-800:#1E252A; --wine-700:#2A333A; --wine-600:#3C4750;
+    --rust:#2E7D32; --rust-600:#256528;
+    --gold:#F2B100; --gold-600:#C98E00;
+    --olive:#4A5560; --olive-700:#2D353C;
+    --cream:#F4F2EC; --cream-2:#E9E5DC; --cream-3:#D9D3C6;
+    --ink:#14171A; --umber:#5C6770; --line:rgba(20,24,27,.13);
+    --navy:#0E1B38;
+    --font-d:'Saira Condensed',system-ui,sans-serif;
+    --font-b:'Archivo',system-ui,sans-serif;
+    --maxw:1240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-b);color:var(--ink);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,.d{font-family:var(--font-d);font-weight:700;line-height:.98;letter-spacing:-.005em;text-transform:uppercase}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:var(--font-b);font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-size:.76rem;color:var(--gold-600)}
+
+  /* ===== AGENCY BAR ===== */
+  .agency-bar{position:fixed;top:0;left:0;right:0;z-index:120;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:16px;padding:9px 20px;font-size:.85rem;border-bottom:2px solid var(--gold)}
+  .agency-bar b{font-family:var(--font-d);letter-spacing:.03em;font-weight:700;color:var(--gold)}
+  .agency-bar .sep{opacity:.4}
+  .agency-bar a.see{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--navy);
+    font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.82rem;padding:5px 14px;border-radius:3px;transition:.2s}
+  .agency-bar a.see:hover{background:#fff;transform:translateY(-1px)}
+  @media(max-width:680px){.agency-bar span.lbl{display:none}}
+
+  /* ===== NAV ===== */
+  nav{position:fixed;top:43px;left:0;right:0;z-index:100;background:transparent;transition:.3s;padding:16px 0}
+  nav.scrolled{background:rgba(20,24,27,.97);backdrop-filter:blur(8px);padding:10px 0;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:11px;color:#fff}
+  .logo .mark{width:42px;height:42px;border-radius:8px;background:var(--gold);display:grid;place-items:center;color:var(--wine-900);flex:none}
+  .logo .mark svg{width:25px;height:25px}
+  .logo .txt{font-family:var(--font-d);font-weight:800;text-transform:uppercase;letter-spacing:.01em;font-size:1.42rem;line-height:.85;color:#fff}
+  .logo .txt small{display:block;font-family:var(--font-b);font-weight:500;text-transform:uppercase;letter-spacing:.24em;font-size:.5rem;color:var(--gold);margin-top:3px}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{color:rgba(255,255,255,.84);font-weight:500;font-size:.94rem;transition:.2s}
+  .nav-links a:hover{color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:11px 20px;border-radius:5px;font-size:.95rem;cursor:pointer;border:0;transition:.22s}
+  .btn-wa{background:var(--gold);color:var(--wine-900)}
+  .btn-wa:hover{background:#fff;transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn-solid{background:var(--rust);color:#fff}
+  .btn-solid:hover{background:var(--rust-600);transform:translateY(-2px)}
+  .hamb{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
+  .hamb span{width:26px;height:2.5px;background:#fff;border-radius:2px;transition:.2s}
+  @media(max-width:920px){
+    .nav-links{position:fixed;inset:0 0 0 auto;width:min(78vw,330px);background:var(--wine-900);flex-direction:column;
+      justify-content:center;gap:26px;transform:translateX(100%);transition:.35s;padding:40px}
+    .nav-links.open{transform:translateX(0)}
+    .nav-links a{font-size:1.22rem;font-family:var(--font-d);text-transform:uppercase}
+    .hamb{display:flex;z-index:101}
+  }
+
+  /* ===== HERO ===== */
+  .hero{position:relative;color:var(--cream);padding:188px 0 0;overflow:hidden;background:#0e1113}
+  .hero-bg{position:absolute;inset:0;z-index:0;
+    background:linear-gradient(90deg,rgba(14,17,19,.95),rgba(14,17,19,.6) 50%,rgba(14,17,19,.32)),
+      linear-gradient(0deg,rgba(14,17,19,.97),rgba(14,17,19,.1) 48%),
+      url('https://images.unsplash.com/photo-1575642975010-983c53b3eeb9?auto=format&fit=crop&q=70&w=1900') center 32%/cover no-repeat;
+    background-attachment:fixed}
+  .hero::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(120% 80% at 86% 6%,rgba(242,177,0,.22),transparent 50%)}
+  .hero::after{content:"";position:absolute;inset:0;z-index:1;background-image:repeating-linear-gradient(112deg,rgba(255,255,255,.03) 0 2px,transparent 2px 26px);opacity:.6}
+  .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.02fr .98fr;gap:54px;align-items:center}
+  .hero h1{font-size:clamp(3rem,7.4vw,6.2rem);color:#fff;font-weight:800;text-shadow:0 2px 34px rgba(0,0,0,.4)}
+  .hero h1 em{font-style:normal;background:linear-gradient(100deg,#FFD23F,#F2B100 45%,#E69500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .lead{font-size:1.16rem;color:rgba(244,242,236,.9);max-width:520px;margin:22px 0 32px;line-height:1.6;text-shadow:0 1px 16px rgba(0,0,0,.4)}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+  .tag{border:1px solid rgba(244,242,236,.28);background:rgba(14,17,19,.3);backdrop-filter:blur(3px);border-radius:30px;padding:6px 15px;font-size:.82rem;color:rgba(244,242,236,.9);font-weight:500;display:inline-flex;gap:7px;align-items:center}
+  .tag svg{width:15px;height:15px;color:var(--gold)}
+
+  /* hero 3D scene */
+  .hero-media{position:relative;z-index:2}
+  .scene{position:relative;perspective:1300px}
+  .deck{position:relative;transform-style:preserve-3d;transition:transform .3s cubic-bezier(.2,.7,.2,1);transform:rotateX(var(--rx,7deg)) rotateY(var(--ry,-14deg))}
+  .hero-frame{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(242,177,0,.4);
+    box-shadow:0 55px 95px -32px rgba(0,0,0,.92),0 0 0 1px rgba(0,0,0,.25);aspect-ratio:4/3;
+    background:linear-gradient(150deg,#3C4750,#14181B);transform:translateZ(0);animation:floatM 8s ease-in-out infinite}
+  .hero-frame img{width:100%;height:100%;object-fit:cover}
+  .hero-frame::after{content:"";position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 2px 0 rgba(255,255,255,.12),inset 0 -70px 90px -50px rgba(0,0,0,.5);pointer-events:none}
+  .chip3d{position:absolute;border-radius:14px;overflow:hidden;border:3px solid rgba(244,242,236,.92);box-shadow:0 28px 52px -14px rgba(0,0,0,.78);background:#fff}
+  .chip3d img{width:100%;height:100%;object-fit:cover}
+  .chip-a{width:128px;height:104px;top:-40px;left:-34px;animation:floatA 6.5s ease-in-out infinite}
+  .chip-b{width:104px;height:88px;bottom:14px;right:-30px;animation:floatB 7.5s ease-in-out infinite}
+  .badge3d{position:absolute;bottom:-24px;left:22px;background:var(--gold);color:var(--wine-900);border-radius:9px;padding:11px 16px;
+    box-shadow:0 28px 52px -16px rgba(0,0,0,.7);animation:floatC 9s ease-in-out infinite}
+  .badge3d .d{font-family:var(--font-d);font-weight:800;text-transform:uppercase;font-size:1.05rem;line-height:.9}
+  .badge3d small{display:block;font-size:.7rem;font-weight:600;letter-spacing:.04em;opacity:.8}
+  @keyframes floatM{0%,100%{transform:translateZ(0) translateY(0)}50%{transform:translateZ(0) translateY(-12px)}}
+  @keyframes floatA{0%,100%{transform:translateZ(95px) translateY(0)}50%{transform:translateZ(95px) translateY(-16px)}}
+  @keyframes floatB{0%,100%{transform:translateZ(120px) translateY(0)}50%{transform:translateZ(120px) translateY(-12px)}}
+  @keyframes floatC{0%,100%{transform:translateZ(70px) translateY(0)}50%{transform:translateZ(70px) translateY(-8px)}}
+  .hero-media .ship{position:absolute;top:-20px;right:4px;z-index:5;background:var(--rust);color:#fff;font-family:var(--font-d);font-weight:800;text-transform:uppercase;
+    padding:13px 16px;border-radius:9px;transform:rotate(3deg);box-shadow:0 14px 30px -8px rgba(0,0,0,.6);text-align:center;line-height:.95}
+  .hero-media .ship span{font-size:.6rem;display:block;font-family:var(--font-b);font-weight:600;letter-spacing:.1em;opacity:.9}
+  .hero-media .ship b{font-size:1.4rem}
+  @media(max-width:920px){
+    .hero{padding:140px 0 0}.hero-grid{grid-template-columns:1fr;gap:64px}
+    .hero-bg{background-attachment:scroll}
+    .deck{--ry:-7deg;--rx:5deg}.chip-a{left:-14px}.chip-b{right:-12px}
+  }
+
+  /* ===== STATS ===== */
+  .stats{position:relative;z-index:2;background:var(--gold);color:var(--wine-900);margin-top:70px}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:28px 22px;text-align:center;border-right:1px solid rgba(20,24,27,.16)}
+  .stat:last-child{border-right:0}
+  .stat .n{font-family:var(--font-d);font-weight:800;font-size:2.5rem;line-height:.9;text-transform:uppercase}
+  .stat .l{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:7px}
+  @media(max-width:720px){.stats-grid{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat{border-bottom:1px solid rgba(20,24,27,.16)}}
+
+  /* ===== SECTION SHELL ===== */
+  section.pad{padding:92px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:42px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(2.2rem,4.8vw,3.7rem);color:var(--wine-800)}
+  .sec-head h2 em{font-style:normal;color:var(--rust)}
+  .sec-head p{color:var(--umber);max-width:440px;font-size:1.02rem}
+
+  /* ===== MARCAS ===== */
+  #marcas{background:var(--wine-900);color:var(--cream)}
+  #marcas .sec-head h2{color:#fff}#marcas .sec-head p{color:rgba(244,242,236,.7)}
+  .brands{display:flex;flex-wrap:wrap;gap:14px}
+  .brand-pill{border:1px solid rgba(244,242,236,.18);border-radius:8px;padding:16px 30px;font-family:var(--font-d);font-weight:700;
+    text-transform:uppercase;letter-spacing:.05em;font-size:1.3rem;color:rgba(244,242,236,.85);transition:.2s;flex:1 1 auto;text-align:center}
+  .brand-pill:hover{border-color:var(--gold);color:var(--gold);background:rgba(242,177,0,.06)}
+
+  /* ===== CATALOG ===== */
+  #productos{background:var(--cream-2)}
+  .searchbar{display:flex;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 8px 8px 18px;align-items:center;max-width:560px;box-shadow:0 6px 24px -16px rgba(0,0,0,.3)}
+  .searchbar svg{width:20px;height:20px;color:var(--umber);flex:none}
+  .searchbar input{border:0;outline:0;font-family:var(--font-b);font-size:1rem;flex:1;background:transparent;color:var(--ink)}
+  .searchbar .btn{padding:10px 18px}.searchbar .btn-wa{background:var(--rust);color:#fff}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 34px}
+  .chip{font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:.92rem;
+    background:#fff;border:1px solid var(--line);color:var(--wine-800);padding:9px 16px;border-radius:30px;cursor:pointer;transition:.18s;display:flex;gap:8px;align-items:center}
+  .chip .ct{font-family:var(--font-b);font-weight:700;font-size:.72rem;background:var(--cream-3);color:var(--olive-700);padding:1px 8px;border-radius:20px}
+  .chip:hover{border-color:var(--wine-600)}
+  .chip.active{background:var(--wine-800);color:#fff;border-color:var(--wine-800)}
+  .chip.active .ct{background:var(--gold);color:var(--wine-900)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:.25s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-5px);box-shadow:0 26px 50px -28px rgba(20,24,27,.5);border-color:var(--gold)}
+  .card .top{position:relative;aspect-ratio:16/11;overflow:hidden;display:grid;place-items:center}
+  .card .top.vial{background:linear-gradient(140deg,#3C4750,#14181B)}
+  .card .top.tractor{background:linear-gradient(140deg,#2E7D32,#14181B)}
+  .card .top.forraje{background:linear-gradient(140deg,#3a6b3d,#1d2a1f)}
+  .card .top.agro{background:linear-gradient(140deg,#C98E00,#4d3600)}
+  .card .top img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;background:#fff;transition:.45s ease}
+  .card:hover .top img{transform:scale(1.05)}
+  .card .top .ico{width:80px;height:80px;color:#fff;opacity:.9;z-index:0}
+  .card .top .estado{position:absolute;top:12px;left:14px;z-index:3;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;
+    background:var(--rust);padding:4px 10px;border-radius:20px}
+  .card .top .estado.dest{background:var(--gold);color:var(--wine-900)}
+  .card .body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .card .brand{font-family:var(--font-b);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.7rem;color:var(--gold-600)}
+  .card h3{font-family:var(--font-d);font-size:1.5rem;color:var(--wine-800);margin:3px 0 9px;line-height:.98;text-transform:uppercase}
+  .card .spec{font-size:.9rem;color:var(--umber);margin-bottom:16px}
+  .card .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+  .card .price{font-family:var(--font-d);font-weight:800;font-size:1.4rem;color:var(--wine-700);text-transform:uppercase}
+  .card .price small{font-family:var(--font-b);font-weight:600;font-size:.68rem;color:var(--umber);display:block;letter-spacing:.03em;text-transform:none}
+  .card .ask{font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.86rem;
+    background:var(--wine-800);color:#fff;padding:10px 16px;border-radius:5px;transition:.2s;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+  .card .ask svg{width:15px;height:15px}
+  .card .ask:hover{background:var(--gold);color:var(--wine-900)}
+  .cat-note{text-align:center;margin-top:32px;color:var(--umber);font-size:.95rem}
+  .cat-note b{color:var(--wine-700)}
+
+  /* ===== BAND ===== */
+  .band{position:relative;min-height:60vh;display:grid;place-items:center;text-align:center;color:#fff;overflow:hidden;
+    background:linear-gradient(rgba(14,17,19,.55),rgba(14,17,19,.82)),
+      url('https://images.unsplash.com/photo-1585110587043-36d457f3e803?auto=format&fit=crop&q=70&w=1900') center 45%/cover no-repeat;
+    background-attachment:fixed}
+  .band .wrap{position:relative;max-width:840px}
+  .band .eyebrow{color:var(--gold);justify-content:center}
+  .band h2{font-family:var(--font-d);font-weight:800;text-transform:uppercase;font-size:clamp(2.3rem,6vw,4.6rem);color:#fff;line-height:.96;margin:14px 0 18px;text-shadow:0 2px 30px rgba(0,0,0,.5)}
+  .band h2 em{font-style:normal;background:linear-gradient(100deg,#FFD23F,#F2B100 50%,#E69500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .band p{font-size:1.16rem;color:rgba(244,242,236,.92);max-width:600px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.5)}
+  @media(max-width:920px){.band{background-attachment:scroll;min-height:50vh}}
+
+  /* ===== POR QUÉ ===== */
+  #porque{background:var(--cream)}
+  .proc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  @media(max-width:860px){.proc-grid{grid-template-columns:1fr}}
+  .proc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:32px 28px;position:relative}
+  .proc .ic{width:54px;height:54px;border-radius:12px;background:var(--wine-800);color:var(--gold);display:grid;place-items:center;margin-bottom:18px}
+  .proc .ic svg{width:28px;height:28px}
+  .proc h3{font-size:1.5rem;color:var(--wine-800);margin-bottom:8px}
+  .proc p{color:var(--umber);font-size:.96rem}
+
+  /* ===== NOSOTROS ===== */
+  #nosotros{background:var(--olive-700);color:var(--cream);position:relative;overflow:hidden}
+  .about-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  #nosotros h2{color:#fff;font-size:clamp(2.2rem,4.8vw,3.6rem)}
+  #nosotros h2 em{font-style:normal;color:var(--gold)}
+  #nosotros .lead{font-size:1.1rem;color:rgba(244,242,236,.9);margin:18px 0}
+  #nosotros .lead2{color:rgba(244,242,236,.72)}
+  .about-photo{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(244,242,236,.22);
+    background:#2b3239;aspect-ratio:16/10;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+  .about-photo img{width:100%;height:100%;object-fit:cover}
+  .about-mini{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+  .about-mini .m{border-left:3px solid var(--gold);padding-left:16px}
+  .about-mini .m .d{font-size:1.7rem;color:var(--gold);font-family:var(--font-d);font-weight:700;text-transform:uppercase}
+  .about-mini .m small{color:rgba(244,242,236,.78);font-size:.86rem}
+
+  /* ===== CONTACTO ===== */
+  #contacto{background:var(--cream-2)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:start}
+  .contact-info .row{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line)}
+  .contact-info .ic{width:46px;height:46px;border-radius:10px;background:var(--wine-800);color:var(--gold);display:grid;place-items:center;flex:none}
+  .contact-info .ic svg{width:22px;height:22px}
+  .contact-info h4{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.1rem;color:var(--wine-800)}
+  .contact-info p{color:var(--umber)}
+  .contact-cta{background:var(--wine-900);color:var(--cream);border-radius:16px;padding:40px}
+  .contact-cta h3{font-size:2rem;color:#fff}
+  .contact-cta p{color:rgba(244,242,236,.8);margin:14px 0 26px}
+  .contact-cta .btn-wa{width:100%;justify-content:center;font-size:1.05rem;padding:15px}
+  .map{margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid rgba(244,242,236,.15);height:160px}
+  .map iframe{width:100%;height:100%;border:0;filter:grayscale(.35) contrast(1.05)}
+  @media(max-width:860px){.contact-grid{grid-template-columns:1fr;gap:30px}}
+
+  .bfoot{background:var(--wine-900);color:rgba(244,242,236,.6);text-align:center;padding:34px 20px;font-size:.86rem;border-top:1px solid rgba(244,242,236,.1)}
+
+  /* ===== PROPUESTA ===== */
+  #propuesta{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+  #propuesta::before{content:"";position:absolute;inset:0;background:radial-gradient(100% 60% at 50% 0,rgba(242,177,0,.13),transparent 60%)}
+  .prop-inner{position:relative;text-align:center;max-width:880px;margin:0 auto}
+  .prop-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(242,177,0,.14);border:1px solid var(--gold);
+    color:var(--gold);font-family:var(--font-d);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:.8rem;padding:7px 16px;border-radius:30px}
+  #propuesta h2{font-size:clamp(2.3rem,5vw,4rem);margin:22px 0 18px;color:#fff}
+  #propuesta h2 em{font-style:normal;color:var(--gold)}
+  #propuesta .sub{font-size:1.12rem;color:rgba(255,255,255,.8);max-width:660px;margin:0 auto 44px;line-height:1.62}
+  .prop-features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left;margin-bottom:44px}
+  @media(max-width:780px){.prop-features{grid-template-columns:1fr}}
+  .pf{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:24px}
+  .pf .ic{width:44px;height:44px;border-radius:10px;background:var(--gold);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
+  .pf .ic svg{width:24px;height:24px}
+  .pf h4{font-family:var(--font-d);font-weight:700;text-transform:uppercase;font-size:1.2rem;margin-bottom:7px}
+  .pf p{color:rgba(255,255,255,.72);font-size:.93rem}
+  .prop-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:center}
+  .prop-cta .btn-wa{font-size:1.05rem;padding:16px 30px}
+  .prop-sign{margin-top:30px;color:rgba(255,255,255,.6);font-size:.95rem}
+  .prop-sign b{color:#fff}
+  .afoot{background:#0a1428;color:rgba(255,255,255,.45);text-align:center;padding:26px 20px;font-size:.82rem}
+
+  .rv{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .fab{position:fixed;right:20px;bottom:20px;z-index:90;width:60px;height:60px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(0,0,0,.4);transition:.2s}
+  .fab:hover{transform:scale(1.08)}
+  .fab svg{width:32px;height:32px;color:#fff}
+</style>
+</head>
+<body>
+
+<!-- ===== AGENCY BAR ===== -->
+<div class="agency-bar">
+  <span class="lbl">Demo creada por <b>Altavista Web</b> para Servicampo Tandil</span>
+  <span class="sep">·</span>
+  <a class="see" href="#propuesta">Ver propuesta ↓</a>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h6l2-5h6l2 3v2"/><path d="M3 17V9h4l2 3"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+      </span>
+      <span class="txt">Servicampo<small>Agrícola & Vial · Tandil</small></span>
+    </a>
+    <div class="nav-links" id="navlinks">
+      <a href="#productos">Máquinas</a>
+      <a href="#marcas">Marcas</a>
+      <a href="#porque">Por qué nosotros</a>
+      <a href="#nosotros">El local</a>
+      <a href="#contacto">Contacto</a>
+      <a class="btn btn-wa" data-wa="Hola Servicampo! Estoy viendo la web y quiero consultar por una máquina.">WhatsApp</a>
+    </div>
+    <button class="hamb" id="hamb" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rv">Maquinaria agrícola & vial · Tandil</p>
+      <h1 class="rv" style="transition-delay:.05s">La máquina que<br>tu <em>trabajo</em><br>necesita.</h1>
+      <p class="lead rv" style="transition-delay:.12s">Palas cargadoras, tractores, mixers e implementos de las mejores marcas — con repuestos, servicio y financiación. Sobre la Rotonda de la RN30, en Tandil: atendemos a todo el partido y la zona.</p>
+      <div class="hero-cta rv" style="transition-delay:.18s">
+        <a class="btn btn-solid" href="#productos">Ver máquinas →</a>
+        <a class="btn btn-ghost" data-wa="Hola Servicampo! Quiero asesoramiento para comprar una máquina.">Hablar con un asesor</a>
+      </div>
+      <div class="hero-tags rv" style="transition-delay:.24s">
+        <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>0 km y usados</span>
+        <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7"/></svg>Permutas</span>
+        <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L16.5 2h-4l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.4h4l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6c.1-.3.1-.6.1-.8Z"/></svg>Repuestos y posventa</span>
+        <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Financiación</span>
+      </div>
+    </div>
+    <div class="hero-media rv" style="transition-delay:.2s">
+      <div class="ship">EN<br><b>STOCK</b><span>entrega rápida</span></div>
+      <div class="scene">
+        <div class="deck" id="deck">
+          <div class="hero-frame">
+            <img src="https://static2.aastatic.com.ar/files/variants/1200/ed34539917714beaa3e07fbcc81548da.jpg" alt="Pala cargadora Michigan M75HD+ en Servicampo Tandil" loading="eager" onerror="this.style.display='none'">
+          </div>
+          <span class="chip3d chip-a"><img src="https://static2.aastatic.com.ar/files/variants/1200/df2b60afdc144124b5a990069c560751.jpg" alt="Tractor Hanomag" loading="lazy" onerror="this.closest('.chip-a').style.display='none'"></span>
+          <span class="chip3d chip-b"><img src="https://static2.aastatic.com.ar/files/variants/1200/8632e55026bd400ca8b943cf1b64820f.jpg" alt="Mixer Montecor" loading="lazy" onerror="this.closest('.chip-b').style.display='none'"></span>
+          <div class="badge3d"><span class="d">Michigan M75HD+</span><small>Pala cargadora · en stock</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="wrap"><div class="stats-grid">
+      <div class="stat"><div class="n">4</div><div class="l">Marcas que representamos</div></div>
+      <div class="stat"><div class="n">Vial</div><div class="l">+ Agrícola</div></div>
+      <div class="stat"><div class="n">Stock</div><div class="l">+ permutas y usados</div></div>
+      <div class="stat"><div class="n">RN30</div><div class="l">Sobre la rotonda · Tandil</div></div>
+    </div></div>
+  </div>
+</header>
+
+<!-- ===== MARCAS ===== -->
+<section class="pad" id="marcas">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="eyebrow">Trabajamos con las mejores</p><h2>Marcas que <em>representamos</em></h2></div>
+      <p>Concesionaria multimarca: te ofrecemos la mejor opción para tu necesidad, con respaldo de fábrica.</p>
+    </div>
+    <div class="brands">
+      <div class="brand-pill rv">Michigan</div>
+      <div class="brand-pill rv">Hanomag</div>
+      <div class="brand-pill rv">Grosspal</div>
+      <div class="brand-pill rv">Montecor</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCTOS ===== -->
+<section class="pad" id="productos">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div>
+        <p class="eyebrow">Stock disponible</p>
+        <h2>Catálogo de <em>máquinas</em></h2>
+      </div>
+      <p>Una selección de nuestro stock. Filtrá por tipo o consultá por la máquina que buscás — tenemos muchas más.</p>
+    </div>
+
+    <div class="searchbar rv">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="q" placeholder="Buscar: Michigan, Hanomag, mixer, rastra…">
+      <a class="btn btn-wa" data-wa="Hola Servicampo! Busco una máquina específica, ¿me ayudan?">Consultar</a>
+    </div>
+
+    <div class="chips rv" id="chips">
+      <button class="chip active" data-f="all">Todo <span class="ct">8</span></button>
+      <button class="chip" data-f="vial">Vial <span class="ct">2</span></button>
+      <button class="chip" data-f="tractor">Tractores <span class="ct">1</span></button>
+      <button class="chip" data-f="forraje">Ganadería <span class="ct">2</span></button>
+      <button class="chip" data-f="agro">Agrícola <span class="ct">3</span></button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <p class="cat-note rv">Mostrando una selección de nuestro stock. ¿No encontrás lo que buscás? <a data-wa="Hola Servicampo! No encontré la máquina que busco en la web, ¿me ayudan?" style="color:var(--rust);font-weight:700;text-decoration:underline;cursor:pointer">Escribinos por WhatsApp</a>.</p>
+  </div>
+</section>
+
+<!-- ===== BAND ===== -->
+<section class="band" id="obra">
+  <div class="wrap rv">
+    <p class="eyebrow">Del campo a la obra</p>
+    <h2>Maquinaria que <em>no para</em></h2>
+    <p>Asesoramiento real, no solo venta. Te ayudamos a elegir la máquina justa y la sostenemos con repuestos y servicio para que tu trabajo nunca se frene.</p>
+  </div>
+</section>
+
+<!-- ===== POR QUÉ ===== -->
+<section class="pad" id="porque">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><p class="eyebrow">Por qué Servicampo</p><h2>Más que <em>vender fierros</em></h2></div>
+      <p>Te acompañamos antes, durante y después de la compra.</p>
+    </div>
+    <div class="proc-grid">
+      <div class="proc rv">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L16.5 2h-4l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.3 2.4h4l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6c.1-.3.1-.6.1-.8Z"/></svg></span>
+        <h3>Repuestos y posventa</h3>
+        <p>Servicio propio y repuestos para que tu máquina no quede parada en plena campaña.</p>
+      </div>
+      <div class="proc rv" style="transition-delay:.08s">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <h3>Financiación y permutas</h3>
+        <p>Planes a medida y tomamos tu usado como parte de pago. Renovás sin descapitalizarte.</p>
+      </div>
+      <div class="proc rv" style="transition-delay:.16s">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg></span>
+        <h3>Asesoramiento real</h3>
+        <p>Te ayudamos a elegir la máquina justa para tu campo o tu obra, no la que más nos conviene.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NOSOTROS ===== -->
+<section class="pad" id="nosotros">
+  <div class="wrap about-grid">
+    <div class="rv">
+      <p class="eyebrow" style="color:var(--gold)">Concesionaria de Tandil</p>
+      <h2>Del campo a la obra,<br><em>te respaldamos.</em></h2>
+      <p class="lead">Servicampo Tandil es concesionaria de maquinaria <b>agrícola y vial</b> sobre la Rotonda de la RN30. Representamos marcas líderes —Michigan, Hanomag, Grosspal y Montecor— y trabajamos con productores, contratistas y municipios de Tandil y la zona.</p>
+      <p class="lead2">No te vendemos y desaparecemos: tenemos repuestos, servicio posventa y financiación para que tu máquina no pare nunca.</p>
+      <div class="about-mini">
+        <div class="m"><div class="d">Multimarca</div><small>la mejor opción para tu necesidad</small></div>
+        <div class="m"><div class="d">Repuestos</div><small>y servicio posventa propio</small></div>
+        <div class="m"><div class="d">RN30</div><small>América 149, sobre la rotonda</small></div>
+        <div class="m"><div class="d">Zona</div><small>Tandil y todo el partido</small></div>
+      </div>
+    </div>
+    <div class="rv" style="transition-delay:.1s">
+      <div class="about-photo">
+        <img src="https://static2.aastatic.com.ar/files/variants/1200/6fbc9eaaf4614ec4add6542152307998.jpg" alt="Local de Servicampo Tandil sobre la Rotonda RN30" loading="lazy" onerror="this.closest('.about-photo').style.display='none'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACTO ===== -->
+<section class="pad" id="contacto">
+  <div class="wrap">
+    <div class="sec-head rv"><div><p class="eyebrow">Estamos para ayudarte</p><h2>Contacto</h2></div></div>
+    <div class="contact-grid">
+      <div class="contact-info rv">
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div><h4>Dónde estamos</h4><p>América 149 — Rotonda RN30, Tandil, Buenos Aires</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></span><div><h4>Consultas y stock</h4><p>Escribinos por WhatsApp · respondemos al toque</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h4>Horarios</h4><p>Lun a Vie 8:00–12:00 y 14:00–18:00 · Sáb 8:00–12:00</p></div></div>
+        <div class="row"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></span><div><h4>Seguinos</h4><p>Instagram @servicampotandil · Facebook /servicampotandilsa</p></div></div>
+        <div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Am%C3%A9rica+149,+Tandil,+Buenos+Aires&output=embed" title="Mapa Servicampo Tandil"></iframe></div>
+      </div>
+      <div class="contact-cta rv" style="transition-delay:.1s">
+        <h3 class="d">¿Querés ver una máquina?</h3>
+        <p>Escribinos y te pasamos disponibilidad, fotos y financiación al instante. Sin vueltas.</p>
+        <a class="btn btn-wa" data-wa="Hola Servicampo! Quiero consultar por una máquina del catálogo.">Escribir por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bfoot">
+  Servicampo Tandil S.A. · Maquinaria agrícola y vial · América 149, Rotonda RN30, Tandil — Michigan · Hanomag · Grosspal · Montecor.
+</footer>
+
+<!-- ===== PROPUESTA — AGENCY PITCH ===== -->
+<section class="pad" id="propuesta">
+  <div class="wrap prop-inner">
+    <span class="prop-badge">● Esto es una demo</span>
+    <h2>Servicampo merece estar<br><em>en internet.</em></h2>
+    <p class="sub">Soy Santiago, de <b>Altavista Web</b> (agencia de Tandil). Armé esta demo gratis, sin que la pidieran, para mostrarte el potencial. Hoy Servicampo vende por Agroads y redes, pero no tiene una web propia donde los productores y contratistas te encuentren y vean tu stock. Esto lo resuelve.</p>
+
+    <div class="prop-features">
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><h4>Catálogo con buscador</h4><p>Tu stock con filtros por tipo, marca y precio. Cargás y sacás máquinas vos, desde un panel simple.</p></div>
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M2 12h2M20 12h2M12 2v2"/></svg></span><h4>Aparecer en Google</h4><p>SEO para "pala cargadora Tandil", "mixer", "tractor Hanomag". Que te encuentren a vos, no a la competencia.</p></div>
+      <div class="pf"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><h4>Consultas directas</h4><p>Cada máquina con botón de WhatsApp: te llega la consulta lista, con el modelo que le interesó.</p></div>
+    </div>
+
+    <div class="prop-cta">
+      <a class="btn btn-wa" data-wa="Hola Santiago! Vi la demo de Altavista Web para Servicampo y me interesa. Charlemos.">Quiero mi web →</a>
+      <a class="btn btn-ghost" data-wa="Hola Santiago! Tengo algunas dudas sobre la demo de Servicampo.">Tengo dudas</a>
+    </div>
+    <p class="prop-sign">Santiago Funes · <b>Altavista Web</b> · +54 9 2494 55-7754 · Tandil</p>
+  </div>
+</section>
+<footer class="afoot">© Altavista Web — Demo personalizada para Servicampo Tandil. Diseño sin compromiso.</footer>
+
+<!-- ===== FLOATING WA ===== -->
+<a class="fab" data-wa="Hola! Te escribo por la web de Servicampo Tandil." aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+</a>
+
+<script>
+  const WA="5492494557754";
+  function bindAll(scope){
+    (scope||document).querySelectorAll("[data-wa]").forEach(el=>{
+      if(el._wa)return;el._wa=1;el.style.cursor="pointer";
+      el.addEventListener("click",e=>{e.preventDefault();window.open(`https://wa.me/${WA}?text=`+encodeURIComponent(el.dataset.wa),"_blank")});
+    });
+  }
+  bindAll();
+
+  const nav=document.getElementById("nav");
+  addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>40));
+  const hamb=document.getElementById("hamb"),links=document.getElementById("navlinks");
+  hamb.addEventListener("click",()=>links.classList.toggle("open"));
+  links.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>links.classList.remove("open")));
+
+  // hero 3D parallax tilt
+  const heroEl=document.querySelector(".hero"),deck=document.getElementById("deck");
+  if(heroEl&&deck&&matchMedia("(pointer:fine)").matches){
+    heroEl.addEventListener("pointermove",e=>{
+      const r=heroEl.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+      deck.style.setProperty("--ry",(-14-px*16).toFixed(1)+"deg");
+      deck.style.setProperty("--rx",(7+py*12).toFixed(1)+"deg");
+    });
+    heroEl.addEventListener("pointerleave",()=>{deck.style.setProperty("--ry","-14deg");deck.style.setProperty("--rx","7deg")});
+  }
+
+  // ===== CATALOG =====
+  const S="https://static2.aastatic.com.ar/files/variants/1200/";
+  const ICONS={
+    vial:'<svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M30 30V16h10l4 8h8v6"/><path d="M30 24 14 30l-2 6"/><path d="M8 36h44"/><circle cx="20" cy="38" r="6"/><circle cx="44" cy="38" r="6"/></svg>',
+    tractor:'<svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 30V14h12l4 10h12v8"/><circle cx="22" cy="34" r="10"/><circle cx="48" cy="36" r="6"/><path d="M44 14h8"/></svg>',
+    forraje:'<svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14h44l-6 22H16z"/><path d="M2 14h8"/><path d="M22 24l4 6h12l4-6"/><circle cx="22" cy="40" r="4"/><circle cx="42" cy="40" r="4"/></svg>',
+    agro:'<svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16h40l8 8"/><circle cx="20" cy="32" r="8"/><circle cx="38" cy="32" r="8"/><path d="M8 16l4 10"/></svg>'
+  };
+  const CAT={vial:"Vial · Michigan",tractor:"Tractores · Hanomag",forraje:"Ganadería · Montecor",agro:"Agrícola · Grosspal"};
+  const PROD=[
+    {t:"Pala Cargadora Michigan M75HD+", c:"vial", s:"Frontal · freno multidisco en baño de aceite", p:"Consultar", e:"0 km", dest:1, id:"ed34539917714beaa3e07fbcc81548da"},
+    {t:"Pala Cargadora Michigan M75HD", c:"vial", s:"Frontal · cabina con aire acondicionado", p:"Consultar", e:"0 km", id:"5d6633afd092415bb78559bb37edcb01"},
+    {t:"Tractor Hanomag INV2", c:"tractor", s:"25 HP · diésel · ruedas parqueras", p:"Consultar", e:"2020", dest:1, id:"df2b60afdc144124b5a990069c560751"},
+    {t:"Mixer Horizontal Montecor MH-7", c:"forraje", s:"7 m³ · mezcla y reparto de ración", p:"Consultar", e:"Nuevo", id:"8632e55026bd400ca8b943cf1b64820f"},
+    {t:"Mixer Horizontal Montecor H3", c:"forraje", s:"3 m³ · ideal para tambos chicos", p:"Consultar", e:"Nuevo", id:"1fa35d80af3f424db932334faf27221b"},
+    {t:"Tanque Atmosférico Grosspal TAV 8000", c:"agro", s:"8.000 L · agua y efluentes", p:"Consultar", e:"Nuevo", id:"a6da68c5874b4b40a3765ddfca225be3"},
+    {t:"Rastra Excéntrica Grosspal RTE 20000", c:"agro", s:"Con cajón sembrador · doble acción", p:"Consultar", e:"Nuevo", id:"8b335c40a89540ffbdce3af1385f5abd"},
+    {t:"Desmalezadora Grosspal 3P 150", c:"agro", s:"3 puntos · corte lateral 1,50 m", p:"Consultar", e:"Nuevo", id:"10c243d181bd45d690689f7a19d9575c"}
+  ];
+  const grid=document.getElementById("grid");
+  function esc(s){return String(s).replace(/"/g,"&quot;")}
+  function render(f="all",q=""){
+    q=q.toLowerCase().trim();
+    const items=PROD.filter(m=>(f==="all"||m.c===f)&&(!q||(m.t+" "+m.s+" "+m.c+" "+(CAT[m.c]||"")).toLowerCase().includes(q)));
+    grid.innerHTML=items.map(m=>`
+      <article class="card">
+        <div class="top ${m.c}">
+          <span class="estado ${m.dest?'dest':''}">${m.e}</span>
+          <img src="${S}${m.id}.jpg" alt="${esc(m.t)} — Servicampo Tandil" loading="lazy" onerror="this.remove()">
+          <div class="ico">${ICONS[m.c]||ICONS.vial}</div>
+        </div>
+        <div class="body">
+          <span class="brand">${CAT[m.c]||""}</span>
+          <h3>${m.t}</h3>
+          <p class="spec">${m.s}</p>
+          <div class="foot">
+            <div class="price">${m.p}<small>precio · financiable</small></div>
+            <a class="ask" data-wa="Hola Servicampo! Me interesa la ${esc(m.t)}. ¿Sigue disponible? ¿Precio?">Consultar</a>
+          </div>
+        </div>
+      </article>`).join("")||`<p style="grid-column:1/-1;color:var(--umber);text-align:center;padding:30px">No hay resultados para esa búsqueda. <a data-wa="Hola Servicampo! Busco una máquina que no veo en la web." style="color:var(--rust);text-decoration:underline;cursor:pointer">Consultanos directo</a>.</p>`;
+    bindAll(grid);
+  }
+  document.getElementById("chips").addEventListener("click",e=>{
+    const c=e.target.closest(".chip");if(!c)return;
+    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));c.classList.add("active");
+    render(c.dataset.f,document.getElementById("q").value);
+  });
+  document.getElementById("q").addEventListener("input",e=>{
+    const act=document.querySelector(".chip.active").dataset.f;render(act,e.target.value);
+  });
+  render();
+
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}}),{threshold:.12});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
