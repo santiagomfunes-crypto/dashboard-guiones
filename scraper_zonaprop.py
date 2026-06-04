@@ -38,8 +38,9 @@ SEARCH_URLS = [
 
 MAX_PAGES_DEFAULT = 5     # máximo de páginas por combinación (~20 items/página)
 DELAY_BETWEEN_REQUESTS = 4  # segundos entre requests
-PAGE_LOAD_TIMEOUT = 25000   # ms
-PAGE_JS_WAIT = 6            # segundos de espera para JS
+PAGE_LOAD_TIMEOUT = 30000   # ms
+PAGE_JS_WAIT = 9            # segundos de espera para JS (necesario para Cloudflare)
+DELAY_BETWEEN_PAGES = 5     # segundos entre páginas (rotación de contexto)
 
 
 # ── Tipo de cambio ────────────────────────────────────────────────────────────
@@ -398,31 +399,208 @@ def extract_from_json_scripts(html, tipologia, operacion):
     return list(props.values())
 
 
+# ── Extracción DOM (nuevo rendering SSR de ZonaProp, jun-2026) ────────────────
+
+_DOM_EXTRACT_JS = """() => {
+    const cards = document.querySelectorAll('[data-id][data-to-posting]');
+    const results = [];
+    for (const card of cards) {
+        const id = card.getAttribute('data-id');
+        const urlPath = card.getAttribute('data-to-posting') || '';
+
+        // Imagen y título desde primer img con alt
+        const img = card.querySelector('img[alt]');
+        const titulo = img ? img.getAttribute('alt') : '';
+        const imagenUrl = img ? img.getAttribute('src') : '';
+
+        // Precio: buscar elemento con data-qa o clase price
+        let precio = '';
+        const priceSelectors = [
+            '[data-qa="POSTING_CARD_PRICE"]',
+            '[class*="price"]',
+            '[class*="Price"]',
+        ];
+        for (const sel of priceSelectors) {
+            const el = card.querySelector(sel);
+            if (el && el.textContent.trim()) {
+                precio = el.textContent.trim();
+                break;
+            }
+        }
+
+        // Features: m², ambientes, dormitorios
+        const features = [];
+        const featSelectors = [
+            '[data-qa="POSTING_CARD_FEATURES"] span',
+            '[class*="cardFeatures"] li',
+            '[class*="feature"] span',
+        ];
+        for (const sel of featSelectors) {
+            card.querySelectorAll(sel).forEach(el => {
+                const t = el.textContent.trim();
+                if (t) features.push(t);
+            });
+            if (features.length > 0) break;
+        }
+
+        // Zona/dirección
+        let zona = '';
+        const locSelectors = [
+            '[data-qa="POSTING_CARD_LOCATION"]',
+            '[class*="location"]',
+            '[class*="Location"]',
+        ];
+        for (const sel of locSelectors) {
+            const el = card.querySelector(sel);
+            if (el && el.textContent.trim()) {
+                zona = el.textContent.trim();
+                break;
+            }
+        }
+
+        results.push({id, urlPath, titulo, precio, features, zona, imagenUrl});
+    }
+    return results;
+}"""
+
+
+def parse_dom_prop(raw, tipologia_default, operacion_default):
+    """
+    Convierte un posting extraído del DOM (nuevo rendering SSR de ZonaProp)
+    en un dict listo para Supabase.
+    """
+    fuente_id = str(raw.get("id") or "").strip()
+    if not fuente_id:
+        return None
+
+    # URL: limpiar parámetros de tracking
+    url_path = (raw.get("urlPath") or "").split("?")[0]
+    url = f"https://www.zonaprop.com.ar{url_path}" if url_path else ""
+
+    titulo = (raw.get("titulo") or "")[:500]
+
+    # ── Precio ──
+    precio_usd = None
+    precio_ars = None
+    precio_text = raw.get("precio") or ""
+
+    usd_m = re.search(r'USD\s*([\d\.]+)', precio_text)
+    if usd_m:
+        try:
+            precio_usd = float(usd_m.group(1).replace(".", ""))
+        except ValueError:
+            pass
+
+    if precio_usd is None:
+        ars_m = re.search(r'\$\s*([\d\.]+)', precio_text)
+        if ars_m:
+            try:
+                precio_ars = float(ars_m.group(1).replace(".", ""))
+            except ValueError:
+                pass
+
+    # ── Features ──
+    dormitorios = None
+    metros_totales = None
+    cochera = False
+
+    for feat in (raw.get("features") or []):
+        feat_l = feat.lower()
+        m2 = re.search(r'([\d,\.]+)\s*m²', feat_l)
+        if m2:
+            try:
+                metros_totales = float(m2.group(1).replace(",", "."))
+            except ValueError:
+                pass
+        dorm = re.search(r'(\d+)\s*dorm', feat_l)
+        if dorm:
+            dormitorios = int(dorm.group(1))
+        elif dormitorios is None:
+            amb = re.search(r'(\d+)\s*amb', feat_l)
+            if amb:
+                dormitorios = max(0, int(amb.group(1)) - 1)
+        if "coch" in feat_l or "garage" in feat_l or "parking" in feat_l:
+            cochera = True
+
+    if metros_totales == 0:
+        metros_totales = None
+
+    # ── Zona ──
+    zona_raw = (raw.get("zona") or "Tandil")
+    zona = zona_raw.split(",")[0].strip() or "Tandil"
+
+    # ── Imagen ──
+    imagen_url = raw.get("imagenUrl") or None
+
+    return {
+        "fuente": "zonaprop",
+        "fuente_id": fuente_id,
+        "url": url,
+        "tipologia": tipologia_default,
+        "operacion": operacion_default,
+        "zona": zona,
+        "precio_usd": precio_usd,
+        "precio_ars": precio_ars,
+        "tipo_cambio_usd": None,
+        "dormitorios": dormitorios,
+        "metros_totales": metros_totales,
+        "cochera": cochera,
+        "titulo": titulo,
+        "imagen_url": imagen_url,
+    }
+
+
 # ── Scraping con Playwright ────────────────────────────────────────────────────
 
-def fetch_html_playwright(page, url):
-    """Usa una página Playwright ya abierta para navegar y obtener el HTML."""
+def _make_context(browser):
+    """Crea un nuevo contexto Playwright fresco (necesario para evadir Cloudflare)."""
+    context = browser.new_context(
+        user_agent=(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+        locale="es-AR",
+        timezone_id="America/Argentina/Buenos_Aires",
+        viewport={"width": 1280, "height": 900},
+    )
+    context.add_init_script(
+        "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+    )
+    return context
+
+
+def fetch_page_playwright(browser, url):
+    """
+    Carga una URL con un contexto Playwright FRESCO y retorna (html, dom_props_raw).
+    ZonaProp (Cloudflare) bloquea después de la primera carga del mismo contexto,
+    por lo que se necesita un contexto nuevo por página.
+    """
+    context = _make_context(browser)
+    page = context.new_page()
     try:
         page.goto(url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT)
         time.sleep(PAGE_JS_WAIT)
-        page.set_default_timeout(PAGE_LOAD_TIMEOUT)
-        return page.content()
+        html = page.content()
+        # Extracción DOM directa (nuevo rendering SSR, jun-2026)
+        try:
+            dom_raw = page.evaluate(_DOM_EXTRACT_JS)
+        except Exception:
+            dom_raw = []
+        return html, dom_raw
     except Exception as e:
         print(f"  Error Playwright en {url}: {e}", file=sys.stderr)
-        return None
+        return None, []
+    finally:
+        context.close()
 
 
 def scrape_all(max_pages):
-    """Scrapea todas las URLs configuradas y retorna lista de propiedades."""
+    """
+    Scrapea todas las URLs configuradas y retorna lista de propiedades.
+    Usa un contexto Playwright fresco por página para evadir Cloudflare.
+    """
     from playwright.sync_api import sync_playwright
-    try:
-        from playwright_stealth import Stealth
-        _stealth = Stealth(
-            navigator_webdriver=True,
-            navigator_platform_override="MacIntel",
-        )
-    except ImportError:
-        _stealth = None
 
     all_props = {}  # fuente_id → prop (dedup global)
 
@@ -436,81 +614,71 @@ def scrape_all(max_pages):
                 "--disable-dev-shm-usage",
             ],
         )
-        context = browser.new_context(
-            user_agent=(
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/124.0.0.0 Safari/537.36"
-            ),
-            locale="es-AR",
-            timezone_id="America/Argentina/Buenos_Aires",
-            viewport={"width": 1280, "height": 900},
-        )
-        context.add_init_script(
-            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-        )
-        pw_page = context.new_page()
-        if _stealth:
-            _stealth.apply_stealth_sync(pw_page)
-            print("  [stealth mode activo]")
 
         for tipologia, operacion, base_url in SEARCH_URLS:
             print(f"\n→ Scrapeando {tipologia}/{operacion}...")
-            session_props = {}  # props de esta sesión para detectar fin de paginación
 
             for pg_idx in range(1, max_pages + 1):
                 url = get_page_url(base_url, pg_idx)
                 print(f"  Página {pg_idx}: {url}")
 
-                html = fetch_html_playwright(pw_page, url)
+                html, dom_raw = fetch_page_playwright(browser, url)
                 if not html:
                     break
 
-                # Extracción primaria: __NEXT_DATA__
-                next_data = extract_next_data(html)
-                postings = []
-                total_pages = None
+                props_this_page = []
 
-                if next_data:
-                    postings, total_pages = get_postings_from_next_data(next_data)
+                # Prioridad 1: extracción DOM (nuevo SSR, jun-2026)
+                if dom_raw:
+                    print(f"  → {len(dom_raw)} cards en DOM")
+                    for raw in dom_raw:
+                        prop = parse_dom_prop(raw, tipologia, operacion)
+                        if prop:
+                            props_this_page.append(prop)
 
-                if postings:
-                    print(f"  → {len(postings)} postings en __NEXT_DATA__")
-                    new_count = 0
-                    for posting in postings:
-                        prop = parse_posting(posting, tipologia, operacion)
-                        if prop and prop["fuente_id"] not in all_props:
-                            all_props[prop["fuente_id"]] = prop
-                            session_props[prop["fuente_id"]] = True
-                            new_count += 1
-                    print(f"  → {new_count} propiedades nuevas (total global: {len(all_props)})")
-                else:
-                    # Respaldo: extraer desde HTML/scripts
+                # Prioridad 2: __NEXT_DATA__ (rendering anterior Next.js)
+                if not props_this_page:
+                    next_data = extract_next_data(html)
+                    if next_data:
+                        postings, total_pages_nd = get_postings_from_next_data(next_data)
+                        if postings:
+                            print(f"  → {len(postings)} postings en __NEXT_DATA__")
+                            for posting in postings:
+                                prop = parse_posting(posting, tipologia, operacion)
+                                if prop:
+                                    props_this_page.append(prop)
+
+                # Prioridad 3: extracción regex de respaldo
+                if not props_this_page:
                     fallback_props = extract_from_json_scripts(html, tipologia, operacion)
                     if fallback_props:
                         print(f"  → {len(fallback_props)} propiedades por extracción de respaldo")
-                        for prop in fallback_props:
-                            if prop["fuente_id"] not in all_props:
-                                all_props[prop["fuente_id"]] = prop
-                                session_props[prop["fuente_id"]] = True
-                    else:
-                        print(f"  → Sin resultados en página {pg_idx}, cortando paginación")
-                        break
+                        props_this_page = fallback_props
 
-                # Verificar si hay más páginas
-                if total_pages is not None and pg_idx >= total_pages:
-                    print(f"  → Última página ({pg_idx}/{total_pages}), fin.")
+                if not props_this_page:
+                    print(f"  → Sin resultados en página {pg_idx}, cortando paginación")
                     break
 
-                # Verificar fin de paginación por URL ausente en el HTML
-                next_page_url = get_page_url(base_url, pg_idx + 1)
+                new_count = 0
+                for prop in props_this_page:
+                    if prop["fuente_id"] not in all_props:
+                        all_props[prop["fuente_id"]] = prop
+                        new_count += 1
+                print(f"  → {new_count} nuevas (total global: {len(all_props)})")
+
+                # Cortar paginación si la página estaba incompleta (<20 cards = última)
+                if len(props_this_page) < 20:
+                    print(f"  → Página incompleta ({len(props_this_page)} props), fin.")
+                    break
+
+                # Verificar presencia de siguiente página en el HTML
                 next_page_slug = f"-pagina-{pg_idx + 1}.html"
-                if pg_idx > 1 and next_page_slug not in html and total_pages is None:
+                if next_page_slug not in html:
                     print(f"  → No se detectó página {pg_idx + 1}, fin.")
                     break
 
                 if pg_idx < max_pages:
-                    time.sleep(DELAY_BETWEEN_REQUESTS)
+                    time.sleep(DELAY_BETWEEN_PAGES)
 
         browser.close()
 
