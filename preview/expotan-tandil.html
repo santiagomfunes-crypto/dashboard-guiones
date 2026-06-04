@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExpoTAN 2026 — Exposición Rural de Tandil</title>
+<meta name="description" content="La exposición rural más importante del centro bonaerense. 400+ expositores, 14 hectáreas, 53 ediciones. 23 al 26 de octubre 2026 en Tandil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ─────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Inter', system-ui, sans-serif;
+  background:#F2F6FC; color:#0F1E3C;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img { display:block; max-width:100%; }
+a { text-decoration:none; color:inherit; }
+button { border:none; background:none; font-family:inherit; cursor:pointer; }
+
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:       #F2F6FC;
+  --bg-white: #FFFFFF;
+  --bg-dark:  #0F1E3C;
+  --bg-dark2: #0A1528;
+  --ink:      #0F1E3C;
+  --ink-2:    #1C2E4A;
+  --muted:    #5A6E8A;
+  --faint:    #8FA3BC;
+  --blue:     #1EA5E1;
+  --blue-dk:  #1584B5;
+  --border:   #DDE7F0;
+  --border-d: #C4D4E6;
+  --w:        1200px;
+  --r:        10px;
+  --r-sm:     6px;
+}
+
+/* ── FOCUS ──────────────────────────────────────────────── */
+*:focus-visible {
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+  border-radius:4px;
+}
+
+/* ── ALTAVISTA DEMO BAR ─────────────────────────────────── */
+#demo-bar {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:#07101C; height:40px;
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  font-size:13px; font-weight:500; color:rgba(255,255,255,.65);
+}
+.demo-bar-link {
+  display:inline-flex; align-items:center; gap:6px;
+  background:#F4C430; color:#07101C;
+  font-size:12px; font-weight:700; letter-spacing:.03em;
+  padding:4px 12px; border-radius:4px;
+  transition:background .15s;
+}
+.demo-bar-link:hover { background:#F7D060; }
+.demo-bar-link::after { content:'→'; }
+
+/* ── NAV ────────────────────────────────────────────────── */
+nav {
+  position:fixed; top:40px; left:0; right:0; z-index:100;
+  height:64px;
+  background:rgba(15,30,60,.96);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  transition:background .2s;
+}
+nav.solid { background:rgba(10,21,40,.99); }
+.nav-w {
+  max-width:var(--w); margin:0 auto;
+  height:100%; padding:0 32px;
+  display:flex; align-items:center;
+}
+.nav-logo {
+  height:36px; width:auto; flex-shrink:0;
+  margin-right:44px; object-fit:contain; object-position:left;
+  filter:brightness(0) invert(1);
+}
+.nav-logo-fallback {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:18px; color:#FFF;
+  letter-spacing:-.02em; margin-right:44px; flex-shrink:0;
+  display:none;
+}
+.nav-logo-fallback span { color:var(--blue); }
+.nav-links {
+  display:flex; align-items:center; flex:1;
+}
+.nav-links a {
+  font-size:13.5px; font-weight:500; color:rgba(255,255,255,.6);
+  padding:6px 14px; border-radius:var(--r-sm);
+  transition:color .15s, background .15s; white-space:nowrap;
+}
+.nav-links a:hover { color:#FFF; background:rgba(255,255,255,.08); }
+.nav-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
+.btn-nav-outline {
+  font-size:13px; font-weight:500; color:rgba(255,255,255,.7);
+  padding:7px 16px; border-radius:var(--r-sm);
+  border:1px solid rgba(255,255,255,.2);
+  cursor:pointer; transition:all .15s;
+}
+.btn-nav-outline:hover { border-color:rgba(255,255,255,.45); color:#FFF; }
+.btn-nav-blue {
+  font-size:13px; font-weight:700; color:#FFF;
+  padding:7px 18px; border-radius:var(--r-sm);
+  background:var(--blue); cursor:pointer; transition:background .15s;
+  display:inline-flex; align-items:center;
+}
+.btn-nav-blue:hover { background:var(--blue-dk); }
+
+/* HAMBURGER */
+.hamburger {
+  display:none;
+  flex-direction:column; justify-content:center; align-items:center;
+  gap:5px; width:40px; height:40px;
+  border-radius:var(--r-sm); margin-left:auto; flex-shrink:0;
+}
+.hamburger:hover { background:rgba(255,255,255,.08); }
+.hamburger span {
+  display:block; width:20px; height:1.5px;
+  background:rgba(255,255,255,.8);
+  transition:transform .25s, opacity .2s;
+}
+.hamburger.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+
+/* MOBILE MENU */
+#mobile-menu {
+  position:fixed; top:104px; left:0; right:0; z-index:98;
+  background:rgba(10,21,40,.98);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:12px 16px 20px;
+  display:none; flex-direction:column; gap:2px;
+}
+#mobile-menu.open { display:flex; }
+#mobile-menu a {
+  font-size:15px; font-weight:500; color:rgba(255,255,255,.7);
+  padding:11px 12px; border-radius:var(--r-sm);
+  transition:background .15s;
+}
+#mobile-menu a:hover { background:rgba(255,255,255,.08); color:#FFF; }
+#mobile-menu hr { border:none; border-top:1px solid rgba(255,255,255,.08); margin:8px 0; }
+.mobile-blue-btn {
+  margin-top:4px;
+  display:flex; justify-content:center; align-items:center;
+  font-size:14.5px; font-weight:700; color:#FFF;
+  background:var(--blue); padding:13px 24px;
+  border-radius:var(--r-sm); cursor:pointer;
+}
+.mobile-blue-btn:hover { background:var(--blue-dk) !important; }
+
+/* ── HERO ───────────────────────────────────────────────── */
+#hero {
+  margin-top:104px;
+  min-height:calc(100svh - 104px);
+  background:var(--bg-dark);
+  display:flex; align-items:center;
+  position:relative; overflow:hidden;
+}
+#hero::before {
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(circle, rgba(30,165,225,.12) 1px, transparent 1px);
+  background-size:40px 40px; pointer-events:none;
+}
+#hero::after {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 70% at 85% 50%, rgba(30,165,225,.1) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 60% at 10% 30%, rgba(255,255,255,.03) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-content {
+  max-width:var(--w); margin:0 auto;
+  padding:80px 32px;
+  position:relative; z-index:1; width:100%;
+  display:grid; grid-template-columns:1fr 380px; gap:64px; align-items:center;
+}
+.hero-main { display:flex; flex-direction:column; }
+.hero-edition {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--blue); margin-bottom:24px;
+}
+.hero-edition::before { content:''; width:20px; height:1.5px; background:var(--blue); }
+.hero-h1 {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800;
+  font-size:clamp(48px, 7.5vw, 96px);
+  line-height:.97; letter-spacing:-.05em;
+  color:#FFF; margin-bottom:28px;
+}
+.hero-h1 .accent { color:var(--blue); }
+.hero-lead {
+  font-size:16px; color:rgba(255,255,255,.5);
+  line-height:1.7; max-width:460px; margin-bottom:36px;
+}
+.hero-date-pill {
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(30,165,225,.12); border:1px solid rgba(30,165,225,.25);
+  border-radius:var(--r-sm); padding:10px 16px;
+  font-size:14px; font-weight:600; color:rgba(255,255,255,.85);
+  margin-bottom:36px; align-self:flex-start;
+}
+.hero-date-pill svg { width:15px; height:15px; stroke:var(--blue); fill:none; stroke-width:1.5; flex-shrink:0; }
+.hero-ctas {
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.btn-blue {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:14.5px; font-weight:700; color:#FFF;
+  background:var(--blue); padding:13px 28px; border-radius:var(--r-sm);
+  transition:background .2s, transform .2s; cursor:pointer;
+}
+.btn-blue:hover { background:var(--blue-dk); transform:translateY(-1px); }
+.btn-blue svg { flex-shrink:0; transition:transform .2s; }
+.btn-blue:hover svg { transform:translateX(3px); }
+.btn-ghost-white {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:14.5px; font-weight:600; color:rgba(255,255,255,.75);
+  padding:13px 22px; border-radius:var(--r-sm);
+  border:1px solid rgba(255,255,255,.2);
+  transition:all .2s; cursor:pointer;
+}
+.btn-ghost-white:hover { border-color:rgba(255,255,255,.45); color:#FFF; background:rgba(255,255,255,.05); }
+
+/* Stats panel — right side */
+.hero-stats {
+  display:grid; grid-template-columns:1fr 1fr; gap:1px;
+  background:rgba(30,165,225,.2);
+  border:1px solid rgba(30,165,225,.2); border-radius:var(--r);
+  overflow:hidden;
+}
+.hero-stat {
+  background:rgba(255,255,255,.04);
+  padding:28px 22px;
+  display:flex; flex-direction:column; justify-content:flex-end;
+}
+.hero-stat-n {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:clamp(32px, 3.5vw, 46px); letter-spacing:-.04em;
+  color:#FFF; line-height:1; margin-bottom:6px;
+}
+.hero-stat-n .dot { color:var(--blue); }
+.hero-stat-l { font-size:12.5px; color:rgba(255,255,255,.4); font-weight:500; line-height:1.3; }
+
+/* ── SECTION BASE ───────────────────────────────────────── */
+.s { padding:96px 32px; }
+.s-w { max-width:var(--w); margin:0 auto; }
+.s-head {
+  display:flex; justify-content:space-between; align-items:flex-end;
+  margin-bottom:48px;
+}
+.s-label {
+  font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:10px;
+}
+.s-title {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:clamp(26px, 3vw, 36px);
+  letter-spacing:-.025em; line-height:1.1; color:var(--ink);
+}
+.s-link {
+  font-size:14px; font-weight:600; color:var(--muted);
+  display:flex; align-items:center; gap:6px;
+  transition:color .15s; white-space:nowrap; cursor:pointer;
+}
+.s-link:hover { color:var(--ink); }
+.s-link::after { content:'→'; transition:transform .2s; }
+.s-link:hover::after { transform:translateX(3px); }
+
+/* ── RUBROS ─────────────────────────────────────────────── */
+#rubros { background:var(--bg-white); }
+.rubros-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--border); border:1px solid var(--border); border-radius:var(--r);
+  overflow:hidden;
+}
+.rubro-card {
+  background:var(--bg-white); padding:32px 24px;
+  display:flex; flex-direction:column; gap:0;
+  cursor:pointer; transition:background .2s;
+}
+.rubro-card:hover { background:#F6FAFF; }
+.rubro-icon { font-size:28px; margin-bottom:16px; line-height:1; }
+.rubro-name {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:700; font-size:16px; letter-spacing:-.015em;
+  color:var(--ink); margin-bottom:6px; line-height:1.2;
+}
+.rubro-count { font-size:13px; color:var(--muted); }
+.rubro-count strong { font-weight:700; color:var(--blue); }
+
+/* ── AGENDA ─────────────────────────────────────────────── */
+#agenda { background:var(--bg); }
+.agenda-grid { display:flex; flex-direction:column; gap:2px; }
+.agenda-day {
+  border:1px solid var(--border); border-radius:var(--r);
+  background:var(--bg-white); overflow:hidden;
+  cursor:pointer; transition:box-shadow .2s;
+}
+.agenda-day:hover { box-shadow:0 4px 20px rgba(15,30,60,.08); }
+.agenda-day-head {
+  display:flex; align-items:center; gap:20px;
+  padding:18px 28px; border-bottom:1px solid var(--border);
+}
+.agenda-day-date {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:20px; letter-spacing:-.02em;
+  color:var(--ink); min-width:52px;
+}
+.agenda-day-label { font-size:14px; font-weight:600; color:var(--ink); }
+.agenda-day-sub { font-size:12px; color:var(--muted); margin-left:auto; }
+.agenda-items {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+  background:var(--border);
+}
+.agenda-item { background:var(--bg-white); padding:16px 20px; }
+.agenda-item-time { font-size:11px; font-weight:700; color:var(--blue); letter-spacing:.05em; margin-bottom:4px; }
+.agenda-item-title { font-size:14px; font-weight:600; color:var(--ink); line-height:1.4; }
+.agenda-item-loc { font-size:12px; color:var(--faint); margin-top:4px; }
+
+/* ── EXPOSITOR CTA ──────────────────────────────────────── */
+#expositor { background:var(--bg-dark); padding:80px 32px; }
+.expositor-w {
+  max-width:var(--w); margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;
+}
+.expositor-label {
+  font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--blue); margin-bottom:14px;
+}
+.expositor-title {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:clamp(28px, 3.5vw, 44px);
+  letter-spacing:-.04em; line-height:1.05; color:#FFF; margin-bottom:18px;
+}
+.expositor-desc { font-size:15px; color:rgba(255,255,255,.42); line-height:1.7; margin-bottom:28px; }
+.expositor-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.expositor-list li {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:14px; color:rgba(255,255,255,.55); line-height:1.4;
+}
+.ex-check {
+  width:18px; height:18px; border-radius:50%; flex-shrink:0;
+  background:rgba(30,165,225,.2); color:var(--blue);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-weight:700; margin-top:1px;
+}
+.expositor-cards { display:flex; flex-direction:column; gap:12px; }
+.ex-card {
+  border-radius:var(--r); padding:22px 26px;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+  transition:border-color .2s;
+}
+.ex-card:hover { border-color:rgba(255,255,255,.22); }
+.ex-card.featured { background:var(--blue); border-color:var(--blue); }
+.ex-card-name {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:700; font-size:16px; color:rgba(255,255,255,.9); margin-bottom:5px;
+}
+.ex-card.featured .ex-card-name { color:#FFF; }
+.ex-card-desc { font-size:13px; color:rgba(255,255,255,.4); margin-bottom:14px; line-height:1.5; }
+.ex-card.featured .ex-card-desc { color:rgba(255,255,255,.75); }
+.ex-card-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:700;
+  padding:8px 16px; border-radius:var(--r-sm);
+  cursor:pointer; transition:all .15s;
+  font-family:'Inter', sans-serif;
+}
+.ex-card:not(.featured) .ex-card-btn {
+  background:rgba(255,255,255,.1); color:#FFF; border:1px solid rgba(255,255,255,.15);
+}
+.ex-card:not(.featured) .ex-card-btn:hover { background:rgba(255,255,255,.18); }
+.ex-card.featured .ex-card-btn { background:rgba(255,255,255,.2); color:#FFF; }
+.ex-card.featured .ex-card-btn:hover { background:rgba(255,255,255,.3); }
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+footer { background:var(--bg-dark2); padding:56px 32px 36px; }
+.footer-w { max-width:var(--w); margin:0 auto; }
+.footer-top {
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:40px; margin-bottom:40px;
+  padding-bottom:40px; border-bottom:1px solid rgba(255,255,255,.07);
+}
+.footer-logo {
+  height:30px; margin-bottom:14px;
+  filter:brightness(0) invert(1); opacity:.65;
+}
+.footer-logo-fallback {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:16px; color:rgba(255,255,255,.5);
+  margin-bottom:14px; display:none;
+}
+.footer-logo-fallback span { color:var(--blue); }
+.footer-tagline { font-size:13.5px; color:rgba(255,255,255,.3); line-height:1.6; max-width:220px; margin-bottom:20px; }
+.footer-social { display:flex; gap:8px; }
+.social-btn {
+  width:30px; height:30px; border-radius:var(--r-sm);
+  background:rgba(255,255,255,.06);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:background .15s;
+}
+.social-btn:hover { background:rgba(255,255,255,.14); }
+.social-btn svg { width:13px; height:13px; fill:rgba(255,255,255,.4); }
+.footer-col-h {
+  font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:rgba(255,255,255,.2); margin-bottom:14px;
+}
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
+.footer-col ul a { font-size:13.5px; color:rgba(255,255,255,.35); transition:color .15s; }
+.footer-col ul a:hover { color:rgba(255,255,255,.75); }
+.footer-bottom {
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:12px;
+}
+.footer-copy { font-size:12.5px; color:rgba(255,255,255,.18); }
+.footer-legal { display:flex; gap:16px; }
+.footer-legal a { font-size:12.5px; color:rgba(255,255,255,.18); transition:color .15s; }
+.footer-legal a:hover { color:rgba(255,255,255,.4); }
+
+/* ── PROPUESTA ALTAVISTA ────────────────────────────────── */
+#propuesta {
+  background:#07101C;
+  padding:80px 32px;
+  border-top:3px solid #F4C430;
+}
+.prop-w { max-width:760px; margin:0 auto; text-align:center; }
+.prop-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(244,196,48,.12); border:1px solid rgba(244,196,48,.2);
+  border-radius:20px; padding:6px 14px;
+  font-size:12px; font-weight:600; color:#F4C430;
+  letter-spacing:.04em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.prop-title {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:clamp(28px, 4vw, 44px);
+  letter-spacing:-.035em; line-height:1.1; color:#FFF;
+  margin-bottom:16px;
+}
+.prop-sub {
+  font-size:16px; color:rgba(255,255,255,.45);
+  line-height:1.65; margin-bottom:40px;
+}
+.prop-cards {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+  margin-bottom:40px; text-align:left;
+}
+.prop-card {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r); padding:20px;
+}
+.prop-card-price {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-weight:800; font-size:22px; color:#F4C430;
+  letter-spacing:-.03em; line-height:1; margin-bottom:4px;
+}
+.prop-card-period { font-size:11px; color:rgba(255,255,255,.3); margin-bottom:10px; }
+.prop-card-name {
+  font-size:14px; font-weight:600; color:rgba(255,255,255,.8);
+  margin-bottom:6px;
+}
+.prop-card-desc { font-size:12.5px; color:rgba(255,255,255,.35); line-height:1.5; }
+.prop-cta-group { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.btn-wa {
+  display:inline-flex; align-items:center; gap:10px;
+  background:#25D366; color:#FFF;
+  font-size:15px; font-weight:700;
+  padding:14px 32px; border-radius:var(--r-sm);
+  transition:background .2s, transform .2s; cursor:pointer;
+}
+.btn-wa:hover { background:#1FB355; transform:translateY(-1px); }
+.btn-wa svg { width:20px; height:20px; fill:#FFF; flex-shrink:0; }
+.prop-disclaimer { font-size:13px; color:rgba(255,255,255,.3); }
+
+/* ── REVEAL ─────────────────────────────────────────────── */
+.reveal {
+  opacity:0; transform:translateY(20px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity:1; transform:none; }
+.reveal[data-delay="1"] { transition-delay:.1s; }
+.reveal[data-delay="2"] { transition-delay:.2s; }
+.reveal[data-delay="3"] { transition-delay:.3s; }
+
+/* ── PREFERS REDUCED MOTION ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  .reveal { opacity:1; transform:none; transition:none; }
+  .btn-blue:hover, .btn-wa:hover { transform:none; }
+  * { transition-duration:.01ms !important; }
+}
+
+/* ── RESPONSIVE: TABLET (≤1023px) ───────────────────────── */
+@media (max-width:1023px) {
+  .nav-links { display:none; }
+  .nav-right { display:none; }
+  .hamburger { display:flex; }
+  .nav-w { padding:0 20px; }
+  .nav-logo { margin-right:0; }
+
+  .hero-content { padding:60px 24px; grid-template-columns:1fr; gap:48px; }
+  .hero-stats { grid-template-columns:repeat(4,1fr); }
+  .hero-h1 { font-size:clamp(44px, 9vw, 68px); }
+
+  .s { padding:72px 24px; }
+
+  .rubros-grid { grid-template-columns:repeat(2,1fr); }
+
+  .agenda-items { grid-template-columns:1fr 1fr; }
+
+  .expositor-w { grid-template-columns:1fr; gap:48px; }
+  #expositor { padding:64px 24px; }
+
+  .footer-top { grid-template-columns:1fr 1fr; gap:28px; }
+  footer { padding:48px 24px 28px; }
+
+  .prop-cards { grid-template-columns:1fr; }
+  #propuesta { padding:64px 24px; }
+}
+
+/* ── RESPONSIVE: MOBILE (≤767px) ────────────────────────── */
+@media (max-width:767px) {
+  #demo-bar { font-size:11px; gap:8px; padding:0 12px; }
+  #demo-bar > span:first-child { display:none; }
+
+  .nav-w { padding:0 16px; }
+  .nav-logo { height:28px; }
+
+  .hero-content { padding:44px 16px 52px; grid-template-columns:1fr; gap:32px; }
+  .hero-h1 { font-size:clamp(40px, 13vw, 56px); }
+  .hero-lead { font-size:15px; }
+  .hero-ctas { gap:10px; }
+  .btn-blue, .btn-ghost-white { font-size:14px; padding:12px 20px; }
+  .hero-stats { grid-template-columns:repeat(2,1fr); }
+  .hero-stat { padding:22px 18px; }
+
+  .s { padding:56px 16px; }
+  .s-head { flex-direction:column; align-items:flex-start; gap:14px; }
+
+  .rubros-grid { grid-template-columns:1fr 1fr; }
+
+  .agenda-items { grid-template-columns:1fr; }
+
+  .expositor-w { gap:36px; }
+  #expositor { padding:56px 16px; }
+
+  .footer-top { grid-template-columns:1fr; gap:24px; }
+  footer { padding:44px 16px 28px; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; }
+
+  #propuesta { padding:56px 16px; }
+  .prop-cards { grid-template-columns:1fr; }
+}
+
+@media (max-width:479px) {
+  .rubros-grid { grid-template-columns:1fr; }
+  .hero-stats { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ALTAVISTA DEMO BAR -->
+<div id="demo-bar">
+  <span>Esta es una demo gratuita de cómo quedaría tu sitio</span>
+  <a href="#propuesta" class="demo-bar-link">Ver propuesta de Altavista Web</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav" aria-label="Navegación principal">
+  <div class="nav-w">
+    <img
+      src="https://www.expotan.com.ar/img-home/logo.png"
+      alt="ExpoTAN — Exposición Rural de Tandil"
+      class="nav-logo"
+      onerror="this.style.display='none'; document.getElementById('nav-logo-fallback').style.display='block';"
+    >
+    <span id="nav-logo-fallback" class="nav-logo-fallback">Expo<span>TAN</span></span>
+    <div class="nav-links" role="navigation">
+      <a href="#rubros">Rubros</a>
+      <a href="#agenda">Agenda</a>
+      <a href="#expositor">Ser Expositor</a>
+      <a href="#">Entradas</a>
+    </div>
+    <div class="nav-right">
+      <a href="#expositor" class="btn-nav-outline">Quiero exponer</a>
+      <a href="#" class="btn-nav-blue">Comprar entrada</a>
+    </div>
+    <button
+      class="hamburger"
+      id="hamburger"
+      type="button"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" aria-hidden="true">
+  <a href="#rubros">Rubros</a>
+  <a href="#agenda">Agenda</a>
+  <a href="#expositor">Ser Expositor</a>
+  <a href="#">Entradas</a>
+  <hr>
+  <a href="#expositor" style="color:rgba(255,255,255,.45); font-size:14px;">Quiero exponer</a>
+  <a href="#" class="mobile-blue-btn">Comprar entrada</a>
+</div>
+
+<main id="main-content">
+
+<!-- HERO -->
+<section id="hero" aria-labelledby="hero-title">
+  <div class="hero-content">
+    <div class="hero-main">
+      <span class="hero-edition">53.ª Edición</span>
+      <h1 class="hero-h1" id="hero-title">
+        El campo y<br>la ciudad,<br>
+        <span class="accent">unidos en Tandil.</span>
+      </h1>
+      <div class="hero-date-pill">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        23 al 26 de Octubre, 2026 — Predio Ferial
+      </div>
+      <p class="hero-lead">
+        La exposición rural más importante del centro bonaerense. Ganadería, agro, maquinaria, gastronomía y más en 14 hectáreas.
+      </p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-blue">
+          Comprar entradas
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#expositor" class="btn-ghost-white">Quiero exponer</a>
+      </div>
+    </div>
+    <div class="hero-stats" role="list" aria-label="Datos de la Expo">
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-n">400<span class="dot">+</span></div>
+        <div class="hero-stat-l">Expositores</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-n">14<span class="dot"> ha</span></div>
+        <div class="hero-stat-l">Superficie</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-n">80k<span class="dot">+</span></div>
+        <div class="hero-stat-l">Visitantes</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="hero-stat-n">53</div>
+        <div class="hero-stat-l">Ediciones</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUBROS -->
+<section id="rubros" class="s" aria-labelledby="rubros-title">
+  <div class="s-w">
+    <div class="s-head reveal">
+      <div>
+        <div class="s-label">Lo que vas a encontrar</div>
+        <h2 class="s-title" id="rubros-title">Todos los rubros, en un solo predio</h2>
+      </div>
+      <a href="#" class="s-link">Ver todos los expositores</a>
+    </div>
+    <div class="rubros-grid reveal" data-delay="1" role="list">
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🐄</div>
+        <div class="rubro-name">Ganadería</div>
+        <div class="rubro-count"><strong>80+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🌾</div>
+        <div class="rubro-name">Agricultura y Agro</div>
+        <div class="rubro-count"><strong>65+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🚜</div>
+        <div class="rubro-name">Maquinaria Rural</div>
+        <div class="rubro-count"><strong>55+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🍖</div>
+        <div class="rubro-name">Gastronomía</div>
+        <div class="rubro-count"><strong>40+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🐎</div>
+        <div class="rubro-name">Equinos y Deportes</div>
+        <div class="rubro-count"><strong>30+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🛠️</div>
+        <div class="rubro-name">Insumos y Servicios</div>
+        <div class="rubro-count"><strong>70+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">🎨</div>
+        <div class="rubro-name">Artesanías y Cultura</div>
+        <div class="rubro-count"><strong>30+</strong> expositores</div>
+      </div>
+      <div class="rubro-card" role="listitem">
+        <div class="rubro-icon" aria-hidden="true">💻</div>
+        <div class="rubro-name">AgroTec e Innovación</div>
+        <div class="rubro-count"><strong>25+</strong> expositores</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section id="agenda" class="s" style="background:var(--bg);" aria-labelledby="agenda-title">
+  <div class="s-w">
+    <div class="s-head reveal">
+      <div>
+        <div class="s-label">Programa</div>
+        <h2 class="s-title" id="agenda-title">Agenda de la Expo</h2>
+      </div>
+      <a href="#" class="s-link">Ver programa completo</a>
+    </div>
+    <div class="agenda-grid">
+      <div class="agenda-day reveal" data-delay="1">
+        <div class="agenda-day-head">
+          <div class="agenda-day-date">Jue 23</div>
+          <div><div class="agenda-day-label">Apertura oficial</div></div>
+          <div class="agenda-day-sub">Entrada libre</div>
+        </div>
+        <div class="agenda-items">
+          <div class="agenda-item">
+            <div class="agenda-item-time">10:00</div>
+            <div class="agenda-item-title">Acto inaugural con autoridades provinciales</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">14:00</div>
+            <div class="agenda-item-title">Juzgamiento Gran Campeón Bovino</div>
+            <div class="agenda-item-loc">Pista principal</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">20:00</div>
+            <div class="agenda-item-title">Show artístico — Cuarteto de Nos</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-day reveal" data-delay="2">
+        <div class="agenda-day-head">
+          <div class="agenda-day-date">Vie 24</div>
+          <div><div class="agenda-day-label">Día del campo y la tecnología</div></div>
+          <div class="agenda-day-sub">Foco AgroTec</div>
+        </div>
+        <div class="agenda-items">
+          <div class="agenda-item">
+            <div class="agenda-item-time">09:30</div>
+            <div class="agenda-item-title">Jornada AgroTec con Cluster Tecnológico</div>
+            <div class="agenda-item-loc">Auditorio norte</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">14:30</div>
+            <div class="agenda-item-title">Remate ganadero — Cabaña El Taladro</div>
+            <div class="agenda-item-loc">Pista de remates</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">20:00</div>
+            <div class="agenda-item-title">Festival folclórico — Los Palmeras</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-day reveal" data-delay="3">
+        <div class="agenda-day-head">
+          <div class="agenda-day-date">Sáb 25</div>
+          <div><div class="agenda-day-label">Día familiar</div></div>
+          <div class="agenda-day-sub">Actividades para chicos</div>
+        </div>
+        <div class="agenda-items">
+          <div class="agenda-item">
+            <div class="agenda-item-time">10:00</div>
+            <div class="agenda-item-title">Gran desfile ecuestre regional</div>
+            <div class="agenda-item-loc">Pista principal</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">15:00</div>
+            <div class="agenda-item-title">Elección de la Reina de ExpoTAN</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">21:00</div>
+            <div class="agenda-item-title">Cierre musical — La Mona Jiménez</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-day reveal" data-delay="1">
+        <div class="agenda-day-head">
+          <div class="agenda-day-date">Dom 26</div>
+          <div><div class="agenda-day-label">Último día — Gran cierre</div></div>
+          <div class="agenda-day-sub">Hasta las 20:00</div>
+        </div>
+        <div class="agenda-items">
+          <div class="agenda-item">
+            <div class="agenda-item-time">10:00</div>
+            <div class="agenda-item-title">Misa campal en el predio ferial</div>
+            <div class="agenda-item-loc">Predio central</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">14:00</div>
+            <div class="agenda-item-title">Entrega de premios y certificaciones</div>
+            <div class="agenda-item-loc">Auditorio principal</div>
+          </div>
+          <div class="agenda-item">
+            <div class="agenda-item-time">18:00</div>
+            <div class="agenda-item-title">Cierre oficial 53.ª edición</div>
+            <div class="agenda-item-loc">Escenario central</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPOSITOR CTA -->
+<section id="expositor" aria-labelledby="expositor-title">
+  <div class="expositor-w">
+    <div class="reveal">
+      <div class="expositor-label">Participá como expositor</div>
+      <h2 class="expositor-title" id="expositor-title">Tu negocio frente a 80.000 visitantes</h2>
+      <p class="expositor-desc">ExpoTAN es la plataforma de negocios más grande del centro bonaerense. Inscribite antes del 1 de septiembre y garantizá tu espacio en la edición 2026.</p>
+      <ul class="expositor-list">
+        <li><div class="ex-check" aria-hidden="true">✓</div> Stands desde 12 m² en zona estratégica</li>
+        <li><div class="ex-check" aria-hidden="true">✓</div> Inclusión en el directorio oficial de expositores</li>
+        <li><div class="ex-check" aria-hidden="true">✓</div> Mención en redes sociales y comunicados de prensa</li>
+        <li><div class="ex-check" aria-hidden="true">✓</div> Acceso preferencial a actividades y remates</li>
+        <li><div class="ex-check" aria-hidden="true">✓</div> Descuento del 20% hasta el 31 de julio</li>
+      </ul>
+    </div>
+    <div class="expositor-cards reveal" data-delay="1">
+      <div class="ex-card featured">
+        <div class="ex-card-name">Stand Empresarial</div>
+        <div class="ex-card-desc">Desde 36 m². Ubicación premium, alto tráfico, presencia destacada.</div>
+        <button class="ex-card-btn" type="button">Consultar disponibilidad →</button>
+      </div>
+      <div class="ex-card">
+        <div class="ex-card-name">Stand Estándar</div>
+        <div class="ex-card-desc">12 a 24 m². Ideal para pymes. Incluye módulo de iluminación.</div>
+        <button class="ex-card-btn" type="button">Reservar mi stand →</button>
+      </div>
+      <div class="ex-card">
+        <div class="ex-card-name">Espacio Artesanos</div>
+        <div class="ex-card-desc">Puestos individuales en el paseo de artesanías y productos regionales.</div>
+        <button class="ex-card-btn" type="button">Inscribirme →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-w">
+    <div class="footer-top">
+      <div>
+        <img
+          src="https://www.expotan.com.ar/img-home/logo.png"
+          alt="ExpoTAN"
+          class="footer-logo"
+          onerror="this.style.display='none'; document.getElementById('footer-logo-fallback').style.display='block';"
+        >
+        <span id="footer-logo-fallback" class="footer-logo-fallback">Expo<span>TAN</span></span>
+        <p class="footer-tagline">Organizada por la Sociedad Rural de Tandil desde 1974. El encuentro del campo y la ciudad.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" aria-label="Facebook de ExpoTAN">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="Instagram de ExpoTAN">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="YouTube de ExpoTAN">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.95C18.88 4 12 4 12 4s-6.88 0-8.59.47A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h">La Expo</div>
+        <ul>
+          <li><a href="#">Historia</a></li>
+          <li><a href="#rubros">Rubros</a></li>
+          <li><a href="#agenda">Agenda 2026</a></li>
+          <li><a href="#">Ediciones anteriores</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h">Participar</div>
+        <ul>
+          <li><a href="#">Comprar entradas</a></li>
+          <li><a href="#expositor">Ser expositor</a></li>
+          <li><a href="#">Espacio artesanos</a></li>
+          <li><a href="#">Acreditaciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h">Información</div>
+        <ul>
+          <li><a href="#">Cómo llegar</a></li>
+          <li><a href="#">Estacionamiento</a></li>
+          <li><a href="#">Prensa</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 ExpoTAN — Sociedad Rural de Tandil. Todos los derechos reservados.</p>
+      <div class="footer-legal">
+        <a href="#">Política de privacidad</a>
+        <a href="#">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- PROPUESTA ALTAVISTA -->
+<section id="propuesta" aria-labelledby="prop-title">
+  <div class="prop-w">
+    <div class="prop-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Demo de Altavista Web
+    </div>
+    <h2 class="prop-title" id="prop-title">Tu sitio web,<br>listo en 10 días.</h2>
+    <p class="prop-sub">Lo que acabas de ver es una demo gratuita que preparé especialmente para ExpoTAN. Así quedaría el sitio real. Sin compromiso, sin adelantos.</p>
+    <div class="prop-cards">
+      <div class="prop-card">
+        <div class="prop-card-price">$450</div>
+        <div class="prop-card-period">setup + $60/mes</div>
+        <div class="prop-card-name">Presencia</div>
+        <div class="prop-card-desc">Landing page + SEO local + WhatsApp. Para estar en Google desde el día 1.</div>
+      </div>
+      <div class="prop-card" style="border-color:rgba(244,196,48,.3); background:rgba(244,196,48,.05);">
+        <div class="prop-card-price">$900</div>
+        <div class="prop-card-period">setup + $100/mes</div>
+        <div class="prop-card-name">Sitio Completo ★</div>
+        <div class="prop-card-desc">5-8 páginas, agenda, galería, Analytics. El más elegido para eventos.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-card-price">$1.800</div>
+        <div class="prop-card-period">setup + $160/mes</div>
+        <div class="prop-card-name">Sitio + Motor</div>
+        <div class="prop-card-desc">Venta de entradas online, inscripción de expositores, panel admin.</div>
+      </div>
+    </div>
+    <div class="prop-cta-group">
+      <a href="https://wa.me/5492494557754?text=Hola%20Santiago!%20Vi%20la%20demo%20de%20ExpoTAN%20y%20quiero%20saber%20m%C3%A1s." class="btn-wa" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Hablar con Santiago por WhatsApp
+      </a>
+      <p class="prop-disclaimer">Sin compromiso. Te respondo en menos de una hora.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ── NAV ─────────────────────────────────────────────────── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 8);
+}, { passive: true });
+
+/* ── MOBILE MENU ─────────────────────────────────────────── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open', isOpen);
+  hamburger.setAttribute('aria-expanded', isOpen);
+  mobileMenu.setAttribute('aria-hidden', !isOpen);
+});
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!nav.contains(e.target) && !mobileMenu.contains(e.target)) {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+  }
+});
+
+/* ── REVEAL ──────────────────────────────────────────────── */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
