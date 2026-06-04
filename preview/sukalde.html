@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sukalde — Cocina Vasca · Tandil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8F2E8;
+    --bg2: #EDE3D0;
+    --ink: #1A0C06;
+    --basque-red: #C52030;
+    --cream: #FAF4E8;
+    --oak: #7A5030;
+    --dark: #120A04;
+    --border: #D4C8B0;
+    --agency-navy: #07101C;
+    --agency-amber: #F4C430;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'Lato', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* SCROLL PROGRESS */
+  #progress-bar {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--basque-red);
+    z-index: 200;
+    transition: width 0.1s linear;
+  }
+
+  /* AGENCY BAR */
+  #agency-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 40px;
+    background: var(--agency-navy);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  #agency-bar span {
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.08em;
+  }
+  #agency-bar a {
+    background: var(--agency-amber);
+    color: #07101C;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 5px 14px;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+  #agency-bar a:hover { opacity: 0.85; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 40px; left: 0; right: 0;
+    height: 56px;
+    background: var(--dark);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+  .nav-brand {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: 22px;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+  .nav-brand span { color: var(--basque-red); }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #fff; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #fff;
+    transition: all 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 96px; left: 0; right: 0;
+    background: var(--dark);
+    padding: 24px 40px;
+    z-index: 240;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* HERO — OAK SPLIT */
+  #hero {
+    padding-top: 96px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-left {
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 64px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(122,80,48,0.25) 0%, transparent 70%);
+  }
+  .hero-left-content { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--basque-red);
+    margin-bottom: 24px;
+  }
+  .hero-name {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: clamp(64px, 9vw, 108px);
+    line-height: 0.9;
+    color: #fff;
+    margin-bottom: 28px;
+  }
+  .hero-tagline {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 340px;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--basque-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    transition: opacity 0.2s;
+  }
+  .hero-cta:hover { opacity: 0.88; }
+  .hero-badges {
+    display: flex;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 14px;
+  }
+  .hero-badge .badge-num {
+    font-family: 'Abril Fatface', serif;
+    font-size: 18px;
+    color: #fff;
+  }
+  .hero-badge .badge-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .hero-right {
+    background: linear-gradient(135deg, #C87820 0%, #A05820 30%, #7A4010 60%, #4A2010 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(255,200,80,0.3) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(120,40,0,0.5) 0%, transparent 40%);
+  }
+  .hero-right-label {
+    position: relative;
+    z-index: 1;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    display: inline-block;
+    padding: 12px 20px;
+    width: fit-content;
+  }
+  .hero-right-label p {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+  }
+  .hero-right-label h3 {
+    font-family: 'Abril Fatface', serif;
+    font-size: 20px;
+    color: #fff;
+  }
+
+  /* PINTXOS COUNTER */
+  #pintxos {
+    padding: 80px 40px;
+    background: var(--bg);
+  }
+  .pintxos-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+  .pintxos-header-left {}
+  .section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--basque-red);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .pintxos-hint {
+    font-size: 12px;
+    color: rgba(26,12,6,0.4);
+    letter-spacing: 0.1em;
+  }
+  .pintxos-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .pintxos-scroll::-webkit-scrollbar { height: 4px; }
+  .pintxos-scroll::-webkit-scrollbar-track { background: transparent; }
+  .pintxos-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .pintxo-card {
+    flex: 0 0 220px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .pintxo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26,12,6,0.12);
+  }
+  .pintxo-card:nth-child(even) { transform: rotate(0.8deg); }
+  .pintxo-card:nth-child(even):hover { transform: rotate(0.8deg) translateY(-4px); }
+  .pintxo-card:nth-child(3n) { transform: rotate(-0.5deg); }
+  .pintxo-num {
+    font-family: 'Abril Fatface', serif;
+    font-size: 36px;
+    color: rgba(26,12,6,0.06);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .pintxo-name {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .pintxo-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(26,12,6,0.6);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .pintxo-tag {
+    display: inline-block;
+    background: var(--basque-red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+  }
+
+  /* DEL PAIS VASCO */
+  #vasco {
+    padding: 80px 40px;
+    background: var(--bg2);
+  }
+  .vasco-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .vasco-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .vasco-card {
+    border-left: 3px solid var(--basque-red);
+    padding-left: 24px;
+  }
+  .vasco-card-title {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .vasco-card-text {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(26,12,6,0.65);
+    line-height: 1.75;
+  }
+  .vasco-card-detail {
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--oak);
+  }
+
+  /* TXAKOLI */
+  #txakoli {
+    background: var(--dark);
+    padding: 80px 40px;
+  }
+  .txakoli-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .txakoli-left {}
+  .txakoli-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--basque-red);
+    margin-bottom: 16px;
+  }
+  .txakoli-title {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: clamp(36px, 5vw, 56px);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .txakoli-text {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+  .txakoli-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .wine-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+  }
+  .wine-year {
+    font-family: 'Abril Fatface', serif;
+    font-size: 24px;
+    color: var(--basque-red);
+    min-width: 60px;
+  }
+  .wine-info {}
+  .wine-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .wine-region {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* RESERVAS */
+  #reservas {
+    padding: 80px 40px;
+    background: var(--cream);
+  }
+  .reservas-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .reservas-left {}
+  .reservas-title {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .reservas-text {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(26,12,6,0.6);
+    line-height: 1.75;
+    margin-bottom: 32px;
+  }
+  .btn-reserva {
+    display: inline-block;
+    background: var(--basque-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    transition: opacity 0.2s;
+  }
+  .btn-reserva:hover { opacity: 0.88; }
+  .reservas-right {}
+  .info-block {
+    margin-bottom: 28px;
+  }
+  .info-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--oak);
+    margin-bottom: 6px;
+  }
+  .info-value {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* PROPUESTA */
+  #propuesta {
+    padding: 100px 40px;
+    background: var(--basque-red);
+    text-align: center;
+  }
+  .propuesta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .propuesta-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 20px;
+  }
+  .propuesta-title {
+    font-family: 'Abril Fatface', Georgia, serif;
+    font-size: clamp(32px, 5vw, 52px);
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .propuesta-text {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.75;
+    margin-bottom: 40px;
+  }
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 36px;
+    transition: opacity 0.2s;
+  }
+  .btn-wa:hover { opacity: 0.88; }
+  .btn-wa svg { width: 18px; height: 18px; fill: #fff; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-family: 'Abril Fatface', serif;
+    font-size: 18px;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-credit {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 240px; }
+    .txakoli-inner { grid-template-columns: 1fr; gap: 40px; }
+    .reservas-inner { grid-template-columns: 1fr; gap: 40px; }
+    .vasco-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    #pintxos { padding: 64px 24px; }
+    #vasco { padding: 64px 24px; }
+    #txakoli { padding: 64px 24px; }
+    #reservas { padding: 64px 24px; }
+    #propuesta { padding: 64px 24px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .pintxos-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    #agency-bar { padding: 0 16px; }
+    #agency-bar span { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AGENCY BAR -->
+<div id="agency-bar">
+  <span>Demo por Altavista Web · Agencia de diseño web en Tandil</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Ver propuesta</a>
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-brand">SUK<span>A</span>LDE</a>
+  <ul class="nav-links">
+    <li><a href="#pintxos">Pintxos</a></li>
+    <li><a href="#vasco">El País Vasco</a></li>
+    <li><a href="#txakoli">Vinos</a></li>
+    <li><a href="#reservas">Reservas</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Menú" onclick="toggleMobile()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#pintxos" onclick="closeMobile()">Pintxos</a>
+  <a href="#vasco" onclick="closeMobile()">El País Vasco</a>
+  <a href="#txakoli" onclick="closeMobile()">Vinos</a>
+  <a href="#reservas" onclick="closeMobile()">Reservas</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-left-content reveal">
+      <p class="hero-eyebrow">Cocina vasca en Tandil</p>
+      <h1 class="hero-name">SUKALDE</h1>
+      <p class="hero-tagline">
+        Pintxos, raciones y cocina vasca de verdad.
+        La tradición del País Vasco en la mesa de la sierra.
+      </p>
+      <a href="https://wa.me/5492494557754" target="_blank" rel="noopener" class="hero-cta">
+        Hacer reserva
+      </a>
+      <div class="hero-badges">
+        <div class="hero-badge">
+          <span class="badge-num">4.7</span>
+          <span class="badge-label">Puntuación</span>
+        </div>
+        <div class="hero-badge">
+          <span class="badge-num">400+</span>
+          <span class="badge-label">Reseñas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-label">
+      <p>Ahora sirviendo</p>
+      <h3>Pintxos del día</h3>
+    </div>
+  </div>
+</section>
+
+<!-- PINTXOS COUNTER -->
+<section id="pintxos">
+  <div class="pintxos-header reveal">
+    <div class="pintxos-header-left">
+      <p class="section-tag">La barra</p>
+      <h2 class="section-title">Pintxos de hoy</h2>
+    </div>
+    <span class="pintxos-hint">Deslizar para ver mas</span>
+  </div>
+  <div class="pintxos-scroll reveal">
+    <div class="pintxo-card">
+      <div class="pintxo-num">01</div>
+      <h3 class="pintxo-name">Gilda clásica</h3>
+      <p class="pintxo-desc">Anchoa del cantábrico, aceitunas manzanilla y guindilla en vinagre sobre pan tostado</p>
+      <span class="pintxo-tag">Clásico</span>
+    </div>
+    <div class="pintxo-card">
+      <div class="pintxo-num">02</div>
+      <h3 class="pintxo-name">Txangurro</h3>
+      <p class="pintxo-desc">Tartar de cangrejo con tomate concassé y mayonesa de pimiento del piquillo</p>
+      <span class="pintxo-tag">Mar</span>
+    </div>
+    <div class="pintxo-card">
+      <div class="pintxo-num">03</div>
+      <h3 class="pintxo-name">Pintxo moruno</h3>
+      <p class="pintxo-desc">Brocheta de cordero al comino con salsa de ajo negro y pepino encurtido</p>
+      <span class="pintxo-tag">Caliente</span>
+    </div>
+    <div class="pintxo-card">
+      <div class="pintxo-num">04</div>
+      <h3 class="pintxo-name">Boquerón</h3>
+      <p class="pintxo-desc">Boquerón en vinagre blanco, pimiento verde asado y aceite de albahaca fresca</p>
+      <span class="pintxo-tag">Frío</span>
+    </div>
+    <div class="pintxo-card">
+      <div class="pintxo-num">05</div>
+      <h3 class="pintxo-name">Hongos a la sartén</h3>
+      <p class="pintxo-desc">Champiñones salteados con ajo, perejil, un toque de txakoli y pan de payés</p>
+      <span class="pintxo-tag">Vegetal</span>
+    </div>
+    <div class="pintxo-card">
+      <div class="pintxo-num">06</div>
+      <h3 class="pintxo-name">Jamón de bellota</h3>
+      <p class="pintxo-desc">Lonchas finas de jamón ibérico de bellota con pan con tomate y aceite extra virgen</p>
+      <span class="pintxo-tag">Ibérico</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEL PAIS VASCO -->
+<section id="vasco">
+  <div class="vasco-header reveal">
+    <p class="section-tag">Historia y tradición</p>
+    <h2 class="section-title">Del País Vasco a Tandil</h2>
+  </div>
+  <div class="vasco-grid">
+    <div class="vasco-card reveal">
+      <h3 class="vasco-card-title">La tradición del txoko</h3>
+      <p class="vasco-card-text">Los txokos vascos son sociedades gastronómicas donde los amigos se reúnen a cocinar juntos. Sukalde es ese espíritu: un lugar donde la comida es el pretexto para encontrarse.</p>
+      <p class="vasco-card-detail">Fundada en 2019 · Tandil</p>
+    </div>
+    <div class="vasco-card reveal">
+      <h3 class="vasco-card-title">Ingredientes de origen</h3>
+      <p class="vasco-card-text">Las anchoas vienen del Cantábrico. Las conservas, de Euskadi. Lo demás, de productores locales de la sierra. La cocina vasca siempre respetó el producto: nosotros también.</p>
+      <p class="vasco-card-detail">Importación directa · Semanal</p>
+    </div>
+    <div class="vasco-card reveal">
+      <h3 class="vasco-card-title">Pintxo: el arte del bocado</h3>
+      <p class="vasco-card-text">El pintxo nació en San Sebastián como una economía de sabores en un trozo de pan. Cada uno es un plato completo en miniatura, donde la técnica no tiene menos rigor que una entrada de alta cocina.</p>
+      <p class="vasco-card-detail">15+ variedades diarias</p>
+    </div>
+  </div>
+</section>
+
+<!-- TXAKOLI -->
+<section id="txakoli">
+  <div class="txakoli-inner">
+    <div class="txakoli-left reveal">
+      <p class="txakoli-tag">La cave</p>
+      <h2 class="txakoli-title">Txakoli<br>y Rioja</h2>
+      <p class="txakoli-text">
+        El txakoli es el vino del País Vasco: ligeramente efervescente, ácido y fresco.
+        Perfecto con los pintxos de mar. Para las raciones y carnes, la bodega ofrece
+        una selección de Riojas reserva.
+      </p>
+    </div>
+    <div class="txakoli-right reveal">
+      <div class="wine-row">
+        <span class="wine-year">24</span>
+        <div class="wine-info">
+          <p class="wine-name">Txakoli Getariako</p>
+          <p class="wine-region">Getaria, País Vasco · Blanco</p>
+        </div>
+      </div>
+      <div class="wine-row">
+        <span class="wine-year">21</span>
+        <div class="wine-info">
+          <p class="wine-name">Rioja Reserva Crianza</p>
+          <p class="wine-region">La Rioja · Tempranillo · Tinto</p>
+        </div>
+      </div>
+      <div class="wine-row">
+        <span class="wine-year">23</span>
+        <div class="wine-info">
+          <p class="wine-name">Albariño Rias Baixas</p>
+          <p class="wine-region">Galicia · Blanco mineral</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas">
+  <div class="reservas-inner">
+    <div class="reservas-left reveal">
+      <p class="section-tag">Visitanos</p>
+      <h2 class="reservas-title">Reservá tu mesa</h2>
+      <p class="reservas-text">
+        El ambiente de pintxos bar es libre, pero para grupos de más de 5 personas
+        recomendamos reservar con anticipación.
+      </p>
+      <a href="https://wa.me/5492494557754" target="_blank" rel="noopener" class="btn-reserva">
+        Reservar por WhatsApp
+      </a>
+    </div>
+    <div class="reservas-right reveal">
+      <div class="info-block">
+        <p class="info-label">Dirección</p>
+        <p class="info-value">Av. del Valle 890, Tandil<br>Buenos Aires, Argentina</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Horarios</p>
+        <p class="info-value">Mar–Vie: 12:00 a 15:00 / 19:00 a 00:00<br>Sáb–Dom: 12:00 a 01:00</p>
+      </div>
+      <div class="info-block">
+        <p class="info-label">Cocina vasca</p>
+        <p class="info-value">4.7 · 400+ reseñas</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROPUESTA ALTAVISTA -->
+<section id="propuesta">
+  <div class="propuesta-inner reveal">
+    <p class="propuesta-tag">Altavista Web · Tandil</p>
+    <h2 class="propuesta-title">Tu negocio necesita<br>una web que trabaje</h2>
+    <p class="propuesta-text">
+      Esta es una demo de lo que podemos hacer.
+      Diseño con personalidad, adaptado al tipo de negocio —
+      desde una pintxoteka hasta un restaurante de autor.
+    </p>
+    <a href="https://wa.me/5492494557754" target="_blank" rel="noopener" class="btn-wa">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Ver propuesta para mi negocio
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-brand">SUKALDE</span>
+  <span class="footer-credit">Demo creada por Altavista Web</span>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('progress-bar');
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    el.style.width = (scrollTop / docHeight * 100) + '%';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+</script>
+</body>
+</html>

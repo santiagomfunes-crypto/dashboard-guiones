@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vuelta y Vuelta — Parrilla Urbana, Tandil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8F5F0;
+  --ink:#111010;
+  --red:#E83C20;
+  --yellow:#F0B000;
+  --gray:#6B6B6B;
+  --light:#EDEAE4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* AGENCY BAR */
+#agency-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  height:36px;background:#07101C;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-family:'Inter',sans-serif;color:#AAB;letter-spacing:.04em;gap:12px;
+}
+#agency-bar a{
+  color:#F4C430;text-decoration:none;font-weight:700;
+  padding:3px 14px;border:1.5px solid #F4C430;border-radius:20px;
+  font-size:11px;letter-spacing:.06em;
+  transition:background .2s,color .2s;
+}
+#agency-bar a:hover{background:#F4C430;color:#07101C}
+
+/* SCROLL PROGRESS */
+#pb{position:fixed;top:36px;left:0;height:2px;background:var(--red);z-index:9998;width:0;transition:width .1s linear}
+
+/* NAV */
+nav{
+  position:fixed;top:36px;left:0;right:0;z-index:998;
+  height:60px;background:var(--bg);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;border-bottom:2px solid var(--ink);
+}
+.nav-logo{font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--ink);letter-spacing:.02em}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;gap:32px}
+.nav-links a{color:var(--ink);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--red)}
+.nav-cta{
+  background:var(--red);color:#fff;
+  padding:10px 22px;border-radius:0;
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;transition:background .2s;
+}
+.nav-cta:hover{background:var(--ink)}
+#mob-btn{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px}
+#mob-btn span{display:block;width:24px;height:2px;background:var(--ink);transition:.3s}
+#mob{display:none;position:fixed;top:96px;left:0;right:0;background:var(--bg);border-bottom:2px solid var(--ink);z-index:997;padding:24px 32px;flex-direction:column;gap:16px}
+#mob a{color:var(--ink);text-decoration:none;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--light)}
+#mob a:last-child{border:none}
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none}
+  #mob-btn{display:flex}
+}
+
+/* HERO — PURE TYPOGRAPHIC */
+.hero{
+  padding-top:96px;min-height:100vh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding-left:40px;padding-right:40px;
+  position:relative;overflow:hidden;
+}
+.hero-label{
+  font-family:'Inter',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--red);
+  margin-bottom:16px;
+}
+.hero-main{
+  font-family:'Black Han Sans',sans-serif;
+  line-height:.9;
+  color:var(--ink);
+  margin-bottom:0;
+}
+.hero-main .l1{
+  font-size:clamp(80px,14vw,200px);
+  display:block;
+}
+.hero-main .l2{
+  font-size:clamp(80px,14vw,200px);
+  display:block;
+  color:var(--red);
+  margin-left:clamp(40px,6vw,100px);
+}
+.hero-main .l3{
+  font-size:clamp(80px,14vw,200px);
+  display:block;
+  -webkit-text-stroke:2px var(--ink);
+  color:transparent;
+}
+.hero-divider{
+  display:flex;align-items:center;gap:16px;margin:32px 0;
+}
+.hero-divider .line{flex:1;height:2px;background:var(--ink)}
+.hero-divider .diamond{
+  width:10px;height:10px;background:var(--red);
+  transform:rotate(45deg);flex-shrink:0;
+}
+.hero-tagline{
+  font-size:clamp(14px,1.8vw,20px);font-weight:500;
+  max-width:480px;line-height:1.5;color:var(--gray);
+}
+.hero-ctas{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap}
+.btn-primary{
+  background:var(--ink);color:var(--bg);
+  padding:16px 36px;font-size:13px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border:2px solid var(--ink);transition:background .2s,color .2s;
+}
+.btn-primary:hover{background:var(--red);border-color:var(--red)}
+.btn-outline{
+  background:transparent;color:var(--ink);
+  padding:16px 36px;font-size:13px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border:2px solid var(--ink);transition:background .2s,color .2s;
+}
+.btn-outline:hover{background:var(--ink);color:var(--bg)}
+.hero-scroll{
+  position:absolute;right:40px;bottom:60px;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gray);display:flex;align-items:center;gap:8px;
+}
+.hero-scroll::before{
+  content:'';display:block;width:1px;height:60px;background:var(--gray);
+}
+.hero-year{
+  position:absolute;right:40px;top:120px;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,10vw,140px);
+  color:transparent;-webkit-text-stroke:1px rgba(0,0,0,.08);
+  line-height:1;pointer-events:none;
+}
+@media(max-width:768px){
+  .hero{padding:120px 24px 60px}
+  .hero-scroll,.hero-year{display:none}
+}
+
+/* STATS STRIP */
+.stats-strip{
+  background:var(--ink);color:var(--bg);
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.stat-item{
+  padding:28px 24px;border-right:1px solid rgba(255,255,255,.1);
+  text-align:center;
+}
+.stat-item:last-child{border-right:none}
+.stat-num{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:clamp(28px,4vw,48px);color:var(--yellow);
+  display:block;line-height:1;
+}
+.stat-lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-top:4px}
+@media(max-width:600px){.stats-strip{grid-template-columns:1fr 1fr}}
+
+/* MENU SECTION */
+.menu-sec{padding:80px 40px}
+.sec-header{display:flex;align-items:baseline;gap:20px;margin-bottom:48px;flex-wrap:wrap}
+.sec-num{
+  font-family:'Bebas Neue',sans-serif;font-size:80px;
+  color:var(--light);line-height:1;
+}
+.sec-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:clamp(28px,4vw,48px);color:var(--ink);
+  letter-spacing:.01em;
+}
+.menu-tabs{display:flex;gap:0;border-bottom:2px solid var(--ink);margin-bottom:40px}
+.menu-tab{
+  padding:12px 24px;font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;cursor:pointer;color:var(--gray);
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  background:none;border-top:none;border-left:none;border-right:none;
+  transition:color .2s,border-color .2s;font-family:'Inter',sans-serif;
+}
+.menu-tab.active{color:var(--ink);border-bottom-color:var(--red)}
+.menu-tab:hover{color:var(--ink)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.menu-card{
+  background:var(--light);padding:28px 24px;
+  position:relative;
+  transition:background .2s;
+}
+.menu-card:hover{background:#E5E0D8}
+.mc-num{
+  font-family:'Bebas Neue',sans-serif;font-size:48px;
+  color:var(--red);opacity:.4;line-height:1;
+  position:absolute;top:16px;right:20px;
+}
+.mc-name{
+  font-family:'Black Han Sans',sans-serif;font-size:18px;
+  color:var(--ink);margin-bottom:6px;padding-right:40px;line-height:1.2;
+}
+.mc-desc{font-size:13px;color:var(--gray);line-height:1.5;margin-bottom:14px}
+.mc-price{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);
+}
+.mc-tag{
+  display:inline-block;font-size:10px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  background:var(--red);color:#fff;
+  padding:2px 8px;margin-bottom:10px;
+}
+@media(max-width:900px){.menu-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.menu-grid{grid-template-columns:1fr};.menu-sec{padding:60px 24px}}
+
+/* PROCESO */
+.proceso{background:var(--ink);color:var(--bg);padding:80px 40px}
+.proceso .sec-title{color:var(--bg)}
+.proceso .sec-num{color:rgba(255,255,255,.06)}
+.proceso-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:48px;
+}
+.paso{position:relative;padding-left:60px}
+.paso-num{
+  position:absolute;left:0;top:-4px;
+  font-family:'Bebas Neue',sans-serif;font-size:56px;
+  color:var(--red);line-height:1;
+}
+.paso-title{
+  font-family:'Black Han Sans',sans-serif;font-size:24px;
+  margin-bottom:10px;
+}
+.paso-desc{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6}
+@media(max-width:768px){.proceso-steps{grid-template-columns:1fr};.proceso{padding:60px 24px}}
+
+/* FIRMA SECTION */
+.firma{
+  padding:80px 40px;display:flex;align-items:center;gap:60px;flex-wrap:wrap;
+}
+.firma-quote{
+  flex:1;min-width:280px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,4vw,56px);
+  line-height:1.1;color:var(--ink);
+  border-left:4px solid var(--red);
+  padding-left:32px;
+}
+.firma-quote span{color:var(--red)}
+.firma-info{
+  flex:1;min-width:240px;
+}
+.firma-label{
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--red);margin-bottom:12px;
+}
+.firma-text{font-size:15px;color:var(--gray);line-height:1.7}
+.firma-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.firma-tag{
+  padding:5px 14px;border:2px solid var(--ink);
+  font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+@media(max-width:600px){.firma{padding:60px 24px}}
+
+/* UBICACION */
+.ubicacion{
+  background:var(--light);padding:80px 40px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:center;
+}
+.ubi-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:clamp(28px,4vw,48px);margin-bottom:24px;
+}
+.ubi-item{
+  display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;
+}
+.ubi-icon{
+  width:32px;height:32px;background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:14px;
+}
+.ubi-text{font-size:14px;color:var(--gray);line-height:1.5}
+.ubi-text strong{color:var(--ink);display:block;font-weight:700;margin-bottom:2px}
+.ubi-map-ph{
+  background:var(--ink);aspect-ratio:4/3;
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.2);font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.1em;
+}
+@media(max-width:768px){.ubicacion{grid-template-columns:1fr;padding:60px 24px}}
+
+/* PROPUESTA ALTAVISTA */
+#propuesta{
+  background:#07101C;padding:80px 40px;text-align:center;
+}
+.prop-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:#F4C430;margin-bottom:16px;
+}
+.prop-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:clamp(28px,4vw,44px);color:#fff;
+  margin-bottom:16px;line-height:1.1;
+}
+.prop-title span{color:#F4C430}
+.prop-desc{font-size:16px;color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 36px;line-height:1.7}
+.prop-features{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:40px;
+}
+.prop-feat{
+  padding:8px 18px;border:1px solid rgba(255,255,255,.15);
+  font-size:12px;color:rgba(255,255,255,.7);letter-spacing:.04em;
+  border-radius:2px;
+}
+.prop-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;
+  padding:16px 36px;font-size:14px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
+  border-radius:2px;transition:background .2s;
+}
+.prop-wa:hover{background:#1DA850}
+.prop-wa svg{width:20px;height:20px;fill:#fff}
+
+/* FOOTER */
+footer{
+  background:var(--ink);color:rgba(255,255,255,.5);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+footer .f-logo{font-family:'Black Han Sans',sans-serif;font-size:18px;color:#fff}
+footer .f-logo span{color:var(--red)}
+footer p{font-size:12px;letter-spacing:.03em}
+@media(max-width:600px){footer{padding:24px;text-align:center;justify-content:center}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- AGENCY BAR -->
+<div id="agency-bar">
+  <span>¿Querés una página así para tu negocio?</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Hablá con nosotros</a>
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div id="pb"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">V<span>&</span>V</div>
+  <div class="nav-links">
+    <a href="#menu">Menú</a>
+    <a href="#proceso">El Proceso</a>
+    <a href="#ubicacion">Ubicación</a>
+  </div>
+  <a href="https://wa.me/5492494557754" class="nav-cta">Reservar</a>
+  <button id="mob-btn" onclick="document.getElementById('mob').style.display=document.getElementById('mob').style.display==='flex'?'none':'flex'" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mob">
+  <a href="#menu" onclick="document.getElementById('mob').style.display='none'">Menú</a>
+  <a href="#proceso" onclick="document.getElementById('mob').style.display='none'">El Proceso</a>
+  <a href="#ubicacion" onclick="document.getElementById('mob').style.display='none'">Ubicación</a>
+  <a href="https://wa.me/5492494557754" onclick="document.getElementById('mob').style.display='none'">Reservar →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-year">2009</div>
+  <div class="hero-label">Parrilla Urbana · Tandil, Buenos Aires</div>
+  <h1 class="hero-main">
+    <span class="l1">VUELTA</span>
+    <span class="l2">Y</span>
+    <span class="l3">VUELTA</span>
+  </h1>
+  <div class="hero-divider">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+  <p class="hero-tagline">Carne de primera al punto exacto. Sin adornos, sin excusas — el fuego y vos.</p>
+  <div class="hero-ctas">
+    <a href="#menu" class="btn-primary">Ver Menú</a>
+    <a href="https://wa.me/5492494557754" class="btn-outline" target="_blank" rel="noopener">Reservar Mesa</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-num">15+</span>
+    <span class="stat-lbl">Años en Tandil</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">12</span>
+    <span class="stat-lbl">Cortes en carta</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">4.7★</span>
+    <span class="stat-lbl">Google Maps</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">100%</span>
+    <span class="stat-lbl">Carne artesanal</span>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu" class="menu-sec">
+  <div class="sec-header reveal">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">La Carta</h2>
+  </div>
+  <div class="menu-tabs" role="tablist">
+    <button class="menu-tab active" onclick="showTab('parri',this)">A La Parrilla</button>
+    <button class="menu-tab" onclick="showTab('entrada',this)">Entradas</button>
+    <button class="menu-tab" onclick="showTab('extra',this)">Extras</button>
+    <button class="menu-tab" onclick="showTab('bebidas',this)">Bebidas</button>
+  </div>
+
+  <div id="tab-parri" class="tab-pane active">
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <span class="mc-num">01</span>
+        <span class="mc-tag">Estrella</span>
+        <div class="mc-name">Bife de Chorizo</div>
+        <div class="mc-desc">400g de bife madurado 21 días. Sellado perfecto, interior jugoso.</div>
+        <div class="mc-price">$3.800</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">02</span>
+        <div class="mc-name">Ojo de Bife</div>
+        <div class="mc-desc">350g con cobertura de hueso. La pieza más pedida de la carta.</div>
+        <div class="mc-price">$4.100</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">03</span>
+        <span class="mc-tag">Especial</span>
+        <div class="mc-name">Tira de Asado</div>
+        <div class="mc-desc">500g en tira entera. Cocción lenta, costillar crujiente.</div>
+        <div class="mc-price">$3.500</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">04</span>
+        <div class="mc-name">Vacío</div>
+        <div class="mc-desc">300g. El corte más popular entre los que saben de carne.</div>
+        <div class="mc-price">$3.200</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">05</span>
+        <div class="mc-name">Entraña Fina</div>
+        <div class="mc-desc">250g. Tierna, rápida, sabrosa. Para los que no esperan.</div>
+        <div class="mc-price">$3.600</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">06</span>
+        <span class="mc-tag">V&V</span>
+        <div class="mc-name">Parrillada V&V</div>
+        <div class="mc-desc">Para 2 personas. Selección de cortes + chorizos + morcilla.</div>
+        <div class="mc-price">$9.500</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-entrada" class="tab-pane">
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <span class="mc-num">01</span>
+        <div class="mc-name">Tabla de Fiambres</div>
+        <div class="mc-desc">Salame, jamón serrano, queso pategrás, aceitunas negras.</div>
+        <div class="mc-price">$2.400</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">02</span>
+        <div class="mc-name">Provoleta</div>
+        <div class="mc-desc">Con orégano, ajo y aceite de oliva extra virgen.</div>
+        <div class="mc-price">$1.800</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">03</span>
+        <div class="mc-name">Chorizos Caseros</div>
+        <div class="mc-desc">Hechos en casa. 3 unidades con chimichurri de la casa.</div>
+        <div class="mc-price">$1.600</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-extra" class="tab-pane">
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <span class="mc-num">01</span>
+        <div class="mc-name">Papas Fritas</div>
+        <div class="mc-desc">Cortadas a la antigua. Crocantes afuera, suaves adentro.</div>
+        <div class="mc-price">$900</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">02</span>
+        <div class="mc-name">Ensalada Mixta</div>
+        <div class="mc-desc">Lechuga, tomate, cebolla morada, zanahoria rallada.</div>
+        <div class="mc-price">$800</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">03</span>
+        <div class="mc-name">Puré Rústico</div>
+        <div class="mc-desc">Con manteca, crema y pizca de nuez moscada.</div>
+        <div class="mc-price">$850</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-bebidas" class="tab-pane">
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <span class="mc-num">01</span>
+        <div class="mc-name">Vino Malbec</div>
+        <div class="mc-desc">Botella 750ml. Distintas bodegas según disponibilidad.</div>
+        <div class="mc-price">$2.800</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">02</span>
+        <div class="mc-name">Cerveza Artesanal</div>
+        <div class="mc-desc">Chopps de producción local. Rubia, negra o roja.</div>
+        <div class="mc-price">$700</div>
+      </div>
+      <div class="menu-card reveal">
+        <span class="mc-num">03</span>
+        <div class="mc-name">Agua / Gaseosas</div>
+        <div class="mc-desc">Agua con o sin gas, Coca-Cola, Sprite, Fanta.</div>
+        <div class="mc-price">$350</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso" class="proceso">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">El Proceso</h2>
+  </div>
+  <div class="proceso-steps">
+    <div class="paso reveal">
+      <div class="paso-num">01</div>
+      <div class="paso-title">Elegís</div>
+      <div class="paso-desc">Elegís tu corte y el punto de cocción. Sin términos complicados — a punto, jugoso, bien hecho. Vos mandás.</div>
+    </div>
+    <div class="paso reveal">
+      <div class="paso-num">02</div>
+      <div class="paso-title">Cocinamos</div>
+      <div class="paso-desc">Leña de quebracho, temperatura exacta. El parrillero lleva más de diez años en el fuego. No se apura.</div>
+    </div>
+    <div class="paso reveal">
+      <div class="paso-num">03</div>
+      <div class="paso-title">Disfrutás</div>
+      <div class="paso-desc">La carne llega en tabla de madera. Sin más. La conversación y el vino hacen el resto.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FIRMA -->
+<section class="firma">
+  <div class="firma-quote reveal">
+    "El secreto<br>es no<br><span>apurarse.</span>"
+  </div>
+  <div class="firma-info reveal">
+    <div class="firma-label">Sobre V&V</div>
+    <p class="firma-text">Desde que abrimos en 2009, la premisa no cambió: carne de primera calidad, fuego real y atención de barrio. Sin música demasiado alta ni menús imposibles. Un lugar donde volvés.</p>
+    <div class="firma-tags">
+      <span class="firma-tag">Sin franquicia</span>
+      <span class="firma-tag">Leña de quebracho</span>
+      <span class="firma-tag">Carne local</span>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACION -->
+<section id="ubicacion" class="ubicacion">
+  <div class="reveal">
+    <h2 class="ubi-title">Dónde<br>estamos</h2>
+    <div class="ubi-item">
+      <div class="ubi-icon">📍</div>
+      <div class="ubi-text">
+        <strong>Dirección</strong>
+        Av. Belgrano 987, Tandil<br>A 5 min del centro
+      </div>
+    </div>
+    <div class="ubi-item">
+      <div class="ubi-icon">🕐</div>
+      <div class="ubi-text">
+        <strong>Horarios</strong>
+        Lunes a viernes: 12–15 y 20–23:30<br>Sábados y domingos: 12–15:30 y 20–00:00
+      </div>
+    </div>
+    <div class="ubi-item">
+      <div class="ubi-icon">📞</div>
+      <div class="ubi-text">
+        <strong>Reservas</strong>
+        WhatsApp: +54 9 249 xxx-xxxx<br>También sin reserva en barra
+      </div>
+    </div>
+  </div>
+  <div class="ubi-map-ph reveal">TANDIL</div>
+</section>
+
+<!-- PROPUESTA -->
+<section id="propuesta">
+  <div class="prop-eyebrow">Desarrollado por Altavista Web · Tandil</div>
+  <h2 class="prop-title">¿Tu negocio necesita<br>una página <span>así</span>?</h2>
+  <p class="prop-desc">Diseñada a medida, entregada en 7 días, con SEO local desde el día uno. Más clientes desde Google.</p>
+  <div class="prop-features">
+    <span class="prop-feat">Diseño único</span>
+    <span class="prop-feat">SEO local incluido</span>
+    <span class="prop-feat">WhatsApp integrado</span>
+    <span class="prop-feat">Entrega en 7 días</span>
+    <span class="prop-feat">Sin plantillas genéricas</span>
+  </div>
+  <a href="https://wa.me/5492494557754" class="prop-wa" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Quiero una página para mi negocio
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">V<span>&</span>V</div>
+  <p>© 2025 Vuelta y Vuelta · Av. Belgrano 987, Tandil</p>
+  <p>Diseño: <strong style="color:rgba(255,255,255,.7)">Altavista Web</strong></p>
+</footer>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  const p=(s.scrollTop||document.body.scrollTop)/(s.scrollHeight-s.clientHeight)*100;
+  document.getElementById('pb').style.width=p+'%';
+});
+
+// Reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Tabs
+function showTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.menu-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

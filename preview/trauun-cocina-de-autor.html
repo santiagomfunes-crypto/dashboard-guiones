@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trauun — Cocina de Autor · Tandil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF8;
+    --bg2: #F2F1EE;
+    --ink: #141210;
+    --mid: #888077;
+    --sage: #7A8A6A;
+    --dark: #1C1A17;
+    --border: #E4E0D8;
+    --agency-navy: #07101C;
+    --agency-amber: #F4C430;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* SCROLL PROGRESS */
+  #progress-bar {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--sage);
+    z-index: 200;
+    transition: width 0.1s linear;
+  }
+
+  /* AGENCY BAR */
+  #agency-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--agency-navy);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  #agency-bar span {
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.08em;
+  }
+  #agency-bar a {
+    background: var(--agency-amber);
+    color: #07101C;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 5px 14px;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+  #agency-bar a:hover { opacity: 0.85; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+  .nav-brand {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    background: var(--ink);
+    transition: all 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 96px;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    z-index: 240;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+  }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* HERO — CENTERED MINIMAL */
+  #hero {
+    padding-top: 96px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--bg);
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .hero-inner {
+    max-width: 600px;
+  }
+  .hero-line {
+    width: 80px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto 40px;
+  }
+  .hero-pretitle {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+  .hero-name {
+    font-size: clamp(72px, 12vw, 120px);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .hero-subtitle {
+    font-size: 14px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 400;
+    font-style: normal;
+  }
+  .hero-line-bottom {
+    width: 80px;
+    height: 1px;
+    background: var(--border);
+    margin: 40px auto 48px;
+  }
+  .hero-tagline {
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mid);
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-top: 56px;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .stat-num {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--ink);
+    display: block;
+  }
+  .hero-stat .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 400;
+  }
+
+  /* TASTING MENU */
+  #menu {
+    padding: 100px 40px;
+    background: var(--bg2);
+  }
+  .menu-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 300;
+    color: var(--ink);
+    font-style: italic;
+    line-height: 1.1;
+  }
+  .menu-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 48px 56px;
+  }
+  .menu-season {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .menu-season-title {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+  .menu-season-name {
+    font-size: 24px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .course-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: baseline;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .course-row:last-child { border-bottom: none; }
+  .course-num {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--mid);
+    font-weight: 400;
+  }
+  .course-info {}
+  .course-name {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .course-ingredients {
+    font-size: 12px;
+    color: var(--mid);
+    font-style: italic;
+    letter-spacing: 0.05em;
+  }
+  .course-note {
+    font-size: 11px;
+    color: var(--sage);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-style: normal;
+    white-space: nowrap;
+  }
+  .menu-footer-note {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    font-style: italic;
+    color: var(--mid);
+  }
+
+  /* TERRITORIO */
+  #territorio {
+    background: var(--dark);
+    padding: 100px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .territorio-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1C1A17 0%, #2A2420 40%, #1A1C18 100%);
+    opacity: 0.8;
+  }
+  .territorio-content {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .territorio-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 24px;
+  }
+  .territorio-title {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 300;
+    font-style: italic;
+    color: #F5F0E8;
+    line-height: 1.05;
+    margin-bottom: 32px;
+  }
+  .territorio-text {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(245, 240, 232, 0.65);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .territorio-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--sage);
+    margin: 40px auto;
+  }
+  .territorio-quote {
+    font-size: 15px;
+    font-style: italic;
+    color: rgba(245, 240, 232, 0.45);
+    letter-spacing: 0.05em;
+  }
+
+  /* TECHNIQUES */
+  #tecnicas {
+    padding: 100px 40px;
+    background: var(--bg);
+  }
+  .tecnicas-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .tecnicas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+  }
+  .tecnica-cell {
+    background: var(--bg);
+    padding: 56px 40px;
+    text-align: center;
+  }
+  .tecnica-word {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .tecnica-line {
+    width: 24px;
+    height: 1px;
+    background: var(--sage);
+    margin: 0 auto 24px;
+  }
+  .tecnica-desc {
+    font-size: 15px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mid);
+    line-height: 1.7;
+  }
+
+  /* RESERVAS */
+  #reservas {
+    padding: 100px 40px;
+    background: var(--bg2);
+    text-align: center;
+  }
+  .reservas-content {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .reservas-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 24px;
+  }
+  .reservas-title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .reservas-note {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--mid);
+    margin-bottom: 48px;
+    letter-spacing: 0.05em;
+  }
+  .btn-reserva {
+    display: inline-block;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 40px;
+    transition: all 0.3s;
+  }
+  .btn-reserva:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .reservas-contact {
+    margin-top: 48px;
+    font-size: 14px;
+    color: var(--mid);
+    font-style: italic;
+  }
+
+  /* PROPUESTA */
+  #propuesta {
+    padding: 100px 40px;
+    background: var(--dark);
+    text-align: center;
+  }
+  .propuesta-inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .propuesta-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 24px;
+  }
+  .propuesta-title {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 300;
+    font-style: italic;
+    color: #F5F0E8;
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+  .propuesta-text {
+    font-size: 17px;
+    font-weight: 300;
+    color: rgba(245, 240, 232, 0.6);
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 36px;
+    transition: opacity 0.2s;
+  }
+  .btn-wa:hover { opacity: 0.88; }
+  .btn-wa svg { width: 18px; height: 18px; fill: #fff; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+  }
+  .footer-credit {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    #hero { padding-left: 24px; padding-right: 24px; }
+    #menu { padding: 64px 24px; }
+    .menu-card { padding: 32px 24px; }
+    .course-row { grid-template-columns: 36px 1fr; }
+    .course-note { display: none; }
+    #territorio { padding: 80px 24px; }
+    #tecnicas { padding: 80px 24px; }
+    .tecnicas-grid { grid-template-columns: 1fr; }
+    #reservas { padding: 80px 24px; }
+    #propuesta { padding: 80px 24px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+    #agency-bar { padding: 0 16px; }
+    #agency-bar span { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AGENCY BAR -->
+<div id="agency-bar">
+  <span>Demo por Altavista Web · Agencia de diseño web en Tandil</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Ver propuesta</a>
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-brand">Trauun</a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#territorio">Territorio</a></li>
+    <li><a href="#tecnicas">Técnica</a></li>
+    <li><a href="#reservas">Reservas</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Menú" onclick="toggleMobile()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#menu" onclick="closeMobile()">Menú</a>
+  <a href="#territorio" onclick="closeMobile()">Territorio</a>
+  <a href="#tecnicas" onclick="closeMobile()">Técnica</a>
+  <a href="#reservas" onclick="closeMobile()">Reservas</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner reveal">
+    <div class="hero-line"></div>
+    <p class="hero-pretitle">Tandil · Sierra · Tabla</p>
+    <h1 class="hero-name">Trauun</h1>
+    <p class="hero-subtitle">Cocina de autor · Tandil</p>
+    <div class="hero-line-bottom"></div>
+    <p class="hero-tagline">
+      El encuentro de la sierra y la mesa.<br>
+      Ocho tiempos. Ingredientes propios. Una sola sesión por noche.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">4.8</span>
+        <span class="stat-label">Puntuación</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Tiempos</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">12</span>
+        <span class="stat-label">Comensales</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Local</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASTING MENU -->
+<section id="menu">
+  <div class="menu-header reveal">
+    <p class="section-tag">Experiencia gastronómica</p>
+    <h2 class="section-title">Menú de Temporada</h2>
+  </div>
+  <div class="menu-card reveal">
+    <div class="menu-season">
+      <p class="menu-season-title">Otoño · Invierno 2025</p>
+      <p class="menu-season-name">El retiro de la sierra</p>
+    </div>
+
+    <div class="course-row">
+      <span class="course-num">01</span>
+      <div class="course-info">
+        <p class="course-name">Amuse-bouche</p>
+        <p class="course-ingredients">Caldo de plantas silvestres, brote de romero, aceite de sierra</p>
+      </div>
+      <span class="course-note">Bienvenida</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">02</span>
+      <div class="course-info">
+        <p class="course-name">Entrada fría</p>
+        <p class="course-ingredients">Trucha curada de río, remolacha fermentada, crema de rábano, eneldo</p>
+      </div>
+      <span class="course-note">Sierra</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">03</span>
+      <div class="course-info">
+        <p class="course-name">Sopa</p>
+        <p class="course-ingredients">Consomé de huesos de cordero, acedera, aceite de cebolla quemada</p>
+      </div>
+      <span class="course-note">Profundidad</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">04</span>
+      <div class="course-info">
+        <p class="course-name">Intermedio vegetal</p>
+        <p class="course-ingredients">Raíz de apio asada, emulsión de nuez, polvo de hongos, flores de estación</p>
+      </div>
+      <span class="course-note">Tierra</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">05</span>
+      <div class="course-info">
+        <p class="course-name">Pescado</p>
+        <p class="course-ingredients">Pejerrey del lago, manteca de algas, alcaparras de ruda</p>
+      </div>
+      <span class="course-note">Agua</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">06</span>
+      <div class="course-info">
+        <p class="course-name">Principal</p>
+        <p class="course-ingredients">Cordero de la sierra, especias Mapuche, hongos silvestres, puré de papa violeta</p>
+      </div>
+      <span class="course-note">Fuego</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">07</span>
+      <div class="course-info">
+        <p class="course-name">Prepostre</p>
+        <p class="course-ingredients">Granita de hierbas serranas, leche de oveja, miel del campo</p>
+      </div>
+      <span class="course-note">Transición</span>
+    </div>
+    <div class="course-row">
+      <span class="course-num">08</span>
+      <div class="course-info">
+        <p class="course-name">Postre</p>
+        <p class="course-ingredients">Frutos silvestres, chocolate amargo de Córdoba, tierra de cacao</p>
+      </div>
+      <span class="course-note">Cierre</span>
+    </div>
+
+    <p class="menu-footer-note">
+      Maridaje de vinos de bodegas sierras · Disponible con anticipación · Menú con variante vegetariana
+    </p>
+  </div>
+</section>
+
+<!-- TERRITORIO -->
+<section id="territorio">
+  <div class="territorio-bg"></div>
+  <div class="territorio-content reveal">
+    <p class="territorio-tag">Raíces e identidad</p>
+    <h2 class="territorio-title">El territorio<br>como despensa</h2>
+    <p class="territorio-text">
+      Todo lo que llega a la mesa nace a menos de 80 kilómetros.
+      Los hongos son de la sierra de Tandil. El cordero pasta en campos familiares.
+      Las hierbas se cultivan en el huerto propio.
+    </p>
+    <div class="territorio-divider"></div>
+    <p class="territorio-text">
+      El nombre <em>Trauun</em> significa "encuentro" en Mapuche —
+      el encuentro entre el cocinero y el productor, entre la técnica y la tradición,
+      entre quien cocina y quien come.
+    </p>
+    <p class="territorio-quote">
+      "Cocinar con lo que da la tierra es el único lujo verdadero."
+    </p>
+  </div>
+</section>
+
+<!-- TECNICAS -->
+<section id="tecnicas">
+  <div class="tecnicas-header reveal">
+    <p class="section-tag">Filosofía de cocina</p>
+    <h2 class="section-title">Tres pilares</h2>
+  </div>
+  <div class="tecnicas-grid">
+    <div class="tecnica-cell reveal">
+      <span class="tecnica-word">Fermento</span>
+      <div class="tecnica-line"></div>
+      <p class="tecnica-desc">La fermentación lenta como forma de honrar el ingrediente. Vinagres, encurtidos y garum que maduran durante meses en la cocina.</p>
+    </div>
+    <div class="tecnica-cell reveal">
+      <span class="tecnica-word">Brasa</span>
+      <div class="tecnica-line"></div>
+      <p class="tecnica-desc">El fuego de leña de quebracho como único calor. Sin gas, sin inducción. La brasa imprime un carácter que no admite imitación.</p>
+    </div>
+    <div class="tecnica-cell reveal">
+      <span class="tecnica-word">Reposo</span>
+      <div class="tecnica-line"></div>
+      <p class="tecnica-desc">Todo tiene su tiempo. Los caldos cocinan 24 horas. Los marinados esperan 72. No hay atajos en la cocina de autor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas">
+  <div class="reservas-content reveal">
+    <p class="reservas-tag">Experiencia privada</p>
+    <h2 class="reservas-title">Reservas: capacidad limitada</h2>
+    <p class="reservas-note">
+      Solo dos servicios por semana · Máximo 12 comensales · Reserva con 48hs de anticipación
+    </p>
+    <a href="https://wa.me/5492494557754" target="_blank" rel="noopener" class="btn-reserva">
+      Consultar disponibilidad
+    </a>
+    <p class="reservas-contact">Tandil, Buenos Aires, Argentina</p>
+  </div>
+</section>
+
+<!-- PROPUESTA ALTAVISTA -->
+<section id="propuesta">
+  <div class="propuesta-inner reveal">
+    <p class="propuesta-tag">Altavista Web · Tandil</p>
+    <h2 class="propuesta-title">Tu restaurante merece<br>una presencia a su altura</h2>
+    <p class="propuesta-text">
+      Esta es una demo de lo que podemos hacer para tu negocio.
+      Sitios web que convierten visitas en reservas, con diseño de nivel internacional
+      y un proceso simple desde Tandil.
+    </p>
+    <a href="https://wa.me/5492494557754" target="_blank" rel="noopener" class="btn-wa">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Ver propuesta para mi negocio
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-brand">Trauun · Cocina de Autor</span>
+  <span class="footer-credit">Demo creada por Altavista Web</span>
+</footer>
+
+<script>
+  // Scroll progress
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('progress-bar');
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    el.style.width = (scrollTop / docHeight * 100) + '%';
+  });
+
+  // IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Mobile menu
+  function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMobile() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+</script>
+</body>
+</html>

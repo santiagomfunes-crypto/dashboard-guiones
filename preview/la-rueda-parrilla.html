@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Rueda Parrilla — Familia · Tandil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#FEFAF4;--bg2:#F4EDE0;--ink:#1C0E06;--brick:#B84A2C;--warm:#D4882A;--sand:#E8D4B0;--cream:#FFF8F0;--bdr:#E0D0B8;--nav:#07101C;--yellow:#F4C430;--w:1200px}
+    html{scroll-behavior:smooth}body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+    #pb{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--brick);z-index:1000;transition:width .1s}
+    .abar{position:fixed;top:0;left:0;right:0;z-index:900;background:var(--nav);height:36px;display:flex;align-items:center;justify-content:center;gap:20px;font-size:11px;font-weight:500}
+    .abar span{color:#aaa}.abar strong{color:#fff}
+    .abar a{background:var(--yellow);color:#000;padding:4px 14px;border-radius:2px;text-decoration:none;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+    nav{position:fixed;top:36px;left:0;right:0;z-index:800;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(254,250,244,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr)}
+    .nav-brand{font-family:'Lora',serif;font-size:18px;font-style:italic;color:var(--ink)}
+    .nav-links{display:flex;gap:28px;list-style:none}.nav-links a{color:#8A6848;text-decoration:none;font-size:13px;font-weight:400;letter-spacing:.04em;transition:color .2s}.nav-links a:hover{color:var(--brick)}
+    .nav-cta{background:var(--brick);color:#fff;padding:8px 20px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:background .2s}.nav-cta:hover{background:#8A2818}
+    .ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}.ham span{display:block;width:22px;height:1px;background:var(--ink)}
+    #mob{display:none;position:fixed;top:96px;left:0;right:0;bottom:0;background:var(--bg);z-index:700;flex-direction:column;padding:40px;gap:8px}
+    #mob.open{display:flex}#mob a{color:var(--ink);text-decoration:none;font-size:22px;font-family:'Lora',serif;font-style:italic;padding:12px 0;border-bottom:1px solid var(--bdr)}
+
+    /* HERO — vintage photo frame */
+    .hero{min-height:100vh;padding-top:96px;background:var(--brick);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,.06)'/%3E%3C/svg%3E") repeat}
+    .frame{background:var(--cream);margin:60px 40px;padding:4px;box-shadow:0 0 0 8px rgba(255,255,255,.15),0 0 0 16px rgba(255,255,255,.05),inset 0 0 60px rgba(180,74,44,.1),0 40px 80px rgba(0,0,0,.3);max-width:680px;width:100%;position:relative;z-index:2}
+    .frame-inner{border:1px solid var(--bdr);padding:52px 60px;text-align:center}
+    .frame-tag{font-size:9px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--warm);margin-bottom:20px}
+    .frame-h1{font-family:'Lora',serif;font-size:clamp(36px,6vw,64px);font-style:italic;color:var(--ink);line-height:1.05;margin-bottom:16px}
+    .frame-rule{display:flex;align-items:center;gap:12px;margin:20px 0}
+    .frame-rule::before,.frame-rule::after{content:'';flex:1;height:1px;background:var(--bdr)}
+    .frame-rule-icon{color:var(--warm);font-size:14px}
+    .frame-tagline{font-family:'Lora',serif;font-style:italic;font-size:16px;color:#7A5848;margin-bottom:28px;line-height:1.6}
+    .frame-stats{display:flex;gap:0;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);margin-bottom:32px}
+    .fs{flex:1;padding:14px;border-right:1px solid var(--bdr);text-align:center}.fs:last-child{border-right:none}
+    .fs-n{font-family:'Lora',serif;font-size:18px;color:var(--brick)}.fs-l{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#8A6848;margin-top:3px}
+    .frame-btns{display:flex;gap:12px;justify-content:center}
+    .btn-br{background:var(--brick);color:#fff;padding:11px 24px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:background .2s}.btn-br:hover{background:#8A2818}
+    .btn-out{border:1px solid var(--bdr);color:var(--ink);padding:11px 24px;text-decoration:none;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:all .2s}.btn-out:hover{border-color:var(--brick);color:var(--brick)}
+
+    /* CARTA — menu mimicry */
+    .carta{padding:100px 0;background:var(--bg)}
+    .carta-inner{max-width:var(--w);margin:0 auto;padding:0 40px}
+    .s-tag{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--warm);margin-bottom:12px}
+    .s-h2{font-family:'Lora',serif;font-size:clamp(28px,4vw,44px);font-style:italic;color:var(--ink);margin-bottom:40px;line-height:1.1}
+    .menu-card{background:var(--cream);border:1px solid var(--sand);padding:40px 48px;max-width:780px;margin:0 auto}
+    .mc-header{text-align:center;margin-bottom:32px}
+    .mc-title{font-family:'Lora',serif;font-size:20px;font-style:italic;color:var(--brick);margin-bottom:6px}
+    .mc-sub{font-size:12px;color:#8A6848;letter-spacing:.08em;text-transform:uppercase}
+    .mc-line{border:none;border-top:1px solid var(--sand);margin:24px 0}
+    .mc-item{display:flex;align-items:baseline;margin-bottom:16px;gap:0}
+    .mc-name{font-family:'Lora',serif;font-size:16px;color:var(--ink)}
+    .mc-dots{flex:1;border-bottom:2px dotted var(--sand);margin:0 8px 4px}
+    .mc-section{font-family:'Lora',serif;font-size:13px;font-style:italic;color:var(--warm);margin-bottom:20px;margin-top:28px}
+
+    /* BANNER FAMILIA */
+    .familia{background:var(--brick);padding:60px 0}
+    .fam-inner{max-width:var(--w);margin:0 auto;padding:0 40px;text-align:center}
+    .fam-h{font-family:'Lora',serif;font-size:clamp(24px,4vw,40px);font-style:italic;color:#fff;margin-bottom:24px}
+    .fam-chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .fchip{background:rgba(255,255,255,.15);color:#fff;padding:8px 20px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.2)}
+
+    /* FOTOS */
+    .fotos{padding:0}
+    .foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+    .foto-cell{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:36px}
+    .foto-cell:nth-child(1){background:linear-gradient(135deg,#E8C4A0,#C48050)}
+    .foto-cell:nth-child(2){background:linear-gradient(135deg,#D4A870,#A86030)}
+    .foto-cell:nth-child(3){background:linear-gradient(135deg,#ECD4B0,#B47040)}
+    .foto-cell:nth-child(4){background:linear-gradient(135deg,#D8B880,#A46030)}
+
+    /* CONTACTO */
+    .contacto{padding:80px 0;background:var(--bg2)}
+    .ct-inner{max-width:var(--w);margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px}
+    .ct-inner h2{font-family:'Lora',serif;font-size:32px;font-style:italic;color:var(--ink);margin-bottom:28px}
+    .ct-row{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+    .ct-ico{font-size:18px;margin-top:2px}.ct-lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brick);margin-bottom:4px}.ct-val{font-size:14px;color:#8A6848;line-height:1.6}
+    .map-box{background:var(--bg);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;color:#8A6848;font-size:14px;min-height:240px}
+
+    /* PROPUESTA */
+    #propuesta{padding:100px 0;background:var(--ink)}
+    .pr-inner{max-width:720px;margin:0 auto;padding:0 40px;text-align:center}
+    .pr-badge{display:inline-block;background:rgba(212,136,42,.12);color:var(--warm);padding:6px 18px;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-bottom:32px;border:1px solid rgba(212,136,42,.25)}
+    #propuesta h2{font-family:'Lora',serif;font-size:clamp(24px,4vw,38px);font-style:italic;color:#FAF0E4;line-height:1.2;margin-bottom:20px}
+    #propuesta p{font-size:14px;color:rgba(250,240,228,.55);line-height:1.8;margin-bottom:40px}
+    .pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.08);margin-bottom:40px}
+    .pr-f{background:var(--ink);padding:24px 16px;text-align:left}.pr-f-ico{font-size:18px;margin-bottom:10px}.pr-f-t{font-size:13px;font-weight:600;color:#FAF0E4;margin-bottom:6px}.pr-f-d{font-size:12px;color:rgba(250,240,228,.45);line-height:1.5}
+    .btn-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 32px;text-decoration:none;font-weight:700;font-size:13px;transition:background .2s}.btn-wa:hover{background:#1BA855}
+    footer{background:#0F0A04;border-top:1px solid rgba(255,255,255,.06);padding:32px;text-align:center;font-size:12px;color:rgba(255,255,255,.3)}
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:none}
+    @media(max-width:1023px){.ct-inner{grid-template-columns:1fr;gap:48px}.pr-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:767px){nav{padding:0 20px}.nav-links,.nav-cta{display:none}.ham{display:flex}.frame{margin:40px 20px}.frame-inner{padding:36px 24px}.carta-inner,.ct-inner,.pr-inner,.fam-inner{padding:0 20px}.menu-card{padding:32px 24px}.foto-grid{grid-template-columns:1fr}.pr-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div id="pb"></div>
+  <div class="abar"><span>Demo creada por</span><strong>Altavista Web</strong><a href="https://wa.me/5492494557754?text=Hola%2C%20vi%20la%20demo%20de%20La%20Rueda%20Parrilla" target="_blank">Ver propuesta</a></div>
+  <nav>
+    <div class="nav-brand">La Rueda Parrilla</div>
+    <ul class="nav-links"><li><a href="#carta">Carta</a></li><li><a href="#contacto">Reservas</a></li></ul>
+    <a href="https://wa.me/5492494557754" class="nav-cta" target="_blank">Reservar</a>
+    <div class="ham" onclick="document.getElementById('mob').classList.toggle('open')"><span></span><span></span><span></span></div>
+  </nav>
+  <div id="mob"><a href="#carta">Carta</a><a href="#contacto">Reservas</a><a href="#propuesta">Propuesta</a></div>
+
+  <section class="hero">
+    <div class="frame reveal">
+      <div class="frame-inner">
+        <div class="frame-tag">· Tandil, desde 1992 ·</div>
+        <h1 class="frame-h1">La Rueda<br>Parrilla</h1>
+        <div class="frame-rule"><div class="frame-rule-icon">◇</div></div>
+        <p class="frame-tagline">"La familia grande de Tandil.<br>Treinta años reuniéndonos alrededor del fuego."</p>
+        <div class="frame-stats">
+          <div class="fs"><div class="fs-n">4.3★</div><div class="fs-l">Reseñas</div></div>
+          <div class="fs"><div class="fs-n">1992</div><div class="fs-l">Fundada</div></div>
+          <div class="fs"><div class="fs-n">Libre</div><div class="fs-l">Parrilla</div></div>
+          <div class="fs"><div class="fs-n">700+</div><div class="fs-l">Opiniones</div></div>
+        </div>
+        <div class="frame-btns">
+          <a href="#carta" class="btn-br">Ver la carta</a>
+          <a href="https://wa.me/5492494557754" class="btn-out" target="_blank">Reservar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="carta" id="carta">
+    <div class="carta-inner">
+      <div class="s-tag reveal">— La carta</div>
+      <h2 class="s-h2 reveal">Nuestra carta de siempre</h2>
+      <div class="menu-card reveal">
+        <div class="mc-header">
+          <div class="mc-title">La Rueda Parrilla</div>
+          <div class="mc-sub">Tandil · Desde 1992</div>
+        </div>
+        <hr class="mc-line">
+        <div class="mc-section">Entradas</div>
+        <div class="mc-item"><div class="mc-name">Provoleta a la plancha</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Empanadas criollas (6 unidades)</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Morcilla y chorizo</div><div class="mc-dots"></div></div>
+        <hr class="mc-line">
+        <div class="mc-section">Parrilla</div>
+        <div class="mc-item"><div class="mc-name">Bife de chorizo</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Asado de tira</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Vacío a las brasas</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Entraña fina</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Parrillada completa para 2</div><div class="mc-dots"></div></div>
+        <hr class="mc-line">
+        <div class="mc-section">Guarniciones</div>
+        <div class="mc-item"><div class="mc-name">Papas fritas caseras</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Ensalada mixta</div><div class="mc-dots"></div></div>
+        <div class="mc-item"><div class="mc-name">Puré casero</div><div class="mc-dots"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="familia">
+    <div class="fam-inner">
+      <h2 class="fam-h reveal">Para toda la familia</h2>
+      <div class="fam-chips reveal">
+        <span class="fchip">Parrilla libre al mediodía</span>
+        <span class="fchip">Menú infantil</span>
+        <span class="fchip">Mesas grandes</span>
+        <span class="fchip">Estacionamiento</span>
+        <span class="fchip">Sin reserva previa</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="fotos">
+    <div class="foto-grid">
+      <div class="foto-cell">🥩</div>
+      <div class="foto-cell">🔥</div>
+      <div class="foto-cell">👨‍👩‍👧‍👦</div>
+      <div class="foto-cell">🍷</div>
+    </div>
+  </div>
+
+  <section class="contacto" id="contacto">
+    <div class="ct-inner">
+      <div>
+        <h2 class="reveal">Vení a comer</h2>
+        <div class="ct-row reveal"><span class="ct-ico">📍</span><div><div class="ct-lbl">Dirección</div><div class="ct-val">Tandil, Buenos Aires</div></div></div>
+        <div class="ct-row reveal"><span class="ct-ico">🕐</span><div><div class="ct-lbl">Horarios</div><div class="ct-val">Todos los días<br>12:00 – 15:00 · 20:00 – 23:30</div></div></div>
+        <div style="margin-top:24px" class="reveal"><a href="https://wa.me/5492494557754" class="btn-br" style="display:inline-block" target="_blank">Reservar por WhatsApp</a></div>
+      </div>
+      <div class="map-box reveal">📍 Tandil</div>
+    </div>
+  </section>
+
+  <section id="propuesta">
+    <div class="pr-inner">
+      <span class="pr-badge">Altavista Web</span>
+      <h2 class="reveal">Treinta años de tradición merecen una web a la altura</h2>
+      <p class="reveal">Demo creada por Altavista Web. Sitios únicos para restaurantes de Tandil: SEO local, diseño propio, reservas por WhatsApp. En 5 días.</p>
+      <div class="pr-grid reveal">
+        <div class="pr-f"><div class="pr-f-ico">⚡</div><div class="pr-f-t">5 días</div><div class="pr-f-d">Diseño único.</div></div>
+        <div class="pr-f"><div class="pr-f-ico">📍</div><div class="pr-f-t">SEO local</div><div class="pr-f-d">Aparecer en Tandil.</div></div>
+        <div class="pr-f"><div class="pr-f-ico">💬</div><div class="pr-f-t">WhatsApp</div><div class="pr-f-d">Reservas directas.</div></div>
+      </div>
+      <a href="https://wa.me/5492494557754?text=Hola%20Santiago%2C%20vi%20la%20demo%20de%20La%20Rueda%20Parrilla" class="btn-wa reveal" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Quiero mi web — Hablemos
+      </a>
+    </div>
+  </section>
+  <footer><p>© 2025 La Rueda Parrilla · Tandil · Demo creada por <strong>Altavista Web</strong></p></footer>
+  <script>
+    window.addEventListener('scroll',()=>{const s=document.documentElement;document.getElementById('pb').style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%'});
+    const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El Molino — Restaurante Histórico Tandil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --stone:#8C7B68;
+  --wheat:#C4A86A;
+  --cream:#FAF6EF;
+  --dark:#1A150E;
+  --siena:#8B4A2C;
+  --fog:#EDE8DF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--dark);font-family:'Source Sans 3',sans-serif;overflow-x:hidden}
+
+/* AGENCY BAR */
+#agency-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  height:36px;background:#07101C;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#AAB;letter-spacing:.04em;gap:12px;
+}
+#agency-bar a{
+  color:#F4C430;text-decoration:none;font-weight:700;
+  padding:3px 14px;border:1.5px solid #F4C430;border-radius:20px;
+  font-size:11px;letter-spacing:.06em;transition:background .2s,color .2s;
+}
+#agency-bar a:hover{background:#F4C430;color:#07101C}
+
+#pb{position:fixed;top:36px;left:0;height:3px;background:var(--wheat);z-index:9998;width:0;transition:width .1s}
+
+/* NAV */
+nav{
+  position:fixed;top:36px;left:0;right:0;z-index:998;
+  height:60px;background:var(--cream);border-bottom:1px solid var(--fog);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;color:var(--dark);
+  letter-spacing:.02em;
+}
+.nav-logo small{
+  font-size:10px;font-weight:400;display:block;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--stone);margin-top:-2px;font-family:'Source Sans 3',sans-serif;
+}
+.nav-links{display:flex;gap:28px}
+.nav-links a{
+  color:var(--dark);text-decoration:none;font-size:12px;
+  font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  transition:color .2s;font-family:'Source Sans 3',sans-serif;
+}
+.nav-links a:hover{color:var(--wheat)}
+.nav-cta{
+  background:var(--dark);color:var(--cream);
+  padding:9px 22px;font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  transition:background .2s;font-family:'Source Sans 3',sans-serif;
+}
+.nav-cta:hover{background:var(--siena)}
+#mob-btn{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px}
+#mob-btn span{display:block;width:24px;height:2px;background:var(--dark)}
+#mob{display:none;position:fixed;top:96px;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--fog);z-index:997;padding:24px 32px;flex-direction:column;gap:14px}
+#mob a{color:var(--dark);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--fog)}
+@media(max-width:768px){.nav-links,.nav-cta{display:none}#mob-btn{display:flex}}
+
+/* HERO — VERTICAL STRIPE */
+.hero{
+  padding-top:96px;
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:55% 45%;
+}
+/* Left stripe: cream */
+.hero-left{
+  background:var(--cream);
+  padding:80px 48px 80px 40px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+.hero-left::after{
+  content:'';position:absolute;top:0;right:-1px;bottom:0;width:2px;
+  background:linear-gradient(to bottom, transparent 5%, var(--wheat) 30%, var(--wheat) 70%, transparent 95%);
+}
+.hero-year-bg{
+  position:absolute;bottom:40px;left:32px;
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(80px,12vw,160px);color:transparent;
+  -webkit-text-stroke:1px rgba(139,123,104,.15);
+  line-height:1;pointer-events:none;user-select:none;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:12px;margin-bottom:28px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';display:block;height:1px;background:var(--stone);opacity:.4;
+}
+.hero-eyebrow::before{width:28px}
+.hero-eyebrow::after{flex:1}
+.hero-eyebrow span{
+  font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--stone);white-space:nowrap;
+}
+h1.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(52px,7vw,88px);
+  font-weight:900;color:var(--dark);
+  line-height:.92;margin-bottom:24px;
+}
+h1.hero-title em{
+  display:block;font-style:italic;font-weight:400;
+  font-size:clamp(28px,4vw,52px);color:var(--wheat);
+  line-height:1.1;margin-top:8px;
+}
+.hero-desc{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:16px;color:var(--stone);line-height:1.7;
+  max-width:380px;margin-bottom:36px;border-left:3px solid var(--wheat);padding-left:16px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-dark{
+  background:var(--dark);color:var(--cream);
+  padding:14px 30px;font-size:12px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  transition:background .2s;font-family:'Source Sans 3',sans-serif;
+}
+.btn-dark:hover{background:var(--siena)}
+.btn-line{
+  background:transparent;color:var(--dark);border:1px solid var(--dark);
+  padding:14px 30px;font-size:12px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  transition:background .2s,color .2s;font-family:'Source Sans 3',sans-serif;
+}
+.btn-line:hover{background:var(--dark);color:var(--cream)}
+
+/* Right stripe: stone */
+.hero-right{
+  background:var(--stone);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:80px 40px;position:relative;overflow:hidden;
+}
+.hero-right::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 50%, rgba(196,168,106,.15) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-stats-vert{display:flex;flex-direction:column;gap:32px}
+.hstat{border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:28px}
+.hstat:last-child{border-bottom:none;padding-bottom:0}
+.hstat-num{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:clamp(36px,4vw,52px);color:var(--wheat);
+  line-height:1;display:block;
+}
+.hstat-lbl{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);margin-top:4px;font-family:'Source Sans 3',sans-serif;
+}
+.hero-mill-icon{
+  font-size:clamp(40px,6vw,80px);margin-top:auto;
+  opacity:.15;line-height:1;
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{min-height:280px;grid-row:1;padding:40px 24px}
+  .hero-stats-vert{flex-direction:row;flex-wrap:wrap;gap:20px}
+  .hstat{border-bottom:none;padding:0;border-right:1px solid rgba(255,255,255,.15);padding-right:20px}
+  .hstat:last-child{border-right:none;padding-right:0}
+  .hero-mill-icon{display:none}
+  .hero-left{padding:48px 24px}
+  .hero-year-bg{display:none}
+}
+
+/* HISTORIA TIMELINE */
+.historia{
+  padding:80px 40px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;
+}
+.hist-label{
+  font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:12px;font-family:'Source Sans 3',sans-serif;
+}
+.hist-title{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:clamp(28px,3.5vw,40px);color:var(--dark);margin-bottom:20px;line-height:1.1;
+}
+.hist-body{
+  font-family:'Lora',serif;font-size:15px;color:var(--stone);
+  line-height:1.75;font-style:italic;
+}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:1px;background:var(--fog);
+}
+.tl-item{position:relative;margin-bottom:32px;padding-bottom:32px;border-bottom:1px dashed var(--fog)}
+.tl-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.tl-dot{
+  position:absolute;left:-35px;top:3px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--cream);border:2px solid var(--wheat);
+}
+.tl-year{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:18px;color:var(--wheat);margin-bottom:4px;
+}
+.tl-text{font-size:14px;color:var(--stone);line-height:1.6}
+@media(max-width:768px){.historia{grid-template-columns:1fr;padding:60px 24px}}
+
+/* CARTA — STACKED CARDS */
+.carta{background:var(--fog);padding:80px 40px}
+.carta-header{text-align:center;margin-bottom:56px}
+.carta-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:10px;font-family:'Source Sans 3',sans-serif;
+}
+.carta-title{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(32px,5vw,56px);color:var(--dark);
+}
+.carta-sub{
+  font-family:'Lora',serif;font-style:italic;font-size:16px;
+  color:var(--stone);margin-top:8px;
+}
+.seccion-carta{margin-bottom:48px}
+.sec-nombre{
+  font-family:'Playfair Display',serif;font-weight:700;font-size:22px;
+  color:var(--dark);margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.sec-nombre::after{
+  content:'';flex:1;height:1px;background:var(--stone);opacity:.25;
+}
+.items-carta{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.item-carta{
+  background:var(--cream);padding:20px 22px;
+  border-left:3px solid var(--wheat);
+  box-shadow:0 2px 8px rgba(26,21,14,.05);
+  display:flex;justify-content:space-between;align-items:start;gap:16px;
+  transition:box-shadow .2s;
+}
+.item-carta:hover{box-shadow:0 4px 20px rgba(26,21,14,.1)}
+.item-info{flex:1}
+.item-nombre{
+  font-family:'Playfair Display',serif;font-weight:600;font-size:15px;
+  color:var(--dark);margin-bottom:4px;
+}
+.item-desc{font-size:12px;color:var(--stone);font-style:italic;line-height:1.5}
+.item-precio{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:18px;color:var(--dark);white-space:nowrap;flex-shrink:0;
+}
+@media(max-width:700px){.items-carta{grid-template-columns:1fr};.carta{padding:60px 24px}}
+
+/* AMBIANTE */
+.ambiente{
+  background:var(--dark);padding:80px 40px;
+  display:grid;grid-template-columns:1fr 1.4fr;gap:60px;align-items:center;
+}
+.amb-text h2{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(28px,4vw,44px);color:var(--cream);margin-bottom:20px;line-height:1.05;
+}
+.amb-text p{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:24px;
+}
+.amb-chips{display:flex;flex-wrap:wrap;gap:8px}
+.amb-chip{
+  padding:5px 14px;border:1px solid rgba(255,255,255,.2);
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);font-family:'Source Sans 3',sans-serif;
+}
+.amb-gallery{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.amb-g{
+  aspect-ratio:1;
+}
+.amb-g:nth-child(1){background:linear-gradient(140deg,#4A3828 0%,#2A1A0E 100%)}
+.amb-g:nth-child(2){background:linear-gradient(140deg,#5A4A38 0%,#3A2818 100%)}
+.amb-g:nth-child(3){background:linear-gradient(140deg,#3A2818 0%,#5A4A38 100%)}
+.amb-g:nth-child(4){background:linear-gradient(140deg,var(--stone) 0%,#5A4A38 100%)}
+@media(max-width:768px){.ambiente{grid-template-columns:1fr;padding:60px 24px}}
+
+/* RESERVAS */
+.reservas{padding:80px 40px;text-align:center}
+.res-title{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:clamp(28px,4vw,44px);color:var(--dark);margin-bottom:12px;
+}
+.res-sub{
+  font-family:'Lora',serif;font-style:italic;font-size:16px;
+  color:var(--stone);max-width:440px;margin:0 auto 40px;line-height:1.6;
+}
+.res-grid{
+  display:flex;justify-content:center;gap:48px;margin-bottom:40px;flex-wrap:wrap;
+}
+.res-item{text-align:left}
+.res-label{
+  font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:6px;font-family:'Source Sans 3',sans-serif;
+}
+.res-val{font-family:'Playfair Display',serif;font-size:16px;color:var(--dark)}
+.res-sep{
+  width:1px;background:var(--fog);
+}
+.res-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;padding:16px 36px;
+  font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;border-radius:2px;transition:background .2s;
+  font-family:'Source Sans 3',sans-serif;
+}
+.res-wa:hover{background:#1DA850}
+.res-wa svg{width:20px;height:20px;fill:#fff}
+@media(max-width:600px){.reservas{padding:60px 24px}.res-sep{display:none}.res-grid{gap:24px}}
+
+/* PROPUESTA */
+#propuesta{
+  background:#07101C;padding:80px 40px;text-align:center;
+}
+.prop-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:#F4C430;font-family:'Source Sans 3',sans-serif;margin-bottom:16px;
+}
+.prop-title{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:clamp(28px,4vw,44px);color:#fff;margin-bottom:16px;line-height:1.1;
+}
+.prop-title span{color:#F4C430}
+.prop-desc{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:16px;color:rgba(255,255,255,.65);max-width:500px;margin:0 auto 36px;line-height:1.7;
+}
+.prop-feats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px}
+.prop-feat{
+  padding:7px 16px;border:1px solid rgba(255,255,255,.15);
+  font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.06em;text-transform:uppercase;
+  font-family:'Source Sans 3',sans-serif;
+}
+.prop-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;padding:16px 36px;
+  font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;border-radius:2px;transition:background .2s;
+  font-family:'Source Sans 3',sans-serif;
+}
+.prop-wa:hover{background:#1DA850}
+.prop-wa svg{width:20px;height:20px;fill:#fff}
+
+/* FOOTER */
+footer{
+  background:#0D0A06;color:rgba(255,255,255,.4);
+  padding:32px 40px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.f-logo{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:16px;color:var(--cream);
+}
+footer p{font-size:12px;letter-spacing:.03em}
+@media(max-width:600px){footer{padding:24px;justify-content:center;text-align:center}}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div id="agency-bar">
+  <span>¿Querés una página así para tu negocio?</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Hablá con nosotros</a>
+</div>
+<div id="pb"></div>
+
+<nav>
+  <div class="nav-logo">
+    El Molino
+    <small>Restaurante histórico · Tandil</small>
+  </div>
+  <div class="nav-links">
+    <a href="#carta">Carta</a>
+    <a href="#historia">Historia</a>
+    <a href="#reservas">Reservas</a>
+  </div>
+  <a href="https://wa.me/5492494557754" class="nav-cta">Reservar</a>
+  <button id="mob-btn" onclick="document.getElementById('mob').style.display=document.getElementById('mob').style.display==='flex'?'none':'flex'" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mob">
+  <a href="#carta" onclick="document.getElementById('mob').style.display='none'">Carta</a>
+  <a href="#historia" onclick="document.getElementById('mob').style.display='none'">Historia</a>
+  <a href="#reservas" onclick="document.getElementById('mob').style.display='none'">Reservas</a>
+  <a href="https://wa.me/5492494557754" onclick="document.getElementById('mob').style.display='none'">Reservar →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- LEFT STRIPE: CREAM -->
+  <div class="hero-left">
+    <div class="hero-year-bg">1924</div>
+    <div class="hero-eyebrow"><span>Restaurante histórico · Tandil, Bs As</span></div>
+    <h1 class="hero-title">
+      El<br>Molino
+      <em>desde 1924</em>
+    </h1>
+    <p class="hero-desc">Un siglo de cocina en el corazón de Tandil. Las recetas cambian según la estación. El edificio, no.</p>
+    <div class="hero-btns">
+      <a href="#carta" class="btn-dark">Ver la Carta</a>
+      <a href="#historia" class="btn-line">Nuestra Historia</a>
+    </div>
+  </div>
+  <!-- RIGHT STRIPE: STONE -->
+  <div class="hero-right">
+    <div class="hero-stats-vert">
+      <div class="hstat">
+        <span class="hstat-num">100</span>
+        <div class="hstat-lbl">Años en Tandil</div>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num">4.6★</span>
+        <div class="hstat-lbl">Google Maps</div>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num">3ª</span>
+        <div class="hstat-lbl">Generación familiar</div>
+      </div>
+      <div class="hstat">
+        <span class="hstat-num">Km0</span>
+        <div class="hstat-lbl">Ingredientes locales</div>
+      </div>
+    </div>
+    <div class="hero-mill-icon">⚙️</div>
+  </div>
+</section>
+
+<!-- HISTORIA -->
+<section id="historia" class="historia">
+  <div class="reveal">
+    <div class="hist-label">Quiénes somos</div>
+    <h2 class="hist-title">Un molino hecho restaurante, una familia hecha cocina</h2>
+    <p class="hist-body">El edificio fue molino harinero durante los primeros años del siglo XX. La familia Bravo lo compró en 1924 y lo transformó en el primer restaurante del barrio. Cien años después, el comedor ocupa donde estaban las tolvas. Las piedras de moler están en la entrada.</p>
+  </div>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1908</div>
+      <div class="tl-text">Se construye el molino harinero. Piedra y madera traídas de Italia.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1924</div>
+      <div class="tl-text">Don Enrique Bravo compra el molino. Abre las primeras mesas para la comunidad italiana del barrio.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1968</div>
+      <div class="tl-text">Segunda generación. Marta Bravo incorpora la cocina de las sierras al menú tradicional.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2001</div>
+      <div class="tl-text">Renovación del salón. Se expone por primera vez la maquinaria original del molino.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2024</div>
+      <div class="tl-text">Centenario. Tercera generación. El menú homenaje recupera recetas de 1924.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CARTA -->
+<section id="carta" class="carta">
+  <div class="carta-header reveal">
+    <div class="carta-eyebrow">Temporada actual</div>
+    <h2 class="carta-title">La Carta</h2>
+    <p class="carta-sub">Cambia cada estación. Los sabores, no.</p>
+  </div>
+
+  <div class="seccion-carta reveal">
+    <h3 class="sec-nombre">Para comenzar</h3>
+    <div class="items-carta">
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Sopa del Molino</div>
+          <div class="item-desc">Caldo de huesos con verduras de temporada y fideos caseros. La receta de 1924.</div>
+        </div>
+        <div class="item-precio">$1.600</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Tabla Italiana</div>
+          <div class="item-desc">Embutidos, quesos y encurtidos. Como la servía Don Enrique.</div>
+        </div>
+        <div class="item-precio">$2.800</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Croquetas de Papa</div>
+          <div class="item-desc">Rellenas de queso de campo, fritas al momento. 4 unidades.</div>
+        </div>
+        <div class="item-precio">$1.400</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Empanadas de Carne</div>
+          <div class="item-desc">Masa casera, carne al cuchillo, pasas y huevo. 3 unidades.</div>
+        </div>
+        <div class="item-precio">$1.800</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seccion-carta reveal">
+    <h3 class="sec-nombre">Principales</h3>
+    <div class="items-carta">
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Matambre a la Pizza</div>
+          <div class="item-desc">Matambre tierno al horno, cubierto con salsa roja y queso mozzarella fundido.</div>
+        </div>
+        <div class="item-precio">$4.200</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Cordero a la Brasa</div>
+          <div class="item-desc">Pierna de cordero con romero y ajo. Solo los fines de semana.</div>
+        </div>
+        <div class="item-precio">$5.800</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Risotto de Hongos</div>
+          <div class="item-desc">Hongos secos y frescos, caldo casero, parmesano y manteca. Vegetariano.</div>
+        </div>
+        <div class="item-precio">$3.600</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Bife de Chorizo</div>
+          <div class="item-desc">400g a la plancha con chimichurri y papas rústicas.</div>
+        </div>
+        <div class="item-precio">$4.800</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seccion-carta reveal">
+    <h3 class="sec-nombre">Postres</h3>
+    <div class="items-carta">
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Tiramisú de la Casa</div>
+          <div class="item-desc">Receta italiana de la familia. Con café negro y cacao amargo.</div>
+        </div>
+        <div class="item-precio">$1.800</div>
+      </div>
+      <div class="item-carta">
+        <div class="item-info">
+          <div class="item-nombre">Flan Casero</div>
+          <div class="item-desc">Con dulce de leche artesanal y crema chantilly.</div>
+        </div>
+        <div class="item-precio">$1.400</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AMBIENTE -->
+<section class="ambiente">
+  <div class="amb-text reveal">
+    <h2>El ambiente:<br>un siglo<br>de piedra</h2>
+    <p>El comedor conserva las vigas originales de 1908. Las paredes de piedra. Las sillas cambiaron; el espíritu, no. Un lugar para ir despacio.</p>
+    <div class="amb-chips">
+      <span class="amb-chip">Salón histórico</span>
+      <span class="amb-chip">Maquinaria expuesta</span>
+      <span class="amb-chip">Bodega propia</span>
+      <span class="amb-chip">Espacio privado</span>
+    </div>
+  </div>
+  <div class="amb-gallery reveal">
+    <div class="amb-g"></div>
+    <div class="amb-g"></div>
+    <div class="amb-g"></div>
+    <div class="amb-g"></div>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas" class="reservas">
+  <h2 class="res-title reveal">Reservás,<br>llegás, comés</h2>
+  <p class="res-sub reveal">Sin formularios ni apps. Mandás un WhatsApp y listo.</p>
+  <div class="res-grid reveal">
+    <div class="res-item">
+      <div class="res-label">Dirección</div>
+      <div class="res-val">Av. Del Valle 445, Tandil</div>
+    </div>
+    <div class="res-sep"></div>
+    <div class="res-item">
+      <div class="res-label">Horarios</div>
+      <div class="res-val">Mar–Dom 12–15 y 20–23:30</div>
+    </div>
+    <div class="res-sep"></div>
+    <div class="res-item">
+      <div class="res-label">Estacionamiento</div>
+      <div class="res-val">A 100m, gratuito</div>
+    </div>
+  </div>
+  <a href="https://wa.me/5492494557754" class="res-wa reveal" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Reservar por WhatsApp
+  </a>
+</section>
+
+<!-- PROPUESTA -->
+<section id="propuesta">
+  <div class="prop-eyebrow">Desarrollado por Altavista Web · Tandil</div>
+  <h2 class="prop-title">¿Tu negocio merece<br>una web <span>así</span>?</h2>
+  <p class="prop-desc">Diseñada a medida, con carácter, entregada en 7 días. Sin plantillas genéricas.</p>
+  <div class="prop-feats">
+    <span class="prop-feat">Diseño único</span>
+    <span class="prop-feat">SEO local</span>
+    <span class="prop-feat">WhatsApp integrado</span>
+    <span class="prop-feat">7 días</span>
+    <span class="prop-feat">Tandil-first</span>
+  </div>
+  <a href="https://wa.me/5492494557754" class="prop-wa" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Quiero mi página web
+  </a>
+</section>
+
+<footer>
+  <div class="f-logo">El Molino — 1924</div>
+  <p>© 2025 El Molino · Av. Del Valle 445, Tandil</p>
+  <p>Diseño: <strong style="color:rgba(255,255,255,.6)">Altavista Web</strong></p>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  const p=(s.scrollTop||document.body.scrollTop)/(s.scrollHeight-s.clientHeight)*100;
+  document.getElementById('pb').style.width=p+'%';
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

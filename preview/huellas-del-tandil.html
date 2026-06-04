@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Huellas del Tandil — Cocina Serrana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,700;0,800;1,300;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --moss:#3D5A2E;
+  --sky:#4A6888;
+  --earth:#7A4E2C;
+  --stone:#8C8478;
+  --cream:#F7F4EE;
+  --fog:#E8E4DC;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:#1A1814;font-family:'Lora',serif;overflow-x:hidden}
+
+/* AGENCY BAR */
+#agency-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  height:36px;background:#07101C;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-family:'Raleway',sans-serif;color:#AAB;letter-spacing:.04em;gap:12px;
+}
+#agency-bar a{
+  color:#F4C430;text-decoration:none;font-weight:700;
+  padding:3px 14px;border:1.5px solid #F4C430;border-radius:20px;
+  font-size:11px;letter-spacing:.06em;
+  transition:background .2s,color .2s;
+}
+#agency-bar a:hover{background:#F4C430;color:#07101C}
+
+/* SCROLL PROGRESS */
+#pb{position:fixed;top:36px;left:0;height:3px;background:var(--moss);z-index:9998;width:0;transition:width .1s linear}
+
+/* NAV */
+nav{
+  position:fixed;top:36px;left:0;right:0;z-index:998;
+  height:60px;background:rgba(247,244,238,.95);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;border-bottom:1px solid rgba(61,90,46,.2);
+}
+.nav-logo{
+  font-family:'Raleway',sans-serif;font-weight:800;font-size:16px;
+  letter-spacing:.12em;text-transform:uppercase;color:#1A1814;
+}
+.nav-logo em{font-style:italic;font-weight:300;letter-spacing:.04em;font-family:'Lora',serif;color:var(--moss)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{
+  color:#1A1814;text-decoration:none;font-family:'Raleway',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--moss)}
+.nav-res{
+  background:var(--moss);color:var(--cream);
+  padding:9px 22px;border-radius:1px;
+  font-family:'Raleway',sans-serif;font-size:11px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  transition:background .2s;
+}
+.nav-res:hover{background:var(--earth)}
+#mob-btn{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px}
+#mob-btn span{display:block;width:24px;height:2px;background:#1A1814}
+#mob{display:none;position:fixed;top:96px;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--fog);z-index:997;padding:24px 32px;flex-direction:column;gap:14px}
+#mob a{color:#1A1814;text-decoration:none;font-family:'Raleway',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--fog)}
+@media(max-width:768px){.nav-links,.nav-res{display:none}#mob-btn{display:flex}}
+
+/* HERO — PANORAMIC GRADIENT */
+.hero{
+  padding-top:96px;
+  min-height:100vh;
+  background:linear-gradient(
+    160deg,
+    #3D5A2E 0%,
+    #4A6244 25%,
+    #4A6888 55%,
+    #2E4060 100%
+  );
+  position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;
+}
+.hero-mist{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 90%, rgba(247,244,238,.12) 0%, transparent 60%),
+    radial-gradient(circle at 20% 60%, rgba(122,78,44,.25) 0%, transparent 40%);
+  pointer-events:none;
+}
+.hero-peak{
+  position:absolute;top:30%;left:50%;transform:translateX(-50%);
+  width:100%;text-align:center;pointer-events:none;
+  opacity:.06;
+}
+.hero-peak span{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(80px,18vw,260px);
+  color:#fff;letter-spacing:.04em;text-transform:uppercase;
+  line-height:1;display:block;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 48px 80px;
+  max-width:740px;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  color:rgba(255,255,255,.85);
+  font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:6px 16px;border-radius:40px;margin-bottom:28px;
+}
+.hero-badge::before{content:'⛰';font-size:13px}
+h1.hero-title{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(44px,8vw,100px);
+  color:#fff;line-height:.92;letter-spacing:-.01em;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+h1.hero-title em{
+  display:block;
+  font-family:'Lora',serif;font-style:italic;font-weight:400;
+  font-size:clamp(20px,3vw,36px);
+  letter-spacing:.04em;text-transform:none;
+  color:rgba(255,255,255,.75);margin-top:4px;
+}
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,.7);
+  line-height:1.65;font-style:italic;max-width:480px;margin-bottom:36px;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-cream{
+  background:var(--cream);color:var(--moss);
+  padding:14px 32px;font-family:'Raleway',sans-serif;
+  font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;border-radius:1px;
+  transition:background .2s,color .2s;
+}
+.btn-cream:hover{background:var(--moss);color:#fff}
+.btn-ghost{
+  background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);
+  padding:14px 32px;font-family:'Raleway',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;border-radius:1px;
+  transition:background .2s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.hero-strip{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(26,24,20,.5);backdrop-filter:blur(4px);
+  display:flex;
+}
+.hs-item{
+  flex:1;padding:16px 20px;border-right:1px solid rgba(255,255,255,.1);
+  text-align:center;
+}
+.hs-item:last-child{border-right:none}
+.hs-val{
+  font-family:'Raleway',sans-serif;font-weight:800;font-size:22px;
+  color:#fff;display:block;line-height:1;
+}
+.hs-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:3px;font-family:'Raleway',sans-serif}
+@media(max-width:768px){
+  .hero-content{padding:0 24px 100px}
+  .hero-strip{flex-wrap:wrap}
+  .hs-item{width:50%;border-bottom:1px solid rgba(255,255,255,.1)}
+}
+
+/* FILOSOFIA BAND */
+.filosofia{
+  background:var(--moss);color:#fff;
+  padding:60px 48px;
+  display:flex;align-items:center;gap:60px;flex-wrap:wrap;
+}
+.fil-ornament{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:clamp(36px,5vw,64px);
+  color:rgba(255,255,255,.2);line-height:1;flex-shrink:0;
+}
+.fil-text{flex:1;min-width:260px}
+.fil-quote{
+  font-family:'Lora',serif;font-style:italic;font-size:20px;
+  line-height:1.55;color:rgba(255,255,255,.9);margin-bottom:14px;
+}
+.fil-author{
+  font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);
+}
+@media(max-width:600px){.filosofia{padding:48px 24px}.fil-ornament{display:none}}
+
+/* MENU ALTURAS */
+.menu-sec{padding:80px 48px;background:var(--cream)}
+.menu-header{margin-bottom:56px}
+.menu-eyebrow{
+  font-family:'Raleway',sans-serif;font-weight:700;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:10px;
+}
+.menu-title{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(32px,5vw,56px);color:#1A1814;
+  margin-bottom:8px;line-height:1;
+}
+.menu-sub{font-style:italic;font-size:16px;color:var(--stone)}
+
+/* Elevation-based menu */
+.nivel{margin-bottom:56px}
+.nivel-header{
+  display:flex;align-items:center;gap:20px;margin-bottom:28px;
+  border-bottom:1px solid var(--fog);padding-bottom:16px;
+}
+.nivel-badge{
+  background:var(--moss);color:#fff;
+  font-family:'Raleway',sans-serif;font-size:10px;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:4px 14px;border-radius:40px;
+}
+.nivel-badge.sky{background:var(--sky)}
+.nivel-badge.earth{background:var(--earth)}
+.nivel-name{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:20px;color:#1A1814;letter-spacing:.04em;text-transform:uppercase;
+}
+.nivel-elev{
+  margin-left:auto;font-family:'Lora',serif;font-style:italic;
+  font-size:13px;color:var(--stone);
+}
+.platos{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.plato{
+  padding:24px;border:1px solid var(--fog);
+  transition:border-color .25s,box-shadow .25s;
+}
+.plato:hover{border-color:var(--moss);box-shadow:0 4px 20px rgba(61,90,46,.1)}
+.plato-nombre{
+  font-family:'Lora',serif;font-weight:600;font-size:16px;
+  color:#1A1814;margin-bottom:6px;line-height:1.3;
+}
+.plato-desc{font-size:13px;color:var(--stone);line-height:1.55;font-style:italic;margin-bottom:14px}
+.plato-footer{display:flex;align-items:center;justify-content:space-between}
+.plato-precio{
+  font-family:'Raleway',sans-serif;font-weight:800;font-size:18px;color:#1A1814;
+}
+.plato-tag{
+  font-family:'Raleway',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--moss);
+}
+@media(max-width:600px){.menu-sec{padding:60px 24px}}
+
+/* TERRITORIO BAND */
+.territorio{
+  background:var(--earth);padding:72px 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+}
+.terr-text h2{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,44px);color:#fff;
+  text-transform:uppercase;margin-bottom:16px;letter-spacing:.01em;
+}
+.terr-text p{
+  font-size:15px;color:rgba(255,255,255,.7);
+  line-height:1.7;font-style:italic;max-width:420px;
+}
+.terr-items{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.terr-item{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  padding:20px;
+}
+.terr-icon{font-size:24px;margin-bottom:8px}
+.terr-item-title{
+  font-family:'Raleway',sans-serif;font-weight:800;font-size:13px;
+  color:#fff;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;
+}
+.terr-item-desc{font-size:12px;color:rgba(255,255,255,.6);font-style:italic;line-height:1.5}
+@media(max-width:768px){.territorio{grid-template-columns:1fr;padding:60px 24px}}
+
+/* GALERIA */
+.galeria{padding:80px 48px;background:var(--fog)}
+.galeria h2{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,40px);text-transform:uppercase;
+  color:#1A1814;margin-bottom:36px;letter-spacing:.02em;
+}
+.gal-grid{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr;
+  grid-template-rows:220px 220px;
+  gap:8px;
+}
+.gal-item{border-radius:2px;overflow:hidden}
+.gal-item:nth-child(1){
+  grid-row:1/3;
+  background:linear-gradient(160deg,var(--moss) 0%,#2A3D1E 100%);
+}
+.gal-item:nth-child(2){background:linear-gradient(140deg,var(--sky) 0%,#2E4A68 100%)}
+.gal-item:nth-child(3){background:linear-gradient(140deg,var(--earth) 0%,#5A3018 100%)}
+.gal-item:nth-child(4){background:linear-gradient(140deg,#5A4030 0%,var(--stone) 100%)}
+.gal-item:nth-child(5){background:linear-gradient(140deg,#2A3D1E 0%,var(--sky) 100%)}
+.gal-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lora',serif;font-style:italic;font-size:14px;
+  color:rgba(255,255,255,.35);letter-spacing:.04em;
+}
+@media(max-width:768px){
+  .gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .gal-item:nth-child(1){grid-row:auto}
+  .galeria{padding:60px 24px}
+}
+
+/* RESERVAS */
+.reservas{
+  padding:80px 48px;background:var(--cream);
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;
+}
+.res-title{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,44px);text-transform:uppercase;color:#1A1814;
+  margin-bottom:16px;letter-spacing:.01em;line-height:1;
+}
+.res-sub{font-style:italic;font-size:15px;color:var(--stone);line-height:1.6;margin-bottom:32px}
+.res-item{
+  display:flex;gap:16px;margin-bottom:20px;align-items:flex-start;
+}
+.res-dot{
+  width:8px;height:8px;background:var(--moss);border-radius:50%;
+  flex-shrink:0;margin-top:6px;
+}
+.res-text strong{display:block;font-weight:700;font-size:14px;margin-bottom:2px}
+.res-text span{font-size:13px;color:var(--stone);font-style:italic}
+.res-cta-block{display:flex;flex-direction:column;gap:12px}
+.res-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;padding:14px 28px;
+  font-family:'Raleway',sans-serif;font-size:12px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border-radius:2px;width:fit-content;transition:background .2s;
+}
+.res-wa:hover{background:#1DA850}
+.res-wa svg{width:18px;height:18px;fill:#fff}
+.res-note{font-size:12px;color:var(--stone);font-style:italic}
+@media(max-width:768px){.reservas{grid-template-columns:1fr;padding:60px 24px}}
+
+/* PROPUESTA */
+#propuesta{
+  background:#07101C;padding:80px 48px;text-align:center;
+}
+.prop-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:#F4C430;font-family:'Raleway',sans-serif;margin-bottom:16px;
+}
+.prop-title{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,44px);color:#fff;
+  text-transform:uppercase;margin-bottom:16px;letter-spacing:.02em;
+}
+.prop-title span{color:#F4C430}
+.prop-desc{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:16px;color:rgba(255,255,255,.65);
+  max-width:500px;margin:0 auto 36px;line-height:1.7;
+}
+.prop-features{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;
+}
+.prop-feat{
+  padding:7px 16px;border:1px solid rgba(255,255,255,.15);
+  font-family:'Raleway',sans-serif;
+  font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.06em;text-transform:uppercase;
+}
+.prop-wa{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;
+  padding:16px 36px;font-family:'Raleway',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border-radius:2px;transition:background .2s;
+}
+.prop-wa:hover{background:#1DA850}
+.prop-wa svg{width:20px;height:20px;fill:#fff}
+
+/* FOOTER */
+footer{
+  background:#0D1208;color:rgba(255,255,255,.4);
+  padding:32px 48px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.f-logo{
+  font-family:'Raleway',sans-serif;font-weight:800;
+  font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#fff;
+}
+footer p{font-size:12px;font-family:'Raleway',sans-serif;letter-spacing:.04em}
+@media(max-width:600px){footer{padding:24px;text-align:center;justify-content:center}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div id="agency-bar">
+  <span>¿Querés una página así para tu negocio?</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Hablá con nosotros</a>
+</div>
+<div id="pb"></div>
+
+<nav>
+  <div class="nav-logo">Huellas <em>del Tandil</em></div>
+  <div class="nav-links">
+    <a href="#menu">Carta</a>
+    <a href="#territorio">Territorio</a>
+    <a href="#reservas">Reservas</a>
+  </div>
+  <a href="https://wa.me/5492494557754" class="nav-res">Reservar</a>
+  <button id="mob-btn" onclick="document.getElementById('mob').style.display=document.getElementById('mob').style.display==='flex'?'none':'flex'" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mob">
+  <a href="#menu" onclick="document.getElementById('mob').style.display='none'">Carta</a>
+  <a href="#territorio" onclick="document.getElementById('mob').style.display='none'">Territorio</a>
+  <a href="#reservas" onclick="document.getElementById('mob').style.display='none'">Reservas</a>
+  <a href="https://wa.me/5492494557754" onclick="document.getElementById('mob').style.display='none'">Reservar →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-mist"></div>
+  <div class="hero-peak"><span>TANDIL</span></div>
+  <div class="hero-content">
+    <div class="hero-badge">Cocina de Montaña · Tandil, Bs As</div>
+    <h1 class="hero-title">
+      Huellas<br>del Tandil
+      <em>cocina serrana de autor</em>
+    </h1>
+    <p class="hero-sub">Los sabores de las sierras, cocinados con fuego lento y productos de la región. Una experiencia que te lleva del pie del cerro a la cumbre.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-cream">Ver la Carta</a>
+      <a href="#reservas" class="btn-ghost">Reservar Mesa</a>
+    </div>
+  </div>
+  <div class="hero-strip">
+    <div class="hs-item"><span class="hs-val">4.8★</span><span class="hs-lbl">Google</span></div>
+    <div class="hs-item"><span class="hs-val">3</span><span class="hs-lbl">Niveles de sabor</span></div>
+    <div class="hs-item"><span class="hs-val">100%</span><span class="hs-lbl">Regional</span></div>
+    <div class="hs-item"><span class="hs-val">Sierras</span><span class="hs-lbl">Inspiración</span></div>
+  </div>
+</section>
+
+<!-- FILOSOFIA -->
+<div class="filosofia">
+  <div class="fil-ornament">"</div>
+  <div class="fil-text">
+    <p class="fil-quote">Cocinar en Tandil es escuchar al cerro. Cada plato nace de lo que la tierra da en esa estación, de esa semana, de ese día.</p>
+    <div class="fil-author">— Pablo Cisneros, Chef y fundador</div>
+  </div>
+</div>
+
+<!-- MENU POR ALTURAS -->
+<section id="menu" class="menu-sec">
+  <div class="menu-header reveal">
+    <div class="menu-eyebrow">Carta de temporada</div>
+    <h2 class="menu-title">La Carta</h2>
+    <p class="menu-sub">Organizada por alturas, como el paisaje serrano.</p>
+  </div>
+
+  <!-- NIVEL 1 -->
+  <div class="nivel reveal">
+    <div class="nivel-header">
+      <span class="nivel-badge">Pie de Cerro</span>
+      <span class="nivel-name">Entradas y Nibblings</span>
+      <span class="nivel-elev">~ 174 m.s.n.m.</span>
+    </div>
+    <div class="platos">
+      <div class="plato">
+        <div class="plato-nombre">Tabla Serrana</div>
+        <div class="plato-desc">Fiambres artesanales, quesos de campo, dulce de membrillo, pan de masa madre.</div>
+        <div class="plato-footer"><span class="plato-precio">$3.200</span><span class="plato-tag">Para compartir</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Empanadas de Cordero</div>
+        <div class="plato-desc">Rellenas con cordero al tomillo, cebolla caramelizada, aceituna negra. 3 unidades.</div>
+        <div class="plato-footer"><span class="plato-precio">$1.800</span><span class="plato-tag">Serranas</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Sopa de Hongos</div>
+        <div class="plato-desc">Hongos de temporada, crema de campo, pimienta negra y hojas de laurel fresco.</div>
+        <div class="plato-footer"><span class="plato-precio">$1.600</span><span class="plato-tag">Temporada</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVEL 2 -->
+  <div class="nivel reveal">
+    <div class="nivel-header">
+      <span class="nivel-badge sky">Media Ladera</span>
+      <span class="nivel-name">Principales</span>
+      <span class="nivel-elev">~ 460 m.s.n.m.</span>
+    </div>
+    <div class="platos">
+      <div class="plato">
+        <div class="plato-nombre">Cordero a la Cruz</div>
+        <div class="plato-desc">Cordero entero cocinado 6 horas en leña de espinillo. Llega a la mesa en tabla de madera.</div>
+        <div class="plato-footer"><span class="plato-precio">$6.400</span><span class="plato-tag">Estrella ★</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Trucha Serrana</div>
+        <div class="plato-desc">Trucha del río Chapaleofú con manteca de hierbas, cítrico y quinoa salteada.</div>
+        <div class="plato-footer"><span class="plato-precio">$4.200</span><span class="plato-tag">Del río</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Risotto de Montaña</div>
+        <div class="plato-desc">Arroz arbóreo con hongos portobello, parmesano envejecido y aceite de trufa.</div>
+        <div class="plato-footer"><span class="plato-precio">$3.800</span><span class="plato-tag">Vegetariano</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Asado de Tira</div>
+        <div class="plato-desc">500g en corte corto. Cocción lenta, costillar crujiente, chimichurri de la casa.</div>
+        <div class="plato-footer"><span class="plato-precio">$4.800</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVEL 3 -->
+  <div class="nivel reveal">
+    <div class="nivel-header">
+      <span class="nivel-badge earth">Cumbre</span>
+      <span class="nivel-name">Postres</span>
+      <span class="nivel-elev">~ 524 m.s.n.m.</span>
+    </div>
+    <div class="platos">
+      <div class="plato">
+        <div class="plato-nombre">Torta de Leche de Cabra</div>
+        <div class="plato-desc">Cheesecake de queso de cabra local con salsa de frutos rojos de temporada.</div>
+        <div class="plato-footer"><span class="plato-precio">$1.800</span><span class="plato-tag">De autor</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Churros Rústicos</div>
+        <div class="plato-desc">Con dulce de leche artesanal y chocolate caliente de la sierra.</div>
+        <div class="plato-footer"><span class="plato-precio">$1.400</span></div>
+      </div>
+      <div class="plato">
+        <div class="plato-nombre">Helado de Campo</div>
+        <div class="plato-desc">Producción artesanal propia. Sabores que cambian por semana.</div>
+        <div class="plato-footer"><span class="plato-precio">$1.200</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERRITORIO -->
+<section id="territorio" class="territorio">
+  <div class="terr-text reveal">
+    <h2>El territorio<br>en el plato</h2>
+    <p>Trabajamos con productores de menos de 80 km. Lo que no crece acá, no entra a la cocina. No es marketing, es la única forma que sabemos cocinar.</p>
+  </div>
+  <div class="terr-items reveal">
+    <div class="terr-item">
+      <div class="terr-icon">🌿</div>
+      <div class="terr-item-title">Hierbas Frescas</div>
+      <div class="terr-item-desc">Huerta propia en las sierras. Cosecha según temporada.</div>
+    </div>
+    <div class="terr-item">
+      <div class="terr-icon">🐑</div>
+      <div class="terr-item-title">Cordero Propio</div>
+      <div class="terr-item-desc">Hacienda familiar en Cerro Leones. Sin intermediarios.</div>
+    </div>
+    <div class="terr-item">
+      <div class="terr-icon">🧀</div>
+      <div class="terr-item-title">Quesos Artesanales</div>
+      <div class="terr-item-desc">Tambos de Tandil y zona de sierras.</div>
+    </div>
+    <div class="terr-item">
+      <div class="terr-icon">🌾</div>
+      <div class="terr-item-title">Granos Locales</div>
+      <div class="terr-item-desc">Trigo, maíz y quinoa de la región pampeana serrana.</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section class="galeria">
+  <h2 class="reveal">El lugar</h2>
+  <div class="gal-grid reveal">
+    <div class="gal-item"><div class="gal-inner">Vista al cerro</div></div>
+    <div class="gal-item"><div class="gal-inner">La parrilla</div></div>
+    <div class="gal-item"><div class="gal-inner">El cordero</div></div>
+    <div class="gal-item"><div class="gal-inner">Tabla serrana</div></div>
+    <div class="gal-item"><div class="gal-inner">El fuego</div></div>
+  </div>
+</section>
+
+<!-- RESERVAS -->
+<section id="reservas" class="reservas">
+  <div class="reveal">
+    <h2 class="res-title">Reservá<br>tu mesa</h2>
+    <p class="res-sub">Recomendamos reservar con 48 hs de anticipación, especialmente los fines de semana.</p>
+    <div class="res-item">
+      <div class="res-dot"></div>
+      <div class="res-text">
+        <strong>Jueves a Domingo</strong>
+        <span>12:30–15:00 y 20:00–23:30</span>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-dot"></div>
+      <div class="res-text">
+        <strong>Dirección</strong>
+        <span>Ruta 226 Km 4, Tandil — camino a las sierras</span>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-dot"></div>
+      <div class="res-text">
+        <strong>Para grupos</strong>
+        <span>Mesas de hasta 20 personas con menú especial</span>
+      </div>
+    </div>
+  </div>
+  <div class="res-cta-block reveal">
+    <a href="https://wa.me/5492494557754" class="res-wa" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Reservar por WhatsApp
+    </a>
+    <p class="res-note">También podés venir sin reserva de lunes a miércoles al mediodía</p>
+  </div>
+</section>
+
+<!-- PROPUESTA -->
+<section id="propuesta">
+  <div class="prop-eyebrow">Desarrollado por Altavista Web · Tandil</div>
+  <h2 class="prop-title">¿Querés una página <span>así</span><br>para tu negocio?</h2>
+  <p class="prop-desc">Diseño personalizado, entregado en 7 días, con SEO local para aparecer en Google Tandil.</p>
+  <div class="prop-features">
+    <span class="prop-feat">Diseño único</span>
+    <span class="prop-feat">SEO local</span>
+    <span class="prop-feat">WhatsApp integrado</span>
+    <span class="prop-feat">7 días de entrega</span>
+    <span class="prop-feat">Sin plantillas</span>
+  </div>
+  <a href="https://wa.me/5492494557754" class="prop-wa" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Quiero mi página web
+  </a>
+</section>
+
+<footer>
+  <div class="f-logo">HUELLAS DEL TANDIL</div>
+  <p>© 2025 Huellas del Tandil · Ruta 226 Km 4, Tandil</p>
+  <p>Diseño: <strong style="color:rgba(255,255,255,.6)">Altavista Web</strong></p>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  const p=(s.scrollTop||document.body.scrollTop)/(s.scrollHeight-s.clientHeight)*100;
+  document.getElementById('pb').style.width=p+'%';
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Época de Quesos — Tandil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:      #F5EFE3;
+      --bg2:     #EDE3D3;
+      --ink:     #1A0C08;
+      --mid:     #7A5840;
+      --wine:    #6B1D3C;
+      --amber:   #C9A35A;
+      --cream:   #FAF6F0;
+      --border:  #DDD0B8;
+      --nav:     #07101C;
+      --yellow:  #F4C430;
+      --r:       4px;
+      --w:       1240px;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; }
+
+    /* ── PROGRESS ─── */
+    #pb { position:fixed; top:0; left:0; height:2px; width:0%; background:var(--wine); z-index:999; }
+
+    /* ── AGENCY BAR ─── */
+    .ab {
+      position:fixed; top:0; left:0; right:0; z-index:300;
+      background:rgba(7,16,28,.97); backdrop-filter:blur(10px);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 24px; gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .ab-l { display:flex; align-items:center; gap:10px; }
+    .ab-badge { background:var(--yellow); color:var(--nav); padding:2px 8px; border-radius:3px; font-size:9px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; }
+    .ab-text { color:rgba(255,255,255,.5); font-size:11.5px; }
+    .ab-text strong { color:rgba(255,255,255,.8); }
+    .ab-cta { background:var(--wine); color:#fff; text-decoration:none; padding:5px 14px; border-radius:3px; font-size:11px; font-weight:600; white-space:nowrap; transition:opacity .2s; }
+    .ab-cta:hover { opacity:.85; }
+
+    /* ── NAV ─── */
+    .nav {
+      position:fixed; top:30px; left:0; right:0; z-index:200;
+      background:rgba(250,246,240,.96); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 40px; height:60px;
+      transition:box-shadow .3s;
+    }
+    .nav.scrolled { box-shadow:0 2px 24px rgba(0,0,0,.1); }
+    .nav-logo { height:32px; display:block; }
+    .nav-logo-txt { font-family:'Playfair Display', serif; font-size:20px; font-weight:600; color:var(--wine); letter-spacing:-.01em; }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a { color:var(--ink); text-decoration:none; font-size:13px; font-weight:400; opacity:.65; transition:opacity .2s; letter-spacing:.01em; }
+    .nav-links a:hover { opacity:1; }
+    .nav-res { background:var(--wine); color:#fff; text-decoration:none; padding:9px 22px; border-radius:var(--r); font-size:13px; font-weight:500; transition:opacity .2s; }
+    .nav-res:hover { opacity:.85; }
+    .hamburger { display:none; background:none; border:none; cursor:pointer; padding:6px; flex-direction:column; gap:5px; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--ink); border-radius:2px; }
+    #mobile-menu { display:none; position:fixed; top:90px; left:0; right:0; background:rgba(250,246,240,.98); z-index:190; flex-direction:column; padding:16px 24px 24px; border-bottom:1px solid var(--border); }
+    #mobile-menu.open { display:flex; }
+    #mobile-menu a { color:var(--ink); text-decoration:none; padding:12px 0; font-size:15px; border-bottom:1px solid var(--border); }
+    .mm-res { margin-top:12px; background:var(--wine); color:#fff !important; text-align:center; padding:13px !important; border-radius:var(--r); border:none !important; }
+
+    /* ── HERO: 2-COL SPLIT ─── */
+    .hero {
+      min-height:calc(100vh - 90px);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      padding-top:90px;
+    }
+    .hero-left {
+      background:var(--wine);
+      display:flex; flex-direction:column; justify-content:center;
+      padding:80px 64px 80px 48px;
+      position:relative; overflow:hidden;
+    }
+    .hero-left::before {
+      content:'';
+      position:absolute; inset:0;
+      background:url('https://epocadequesos.com/wp-content/uploads/2021/02/Epoca-de-Quesos-50-1024x682.jpg') center/cover no-repeat;
+      opacity:.12;
+    }
+    .hero-eyebrow {
+      font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase;
+      color:rgba(255,255,255,.55); margin-bottom:20px;
+      position:relative;
+    }
+    .hero-h1 {
+      font-family:'Playfair Display', serif;
+      font-size:clamp(44px,5.5vw,76px);
+      font-weight:700; line-height:.95;
+      color:#fff; letter-spacing:-.02em;
+      position:relative; margin-bottom:24px;
+    }
+    .hero-h1 em { font-style:italic; color:var(--amber); }
+    .hero-sub {
+      font-size:16px; color:rgba(255,255,255,.7);
+      line-height:1.65; max-width:420px;
+      position:relative; margin-bottom:40px;
+    }
+    .hero-since {
+      display:inline-flex; align-items:center; gap:10px;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      border-radius:40px; padding:8px 20px;
+      font-size:12px; color:rgba(255,255,255,.8); font-weight:500;
+      position:relative;
+    }
+    .hero-since-dot { width:6px; height:6px; border-radius:50%; background:var(--amber); flex-shrink:0; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; position:relative; }
+    .btn-amber { background:var(--amber); color:var(--ink); padding:14px 28px; border-radius:var(--r); font-size:14px; font-weight:600; text-decoration:none; transition:opacity .2s; }
+    .btn-amber:hover { opacity:.88; }
+    .btn-ghost-w { background:transparent; border:1px solid rgba(255,255,255,.3); color:#fff; padding:14px 28px; border-radius:var(--r); font-size:14px; text-decoration:none; transition:background .2s; }
+    .btn-ghost-w:hover { background:rgba(255,255,255,.1); }
+
+    .hero-right {
+      position:relative; overflow:hidden;
+    }
+    .hero-right img {
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .hero-right-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to right, rgba(107,29,60,.25) 0%, transparent 40%);
+    }
+    .hero-badge {
+      position:absolute; bottom:32px; right:32px;
+      background:var(--cream); border:1px solid var(--border);
+      border-radius:var(--r); padding:16px 20px;
+      text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.15);
+    }
+    .hero-badge-n { font-family:'Playfair Display', serif; font-size:36px; font-weight:700; color:var(--wine); line-height:1; }
+    .hero-badge-l { font-size:11px; color:var(--mid); font-weight:500; margin-top:4px; }
+
+    /* ── CATEGORY STRIP ─── */
+    .cats {
+      background:var(--bg2);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      overflow-x:auto;
+    }
+    .cats-inner {
+      max-width:var(--w); margin:0 auto;
+      display:flex; padding:0 40px;
+    }
+    .cat-item {
+      flex-shrink:0; padding:16px 28px;
+      font-size:12px; font-weight:600; letter-spacing:.8px;
+      text-transform:uppercase; color:var(--mid);
+      border-right:1px solid var(--border);
+      cursor:pointer; text-decoration:none;
+      transition:color .2s; white-space:nowrap;
+    }
+    .cat-item:hover, .cat-item.active { color:var(--wine); }
+
+    /* ── LA CARTA ─── */
+    .carta { padding:96px 40px; background:var(--cream); }
+    .carta-inner { max-width:var(--w); margin:0 auto; }
+    .section-label { font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--wine); margin-bottom:12px; }
+    .section-h2 { font-family:'Playfair Display', serif; font-size:clamp(28px,3.5vw,48px); font-weight:600; line-height:1.1; letter-spacing:-.02em; margin-bottom:8px; }
+    .section-p { font-size:15px; color:var(--mid); line-height:1.7; max-width:520px; }
+
+    .carta-list {
+      margin-top:48px;
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:0;
+      border:1px solid var(--border); border-radius:var(--r);
+      overflow:hidden;
+    }
+    .carta-item {
+      padding:32px 36px;
+      border-bottom:1px solid var(--border);
+      border-right:1px solid var(--border);
+      position:relative;
+      transition:background .2s;
+    }
+    .carta-item:hover { background:var(--bg); }
+    .carta-item:nth-child(even) { border-right:none; }
+    .carta-item:nth-last-child(-n+2) { border-bottom:none; }
+    .carta-num { font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:8px; }
+    .carta-name { font-family:'Playfair Display', serif; font-size:19px; font-weight:500; color:var(--ink); margin-bottom:8px; }
+    .carta-desc { font-size:13.5px; color:var(--mid); line-height:1.55; }
+    .carta-line { width:40px; height:2px; background:var(--wine); border-radius:1px; margin-top:16px; opacity:.4; }
+
+    /* ── PRODUCTS SHOWCASE ─── */
+    .products { padding:96px 40px; background:var(--bg); }
+    .products-inner { max-width:var(--w); margin:0 auto; }
+    .products-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:24px; margin-top:48px;
+    }
+    .product-card { border-radius:var(--r); overflow:hidden; background:var(--cream); border:1px solid var(--border); }
+    .product-img { aspect-ratio:4/3; overflow:hidden; }
+    .product-img img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+    .product-card:hover .product-img img { transform:scale(1.04); }
+    .product-info { padding:20px; }
+    .product-tag { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+    .product-name { font-family:'Playfair Display', serif; font-size:18px; font-weight:500; margin-bottom:6px; }
+    .product-desc { font-size:13px; color:var(--mid); line-height:1.5; }
+
+    /* ── LA CASA ─── */
+    .lacasa {
+      padding:96px 40px;
+      background:var(--wine);
+      color:#fff;
+    }
+    .lacasa-inner { max-width:var(--w); margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .lacasa-label { font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:12px; }
+    .lacasa-h2 { font-family:'Playfair Display', serif; font-size:clamp(28px,3.5vw,48px); font-weight:600; line-height:1.1; color:#fff; letter-spacing:-.02em; margin-bottom:24px; }
+    .lacasa-p { font-size:15px; color:rgba(255,255,255,.72); line-height:1.75; margin-bottom:16px; }
+    .lacasa-nums {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:24px; margin-top:40px;
+    }
+    .lacasa-num { border-top:1px solid rgba(255,255,255,.2); padding-top:16px; }
+    .lacasa-num-n { font-family:'Playfair Display', serif; font-size:42px; font-weight:700; color:var(--amber); line-height:1; letter-spacing:-.02em; }
+    .lacasa-num-l { font-size:12px; color:rgba(255,255,255,.55); margin-top:4px; }
+    .lacasa-img { border-radius:var(--r); overflow:hidden; aspect-ratio:3/4; }
+    .lacasa-img img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* ── CONTACT ─── */
+    .contact { padding:80px 40px; background:var(--bg2); border-top:1px solid var(--border); }
+    .contact-inner { max-width:var(--w); margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; }
+    .contact-col h3 { font-family:'Playfair Display', serif; font-size:22px; font-weight:500; margin-bottom:16px; }
+    .contact-col p, .contact-col a { font-size:14px; color:var(--mid); line-height:1.8; text-decoration:none; display:block; }
+    .contact-col a:hover { color:var(--wine); }
+
+    /* ── PROPUESTA ─── */
+    .propuesta { padding:96px 40px; background:var(--nav); }
+    .propuesta-inner { max-width:var(--w); margin:0 auto; }
+    .propuesta-label { font-size:11px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--yellow); margin-bottom:12px; }
+    .propuesta-h2 { font-family:'Playfair Display', serif; font-size:clamp(32px,4vw,56px); font-weight:700; color:#fff; letter-spacing:-.02em; line-height:1.05; margin-bottom:16px; }
+    .propuesta-sub { font-size:16px; color:rgba(255,255,255,.55); max-width:600px; line-height:1.65; margin-bottom:48px; }
+    .props-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); border-radius:var(--r); overflow:hidden; margin-bottom:48px; }
+    .prop { background:rgba(255,255,255,.03); padding:28px 24px; }
+    .prop-icon { font-size:28px; margin-bottom:14px; display:block; }
+    .prop h4 { font-size:15px; font-weight:600; color:#fff; margin-bottom:8px; }
+    .prop p { font-size:13px; color:rgba(255,255,255,.45); line-height:1.55; }
+    .wa-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      background:#25D366; color:#fff;
+      padding:16px 36px; border-radius:var(--r);
+      font-size:15px; font-weight:600;
+      text-decoration:none; transition:opacity .2s;
+    }
+    .wa-btn:hover { opacity:.9; }
+    .wa-btn svg { width:20px; height:20px; fill:currentColor; flex-shrink:0; }
+
+    /* ── FOOTER ─── */
+    footer { padding:24px 40px; background:var(--bg2); border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+    footer p { font-size:12px; color:var(--mid); }
+    footer a { color:var(--wine); text-decoration:none; }
+
+    /* ── REVEAL ─── */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .55s ease, transform .55s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* ── RESPONSIVE ─── */
+    @media (max-width:1023px) {
+      .hero { grid-template-columns:1fr; min-height:auto; }
+      .hero-right { height:320px; }
+      .hero-left { padding:64px 32px; }
+      .lacasa-inner { grid-template-columns:1fr; gap:40px; }
+      .lacasa-img { max-height:320px; }
+      .carta-list { grid-template-columns:1fr; }
+      .carta-item { border-right:none !important; }
+      .carta-item:nth-last-child(1) { border-bottom:none; }
+      .products-grid { grid-template-columns:1fr 1fr; }
+      .props-row { grid-template-columns:1fr; }
+    }
+    @media (max-width:767px) {
+      .nav { padding:0 20px; }
+      .nav-links, .nav-res { display:none; }
+      .hamburger { display:flex; }
+      .carta { padding:64px 20px; }
+      .products { padding:64px 20px; }
+      .products-grid { grid-template-columns:1fr; }
+      .lacasa { padding:64px 20px; }
+      .lacasa-nums { grid-template-columns:1fr 1fr; }
+      .propuesta { padding:64px 20px; }
+      .contact { padding:56px 20px; }
+      .contact-inner { flex-direction:column; gap:32px; }
+      footer { flex-direction:column; text-align:center; padding:20px; }
+      .cats-inner { padding:0 16px; }
+    }
+    @media (prefers-reduced-motion:reduce) { *, *::before, *::after { transition-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+
+<div id="pb"></div>
+
+<!-- AGENCY BAR -->
+<div class="ab">
+  <div class="ab-l">
+    <span class="ab-badge">Demo</span>
+    <span class="ab-text">Creada por <strong>Altavista Web</strong> para Época de Quesos</span>
+  </div>
+  <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#inicio">
+    <img src="https://epocadequesos.com/wp-content/uploads/2021/06/web-logo-2.png"
+         alt="Época de Quesos" class="nav-logo"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <span class="nav-logo-txt" style="display:none">Época de Quesos</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#carta">La carta</a></li>
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#lacasa">La casa</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a href="#contacto" class="nav-res">Visitanos</a>
+  <button class="hamburger" id="ham" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mobile-menu">
+  <a href="#carta">La carta</a>
+  <a href="#productos">Productos</a>
+  <a href="#lacasa">La casa</a>
+  <a href="#contacto">Contacto</a>
+  <a href="#propuesta" class="mm-res">Ver propuesta web</a>
+</div>
+
+<!-- HERO: SPLIT -->
+<section class="hero" id="inicio">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Tandil · Buenos Aires · Desde 1982</p>
+    <h1 class="hero-h1">Quesos,<br><em>fiambres</em><br>y buenas<br>picadas.</h1>
+    <p class="hero-sub">El rincón más querido de Tandil para los amantes del buen gusto. Quesos artesanales de campo, fiambres serranos y una selección de vinos que no falla.</p>
+    <div class="hero-since">
+      <span class="hero-since-dot"></span>
+      Fundado en 1982 · 42 años de tradición
+    </div>
+    <div class="hero-actions">
+      <a href="#carta" class="btn-amber">Ver la carta</a>
+      <a href="#lacasa" class="btn-ghost-w">Nuestra historia</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://epocadequesos.com/wp-content/uploads/2021/02/Epoca-de-Quesos-50-1024x682.jpg"
+         alt="Productos Época de Quesos"
+         onerror="this.style.background='#3D1A2E'; this.style.minHeight='100%'">
+    <div class="hero-right-overlay"></div>
+    <div class="hero-badge">
+      <div class="hero-badge-n">★ 4.7</div>
+      <div class="hero-badge-l">2.800+ reseñas<br>en Google Maps</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY STRIP -->
+<nav class="cats" aria-label="Categorías">
+  <div class="cats-inner">
+    <a href="#carta" class="cat-item active">🧀 Quesos</a>
+    <a href="#carta" class="cat-item">🥩 Fiambres</a>
+    <a href="#carta" class="cat-item">🫒 Picadas</a>
+    <a href="#carta" class="cat-item">🍷 Vinos</a>
+    <a href="#carta" class="cat-item">🛒 Tienda</a>
+  </div>
+</nav>
+
+<!-- LA CARTA -->
+<section class="carta" id="carta">
+  <div class="carta-inner">
+    <div class="reveal">
+      <p class="section-label">Nuestra carta</p>
+      <h2 class="section-h2">Lo que servimos</h2>
+      <p class="section-p">Selección artesanal de quesos de campo, fiambres serranos, conservas y vinos de bodega. Todo en un espacio que huele a Tandil de punta a punta.</p>
+    </div>
+    <div class="carta-list reveal">
+      <div class="carta-item">
+        <div class="carta-num">01 — Flagship</div>
+        <div class="carta-name">Picada Completa Época</div>
+        <div class="carta-desc">Selección de quesos artesanales (blando, semiduro, estacionado), fiambres serranos, aceitunas, conservas y pan de campo recién horneado.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">02 — Especialidad</div>
+        <div class="carta-name">Tabla de Cuatro Quesos</div>
+        <div class="carta-desc">Queso de campo blando, semiduro estacionado, queso azul artesanal y brie de producción local con frutos secos y mermelada.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">03 — Clásico</div>
+        <div class="carta-name">Provoleta con Hierbas</div>
+        <div class="carta-desc">Provoleta artesanal fundida a la parrilla con romero, paprika y aceite de oliva virgen extra. La entrada más pedida de la casa.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">04 — Gourmet</div>
+        <div class="carta-name">Queso Azul con Miel</div>
+        <div class="carta-desc">Queso azul de campo con miel de flores del cerro, nueces tostadas y crostini de masa madre. Dulce y salado en equilibrio perfecto.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">05 — Serrano</div>
+        <div class="carta-name">Tabla de Fiambres</div>
+        <div class="carta-desc">Bondiola estacionada, brisket ahumado, lomo embuchado y salame de campo. Los mejores fiambres de la región en una tabla.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">06 — Compartir</div>
+        <div class="carta-name">Fondue de Quesos</div>
+        <div class="carta-desc">Fondue artesanal de tres quesos (gruyère, emmental y queso azul) con pan tostado, papines andinos y manzana verde.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">07 — Vinos</div>
+        <div class="carta-name">Selección de Bodega</div>
+        <div class="carta-desc">Vinos de bodegas regionales elegidos a mano para maridar con cada tabla. Malbec, Torrontés y espumantes de los mejores viñedos.</div>
+        <div class="carta-line"></div>
+      </div>
+      <div class="carta-item">
+        <div class="carta-num">08 — Tienda</div>
+        <div class="carta-name">Combo para Llevar</div>
+        <div class="carta-desc">Llevate lo mejor de la casa: quesos del día, fiambres al vacío, dulces artesanales y vino. El regalo perfecto de Tandil.</div>
+        <div class="carta-line"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS SHOWCASE -->
+<section class="products" id="productos">
+  <div class="products-inner">
+    <div class="reveal">
+      <p class="section-label">Artesanal y local</p>
+      <h2 class="section-h2">Nuestros productos</h2>
+      <p class="section-p">Todo lo que servimos viene de productores de la región. Quesos de campo, fiambres serranos y conservas que cuentan la historia del lugar.</p>
+    </div>
+    <div class="products-grid reveal">
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://epocadequesos.com/wp-content/uploads/2021/02/Epoca-web-fiambres-2.png"
+               alt="Fiambres serranos"
+               onerror="this.parentElement.style.background='var(--bg2)'; this.style.display='none'">
+        </div>
+        <div class="product-info">
+          <div class="product-tag">Fiambres serranos</div>
+          <div class="product-name">Charcutería de campo</div>
+          <div class="product-desc">Bondiola, brisket ahumado, salame y lomo embuchado de productores locales.</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img" style="background:var(--bg2); display:flex; align-items:center; justify-content:center; font-size:64px; min-height:200px;">🧀</div>
+        <div class="product-info">
+          <div class="product-tag">Quesos artesanales</div>
+          <div class="product-name">Del campo a tu mesa</div>
+          <div class="product-desc">Quesos blandos, semiduros y estacionados de tambos de la región serrana.</div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img" style="background:var(--bg2); display:flex; align-items:center; justify-content:center; font-size:64px; min-height:200px;">🍷</div>
+        <div class="product-info">
+          <div class="product-tag">Vinos y conservas</div>
+          <div class="product-name">Selección de bodega</div>
+          <div class="product-desc">Vinos de bodegas regionales, aceites, mermeladas y conservas artesanales para llevar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LA CASA -->
+<section class="lacasa" id="lacasa">
+  <div class="lacasa-inner">
+    <div class="reveal">
+      <p class="lacasa-label">Nuestra historia</p>
+      <h2 class="lacasa-h2">En el corazón<br>de Tandil<br>desde 1982.</h2>
+      <p class="lacasa-p">Época de Quesos nació en una intersección que hoy todos conocen: 14 de Julio y San Martín. Lo que empezó como una pequeña tienda de productos regionales se convirtió en el lugar emblema de Tandil para los amantes del buen gusto.</p>
+      <p class="lacasa-p">Cuatro décadas después, seguimos eligiendo a mano cada queso, cada fiambre, cada vino. Porque la calidad no se improvisa.</p>
+      <div class="lacasa-nums">
+        <div class="lacasa-num">
+          <div class="lacasa-num-n">42</div>
+          <div class="lacasa-num-l">Años de tradición</div>
+        </div>
+        <div class="lacasa-num">
+          <div class="lacasa-num-n">4.7★</div>
+          <div class="lacasa-num-l">Nota en Google</div>
+        </div>
+        <div class="lacasa-num">
+          <div class="lacasa-num-n">2.8K</div>
+          <div class="lacasa-num-l">Reseñas Google</div>
+        </div>
+        <div class="lacasa-num">
+          <div class="lacasa-num-n">100%</div>
+          <div class="lacasa-num-l">Artesanal y local</div>
+        </div>
+      </div>
+    </div>
+    <div class="lacasa-img reveal">
+      <img src="https://epocadequesos.com/wp-content/uploads/2021/02/Epoca-de-Quesos-50-1024x682.jpg"
+           alt="Época de Quesos · Interior"
+           onerror="this.parentElement.style.background='rgba(255,255,255,.1)'">
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contact" id="contacto">
+  <div class="contact-inner">
+    <div class="contact-col">
+      <h3>Dónde encontrarnos</h3>
+      <p>14 de Julio esq. San Martín</p>
+      <p>Tandil, Buenos Aires</p>
+      <a href="https://maps.google.com/?q=Epoca+de+Quesos+Tandil" target="_blank" style="margin-top:8px; color:var(--wine)">Ver en Google Maps →</a>
+    </div>
+    <div class="contact-col">
+      <h3>Contacto</h3>
+      <a href="tel:+542494448750">+54 249 444-8750</a>
+      <a href="https://www.instagram.com/epocadequesos/" target="_blank">@epocadequesos</a>
+      <a href="https://epocadequesos.com" target="_blank">epocadequesos.com</a>
+    </div>
+    <div class="contact-col">
+      <h3>Horarios</h3>
+      <p>Martes a Domingo</p>
+      <p>10:00 – 24:00</p>
+      <p style="margin-top:8px; font-size:12px; color:var(--mid)">Lunes cerrado</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROPUESTA ALTAVISTA -->
+<section class="propuesta" id="propuesta">
+  <div class="propuesta-inner">
+    <p class="propuesta-label">Altavista Web · Tandil</p>
+    <h2 class="propuesta-h2">Época de Quesos merece<br>el mejor sitio web de la ciudad.</h2>
+    <p class="propuesta-sub">Esta es una demo gratuita de cómo quedaría. Sin compromiso. Si te gusta, lo hablamos en 15 minutos.</p>
+    <div class="props-row reveal">
+      <div class="prop">
+        <span class="prop-icon">🛒</span>
+        <h4>Tienda online integrada</h4>
+        <p>Tus productos disponibles para venta online. Retiro en local o envío a domicilio.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-icon">📍</span>
+        <h4>SEO local dominante</h4>
+        <p>Aparecer primero cuando alguien busca "quesos artesanales Tandil" en Google.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-icon">💬</span>
+        <h4>Pedidos por WhatsApp</h4>
+        <p>Botón directo a tu WhatsApp para pedidos, reservas o consultas. Simple y efectivo.</p>
+      </div>
+    </div>
+    <a href="https://wa.me/5492494557754?text=Hola%20Santiago%2C%20vi%20la%20demo%20de%20Época%20de%20Quesos%20y%20quiero%20saber%20más" class="wa-btn" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Hablemos por WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Época de Quesos · 14 de Julio esq. San Martín, Tandil</p>
+  <p>Demo creada por <a href="https://wa.me/5492494557754" target="_blank">Altavista Web</a></p>
+</footer>
+
+<script>
+  const pb = document.getElementById('pb');
+  const nav = document.getElementById('nav');
+  const ham = document.getElementById('ham');
+  const mm = document.getElementById('mobile-menu');
+
+  window.addEventListener('scroll', () => {
+    pb.style.width = Math.min(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100, 100) + '%';
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  ham.addEventListener('click', () => {
+    const open = mm.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open);
+  });
+  mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mm.classList.remove('open'); ham.setAttribute('aria-expanded','false');
+  }));
+
+  const obs = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  }), { threshold:0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
