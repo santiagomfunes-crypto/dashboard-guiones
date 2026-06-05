@@ -573,6 +573,185 @@ footer { background:var(--bg-dark2); padding:56px 32px 36px; }
   .rubros-grid { grid-template-columns:1fr; }
   .hero-stats { grid-template-columns:repeat(2,1fr); }
 }
+
+/* ── STANDS MAP ─────────────────────────────────────────── */
+#stands { background:var(--bg-white); }
+.stands-statsbar {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--border); border:1px solid var(--border);
+  border-radius:var(--r); overflow:hidden; margin-bottom:32px;
+}
+.sstat {
+  background:var(--bg-white); padding:20px 20px 16px;
+  display:flex; flex-direction:column;
+}
+.sstat-lbl { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.sstat-num {
+  font-family:'Bricolage Grotesque',sans-serif; font-weight:800;
+  font-size:clamp(28px,3vw,40px); letter-spacing:-.04em; line-height:1; margin-bottom:8px;
+}
+.sstat-num.s-ocu { color:#E84B3A; }
+.sstat-num.s-dis { color:var(--blue); }
+.sstat-bar { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-bottom:5px; }
+.sstat-fill { height:100%; border-radius:2px; width:0; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.sstat-fill.f-ocu { background:#E84B3A; }
+.sstat-fill.f-dis { background:var(--blue); }
+.sstat-fill.f-all { background:linear-gradient(90deg,#E84B3A,var(--blue)); }
+.sstat-sub { font-size:11.5px; color:var(--faint); font-weight:500; }
+
+.stands-controls {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:28px; flex-wrap:wrap;
+}
+.stands-search {
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:8px 12px;
+  flex:1; min-width:140px; max-width:220px;
+  transition:border-color .15s;
+}
+.stands-search:focus-within { border-color:var(--blue); }
+.stands-search svg { width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0; }
+.stands-search input {
+  border:none;outline:none;background:none;
+  font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);width:100%;
+}
+.stands-search input::placeholder { color:var(--faint); }
+.sfg { display:flex; gap:4px; flex-wrap:wrap; }
+.sfbtn {
+  font-size:12.5px;font-weight:600;font-family:'Inter',sans-serif;
+  color:var(--muted);padding:6px 12px;border-radius:var(--r-sm);
+  border:1px solid transparent;cursor:pointer;
+  transition:all .15s;background:transparent;white-space:nowrap;
+}
+.sfbtn:hover { background:var(--bg);color:var(--ink); }
+.sfbtn.active { background:var(--ink);color:#fff;border-color:var(--ink); }
+.sfbtn.av-dis.active { background:var(--blue);border-color:var(--blue); }
+.sfbtn.av-ocu.active { background:#E84B3A;border-color:#E84B3A; }
+.stands-sep { width:1px;height:28px;background:var(--border);flex-shrink:0; }
+
+.stands-layout {
+  display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start;
+}
+.stands-zones { display:flex; flex-direction:column; gap:12px; }
+
+.zcard {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r); overflow:hidden; transition:box-shadow .2s;
+}
+.zcard.zc-hidden { display:none; }
+.zcard-head {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 18px; cursor:pointer; user-select:none;
+  transition:background .15s;
+}
+.zcard-head:hover { background:rgba(0,0,0,.02); }
+.zcard-icon { font-size:18px; line-height:1; flex-shrink:0; }
+.zcard-info { flex:1; min-width:0; }
+.zcard-name {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:700;font-size:14px;color:var(--ink);letter-spacing:-.01em;
+}
+.zcard-sub { font-size:11.5px;color:var(--muted);margin-top:1px; }
+.zcard-badge {
+  display:flex;align-items:baseline;gap:4px;flex-shrink:0;
+}
+.zcard-free {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800;font-size:22px;letter-spacing:-.03em;line-height:1;
+}
+.zcard-free.has-free { color:var(--blue); }
+.zcard-free.no-free { color:var(--faint); }
+.zcard-free-lbl { font-size:11px;color:var(--muted);font-weight:500; }
+.zcard-chev { font-size:11px;color:var(--faint);margin-left:6px;transition:transform .2s;flex-shrink:0; }
+.zcard:not(.zcollapsed) .zcard-chev { transform:rotate(180deg); }
+.zcard-prog { height:3px;background:var(--border); }
+.zcard-prog-fill { height:100%;background:#E84B3A;transition:width .6s ease; }
+.zcard-body { padding:14px 18px 18px; }
+.zcard.zcollapsed .zcard-body,.zcard.zcollapsed .zcard-prog { display:none; }
+.stands-pills { display:flex;flex-wrap:wrap;gap:5px; }
+.spill {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:700;font-size:11.5px;letter-spacing:.01em;
+  padding:4px 8px;border-radius:4px;cursor:pointer;
+  border:1.5px solid transparent;transition:all .12s;
+  user-select:none;line-height:1;
+}
+.spill.sp-ocu { background:rgba(232,75,58,.1);color:#B83020;border-color:rgba(232,75,58,.2); }
+.spill.sp-ocu:hover { background:rgba(232,75,58,.18);border-color:rgba(232,75,58,.4); }
+.spill.sp-dis { background:rgba(30,165,225,.1);color:#1075A0;border-color:rgba(30,165,225,.2); }
+.spill.sp-dis:hover { background:rgba(30,165,225,.2);border-color:var(--blue);transform:scale(1.05); }
+.spill.sp-ocu:hover { transform:scale(1.05); }
+.spill.sp-sel { outline:2.5px solid var(--blue);outline-offset:2px;transform:scale(1.05); }
+.spill.sp-hidden { display:none; }
+
+/* Detail panel */
+.stands-detail {
+  position:sticky;top:116px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+}
+.detail-empty {
+  padding:52px 24px;text-align:center;
+}
+.detail-empty-ico { font-size:36px;opacity:.3;margin-bottom:12px; }
+.detail-empty-txt { font-size:13px;color:var(--faint);line-height:1.6; }
+.detail-panel { display:none; }
+.detail-panel.dp-vis { display:block; }
+.dp-statusbar {
+  padding:12px 18px;display:flex;align-items:center;gap:8px;
+}
+.dp-statusbar.dp-ocu { background:rgba(232,75,58,.08);border-bottom:1px solid rgba(232,75,58,.15); }
+.dp-statusbar.dp-dis { background:rgba(30,165,225,.08);border-bottom:1px solid rgba(30,165,225,.15); }
+.dp-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+.dp-statusbar.dp-ocu .dp-dot { background:#E84B3A; }
+.dp-statusbar.dp-dis .dp-dot { background:var(--blue); }
+.dp-status-lbl { font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase; }
+.dp-statusbar.dp-ocu .dp-status-lbl { color:#C23828; }
+.dp-statusbar.dp-dis .dp-status-lbl { color:#1075A0; }
+.dp-body { padding:20px 18px; }
+.dp-num {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800;font-size:52px;letter-spacing:-.05em;
+  color:var(--ink);line-height:1;
+}
+.dp-num-lbl { font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px; }
+.dp-rows { display:flex;flex-direction:column; }
+.dp-row {
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:9px 0;border-bottom:1px solid var(--border);
+}
+.dp-row:last-child { border-bottom:none; }
+.dp-k { font-size:12px;color:var(--muted);font-weight:500; }
+.dp-v { font-size:13px;font-weight:600;color:var(--ink); }
+.dp-foot { padding:14px 18px;border-top:1px solid var(--border); }
+.dp-cta {
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:11px;border-radius:var(--r-sm);border:none;
+  font-size:13px;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:background .15s;text-decoration:none;
+}
+.dp-cta.dc-dis { background:var(--blue);color:#fff; }
+.dp-cta.dc-dis:hover { background:var(--blue-dk); }
+.dp-cta.dc-ocu { background:rgba(232,75,58,.1);color:#C23828; }
+.dp-cta.dc-ocu:hover { background:rgba(232,75,58,.16); }
+.dp-updated { text-align:center;font-size:10.5px;color:var(--faint);padding:8px 18px 12px;font-weight:500; }
+
+.no-results-msg {
+  padding:32px;text-align:center;font-size:14px;color:var(--faint);display:none;
+}
+.no-results-msg.nm-vis { display:block; }
+
+@media (max-width:1023px) {
+  .stands-layout { grid-template-columns:1fr; }
+  .stands-detail { position:static; }
+  .stands-statsbar { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:767px) {
+  .stands-statsbar { grid-template-columns:1fr 1fr; }
+  .sfbtn { font-size:11.5px;padding:5px 9px; }
+  .stands-sep { display:none; }
+}
 </style>
 </head>
 <body>
@@ -596,6 +775,7 @@ footer { background:var(--bg-dark2); padding:56px 32px 36px; }
     <div class="nav-links" role="navigation">
       <a href="#rubros">Rubros</a>
       <a href="#agenda">Agenda</a>
+      <a href="#stands">Mapa de Stands</a>
       <a href="#expositor">Ser Expositor</a>
       <a href="#">Entradas</a>
     </div>
@@ -620,6 +800,7 @@ footer { background:var(--bg-dark2); padding:56px 32px 36px; }
 <div id="mobile-menu" aria-hidden="true">
   <a href="#rubros">Rubros</a>
   <a href="#agenda">Agenda</a>
+  <a href="#stands">Mapa de Stands</a>
   <a href="#expositor">Ser Expositor</a>
   <a href="#">Entradas</a>
   <hr>
@@ -840,6 +1021,55 @@ footer { background:var(--bg-dark2); padding:56px 32px 36px; }
   </div>
 </section>
 
+<!-- STANDS MAP -->
+<section id="stands" class="s" aria-labelledby="stands-title">
+  <div class="s-w">
+    <div class="s-head reveal">
+      <div>
+        <div class="s-label">Disponibilidad en tiempo real</div>
+        <h2 class="s-title" id="stands-title">Mapa Interactivo de Stands</h2>
+      </div>
+      <span style="font-size:12px;color:var(--muted);font-weight:500;">Actualizado: 03/06/2026</span>
+    </div>
+    <div class="stands-statsbar reveal" id="stands-statsbar"></div>
+    <div class="stands-controls reveal" id="stands-controls">
+      <div class="stands-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="search" id="sm-search" placeholder="Buscar por número…" autocomplete="off">
+      </div>
+      <div class="sfg" id="zona-filters"></div>
+      <div class="stands-sep"></div>
+      <div class="sfg">
+        <button class="sfbtn active" data-avail="all">Todos</button>
+        <button class="sfbtn av-dis" data-avail="dis">Libres</button>
+        <button class="sfbtn av-ocu" data-avail="ocu">Ocupados</button>
+      </div>
+    </div>
+    <div class="stands-layout">
+      <div>
+        <div class="stands-zones" id="stands-zones"></div>
+        <div class="no-results-msg" id="no-results">No se encontraron stands con ese criterio.</div>
+      </div>
+      <div class="stands-detail" id="stands-detail">
+        <div class="detail-empty">
+          <div class="detail-empty-ico">📍</div>
+          <div class="detail-empty-txt">Hacé click en cualquier<br>stand para ver su detalle</div>
+        </div>
+        <div class="detail-panel" id="detail-panel"></div>
+      </div>
+    </div>
+    <div style="margin-top:40px;padding:24px 28px;background:var(--bg-dark);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;" class="reveal">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">¿Encontraste un stand disponible?</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#fff;letter-spacing:-.02em;">Asegurá tu espacio antes del 1 de agosto</div>
+      </div>
+      <a href="#expositor" style="display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;padding:12px 24px;border-radius:var(--r-sm);font-size:14px;font-weight:700;text-decoration:none;transition:background .15s;white-space:nowrap;" onmouseover="this.style.background='#1584B5'" onmouseout="this.style.background='#1EA5E1'">
+        Inscribirse como expositor →
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- EXPOSITOR CTA -->
 <section id="expositor" aria-labelledby="expositor-title">
   <div class="expositor-w">
@@ -1019,6 +1249,356 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ── STANDS MAP ──────────────────────────────────────────── */
+const ZONES_DEF = {
+  A:{ name:'Zona A', sub:'Pabellón Ganadero',       icon:'🐄', order:1 },
+  B:{ name:'Zona B', sub:'Agricultura y Semillas',   icon:'🌾', order:2 },
+  C:{ name:'Zona C', sub:'Maquinaria Rural',         icon:'🚜', order:3 },
+  D:{ name:'Zona D', sub:'Insumos y Servicios',      icon:'🛠️', order:4 },
+  E:{ name:'Zona E', sub:'Empresarial Premium',      icon:'⭐', order:5 },
+  F:{ name:'Zona F', sub:'Paseo de Artesanos',       icon:'🎨', order:6 },
+  G:{ name:'Zona G', sub:'Patio Gastronómico',       icon:'🍖', order:7 },
+};
+const S=['ocu','dis'];
+const STANDS=[
+  // ZONA A — Ganadería
+  {id:'105',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'107',z:'A',e:'dis',m2:24,rubro:'Ganadería'},
+  {id:'110',z:'A',e:'ocu',m2:36,rubro:'Ganadería'},
+  {id:'113',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'125',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'126',z:'A',e:'dis',m2:24,rubro:'Ganadería'},
+  {id:'127',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'131',z:'A',e:'ocu',m2:36,rubro:'Ganadería'},
+  {id:'132',z:'A',e:'ocu',m2:36,rubro:'Ganadería'},
+  {id:'136',z:'A',e:'dis',m2:24,rubro:'Ganadería'},
+  {id:'137',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'143',z:'A',e:'ocu',m2:24,rubro:'Ganadería'},
+  {id:'145',z:'A',e:'dis',m2:24,rubro:'Ganadería'},
+  // ZONA B — Agricultura
+  {id:'203',z:'B',e:'ocu',m2:36,rubro:'Agricultura'},
+  {id:'213',z:'B',e:'ocu',m2:36,rubro:'Agricultura'},
+  {id:'214',z:'B',e:'dis',m2:36,rubro:'Agricultura'},
+  {id:'215',z:'B',e:'ocu',m2:36,rubro:'Agricultura'},
+  {id:'220',z:'B',e:'ocu',m2:48,rubro:'Agricultura'},
+  {id:'224',z:'B',e:'dis',m2:36,rubro:'Agricultura'},
+  {id:'234',z:'B',e:'ocu',m2:36,rubro:'Agricultura'},
+  {id:'240',z:'B',e:'ocu',m2:48,rubro:'Agricultura'},
+  {id:'243',z:'B',e:'dis',m2:36,rubro:'Agricultura'},
+  {id:'244',z:'B',e:'ocu',m2:36,rubro:'Agricultura'},
+  {id:'246',z:'B',e:'dis',m2:36,rubro:'Agricultura'},
+  // ZONA C — Maquinaria
+  {id:'300',z:'C',e:'ocu',m2:72,rubro:'Maquinaria'},
+  {id:'400',z:'C',e:'ocu',m2:72,rubro:'Maquinaria'},
+  {id:'413',z:'C',e:'dis',m2:36,rubro:'Maquinaria'},
+  {id:'415',z:'C',e:'ocu',m2:36,rubro:'Maquinaria'},
+  {id:'416',z:'C',e:'ocu',m2:36,rubro:'Maquinaria'},
+  {id:'423',z:'C',e:'dis',m2:36,rubro:'Maquinaria'},
+  {id:'428',z:'C',e:'ocu',m2:48,rubro:'Maquinaria'},
+  // ZONA D — Servicios
+  {id:'502',z:'D',e:'ocu',m2:24,rubro:'Servicios'},
+  {id:'503',z:'D',e:'dis',m2:24,rubro:'Servicios'},
+  {id:'506',z:'D',e:'ocu',m2:24,rubro:'Servicios'},
+  {id:'507',z:'D',e:'dis',m2:24,rubro:'Servicios'},
+  {id:'510',z:'D',e:'ocu',m2:36,rubro:'Servicios'},
+  {id:'512',z:'D',e:'ocu',m2:24,rubro:'Servicios'},
+  {id:'513',z:'D',e:'dis',m2:24,rubro:'Servicios'},
+  {id:'520',z:'D',e:'ocu',m2:36,rubro:'Servicios'},
+  {id:'521',z:'D',e:'dis',m2:24,rubro:'Servicios'},
+  {id:'530',z:'D',e:'ocu',m2:36,rubro:'Servicios'},
+  {id:'540',z:'D',e:'ocu',m2:48,rubro:'Servicios'},
+  {id:'601',z:'D',e:'ocu',m2:36,rubro:'Servicios'},
+  {id:'603',z:'D',e:'dis',m2:36,rubro:'Servicios'},
+  {id:'604',z:'D',e:'ocu',m2:36,rubro:'Servicios'},
+  // ZONA E — Premium
+  {id:'710',z:'E',e:'ocu',m2:48,rubro:'Empresarial'},
+  {id:'711',z:'E',e:'ocu',m2:48,rubro:'Empresarial'},
+  {id:'712',z:'E',e:'dis',m2:48,rubro:'Empresarial'},
+  {id:'713',z:'E',e:'ocu',m2:48,rubro:'Empresarial'},
+  {id:'716',z:'E',e:'dis',m2:48,rubro:'Empresarial'},
+  {id:'722',z:'E',e:'ocu',m2:48,rubro:'Empresarial'},
+  {id:'723',z:'E',e:'dis',m2:48,rubro:'Empresarial'},
+  {id:'726',z:'E',e:'ocu',m2:48,rubro:'Empresarial'},
+  {id:'809',z:'E',e:'ocu',m2:72,rubro:'Empresarial'},
+  // ZONA F — Artesanos
+  {id:'001',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'002',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'003',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'004',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'005',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'006',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'007',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'008',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'009',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'010',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'011',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'021',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'022',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'023',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'025',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'026',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'027',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'028',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'029',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'030',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'031',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'032',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'033',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'034',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'035',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'036',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'037',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'038',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'039',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'040',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'041',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'042',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'043',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'044',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'045',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'046',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'047',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'048',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'050',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'051',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'061',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'062',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'063',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'064',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'065',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'066',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'067',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'068',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'069',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'070',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'071',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'072',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'073',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'074',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'075',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  {id:'076',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'077',z:'F',e:'ocu',m2:12,rubro:'Artesanías'},
+  {id:'078',z:'F',e:'dis',m2:12,rubro:'Artesanías'},
+  // ZONA G — Gastronomía
+  {id:'901',z:'G',e:'ocu',m2:16,rubro:'Gastronomía'},
+  {id:'902',z:'G',e:'ocu',m2:16,rubro:'Gastronomía'},
+  {id:'903',z:'G',e:'dis',m2:16,rubro:'Gastronomía'},
+  {id:'904',z:'G',e:'ocu',m2:16,rubro:'Gastronomía'},
+  {id:'905',z:'G',e:'dis',m2:16,rubro:'Gastronomía'},
+  {id:'906',z:'G',e:'ocu',m2:16,rubro:'Gastronomía'},
+  {id:'907',z:'G',e:'ocu',m2:16,rubro:'Gastronomía'},
+  {id:'908',z:'G',e:'dis',m2:16,rubro:'Gastronomía'},
+  {id:'960',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'961',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'962',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'963',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'964',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'965',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'966',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'967',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'968',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'969',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'970',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'971',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'972',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'973',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'974',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'976',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'980',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'981',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'982',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'983',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'984',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'985',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'986',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'987',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+  {id:'988',z:'G',e:'dis',m2:20,rubro:'Gastronomía'},
+  {id:'989',z:'G',e:'ocu',m2:20,rubro:'Gastronomía'},
+];
+
+let smZona='all', smAvail='all', smSearch='', smSelected=null;
+
+function smTotal(){ return STANDS.length; }
+function smOcu(){ return STANDS.filter(s=>s.e==='ocu').length; }
+function smDis(){ return STANDS.filter(s=>s.e==='dis').length; }
+function smZoneDis(z){ return STANDS.filter(s=>s.z===z&&s.e==='dis').length; }
+function smZoneTotal(z){ return STANDS.filter(s=>s.z===z).length; }
+function smZoneOcuPct(z){ return Math.round(STANDS.filter(s=>s.z===z&&s.e==='ocu').length/smZoneTotal(z)*100); }
+
+function smCountUp(el,target,dur){
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/dur,1);
+    el.textContent=Math.round(p*p*(3-2*p)*target);
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
+
+function smRenderStats(){
+  const tot=smTotal(),ocu=smOcu(),dis=smDis();
+  const pctOcu=Math.round(ocu/tot*100), pctDis=Math.round(dis/tot*100);
+  const bar=document.getElementById('stands-statsbar');
+  bar.innerHTML=`
+    <div class="sstat"><div class="sstat-lbl">Total de Stands</div><div class="sstat-num" id="sn-tot">0</div><div class="sstat-bar"><div class="sstat-fill f-all" data-w="100"></div></div><div class="sstat-sub">ExpoTAN 2026</div></div>
+    <div class="sstat"><div class="sstat-lbl">Ocupados</div><div class="sstat-num s-ocu" id="sn-ocu">0</div><div class="sstat-bar"><div class="sstat-fill f-ocu" data-w="${pctOcu}"></div></div><div class="sstat-sub">${pctOcu}% del total</div></div>
+    <div class="sstat"><div class="sstat-lbl">Disponibles</div><div class="sstat-num s-dis" id="sn-dis">0</div><div class="sstat-bar"><div class="sstat-fill f-dis" data-w="${pctDis}"></div></div><div class="sstat-sub">${pctDis}% del total</div></div>
+    <div class="sstat"><div class="sstat-lbl">Zonas activas</div><div class="sstat-num" id="sn-zon">0</div><div class="sstat-bar"><div class="sstat-fill f-dis" data-w="100"></div></div><div class="sstat-sub">A · B · C · D · E · F · G</div></div>
+  `;
+  // Trigger animations when stats bar enters viewport
+  const ioStats=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting) return;
+    ioStats.disconnect();
+    smCountUp(document.getElementById('sn-tot'),tot,900);
+    smCountUp(document.getElementById('sn-ocu'),ocu,900);
+    smCountUp(document.getElementById('sn-dis'),dis,900);
+    smCountUp(document.getElementById('sn-zon'),7,600);
+    bar.querySelectorAll('.sstat-fill').forEach(el=>{
+      el.style.width=el.dataset.w+'%';
+    });
+  },{threshold:.3});
+  ioStats.observe(bar);
+}
+
+function smRenderZoneFilters(){
+  const zf=document.getElementById('zona-filters');
+  let html=`<button class="sfbtn active" data-zona="all">Todas las zonas</button>`;
+  Object.keys(ZONES_DEF).forEach(k=>{
+    const d=ZONES_DEF[k], fr=smZoneDis(k);
+    html+=`<button class="sfbtn" data-zona="${k}">${d.icon} ${d.name} <span style="color:var(--blue);margin-left:2px;font-size:11px">(${fr})</span></button>`;
+  });
+  zf.innerHTML=html;
+  zf.querySelectorAll('.sfbtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      smZona=btn.dataset.zona;
+      zf.querySelectorAll('.sfbtn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      smApply();
+    });
+  });
+}
+
+function smRenderZones(){
+  const cont=document.getElementById('stands-zones');
+  cont.innerHTML='';
+  Object.keys(ZONES_DEF).sort((a,b)=>ZONES_DEF[a].order-ZONES_DEF[b].order).forEach(zk=>{
+    const zd=ZONES_DEF[zk];
+    const zStands=STANDS.filter(s=>s.z===zk);
+    const freeCt=smZoneDis(zk), tot=zStands.length, pct=smZoneOcuPct(zk);
+    const card=document.createElement('div');
+    const defaultCollapsed=(zk==='F'||zk==='G');
+    card.className='zcard'+(defaultCollapsed?' zcollapsed':''); card.dataset.zone=zk;
+    let pills='';
+    zStands.forEach(s=>{
+      pills+=`<button class="spill sp-${s.e}" data-id="${s.id}" aria-label="Stand ${s.id}, ${s.e==='dis'?'disponible':'ocupado'}">${s.id}</button>`;
+    });
+    card.innerHTML=`
+      <div class="zcard-head" onclick="smToggleZone(this)">
+        <div class="zcard-icon">${zd.icon}</div>
+        <div class="zcard-info"><div class="zcard-name">${zd.name}</div><div class="zcard-sub">${zd.sub} · ${tot} stands</div></div>
+        <div class="zcard-badge"><div class="zcard-free ${freeCt>0?'has-free':'no-free'}">${freeCt}</div><div class="zcard-free-lbl">/ ${tot} libres</div></div>
+        <div class="zcard-chev">▼</div>
+      </div>
+      <div class="zcard-prog"><div class="zcard-prog-fill" style="width:${pct}%"></div></div>
+      <div class="zcard-body"><div class="stands-pills" data-zone="${zk}">${pills}</div></div>
+    `;
+    cont.appendChild(card);
+  });
+  cont.querySelectorAll('.spill').forEach(btn=>{
+    btn.addEventListener('click',()=>smSelectStand(btn.dataset.id));
+  });
+}
+
+function smToggleZone(head){
+  head.closest('.zcard').classList.toggle('zcollapsed');
+}
+
+function smSelectStand(id){
+  const s=STANDS.find(st=>st.id===id); if(!s) return;
+  smSelected=id;
+  document.querySelectorAll('.spill').forEach(p=>{
+    p.classList.toggle('sp-sel',p.dataset.id===id);
+  });
+  const zd=ZONES_DEF[s.z];
+  const isDis=s.e==='dis';
+  const panel=document.getElementById('detail-panel');
+  panel.className='detail-panel dp-vis';
+  panel.innerHTML=`
+    <div class="dp-statusbar ${isDis?'dp-dis':'dp-ocu'}">
+      <div class="dp-dot"></div>
+      <div class="dp-status-lbl">${isDis?'DISPONIBLE':'OCUPADO'}</div>
+    </div>
+    <div class="dp-body">
+      <div class="dp-num">${s.id}</div>
+      <div class="dp-num-lbl">Número de stand</div>
+      <div class="dp-rows">
+        <div class="dp-row"><span class="dp-k">Zona</span><span class="dp-v">${zd.name} — ${zd.sub}</span></div>
+        <div class="dp-row"><span class="dp-k">Superficie</span><span class="dp-v">${s.m2} m²</span></div>
+        <div class="dp-row"><span class="dp-k">Rubro</span><span class="dp-v">${s.rubro}</span></div>
+        <div class="dp-row"><span class="dp-k">Estado</span><span class="dp-v" style="color:${isDis?'#1075A0':'#C23828'};font-weight:700">${isDis?'Disponible':'Ocupado'}</span></div>
+      </div>
+    </div>
+    <div class="dp-foot">
+      <a href="https://wa.me/5492494557754?text=Hola%20Santiago%2C%20me%20interesa%20el%20stand%20${s.id}%20(${zd.name})%20en%20ExpoTAN%202026."
+         target="_blank" rel="noopener" class="dp-cta ${isDis?'dc-dis':'dc-ocu'}">
+        ${isDis?'Reservar este stand →':'Consultar lista de espera →'}
+      </a>
+    </div>
+    <div class="dp-updated">Última actualización: 03/06/2026</div>
+  `;
+  document.querySelector('.detail-empty') && (document.querySelector('.detail-empty').style.display='none');
+  if(window.innerWidth<1024){
+    document.getElementById('stands-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function smApply(){
+  let anyVisible=false;
+  document.querySelectorAll('.zcard').forEach(card=>{
+    const zk=card.dataset.zone;
+    const zMatch=smZona==='all'||smZona===zk;
+    if(!zMatch){ card.classList.add('zc-hidden'); return; }
+    card.classList.remove('zc-hidden');
+    const pills=card.querySelectorAll('.spill');
+    let zHasVisible=false;
+    pills.forEach(p=>{
+      const s=STANDS.find(st=>st.id===p.dataset.id);
+      const avMatch=smAvail==='all'||smAvail===s.e;
+      const srMatch=!smSearch||s.id.includes(smSearch);
+      const show=avMatch&&srMatch;
+      p.classList.toggle('sp-hidden',!show);
+      if(show){ zHasVisible=true; anyVisible=true; }
+    });
+    card.classList.toggle('zc-hidden',!zHasVisible);
+    if(zHasVisible&&card.classList.contains('zcollapsed')){
+      card.classList.remove('zcollapsed');
+    }
+  });
+  document.getElementById('no-results').classList.toggle('nm-vis',!anyVisible);
+}
+
+// Avail filter
+document.querySelectorAll('[data-avail]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    smAvail=btn.dataset.avail;
+    document.querySelectorAll('[data-avail]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    smApply();
+  });
+});
+
+// Search
+document.getElementById('sm-search').addEventListener('input',e=>{
+  smSearch=e.target.value.toLowerCase().trim();
+  smApply();
+});
+
+// Init
+smRenderStats();
+smRenderZoneFilters();
+smRenderZones();
 </script>
 </body>
 </html>

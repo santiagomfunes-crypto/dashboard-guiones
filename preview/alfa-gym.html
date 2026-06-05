@@ -3,329 +3,548 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alfa Gym — Demo de tu nueva web | Altavista Web</title>
+  <title>Alfa Gym — Tandil</title>
+  <meta name="description" content="Gimnasio en Tandil. Musculación, clases grupales y entrenamiento personalizado. Pratt 301.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--char:#1A1A1A;--stone:#6B6560;--cream:#F5F0E8;--warm:#FAFAF8;--gold:#B8954A;--border:#E5DDD0;--white:#fff;--navy:#08111C;--yellow:#F4C430}
-    html{scroll-behavior:smooth}
-    body{font-family:'Inter',sans-serif;background:var(--warm);color:var(--char)}
-
-    /* AGENCY BAR */
-    .ab{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;gap:16px}
-    .ab-l{display:flex;align-items:center;gap:10px}
-    .ab-badge{background:var(--yellow);color:var(--navy);padding:2px 9px;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-    .ab-text{color:rgba(255,255,255,.7);font-size:13px}
-    .ab-text strong{color:#fff}
-    .ab-cta{background:var(--yellow);color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
-    .ab-cta:hover{opacity:.85}
-
-    /* HERO */
-    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;background:#111;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.38)}
-    .hero-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:32px 60px}
-    .logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff}
-    .logo small{display:block;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:3px}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .2s}
-    .nav-links a:hover{color:#fff}
-    .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 60px 100px;max-width:680px}
-    .eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,66px);font-weight:400;color:#fff;line-height:1.12;margin-bottom:20px}
-    .hero-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.58);max-width:460px;margin-bottom:36px}
-    .hero-ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px}
-    .hero-pill{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:6px 14px;border-radius:20px;font-size:12px;backdrop-filter:blur(4px)}
-
-    /* BUTTONS */
-    .btn-g{background:var(--gold);color:#fff;padding:13px 26px;border-radius:2px;text-decoration:none;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-g:hover{background:#9E7D3F}
-    .btn-wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:13px 22px;border-radius:2px;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-wa:hover{background:#1BBE5A}
-    .btn-ghost{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px}
-    .btn-ghost:hover{color:#fff}
-
-    /* INFO SECTION */
-    .info-sec{background:var(--white);padding:72px 60px}
-    .info-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-    .s-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px}
-    .s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.2;color:var(--char);margin-bottom:14px}
-    .s-body{font-size:15px;line-height:1.8;color:var(--stone);margin-bottom:24px}
-    .info-list{display:flex;flex-direction:column;gap:16px}
-    .info-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--warm);border-radius:4px}
-    .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-    .info-item strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
-    .info-item span{font-size:13px;color:var(--stone);line-height:1.4}
-    .rating-box{background:var(--char);color:#fff;padding:28px;border-radius:4px;text-align:center}
-    .rating-big{font-family:'Playfair Display',serif;font-size:60px;font-weight:600;line-height:1;color:var(--yellow)}
-    .rating-stars{font-size:20px;margin:8px 0}
-    .rating-label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
-
-    /* FEATURES */
-    .features{background:var(--warm);padding:72px 60px}
-    .feat-header{max-width:560px;margin-bottom:48px}
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1200px;margin:0 auto}
-    .feat{background:#fff;border:1px solid var(--border);padding:28px 22px;border-radius:4px;position:relative;transition:border-color .2s,box-shadow .2s}
-    .feat:hover{border-color:var(--gold);box-shadow:0 4px 18px rgba(184,149,74,.08)}
-    .feat-tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px}
-    .t-inc{background:#E8F5E9;color:#2E7D32}
-    .t-pro{background:rgba(184,149,74,.12);color:var(--gold)}
-    .feat-ico{font-size:26px;margin-bottom:12px}
-    .feat-t{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;margin-bottom:7px;color:var(--char)}
-    .feat-d{font-size:13px;color:var(--stone);line-height:1.6}
-
-    /* DIVIDER PITCH */
-    .divider{background:var(--navy);padding:72px 60px;text-align:center;position:relative;overflow:hidden}
-    .divider::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%)}
-    .dv{position:relative;z-index:1;max-width:700px;margin:0 auto}
-    .dv-badge{display:inline-block;background:rgba(244,196,48,.12);color:var(--yellow);border:1px solid rgba(244,196,48,.25);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
-    .dv h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);color:#fff;font-weight:400;line-height:1.3;margin-bottom:12px}
-    .dv h2 em{color:var(--yellow);font-style:normal}
-    .dv p{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7}
-
-    /* PRICING */
-    .pricing{background:var(--char);padding:72px 60px}
-    .pr-hdr{text-align:center;margin-bottom:48px}
-    .pr-hdr .s-title{color:#fff}
-    .pr-hdr .s-body{color:rgba(255,255,255,.4);margin:0 auto;text-align:center}
-    .pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1100px;margin:0 auto}
-    .pr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);padding:32px 24px;border-radius:4px;position:relative}
-    .pr-card.pop{background:rgba(244,196,48,.07);border-color:rgba(244,196,48,.35)}
-    .pop-lbl{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--yellow);color:var(--navy);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 14px;border-radius:10px;white-space:nowrap}
-    .pr-tier{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
-    .pr-card.pop .pr-tier{color:var(--yellow)}
-    .pr-name{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:500;margin-bottom:16px}
-    .pr-amt{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:#fff}
-    .pr-amt sup{font-size:15px;vertical-align:super}
-    .pr-mo{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px;margin-bottom:16px}
-    .pr-div{border:none;border-top:1px solid rgba(255,255,255,.08);margin:16px 0}
-    .pr-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-    .pr-feats li{font-size:12px;color:rgba(255,255,255,.58);display:flex;align-items:flex-start;gap:6px}
-    .pr-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
-    .btn-pr{display:block;text-align:center;padding:11px;border-radius:2px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s}
-    .btn-wh{border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
-    .btn-wh:hover{border-color:rgba(255,255,255,.45);color:#fff}
-    .btn-gy{background:var(--yellow);color:var(--navy)}
-    .btn-gy:hover{opacity:.9}
-
-    /* CTA */
-    .final{background:var(--warm);padding:72px 60px;text-align:center}
-    .final-in{max-width:560px;margin:0 auto}
-    .final-in .s-title{margin-bottom:12px}
-    .final-in .s-body{margin:0 auto 28px;text-align:center}
-    .final-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-    .btn-wa-big{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:14px 22px;border-radius:4px;font-size:14px;font-weight:600;transition:background .2s}
-    .btn-wa-big:hover{background:#1BBE5A}
-    .btn-mail{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--char);text-decoration:none;padding:14px 22px;border-radius:4px;border:1px solid var(--border);font-size:14px;font-weight:600;transition:border-color .2s}
-    .btn-mail:hover{border-color:var(--char)}
-    .final-note{margin-top:22px;font-size:12px;color:var(--stone)}
-
-    footer{background:var(--char);padding:24px 60px;display:flex;justify-content:space-between;align-items:center}
-    .f-brand{font-family:'Playfair Display',serif;font-size:16px;color:var(--yellow)}
-    .f-brand small{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,.25);display:block}
-    .f-copy{font-size:12px;color:rgba(255,255,255,.25)}
-
-    @media(max-width:960px){
-      .hero-nav{padding:24px}.nav-links{display:none}.hero-body{padding:40px 24px 80px}
-      .info-sec{padding:56px 24px}.info-inner{grid-template-columns:1fr;gap:40px}
-      .features{padding:56px 24px}.feat-grid{grid-template-columns:1fr 1fr}
-      .divider{padding:56px 24px}.pricing{padding:56px 24px}.pr-grid{grid-template-columns:1fr}
-      .final{padding:56px 24px}footer{padding:20px;flex-direction:column;gap:10px;text-align:center}
+    /* ── TOKENS ─────────────────────────────────────────────────────── */
+    :root {
+      --bg:         #080808;
+      --surface:    #111111;
+      --surface-2:  #1A1A1A;
+      --border:     rgba(255,255,255,.08);
+      --accent:     #E8402A;
+      --accent-dim: rgba(232,64,42,.12);
+      --white:      #FFFFFF;
+      --w70:        rgba(255,255,255,.70);
+      --w50:        rgba(255,255,255,.50);
+      --w20:        rgba(255,255,255,.20);
+      --w10:        rgba(255,255,255,.10);
+      --navy:  #07101C;
+      --amber: #F4C430;
+      --f-head: 'Space Grotesk', system-ui, sans-serif;
+      --f-body: 'Inter', system-ui, sans-serif;
+      --ease: cubic-bezier(.22,1,.36,1);
     }
-    @media(max-width:580px){.feat-grid{grid-template-columns:1fr}}
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-size:16px; }
+    body { font-family:var(--f-body); background:var(--bg); color:var(--white); -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    img { display:block; max-width:100%; }
+
+    /* ── AGENCY BAR ─────────────────────────────────────────────────── */
+    .ab {
+      position:fixed; top:0; left:0; right:0; z-index:9999;
+      background:var(--navy);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 24px; height:36px;
+      font-family:var(--f-body); font-size:11px; font-weight:500; letter-spacing:.04em;
+    }
+    .ab-left { color:rgba(255,255,255,.55); }
+    .ab-left span { color:var(--amber); font-weight:600; }
+    .ab-right {
+      color:var(--amber); font-weight:600; letter-spacing:.06em;
+      display:flex; align-items:center; gap:6px; cursor:pointer;
+      transition:opacity .2s;
+    }
+    .ab-right:hover { opacity:.8; }
+
+    /* ── NAV ─────────────────────────────────────────────────────────── */
+    .nav {
+      position:fixed; top:36px; left:0; right:0; z-index:999;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 48px; height:64px;
+      transition:background .3s var(--ease), border-color .3s;
+      border-bottom:1px solid transparent;
+    }
+    .nav.scrolled {
+      background:rgba(8,8,8,.92);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border-color:var(--border);
+    }
+    .nav-logo {
+      font-family:var(--f-head); font-size:18px; font-weight:700; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--white);
+    }
+    .nav-logo span { color:var(--accent); }
+    .nav-links { display:flex; gap:36px; }
+    .nav-links a {
+      font-size:13px; font-weight:500; color:var(--w70); letter-spacing:.02em;
+      transition:color .2s;
+    }
+    .nav-links a:hover { color:var(--white); }
+    .nav-cta {
+      background:var(--accent); color:var(--white);
+      padding:10px 22px; border-radius:6px;
+      font-size:13px; font-weight:600; letter-spacing:.04em;
+      transition:opacity .2s;
+    }
+    .nav-cta:hover { opacity:.88; }
+
+    /* ── HERO ─────────────────────────────────────────────────────────── */
+    .hero { position:relative; height:100vh; min-height:620px; overflow:hidden; }
+    .hero-img {
+      position:absolute; inset:0;
+      background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAFeFENadegWnRallYxU_8Eo8LsYNN6uAm0lIrH18DTZ38xtaTCk7XKJIvj8dwI44wAawoe1rhADMGkeuPLo2ONR49nE0LJwv5euahEW3OawCBzLCz4PCXUUwR4k2Sxp4hV3Cu-V-PB9kKcj=w1600-h900-k-no');
+      background-size:cover; background-position:center 40%;
+      animation:heroZoom 14s ease-in-out infinite alternate;
+    }
+    @keyframes heroZoom { from{transform:scale(1)} to{transform:scale(1.04)} }
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom, rgba(0,0,0,.30) 0%, rgba(0,0,0,.10) 30%, rgba(0,0,0,.62) 65%, rgba(0,0,0,.94) 100%);
+    }
+    .hero-body {
+      position:absolute; z-index:2; bottom:0; left:0; right:0;
+      padding:0 64px 80px;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,.12); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.18);
+      padding:6px 14px; border-radius:100px;
+      font-size:12px; font-weight:500; color:var(--white); margin-bottom:20px;
+    }
+    .hero-badge svg { width:14px; height:14px; fill:#F4C430; }
+    .hero-title {
+      font-family:var(--f-head); font-weight:700;
+      font-size:clamp(56px,10vw,120px); line-height:.95;
+      letter-spacing:-.01em; text-transform:uppercase; color:var(--white); margin-bottom:16px;
+    }
+    .hero-title span { color:var(--accent); }
+    .hero-sub {
+      font-size:clamp(15px,1.8vw,19px); font-weight:300; color:var(--w70);
+      max-width:480px; margin-bottom:32px; line-height:1.5;
+    }
+    .hero-actions { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .btn-primary {
+      background:var(--accent); color:var(--white);
+      padding:15px 32px; border-radius:8px;
+      font-size:15px; font-weight:600; letter-spacing:.02em;
+      display:inline-flex; align-items:center; gap:10px;
+      transition:opacity .2s, transform .2s var(--ease);
+    }
+    .btn-primary:hover { opacity:.9; transform:translateY(-1px); }
+    .btn-ghost {
+      color:var(--w70); font-size:15px; font-weight:500;
+      display:inline-flex; align-items:center; gap:8px; transition:color .2s;
+    }
+    .btn-ghost:hover { color:var(--white); }
+
+    /* ── STRIP ────────────────────────────────────────────────────────── */
+    .strip {
+      background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+      display:flex; justify-content:center; flex-wrap:wrap;
+    }
+    .strip-item {
+      display:flex; align-items:center; gap:12px;
+      padding:20px 48px; border-right:1px solid var(--border);
+      font-size:14px; font-weight:500; color:var(--w70);
+    }
+    .strip-item:last-child { border-right:none; }
+    .strip-item svg { width:18px; height:18px; color:var(--accent); flex-shrink:0; }
+    .strip-item strong { color:var(--white); }
+
+    /* ── SECTION ─────────────────────────────────────────────────────── */
+    .section { padding:100px 64px; }
+    .section-tag {
+      font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--accent); margin-bottom:14px;
+    }
+    .section-title {
+      font-family:var(--f-head); font-size:clamp(30px,4vw,48px);
+      font-weight:700; line-height:1.1; margin-bottom:16px;
+    }
+    .section-body {
+      font-size:17px; font-weight:300; color:var(--w70); line-height:1.7; max-width:560px;
+    }
+
+    /* ── SERVICES ────────────────────────────────────────────────────── */
+    .services { background:var(--bg); }
+    .services-header { margin-bottom:56px; }
+    .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .service-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:40px 32px;
+      transition:border-color .25s, background .25s;
+    }
+    .service-card:hover { border-color:rgba(232,64,42,.35); background:var(--surface-2); }
+    .service-icon {
+      width:48px; height:48px; background:var(--accent-dim);
+      border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;
+    }
+    .service-icon svg { width:24px; height:24px; color:var(--accent); }
+    .service-title { font-family:var(--f-head); font-size:20px; font-weight:600; margin-bottom:10px; }
+    .service-desc { font-size:14px; color:var(--w70); line-height:1.65; }
+
+    /* ── ABOUT ────────────────────────────────────────────────────────── */
+    .about { background:var(--surface); }
+    .about-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .about-img-wrap {
+      aspect-ratio:4/3; overflow:hidden; border-radius:16px; background:var(--surface-2);
+    }
+    .about-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .6s var(--ease); }
+    .about-img-wrap:hover img { transform:scale(1.04); }
+    .about-bullets { list-style:none; margin-top:28px; display:flex; flex-direction:column; gap:12px; }
+    .about-bullets li {
+      display:flex; align-items:flex-start; gap:12px;
+      font-size:14px; color:var(--w70); line-height:1.5;
+    }
+    .about-bullets li::before {
+      content:''; flex-shrink:0; width:20px; height:20px; margin-top:1px;
+      background:var(--accent-dim); border-radius:50%; border:1.5px solid var(--accent);
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='%23E8402A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:center; background-size:12px;
+    }
+
+    /* ── HORARIOS ────────────────────────────────────────────────────── */
+    .horarios { background:var(--bg); }
+    .horarios-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-top:48px;
+    }
+    .hora-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:12px; padding:20px 16px; text-align:center;
+    }
+    .hora-dia { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--w50); margin-bottom:6px; }
+    .hora-time { font-family:var(--f-head); font-size:16px; font-weight:600; color:var(--white); }
+
+    /* ── CONTACTO ────────────────────────────────────────────────────── */
+    .contacto { background:var(--surface); text-align:center; padding:80px 64px; }
+    .contacto .section-body { margin:0 auto 40px; text-align:center; }
+    .contacto-btns { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
+    .btn-wa {
+      background:#25D366; color:#fff;
+      padding:15px 32px; border-radius:8px; font-size:15px; font-weight:600;
+      display:inline-flex; align-items:center; gap:10px; transition:opacity .2s;
+    }
+    .btn-wa:hover { opacity:.9; }
+    .btn-outline {
+      border:1.5px solid var(--border); color:var(--w70);
+      padding:15px 28px; border-radius:8px; font-size:15px; font-weight:500;
+      display:inline-flex; align-items:center; gap:10px; transition:border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color:var(--w50); color:var(--white); }
+
+    /* ── PITCH ───────────────────────────────────────────────────────── */
+    .pitch-divider {
+      background:var(--navy); padding:28px 48px; text-align:center;
+      border-top:2px solid var(--amber);
+    }
+    .pitch-divider p { font-size:13px; font-weight:500; color:rgba(255,255,255,.6); letter-spacing:.04em; }
+    .pitch-divider p span { color:var(--amber); font-weight:700; }
+    .pitch { background:var(--navy); padding:80px 64px; }
+    .pitch-header { text-align:center; margin-bottom:64px; }
+    .pitch-header .section-tag { color:var(--amber); }
+    .pitch-header .section-title { font-size:clamp(28px,4vw,44px); max-width:640px; margin:0 auto 16px; }
+    .pitch-header .section-body { margin:0 auto; text-align:center; }
+    .pitch-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:960px; margin:0 auto 56px; }
+    .pitch-card {
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10);
+      border-radius:16px; padding:36px 28px; display:flex; flex-direction:column;
+    }
+    .pitch-card.featured { border-color:var(--amber); background:rgba(244,196,48,.06); }
+    .pitch-tier { font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--amber); margin-bottom:10px; }
+    .pitch-plan { font-family:var(--f-head); font-size:20px; font-weight:700; margin-bottom:20px; }
+    .pitch-price { font-family:var(--f-head); font-size:36px; font-weight:700; color:var(--white); line-height:1; margin-bottom:4px; }
+    .pitch-recur { font-size:13px; color:var(--w70); margin-bottom:24px; }
+    .pitch-features { list-style:none; display:flex; flex-direction:column; gap:10px; flex:1; margin-bottom:28px; }
+    .pitch-features li {
+      display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--w70); line-height:1.5;
+    }
+    .pitch-features li::before { content:'✓'; color:var(--amber); font-weight:700; flex-shrink:0; margin-top:1px; }
+    .pitch-cta {
+      background:var(--accent); color:var(--white);
+      padding:13px 24px; border-radius:7px; text-align:center;
+      font-weight:600; font-size:14px; letter-spacing:.02em; transition:opacity .2s;
+    }
+    .pitch-cta:hover { opacity:.88; }
+    .pitch-card.featured .pitch-cta { background:var(--amber); color:#0a0a0a; }
+    .pitch-footer { text-align:center; }
+    .pitch-footer p { font-size:14px; color:var(--w70); margin-bottom:24px; }
+    .btn-wa-big {
+      display:inline-flex; align-items:center; gap:12px;
+      background:#25D366; color:#fff; padding:18px 40px; border-radius:10px;
+      font-size:17px; font-weight:700; letter-spacing:.02em;
+      transition:opacity .2s, transform .2s var(--ease);
+    }
+    .btn-wa-big:hover { opacity:.9; transform:translateY(-2px); }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────── */
+    .footer {
+      background:var(--bg); border-top:1px solid var(--border);
+      padding:24px 48px; text-align:center; font-size:12px; color:var(--w50);
+    }
+    .footer a { color:var(--accent); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+    @media (max-width:900px) {
+      .nav-links { display:none; }
+      .nav { padding:0 24px; }
+      .hero-body { padding:0 28px 60px; }
+      .section { padding:72px 28px; }
+      .services-grid { grid-template-columns:1fr; gap:16px; }
+      .about-inner { grid-template-columns:1fr; gap:40px; }
+      .strip { flex-direction:column; }
+      .strip-item { border-right:none; border-bottom:1px solid var(--border); padding:18px 28px; }
+      .strip-item:last-child { border-bottom:none; }
+      .pitch-grid { grid-template-columns:1fr; max-width:400px; margin:0 auto 40px; }
+      .pitch { padding:60px 28px; }
+      .contacto { padding:60px 28px; }
+      .horarios-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width:480px) {
+      .hero-title { font-size:clamp(42px,12vw,64px); }
+      .nav-cta { display:none; }
+      .ab { padding:0 16px; }
+      .ab-left { font-size:10px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="ab">
-  <div class="ab-l">
-    <span class="ab-badge">Demo gratuita</span>
-    <span class="ab-text">Altavista Web preparó esta propuesta para <strong>Alfa Gym</strong></span>
+  <!-- AGENCY BAR -->
+  <div class="ab">
+    <div class="ab-left">Demo creada por <span>Altavista Web</span></div>
+    <a class="ab-right" href="#propuesta">
+      Ver propuesta
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+    </a>
   </div>
-  <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
-</div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAFeFENadegWnRallYxU_8Eo8LsYNN6uAm0lIrH18DTZ38xtaTCk7XKJIvj8dwI44wAawoe1rhADMGkeuPLo2ONR49nE0LJwv5euahEW3OawCBzLCz4PCXUUwR4k2Sxp4hV3Cu-V-PB9kKcj=w408-h666-k-no')"></div>
-  <nav class="hero-nav">
-    <div class="logo">Alfa Gym<small>Gimnasio · Tandil</small></div>
-    <ul class="nav-links">
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Servicios</a></li>
-      <li><a href="#">Nosotros</a></li>
-      <li><a href="#">Contacto</a></li>
-    </ul>
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">ALFA<span>GYM</span></div>
+    <div class="nav-links">
+      <a href="#servicios">Instalaciones</a>
+      <a href="#horarios">Horarios</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/5492494454823?text=Hola%21+Vi+el+sitio+de+Alfa+Gym+y+quiero+info" target="_blank">Empezar hoy</a>
   </nav>
-  <div class="hero-body">
-    <p class="eyebrow">Pratt 301, B7001 Tandil, Provincia de Buenos Aires, Argentina</p>
-    <h1 class="hero-title">Alfa Gym</h1>
-    <p class="hero-sub">Tu próximo cliente ya te está buscando en Google.</p>
-    <div class="hero-ctas">
-      <a href="https://wa.me/542494548233" class="btn-wa" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Escribinos
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-img"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-body">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        4.9 en Google
+      </div>
+      <h1 class="hero-title">ALFA<br><span>GYM</span></h1>
+      <p class="hero-sub">Entrenamiento de alto nivel.<br>Todos los niveles. Tandil.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="https://wa.me/5492494454823?text=Hola%21+Vi+el+sitio+de+Alfa+Gym+y+quiero+consultar" target="_blank">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Empezar hoy
+        </a>
+        <a class="btn-ghost" href="#servicios">
+          Ver instalaciones
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP -->
+  <div class="strip">
+    <div class="strip-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><strong>Pratt 301</strong>, Tandil</span>
+    </div>
+    <div class="strip-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><strong>4.9</strong> puntos Google</span>
+    </div>
+    <div class="strip-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Lunes a <strong>Domingo</strong></span>
+    </div>
+    <div class="strip-item">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 10h16M4 14h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Equipamiento <strong>completo</strong></span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="section services" id="servicios">
+    <div class="services-header">
+      <p class="section-tag">Lo que ofrecemos</p>
+      <h2 class="section-title">Todo lo que necesitás<br>en un solo lugar</h2>
+      <p class="section-body">Equipamiento de primer nivel, coaches capacitados y un espacio diseñado para que alcances tus objetivos.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M6.5 6.5h11M6.5 17.5h11M4 12h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="service-title">Musculación</h3>
+        <p class="service-desc">Pesas libres, máquinas y equipamiento completo para trabajar todos los grupos musculares. Ideal para todos los niveles.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="service-title">Clases Grupales</h3>
+        <p class="service-desc">Funcional, cardio, HIIT y más. Dictadas por instructores certificados con horarios variados para que entrés cuando puedas.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="service-title">Entrenamiento Personalizado</h3>
+        <p class="service-desc">Plan a medida, seguimiento de progreso y asesoramiento nutricional. Tu coach te guía en cada paso del camino.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section about">
+    <div class="about-inner">
+      <div class="about-img-wrap">
+        <img
+          src="https://lh3.googleusercontent.com/gps-cs-s/APNQkAFeFENadegWnRallYxU_8Eo8LsYNN6uAm0lIrH18DTZ38xtaTCk7XKJIvj8dwI44wAawoe1rhADMGkeuPLo2ONR49nE0LJwv5euahEW3OawCBzLCz4PCXUUwR4k2Sxp4hV3Cu-V-PB9kKcj=w800-h600-k-no"
+          alt="Alfa Gym — instalaciones" loading="lazy" width="800" height="600"
+        >
+      </div>
+      <div class="about-text">
+        <p class="section-tag">Alfa Gym</p>
+        <h2 class="section-title">Más que un gimnasio,<br>una comunidad</h2>
+        <p class="section-body">En Alfa Gym entendemos que el entrenamiento va más allá del físico. Creamos un espacio donde cada persona progresa a su propio ritmo, rodeada de un equipo que quiere que llegues a tus metas.</p>
+        <ul class="about-bullets">
+          <li>Acceso libre en todos los horarios habilitados</li>
+          <li>Vestuarios y duchas disponibles para socios</li>
+          <li>Equipamiento moderno y en perfecto estado</li>
+          <li>Atención personalizada desde el primer día</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORARIOS -->
+  <section class="section horarios" id="horarios">
+    <p class="section-tag">Horarios</p>
+    <h2 class="section-title">Encontrá tu momento</h2>
+    <div class="horarios-grid">
+      <div class="hora-card"><div class="hora-dia">Lunes</div><div class="hora-time">7:00 – 22:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Martes</div><div class="hora-time">7:00 – 22:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Miércoles</div><div class="hora-time">7:00 – 22:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Jueves</div><div class="hora-time">7:00 – 22:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Viernes</div><div class="hora-time">7:00 – 22:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Sábado</div><div class="hora-time">8:00 – 14:00</div></div>
+      <div class="hora-card"><div class="hora-dia">Domingo</div><div class="hora-time">9:00 – 13:00</div></div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto" id="contacto">
+    <p class="section-tag">Contacto</p>
+    <h2 class="section-title">¿Empezamos hoy?</h2>
+    <p class="section-body">Escribinos por WhatsApp o llamanos. Te contamos todo sobre las membresías y te ayudamos a elegir el plan que más te sirve.</p>
+    <div class="contacto-btns">
+      <a class="btn-wa" href="https://wa.me/5492494454823?text=Hola%2C+quiero+info+sobre+Alfa+Gym" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
       </a>
-      <a href="#propuesta" class="btn-ghost">Ver propuesta →</a>
+      <a class="btn-outline" href="tel:+5492494454823">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        +54 249 454-8233
+      </a>
+      <a class="btn-outline" href="https://maps.google.com/?q=Pratt+301+Tandil" target="_blank">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Pratt 301
+      </a>
     </div>
-    <div class="hero-meta">
-      <span class="hero-pill">⭐ 4.9 en Google</span>
-      <span class="hero-pill">📍 Pratt 301, B7001 Tandil, Provincia </span>
-      
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- INFO -->
-<section class="info-sec">
-  <div class="info-inner">
-    <div>
-      <p class="s-eye">Quiénes somos</p>
-      <h2 class="s-title">Alfa Gym</h2>
-      <p class="s-body">En Tandil hay cientos de personas buscando dónde entrenar. Una web profesional es el primer paso para que te elijan a vos — con horarios, clases y planes claros desde el primer vistazo.</p>
-      <div class="info-list">
-        <div class="info-item"><div class="info-icon">📍</div><div><strong>Dirección</strong><span>Pratt 301, B7001 Tandil, Provincia de Buenos Aires, Argentina</span></div></div>
-        <div class="info-item"><div class="info-icon">📞</div><div><strong>Teléfono</strong><span>+54 249 454-8233</span></div></div>
-        
-        <div class="info-item"><div class="info-icon">📷</div><div><strong>Categoría</strong><span>Gimnasio</span></div></div>
+  <!-- PITCH DIVIDER -->
+  <div class="pitch-divider" id="propuesta">
+    <p>Esta página fue creada como demo por <span>Altavista Web</span> · Tu negocio merece una presencia digital así</p>
+  </div>
+
+  <!-- PITCH -->
+  <section class="pitch">
+    <div class="pitch-header">
+      <p class="section-tag">Altavista Web — Tandil</p>
+      <h2 class="section-title">Tu sitio web listo<br>en 5 días</h2>
+      <p class="section-body">Páginas profesionales para negocios de Tandil. SEO local desde el día uno, WhatsApp integrado y mantenimiento incluido. Sin contratos largos.</p>
+    </div>
+    <div class="pitch-grid">
+      <div class="pitch-card">
+        <div class="pitch-tier">Tier 1</div>
+        <div class="pitch-plan">Presencia</div>
+        <div class="pitch-price">USD 450</div>
+        <div class="pitch-recur">+ USD 60 / mes</div>
+        <ul class="pitch-features">
+          <li>Landing page profesional</li>
+          <li>SEO local básico (Google)</li>
+          <li>WhatsApp integrado</li>
+          <li>Fotos de Google Maps</li>
+          <li>Dominio + hosting incluido</li>
+        </ul>
+        <a class="pitch-cta" href="https://wa.me/5492494557754?text=Hola+Santiago%2C+me+interesa+el+plan+Presencia+para+mi+negocio" target="_blank">Me interesa</a>
+      </div>
+      <div class="pitch-card featured">
+        <div class="pitch-tier">⭐ Más elegido</div>
+        <div class="pitch-plan">Sitio Completo</div>
+        <div class="pitch-price">USD 900</div>
+        <div class="pitch-recur">+ USD 100 / mes</div>
+        <ul class="pitch-features">
+          <li>5–8 páginas optimizadas</li>
+          <li>Blog + noticias</li>
+          <li>Google Analytics</li>
+          <li>Fotos profesionales integradas</li>
+          <li>Formulario de contacto</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a class="pitch-cta" href="https://wa.me/5492494557754?text=Hola+Santiago%2C+me+interesa+el+plan+Sitio+Completo" target="_blank">Me interesa</a>
+      </div>
+      <div class="pitch-card">
+        <div class="pitch-tier">Tier 3</div>
+        <div class="pitch-plan">Sitio + Motor</div>
+        <div class="pitch-price">USD 1.800</div>
+        <div class="pitch-recur">+ USD 160 / mes</div>
+        <ul class="pitch-features">
+          <li>Todo el plan Completo</li>
+          <li>Reservas / turnos online</li>
+          <li>Panel de administración</li>
+          <li>Integración con WhatsApp</li>
+          <li>Automatizaciones</li>
+          <li>Reportes mensuales</li>
+        </ul>
+        <a class="pitch-cta" href="https://wa.me/5492494557754?text=Hola+Santiago%2C+me+interesa+el+plan+Motor" target="_blank">Me interesa</a>
       </div>
     </div>
-    <div>
-      <div class="rating-box">
-        <div class="rating-big">4.9</div>
-        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-        <div class="rating-label">Calificación en Google</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features">
-  <div class="feat-header" style="max-width:1200px;margin:0 auto 48px">
-    <p class="s-eye">Lo que incluiría tu web</p>
-    <h2 class="s-title">Funciones pensadas para tu negocio</h2>
-  </div>
-  <div class="feat-grid">
-    
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">🗓️</div>
-          <h3 class="feat-t">Horarios y clases online</h3>
-          <p class="feat-d">Grilla de actividades actualizable. Tus clientes saben qué hay cada día.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💪</div>
-          <h3 class="feat-t">Planes y precios visibles</h3>
-          <p class="feat-d">Mostrá tus opciones claramente. Reducís consultas repetitivas y acelerás la decisión.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📍</div>
-          <h3 class="feat-t">Ubicación y cómo llegar</h3>
-          <p class="feat-d">Google Maps integrado para que ningún nuevo socio se pierda.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💬</div>
-          <h3 class="feat-t">WhatsApp para inscripciones</h3>
-          <p class="feat-d">El cliente te escribe directo con un clic. Sin formularios complicados.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">🎯</div>
-          <h3 class="feat-t">Galería de instalaciones</h3>
-          <p class="feat-d">Fotos del espacio y equipamiento que generan confianza antes de la visita.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">⭐</div>
-          <h3 class="feat-t">Testimonios de socios</h3>
-          <p class="feat-d">Reseñas reales que convencen a los indecisos de dar el paso.</p>
-        </div>
-  </div>
-</section>
-
-<!-- DIVIDER -->
-<div id="propuesta" class="divider">
-  <div class="dv">
-    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
-    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
-    <p>¿Querés llenar tus clases con menos esfuerzo?<br>Tu dominio actual no está activo. En 5 días podés tener este sitio publicado con tu dominio, tus fotos reales y todas las funciones activas.</p>
-  </div>
-</div>
-
-<!-- PRICING -->
-<section class="pricing">
-  <div class="pr-hdr">
-    <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
-    <h2 class="s-title">Elegí el plan que te conviene</h2>
-    <p class="s-body">Sin contratos largos. Empezás cuando querés.</p>
-  </div>
-  <div class="pr-grid">
-    <div class="pr-card">
-      <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
-      <div class="pr-amt"><sup>USD </sup>450</div>
-      <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Landing page profesional</li><li>Galería y servicios</li>
-        <li>Formulario de contacto</li><li>WhatsApp integrado</li>
-        <li>SEO local Tandil</li><li>Dominio + hosting incluido</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Alfa+Gym+y+me+interesa+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
-    </div>
-    <div class="pr-card pop">
-      <div class="pop-lbl">Más elegido</div>
-      <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
-      <div class="pr-amt"><sup>USD </sup>900</div>
-      <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el plan Presencia</li><li>Secciones completas</li>
-        <li>Blog / novedades</li><li>Google Analytics</li>
-        <li>SEO completo optimizado</li><li>Diseño a medida</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Alfa+Gym+y+me+interesa+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
-    </div>
-    <div class="pr-card">
-      <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
-      <div class="pr-amt"><sup>USD </sup>1.800</div>
-      <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el Sitio Completo</li><li>Turnos / reservas online</li>
-        <li>Panel de gestión propio</li><li>Actualizaciones ilimitadas</li>
-        <li>Soporte prioritario</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Alfa+Gym+y+me+interesa+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
-    </div>
-  </div>
-</section>
-
-<!-- CTA FINAL -->
-<section class="final">
-  <div class="final-in">
-    <p class="s-eye" style="text-align:center">¿Hablamos?</p>
-    <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
-    <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — soy de Tandil y armé esta propuesta especialmente para Alfa Gym. Si te interesa avanzar, charlamos sin compromiso.</p>
-    <div class="final-btns">
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Alfa+Gym+y+me+interesa" class="btn-wa-big" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
+    <div class="pitch-footer">
+      <p>¿Querés una demo personalizada para tu negocio? Hablemos hoy.</p>
+      <a class="btn-wa-big" href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Alfa+Gym+y+me+gustar%C3%ADa+hablar" target="_blank">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         Hablar con Santiago
       </a>
-      <a href="mailto:santiagomfunes@gmail.com?subject=Demo Alfa Gym — me interesa" class="btn-mail">✉️ Enviar email</a>
     </div>
-    <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
-  <p class="f-copy">© 2025 · Demo para Alfa Gym · Tandil, Buenos Aires</p>
-</footer>
+  <footer class="footer">
+    <p>Demo creada por <a href="https://wa.me/5492494557754" target="_blank">Altavista Web</a> · Tandil, Buenos Aires · <a href="mailto:santiagomfunes@gmail.com">santiagomfunes@gmail.com</a></p>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          nav.classList.toggle('scrolled', window.scrollY > 80);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  </script>
 
 </body>
 </html>

@@ -1,331 +1,305 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bodegón Del Fuerte — Demo de tu nueva web | Altavista Web</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--char:#1A1A1A;--stone:#6B6560;--cream:#F5F0E8;--warm:#FAFAF8;--gold:#B8954A;--border:#E5DDD0;--white:#fff;--navy:#08111C;--yellow:#F4C430}
-    html{scroll-behavior:smooth}
-    body{font-family:'Inter',sans-serif;background:var(--warm);color:var(--char)}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bodegón Del Fuerte — Tandil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F5F0E8; --bg2:#EDE5D5; --ink:#1A1208;
+  --rust:#8B3A1C; --ochre:#C4883A; --cream:#FAF5EC;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;font-size:17px;line-height:1.65}
 
-    /* AGENCY BAR */
-    .ab{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;gap:16px}
-    .ab-l{display:flex;align-items:center;gap:10px}
-    .ab-badge{background:var(--yellow);color:var(--navy);padding:2px 9px;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-    .ab-text{color:rgba(255,255,255,.7);font-size:13px}
-    .ab-text strong{color:#fff}
-    .ab-cta{background:var(--yellow);color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
-    .ab-cta:hover{opacity:.85}
+/* scroll progress */
+#pb{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--ochre);z-index:9999;transition:width .1s linear}
 
-    /* HERO */
-    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;background:#111;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.38)}
-    .hero-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:32px 60px}
-    .logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff}
-    .logo small{display:block;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:3px}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .2s}
-    .nav-links a:hover{color:#fff}
-    .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 60px 100px;max-width:680px}
-    .eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,66px);font-weight:400;color:#fff;line-height:1.12;margin-bottom:20px}
-    .hero-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.58);max-width:460px;margin-bottom:36px}
-    .hero-ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px}
-    .hero-pill{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:6px 14px;border-radius:20px;font-size:12px;backdrop-filter:blur(4px)}
+/* agency bar */
+#ab{position:fixed;top:0;left:0;right:0;z-index:1000;background:#07101C;height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-family:'Source Serif 4',serif;font-size:12px;color:#aaa}
+#ab a{background:#F4C430;color:#07101C;font-weight:700;font-size:11px;padding:4px 14px;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:opacity .2s}
+#ab a:hover{opacity:.85}
 
-    /* BUTTONS */
-    .btn-g{background:var(--gold);color:#fff;padding:13px 26px;border-radius:2px;text-decoration:none;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-g:hover{background:#9E7D3F}
-    .btn-wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:13px 22px;border-radius:2px;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-wa:hover{background:#1BBE5A}
-    .btn-ghost{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px}
-    .btn-ghost:hover{color:#fff}
+/* nav */
+nav{position:fixed;top:36px;left:0;right:0;z-index:900;background:var(--ink);border-bottom:2px solid var(--ochre);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--cream);letter-spacing:.04em}
+.nav-logo span{color:var(--ochre)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:#ccc;text-decoration:none;font-size:13px;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--ochre)}
+.nav-cta{background:var(--rust);color:#fff;padding:8px 20px;text-decoration:none;font-size:13px;letter-spacing:.08em;text-transform:uppercase;transition:background .2s}
+.nav-cta:hover{background:var(--ochre);color:var(--ink)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--cream);transition:all .3s}
+.mob-menu{display:none;position:fixed;top:96px;left:0;right:0;background:var(--ink);z-index:850;padding:24px 40px;border-top:1px solid var(--ochre)}
+.mob-menu.open{display:block}
+.mob-menu ul{list-style:none;display:flex;flex-direction:column;gap:16px}
+.mob-menu a{color:#ccc;text-decoration:none;font-size:16px;letter-spacing:.08em;text-transform:uppercase}
 
-    /* INFO SECTION */
-    .info-sec{background:var(--white);padding:72px 60px}
-    .info-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-    .s-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px}
-    .s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.2;color:var(--char);margin-bottom:14px}
-    .s-body{font-size:15px;line-height:1.8;color:var(--stone);margin-bottom:24px}
-    .info-list{display:flex;flex-direction:column;gap:16px}
-    .info-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--warm);border-radius:4px}
-    .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-    .info-item strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
-    .info-item span{font-size:13px;color:var(--stone);line-height:1.4}
-    .rating-box{background:var(--char);color:#fff;padding:28px;border-radius:4px;text-align:center}
-    .rating-big{font-family:'Playfair Display',serif;font-size:60px;font-weight:600;line-height:1;color:var(--yellow)}
-    .rating-stars{font-size:20px;margin:8px 0}
-    .rating-label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
+/* hero */
+#hero{padding-top:96px;min-height:100vh;background:linear-gradient(160deg,#1A1208 0%,#2C1E0E 40%,#1A1208 100%);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-left:8vw;padding-right:8vw;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(196,136,58,.12) 0%,transparent 60%);pointer-events:none}
+.hero-eye{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ochre);margin-bottom:24px}
+.hero-h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(42px,8vw,108px);color:var(--cream);line-height:1.0;max-width:800px;position:relative;z-index:1}
+.hero-h1 em{color:var(--ochre);font-style:italic}
+.hero-div{width:80px;height:3px;background:var(--rust);margin:32px 0}
+.hero-sub{font-size:18px;color:#C4B898;max-width:480px;line-height:1.7;margin-bottom:40px;font-style:italic}
+.hero-acts{display:flex;gap:16px;flex-wrap:wrap}
+.btn-p{background:var(--ochre);color:var(--ink);padding:14px 32px;text-decoration:none;font-family:'Playfair Display',serif;font-weight:700;font-size:15px;letter-spacing:.04em;transition:background .2s}
+.btn-p:hover{background:#D49B50}
+.btn-o{border:2px solid var(--ochre);color:var(--ochre);padding:12px 30px;text-decoration:none;font-size:14px;letter-spacing:.1em;text-transform:uppercase;transition:all .2s}
+.btn-o:hover{background:var(--ochre);color:var(--ink)}
+.hero-lbl{position:absolute;right:8vw;bottom:60px;writing-mode:vertical-rl;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(196,136,58,.5)}
 
-    /* FEATURES */
-    .features{background:var(--warm);padding:72px 60px}
-    .feat-header{max-width:560px;margin-bottom:48px}
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1200px;margin:0 auto}
-    .feat{background:#fff;border:1px solid var(--border);padding:28px 22px;border-radius:4px;position:relative;transition:border-color .2s,box-shadow .2s}
-    .feat:hover{border-color:var(--gold);box-shadow:0 4px 18px rgba(184,149,74,.08)}
-    .feat-tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px}
-    .t-inc{background:#E8F5E9;color:#2E7D32}
-    .t-pro{background:rgba(184,149,74,.12);color:var(--gold)}
-    .feat-ico{font-size:26px;margin-bottom:12px}
-    .feat-t{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;margin-bottom:7px;color:var(--char)}
-    .feat-d{font-size:13px;color:var(--stone);line-height:1.6}
+/* stats ticker */
+#stats{background:var(--rust);overflow:hidden}
+.ticker{display:flex;white-space:nowrap}
+.t-item{display:inline-flex;align-items:center;gap:12px;padding:16px 48px;border-right:1px solid rgba(255,255,255,.2);font-family:'Playfair Display',serif}
+.t-num{font-size:28px;font-weight:900;color:#FAF5EC}
+.t-lbl{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.7)}
 
-    /* DIVIDER PITCH */
-    .divider{background:var(--navy);padding:72px 60px;text-align:center;position:relative;overflow:hidden}
-    .divider::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%)}
-    .dv{position:relative;z-index:1;max-width:700px;margin:0 auto}
-    .dv-badge{display:inline-block;background:rgba(244,196,48,.12);color:var(--yellow);border:1px solid rgba(244,196,48,.25);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
-    .dv h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);color:#fff;font-weight:400;line-height:1.3;margin-bottom:12px}
-    .dv h2 em{color:var(--yellow);font-style:normal}
-    .dv p{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7}
+/* chalkboard */
+#chalk{background:#1E1408;padding:80px 0;position:relative;overflow:hidden}
+#chalk::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(255,255,255,.015) 30px,rgba(255,255,255,.015) 31px);pointer-events:none}
+.chalk-wrap{max-width:800px;margin:0 auto;padding:0 40px;text-align:center}
+.chalk-t{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);color:#F5EED8;font-weight:700;margin-bottom:8px}
+.chalk-st{font-size:14px;letter-spacing:.25em;text-transform:uppercase;color:var(--ochre);margin-bottom:48px}
+.chalk-list{display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.1)}
+.ci{display:flex;justify-content:space-between;align-items:center;padding:20px 32px;border-bottom:1px solid rgba(255,255,255,.08);transition:background .2s}
+.ci:last-child{border-bottom:none}
+.ci:hover{background:rgba(196,136,58,.08)}
+.ci-name{font-family:'Playfair Display',serif;font-size:18px;color:#F5EED8;font-weight:400;text-align:left}
+.ci-desc{font-size:13px;color:#8A7A60;font-style:italic;margin-top:2px;text-align:left}
+.ci-price{font-family:'Playfair Display',serif;font-size:22px;color:var(--ochre);font-weight:700;white-space:nowrap;margin-left:24px}
+.chalk-note{margin-top:32px;font-size:13px;color:#6A5A40;font-style:italic;letter-spacing:.05em}
 
-    /* PRICING */
-    .pricing{background:var(--char);padding:72px 60px}
-    .pr-hdr{text-align:center;margin-bottom:48px}
-    .pr-hdr .s-title{color:#fff}
-    .pr-hdr .s-body{color:rgba(255,255,255,.4);margin:0 auto;text-align:center}
-    .pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1100px;margin:0 auto}
-    .pr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);padding:32px 24px;border-radius:4px;position:relative}
-    .pr-card.pop{background:rgba(244,196,48,.07);border-color:rgba(244,196,48,.35)}
-    .pop-lbl{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--yellow);color:var(--navy);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 14px;border-radius:10px;white-space:nowrap}
-    .pr-tier{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
-    .pr-card.pop .pr-tier{color:var(--yellow)}
-    .pr-name{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:500;margin-bottom:16px}
-    .pr-amt{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:#fff}
-    .pr-amt sup{font-size:15px;vertical-align:super}
-    .pr-mo{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px;margin-bottom:16px}
-    .pr-div{border:none;border-top:1px solid rgba(255,255,255,.08);margin:16px 0}
-    .pr-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-    .pr-feats li{font-size:12px;color:rgba(255,255,255,.58);display:flex;align-items:flex-start;gap:6px}
-    .pr-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
-    .btn-pr{display:block;text-align:center;padding:11px;border-radius:2px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s}
-    .btn-wh{border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
-    .btn-wh:hover{border-color:rgba(255,255,255,.45);color:#fff}
-    .btn-gy{background:var(--yellow);color:var(--navy)}
-    .btn-gy:hover{opacity:.9}
+/* newspaper de la casa */
+#casa{background:var(--bg);padding:80px 0}
+.sec-lbl{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--ochre);margin-bottom:12px}
+.sec-t{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,48px);color:var(--ink);font-weight:900;line-height:1.1;margin-bottom:48px}
+.np-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:3px solid var(--ink);border-left:1px solid #C4B898}
+.np-col{padding:32px 28px;border-right:1px solid #C4B898;border-bottom:1px solid #C4B898}
+.np-col:nth-child(n+4){border-bottom:none}
+.np-num{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:.2em;color:var(--ochre);border-bottom:1px solid var(--ochre);padding-bottom:8px;margin-bottom:16px;display:inline-block}
+.np-h{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.2}
+.np-p{font-size:15px;color:#3A2E1E;line-height:1.7;margin-bottom:16px}
+.np-tag{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--rust)}
+.cont{max-width:1200px;margin:0 auto;padding:0 40px}
 
-    /* CTA */
-    .final{background:var(--warm);padding:72px 60px;text-align:center}
-    .final-in{max-width:560px;margin:0 auto}
-    .final-in .s-title{margin-bottom:12px}
-    .final-in .s-body{margin:0 auto 28px;text-align:center}
-    .final-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-    .btn-wa-big{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:14px 22px;border-radius:4px;font-size:14px;font-weight:600;transition:background .2s}
-    .btn-wa-big:hover{background:#1BBE5A}
-    .btn-mail{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--char);text-decoration:none;padding:14px 22px;border-radius:4px;border:1px solid var(--border);font-size:14px;font-weight:600;transition:border-color .2s}
-    .btn-mail:hover{border-color:var(--char)}
-    .final-note{margin-top:22px;font-size:12px;color:var(--stone)}
+/* historia pull-quote */
+#hist{background:var(--bg2);padding:100px 40px;text-align:center}
+.pq-wrap{max-width:760px;margin:0 auto}
+.pq-lines{display:flex;align-items:center;gap:24px;margin-bottom:32px}
+.pq-line{flex:1;height:1px;background:var(--ochre)}
+.pq-orn{font-family:'Playfair Display',serif;font-size:48px;color:var(--ochre);line-height:1}
+.pq-q{font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,38px);font-style:italic;color:var(--ink);line-height:1.4;margin-bottom:32px}
+.pq-attr{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre)}
+.hist-body{font-size:17px;color:#4A3828;line-height:1.8;max-width:640px;margin:40px auto 0}
 
-    footer{background:var(--char);padding:24px 60px;display:flex;justify-content:space-between;align-items:center}
-    .f-brand{font-family:'Playfair Display',serif;font-size:16px;color:var(--yellow)}
-    .f-brand small{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,.25);display:block}
-    .f-copy{font-size:12px;color:rgba(255,255,255,.25)}
+/* contact */
+#contacto{background:var(--ink);padding:80px 0}
+#contacto .sec-t{color:var(--cream)}
+#contacto .sec-lbl{color:var(--ochre)}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.ct-info p{color:#B8A888;font-size:16px;margin-bottom:24px;line-height:1.7}
+.ct-det{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.ct-det span{color:#888;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.ct-det strong{color:var(--cream);font-size:16px;font-weight:400}
+.ct-box{background:var(--rust);padding:40px}
+.ct-box h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--cream);margin-bottom:12px}
+.ct-box p{color:rgba(255,255,255,.7);font-size:15px;margin-bottom:24px}
+.wa-btn{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:14px 28px;text-decoration:none;font-size:15px;font-weight:600;transition:opacity .2s}
+.wa-btn:hover{opacity:.9}
 
-    @media(max-width:960px){
-      .hero-nav{padding:24px}.nav-links{display:none}.hero-body{padding:40px 24px 80px}
-      .info-sec{padding:56px 24px}.info-inner{grid-template-columns:1fr;gap:40px}
-      .features{padding:56px 24px}.feat-grid{grid-template-columns:1fr 1fr}
-      .divider{padding:56px 24px}.pricing{padding:56px 24px}.pr-grid{grid-template-columns:1fr}
-      .final{padding:56px 24px}footer{padding:20px;flex-direction:column;gap:10px;text-align:center}
-    }
-    @media(max-width:580px){.feat-grid{grid-template-columns:1fr}}
-  </style>
+/* propuesta */
+#propuesta{background:var(--cream);padding:80px 0;border-top:4px solid var(--ochre)}
+.prop-in{max-width:760px;margin:0 auto;text-align:center;padding:0 40px}
+.prop-badge{display:inline-block;background:var(--ink);color:var(--ochre);font-size:11px;letter-spacing:.3em;text-transform:uppercase;padding:6px 18px;margin-bottom:24px}
+.prop-t{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);color:var(--ink);margin-bottom:16px;font-weight:900}
+.prop-body{font-size:17px;color:#4A3828;line-height:1.75;margin-bottom:36px}
+.prop-feats{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:36px}
+.f-chip{background:var(--bg2);border:1px solid #C4B898;padding:8px 18px;font-size:13px;color:var(--ink)}
+.prop-cta{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:16px 36px;text-decoration:none;font-size:16px;font-weight:700;transition:opacity .2s}
+.prop-cta:hover{opacity:.9}
+.prop-note{margin-top:16px;font-size:13px;color:#888;font-style:italic}
+
+/* footer */
+footer{background:#0E0B06;padding:28px 40px;text-align:center;font-size:13px;color:#555;letter-spacing:.08em}
+footer a{color:var(--ochre);text-decoration:none}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .np-grid{grid-template-columns:1fr}
+  .np-col{border-right:none}
+  .ct-grid{grid-template-columns:1fr}
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .ticker{flex-direction:column}
+  .t-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.2)}
+}
+@media(max-width:600px){
+  nav{padding:0 20px}
+  .cont{padding:0 20px}
+  #hero{padding-left:6vw;padding-right:6vw}
+  .hero-lbl{display:none}
+  .ci{flex-direction:column;align-items:flex-start;gap:6px}
+  .ci-price{margin-left:0}
+  .chalk-wrap{padding:0 20px}
+}
+</style>
 </head>
 <body>
+<div id="pb"></div>
 
-<div class="ab">
-  <div class="ab-l">
-    <span class="ab-badge">Demo gratuita</span>
-    <span class="ab-text">Altavista Web preparó esta propuesta para <strong>Bodegón Del Fuerte</strong></span>
-  </div>
-  <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
+<div id="ab">
+  <span>Sitio demo · Altavista Web · Tandil</span>
+  <a href="https://wa.me/5492494557754" target="_blank" rel="noopener">Ver propuesta</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAFiBaEliApONyy8puS1wD0FG0-bqfoCbXE_JBHGWoRYz5sL0zMchzN057MNb7XNmr-UlhY4pn_mADmG4viEtEEbbtvhg6OKbUahummN9Yxw25QIHAKaSOwTemm3echxpPKaNegf=w426-h240-k-no')"></div>
-  <nav class="hero-nav">
-    <div class="logo">Bodegón Del Fuerte<small>Restaurante · Tandil</small></div>
-    <ul class="nav-links">
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Servicios</a></li>
-      <li><a href="#">Nosotros</a></li>
-      <li><a href="#">Contacto</a></li>
-    </ul>
-  </nav>
-  <div class="hero-body">
-    <p class="eyebrow">Belgrano 589, B7000 Tandil, Provincia de Buenos Aires, Argentina</p>
-    <h1 class="hero-title">Bodegón Del Fuerte</h1>
-    <p class="hero-sub">Una experiencia que empieza antes de entrar.</p>
-    <div class="hero-ctas">
-      <a href="https://wa.me/542494424219" class="btn-wa" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Escribinos
-      </a>
-      <a href="#propuesta" class="btn-ghost">Ver propuesta →</a>
-    </div>
-    <div class="hero-meta">
-      <span class="hero-pill">⭐ 4.5 en Google</span>
-      <span class="hero-pill">📍 Belgrano 589, B7000 Tandil, Provinc</span>
-      <span class="hero-pill">🕐 miércoles: 12 to 3:30 PM, 8 to 11:30 PM </span>
-    </div>
+<nav>
+  <div class="nav-logo">Bodegón <span>Del Fuerte</span></div>
+  <ul class="nav-links">
+    <li><a href="#chalk">Menú</a></li>
+    <li><a href="#casa">Especialidades</a></li>
+    <li><a href="#hist">Historia</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a href="https://wa.me/5492494557754" class="nav-cta" target="_blank" rel="noopener">Reservar</a>
+  <button class="hamburger" id="ham" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu" id="mobmenu">
+  <ul>
+    <li><a href="#chalk">Menú</a></li>
+    <li><a href="#casa">Especialidades</a></li>
+    <li><a href="#hist">Historia</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="https://wa.me/5492494557754" target="_blank">Reservar mesa</a></li>
+  </ul>
+</div>
+
+<section id="hero">
+  <p class="hero-eye">Tandil · Desde 1985</p>
+  <h1 class="hero-h1">Donde Tandil<br>se sienta<br>a <em>comer</em></h1>
+  <div class="hero-div"></div>
+  <p class="hero-sub">Cocina de bodegón auténtica. Las recetas de siempre, el sabor de las sierras, la calidez de siempre.</p>
+  <div class="hero-acts">
+    <a href="#chalk" class="btn-p">Ver el menú</a>
+    <a href="https://wa.me/5492494557754" class="btn-o" target="_blank" rel="noopener">Reservar mesa</a>
   </div>
+  <span class="hero-lbl">Cocina bodegón — Tandil</span>
 </section>
 
-<!-- INFO -->
-<section class="info-sec">
-  <div class="info-inner">
-    <div>
-      <p class="s-eye">Quiénes somos</p>
-      <h2 class="s-title">Bodegón Del Fuerte</h2>
-      <p class="s-body">Más del 88% de los comensales buscan el menú online antes de decidirse. Con una web profesional, tus clientes llegan sabiendo qué van a pedir — y con ganas de reservar.</p>
-      <div class="info-list">
-        <div class="info-item"><div class="info-icon">📍</div><div><strong>Dirección</strong><span>Belgrano 589, B7000 Tandil, Provincia de Buenos Aires, Argentina</span></div></div>
-        <div class="info-item"><div class="info-icon">📞</div><div><strong>Teléfono</strong><span>+54 249 442-4219</span></div></div>
-        <div class="info-item"><div class="info-icon">🕐</div><div><strong>Horario</strong><span>miércoles: 12 to 3:30 PM, 8 to 11:30 PM · jueves: 12 to 3:30</span></div></div>
-        <div class="info-item"><div class="info-icon">📷</div><div><strong>Categoría</strong><span>Bar restaurante</span></div></div>
-      </div>
-    </div>
-    <div>
-      <div class="rating-box">
-        <div class="rating-big">4.5</div>
-        <div class="rating-stars">⭐⭐⭐⭐</div>
-        <div class="rating-label">Calificación en Google</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features">
-  <div class="feat-header" style="max-width:1200px;margin:0 auto 48px">
-    <p class="s-eye">Lo que incluiría tu web</p>
-    <h2 class="s-title">Funciones pensadas para tu negocio</h2>
-  </div>
-  <div class="feat-grid">
-    
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">🍽️</div>
-          <h3 class="feat-t">Menú digital interactivo</h3>
-          <p class="feat-d">Tus platos con fotos, descripción y precios. Actualizable en cualquier momento.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📅</div>
-          <h3 class="feat-t">Reservas de mesa online</h3>
-          <p class="feat-d">Los clientes reservan directo desde tu web, sin llamadas. Integrado con WhatsApp.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📍</div>
-          <h3 class="feat-t">Google Maps integrado</h3>
-          <p class="feat-d">Tu ubicación exacta en la web. Un tap y el cliente llega a tu puerta.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💬</div>
-          <h3 class="feat-t">WhatsApp en un clic</h3>
-          <p class="feat-d">Botón directo para que el cliente te escriba sin barreras.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">📸</div>
-          <h3 class="feat-t">Galería de platos y ambiente</h3>
-          <p class="feat-d">Fotos reales de tu local que generan deseo antes de la visita.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">⭐</div>
-          <h3 class="feat-t">Reseñas de Google visibles</h3>
-          <p class="feat-d">Tus mejores reseñas destacadas en la web. La prueba social que convierte.</p>
-        </div>
-  </div>
-</section>
-
-<!-- DIVIDER -->
-<div id="propuesta" class="divider">
-  <div class="dv">
-    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
-    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
-    <p>¿Te imaginás tener reservas sin levantar el teléfono?<br>En 5 días podés tener este sitio publicado con tu dominio, tus fotos reales y todas las funciones activas.</p>
+<div id="stats">
+  <div class="ticker">
+    <div class="t-item"><span class="t-num">4.3★</span><span class="t-lbl">Calificación promedio</span></div>
+    <div class="t-item"><span class="t-num">800+</span><span class="t-lbl">Reseñas verificadas</span></div>
+    <div class="t-item"><span class="t-num">1985</span><span class="t-lbl">Fundación</span></div>
+    <div class="t-item"><span class="t-num">40</span><span class="t-lbl">Años en Tandil</span></div>
   </div>
 </div>
 
-<!-- PRICING -->
-<section class="pricing">
-  <div class="pr-hdr">
-    <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
-    <h2 class="s-title">Elegí el plan que te conviene</h2>
-    <p class="s-body">Sin contratos largos. Empezás cuando querés.</p>
+<section id="chalk">
+  <div class="chalk-wrap">
+    <p class="chalk-st reveal">― El menú de la semana ―</p>
+    <h2 class="chalk-t reveal">Cocina de mercado</h2>
+    <div class="chalk-list reveal">
+      <div class="ci"><div><div class="ci-name">Empanadas del fuerte</div><div class="ci-desc">Carne cortada a cuchillo, aceituna y huevo · x6</div></div><span class="ci-price">$4.800</span></div>
+      <div class="ci"><div><div class="ci-name">Locro de invierno</div><div class="ci-desc">Maíz blanco, poroto, chorizo colorado, cuerito</div></div><span class="ci-price">$8.200</span></div>
+      <div class="ci"><div><div class="ci-name">Asado de tira</div><div class="ci-desc">Corte de campo, carbón de quebracho, chimichurri casero</div></div><span class="ci-price">$14.500</span></div>
+      <div class="ci"><div><div class="ci-name">Matambre relleno</div><div class="ci-desc">Con zanahoria, huevo y aceitunas. Salsa criolla</div></div><span class="ci-price">$11.200</span></div>
+      <div class="ci"><div><div class="ci-name">Pastel de papa</div><div class="ci-desc">Carne estofada, puré gratinado, cebolla caramelizada</div></div><span class="ci-price">$9.800</span></div>
+      <div class="ci"><div><div class="ci-name">Budín de pan</div><div class="ci-desc">Con dulce de leche artesanal y crema batida</div></div><span class="ci-price">$3.800</span></div>
+    </div>
+    <p class="chalk-note reveal">* Precios finales con IVA incluido · Menú sujeto a cambios según temporada</p>
   </div>
-  <div class="pr-grid">
-    <div class="pr-card">
-      <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
-      <div class="pr-amt"><sup>USD </sup>450</div>
-      <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Landing page profesional</li><li>Galería y servicios</li>
-        <li>Formulario de contacto</li><li>WhatsApp integrado</li>
-        <li>SEO local Tandil</li><li>Dominio + hosting incluido</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Bodegón+Del+Fuerte+y+me+interesa+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
-    </div>
-    <div class="pr-card pop">
-      <div class="pop-lbl">Más elegido</div>
-      <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
-      <div class="pr-amt"><sup>USD </sup>900</div>
-      <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el plan Presencia</li><li>Secciones completas</li>
-        <li>Blog / novedades</li><li>Google Analytics</li>
-        <li>SEO completo optimizado</li><li>Diseño a medida</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Bodegón+Del+Fuerte+y+me+interesa+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
-    </div>
-    <div class="pr-card">
-      <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
-      <div class="pr-amt"><sup>USD </sup>1.800</div>
-      <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
-      <hr class="pr-div">
-      <ul class="pr-feats">
-        <li>Todo el Sitio Completo</li><li>Turnos / reservas online</li>
-        <li>Panel de gestión propio</li><li>Actualizaciones ilimitadas</li>
-        <li>Soporte prioritario</li>
-      </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Bodegón+Del+Fuerte+y+me+interesa+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
+</section>
+
+<section id="casa">
+  <div class="cont">
+    <p class="sec-lbl reveal">De la casa</p>
+    <h2 class="sec-t reveal">Nuestras especialidades</h2>
+    <div class="np-grid reveal">
+      <div class="np-col"><span class="np-num">I</span><h3 class="np-h">La parrilla de piedra</h3><p class="np-p">Construida en 1987 con piedra pizarra de las sierras de Tandil. Nunca se apagó. La misma brasa que nos vio crecer alimenta cada corte que sale a la mesa.</p><span class="np-tag">Tradición · Parrilla</span></div>
+      <div class="np-col"><span class="np-num">II</span><h3 class="np-h">Los guisos del mediodía</h3><p class="np-p">Cada semana, María prepara el guiso del día. Puede ser de lentejas, de mondongo o de garbanzos. No hay receta escrita — está toda en la memoria.</p><span class="np-tag">Recetas · Memoria</span></div>
+      <div class="np-col"><span class="np-num">III</span><h3 class="np-h">Vinos de la región</h3><p class="np-p">Una selección de bodegas de Mendoza y San Juan elegida por don Alberto. Tintos de cuerpo para los cortes, blancos frescos para los guisos de verano.</p><span class="np-tag">Vinos · Selección</span></div>
+      <div class="np-col"><span class="np-num">IV</span><h3 class="np-h">El pan del bodegón</h3><p class="np-p">Hecho a diario en el horno de barro del patio. Masa madre, corteza crocante y miga aireada. Llega caliente a la mesa con manteca y aceite de oliva.</p><span class="np-tag">Panadería · Artesanal</span></div>
+      <div class="np-col"><span class="np-num">V</span><h3 class="np-h">Postres de la abuela</h3><p class="np-p">El budín de pan, el flan con caramelo y el arroz con leche. Tres recetas que nunca salen del menú porque los clientes no los dejarían salir.</p><span class="np-tag">Postres · Caseros</span></div>
+      <div class="np-col"><span class="np-num">VI</span><h3 class="np-h">Quesos serranos</h3><p class="np-p">Tabla de quesos locales de Tandil — cremoso, provolone estacionado y pategras artesanal, acompañados de membrillo, nueces y pan de campo.</p><span class="np-tag">Quesos · Tandil</span></div>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="final">
-  <div class="final-in">
-    <p class="s-eye" style="text-align:center">¿Hablamos?</p>
-    <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
-    <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — soy de Tandil y armé esta propuesta especialmente para Bodegón Del Fuerte. Si te interesa avanzar, charlamos sin compromiso.</p>
-    <div class="final-btns">
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Bodegón+Del+Fuerte+y+me+interesa" class="btn-wa-big" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Hablar con Santiago
-      </a>
-      <a href="mailto:santiagomfunes@gmail.com?subject=Demo Bodegón Del Fuerte — me interesa" class="btn-mail">✉️ Enviar email</a>
-    </div>
-    <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
+<section id="hist">
+  <div class="pq-wrap">
+    <div class="pq-lines reveal"><span class="pq-line"></span><span class="pq-orn">"</span><span class="pq-line"></span></div>
+    <p class="pq-q reveal">Mi padre abrió este bodegón con una mesa, cuatro sillas y el mejor asado de la cuadra. Hoy somos cuarenta mesas, pero el asado sigue siendo el mismo.</p>
+    <div class="pq-lines reveal"><span class="pq-line"></span><span class="pq-attr">— Carlos Fuerte, segunda generación</span><span class="pq-line"></span></div>
+    <p class="hist-body reveal">El Bodegón Del Fuerte nació en 1985 en una esquina del barrio histórico de Tandil. Lo que empezó como una fonda de barrio se convirtió en el lugar de encuentro de varias generaciones de tandilenses. La misma receta de locro, la misma parrilla, las mismas manos que le dan calor a cada plato.</p>
   </div>
 </section>
 
-<footer>
-  <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
-  <p class="f-copy">© 2025 · Demo para Bodegón Del Fuerte · Tandil, Buenos Aires</p>
-</footer>
+<section id="contacto">
+  <div class="cont">
+    <p class="sec-lbl reveal">Ubicación y reservas</p>
+    <h2 class="sec-t reveal">Encontranos en Tandil</h2>
+    <div class="ct-grid reveal">
+      <div class="ct-info">
+        <p>Abrimos todos los días al mediodía y a la noche. Para grupos grandes, recomendamos reservar con anticipación.</p>
+        <div class="ct-det"><span>Dirección</span><strong>Av. España 1240, Tandil</strong></div>
+        <div class="ct-det"><span>Horario</span><strong>Lun–Dom · 12:00–15:30 · 20:00–23:30</strong></div>
+        <div class="ct-det"><span>Teléfono</span><strong>(0249) 442-8800</strong></div>
+      </div>
+      <div class="ct-box">
+        <h3>Reservar mesa</h3>
+        <p>Escribinos por WhatsApp y te confirmamos disponibilidad en minutos.</p>
+        <a href="https://wa.me/5492494557754" class="wa-btn" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Reservar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
+<section id="propuesta">
+  <div class="prop-in">
+    <span class="prop-badge reveal">Altavista Web</span>
+    <h2 class="prop-t reveal">Tu restaurante merece una presencia digital a la altura</h2>
+    <p class="prop-body reveal">Esta página es un demo creado por <strong>Altavista Web</strong>, agencia de diseño web en Tandil. Diseñamos sitios que convierten visitas en reservas, reflejan el alma de tu negocio y se ven perfectos en cualquier dispositivo.</p>
+    <div class="prop-feats reveal">
+      <span class="f-chip">Diseño profesional</span>
+      <span class="f-chip">Menú online</span>
+      <span class="f-chip">Botón WhatsApp</span>
+      <span class="f-chip">Google My Business</span>
+      <span class="f-chip">100% mobile</span>
+      <span class="f-chip">Entrega en 7 días</span>
+    </div>
+    <a href="https://wa.me/5492494557754" class="prop-cta reveal" target="_blank" rel="noopener">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Quiero mi sitio web
+    </a>
+    <p class="prop-note reveal">Sin costo inicial · Propuesta personalizada en 24hs</p>
+  </div>
+</section>
+
+<footer><p>Demo creada por <a href="https://wa.me/5492494557754" target="_blank">Altavista Web</a> · Tandil, Buenos Aires · 2026</p></footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement,pb=document.getElementById('pb');
+  pb.style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+});
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.getElementById('ham').addEventListener('click',()=>document.getElementById('mobmenu').classList.toggle('open'));
+document.querySelectorAll('.mob-menu a').forEach(a=>a.addEventListener('click',()=>document.getElementById('mobmenu').classList.remove('open')));
+</script>
 </body>
 </html>

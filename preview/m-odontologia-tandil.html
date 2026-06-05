@@ -3,141 +3,509 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>M odontologia Tandil — Demo de tu nueva web | Altavista Web</title>
+  <title>M odontologia Tandil — Consultorio · Tandil</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--char:#1A1A1A;--stone:#6B6560;--cream:#F5F0E8;--warm:#FAFAF8;--gold:#B8954A;--border:#E5DDD0;--white:#fff;--navy:#08111C;--yellow:#F4C430}
-    html{scroll-behavior:smooth}
-    body{font-family:'Inter',sans-serif;background:var(--warm);color:var(--char)}
-
-    /* AGENCY BAR */
-    .ab{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;gap:16px}
-    .ab-l{display:flex;align-items:center;gap:10px}
-    .ab-badge{background:var(--yellow);color:var(--navy);padding:2px 9px;border-radius:4px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-    .ab-text{color:rgba(255,255,255,.7);font-size:13px}
-    .ab-text strong{color:#fff}
-    .ab-cta{background:var(--yellow);color:var(--navy);text-decoration:none;padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
-    .ab-cta:hover{opacity:.85}
-
-    /* HERO */
-    .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;background:#111;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.38)}
-    .hero-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:32px 60px}
-    .logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff}
-    .logo small{display:block;font-family:'Inter',sans-serif;font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:3px}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;transition:color .2s}
-    .nav-links a:hover{color:#fff}
-    .hero-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 60px 100px;max-width:680px}
-    .eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,66px);font-weight:400;color:#fff;line-height:1.12;margin-bottom:20px}
-    .hero-sub{font-size:16px;line-height:1.75;color:rgba(255,255,255,.58);max-width:460px;margin-bottom:36px}
-    .hero-ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-    .hero-meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px}
-    .hero-pill{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);padding:6px 14px;border-radius:20px;font-size:12px;backdrop-filter:blur(4px)}
-
-    /* BUTTONS */
-    .btn-g{background:var(--gold);color:#fff;padding:13px 26px;border-radius:2px;text-decoration:none;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-g:hover{background:#9E7D3F}
-    .btn-wa{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:13px 22px;border-radius:2px;font-size:13px;font-weight:600;transition:background .2s}
-    .btn-wa:hover{background:#1BBE5A}
-    .btn-ghost{color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px}
-    .btn-ghost:hover{color:#fff}
-
-    /* INFO SECTION */
-    .info-sec{background:var(--white);padding:72px 60px}
-    .info-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-    .s-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:12px}
-    .s-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.2;color:var(--char);margin-bottom:14px}
-    .s-body{font-size:15px;line-height:1.8;color:var(--stone);margin-bottom:24px}
-    .info-list{display:flex;flex-direction:column;gap:16px}
-    .info-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--warm);border-radius:4px}
-    .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-    .info-item strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
-    .info-item span{font-size:13px;color:var(--stone);line-height:1.4}
-    .rating-box{background:var(--char);color:#fff;padding:28px;border-radius:4px;text-align:center}
-    .rating-big{font-family:'Playfair Display',serif;font-size:60px;font-weight:600;line-height:1;color:var(--yellow)}
-    .rating-stars{font-size:20px;margin:8px 0}
-    .rating-label{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase}
-
-    /* FEATURES */
-    .features{background:var(--warm);padding:72px 60px}
-    .feat-header{max-width:560px;margin-bottom:48px}
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1200px;margin:0 auto}
-    .feat{background:#fff;border:1px solid var(--border);padding:28px 22px;border-radius:4px;position:relative;transition:border-color .2s,box-shadow .2s}
-    .feat:hover{border-color:var(--gold);box-shadow:0 4px 18px rgba(184,149,74,.08)}
-    .feat-tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px}
-    .t-inc{background:#E8F5E9;color:#2E7D32}
-    .t-pro{background:rgba(184,149,74,.12);color:var(--gold)}
-    .feat-ico{font-size:26px;margin-bottom:12px}
-    .feat-t{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;margin-bottom:7px;color:var(--char)}
-    .feat-d{font-size:13px;color:var(--stone);line-height:1.6}
-
-    /* DIVIDER PITCH */
-    .divider{background:var(--navy);padding:72px 60px;text-align:center;position:relative;overflow:hidden}
-    .divider::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%)}
-    .dv{position:relative;z-index:1;max-width:700px;margin:0 auto}
-    .dv-badge{display:inline-block;background:rgba(244,196,48,.12);color:var(--yellow);border:1px solid rgba(244,196,48,.25);padding:5px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
-    .dv h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);color:#fff;font-weight:400;line-height:1.3;margin-bottom:12px}
-    .dv h2 em{color:var(--yellow);font-style:normal}
-    .dv p{color:rgba(255,255,255,.5);font-size:15px;line-height:1.7}
-
-    /* PRICING */
-    .pricing{background:var(--char);padding:72px 60px}
-    .pr-hdr{text-align:center;margin-bottom:48px}
-    .pr-hdr .s-title{color:#fff}
-    .pr-hdr .s-body{color:rgba(255,255,255,.4);margin:0 auto;text-align:center}
-    .pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1100px;margin:0 auto}
-    .pr-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);padding:32px 24px;border-radius:4px;position:relative}
-    .pr-card.pop{background:rgba(244,196,48,.07);border-color:rgba(244,196,48,.35)}
-    .pop-lbl{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--yellow);color:var(--navy);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 14px;border-radius:10px;white-space:nowrap}
-    .pr-tier{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px}
-    .pr-card.pop .pr-tier{color:var(--yellow)}
-    .pr-name{font-family:'Playfair Display',serif;font-size:22px;color:#fff;font-weight:500;margin-bottom:16px}
-    .pr-amt{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:#fff}
-    .pr-amt sup{font-size:15px;vertical-align:super}
-    .pr-mo{font-size:12px;color:rgba(255,255,255,.38);margin-top:4px;margin-bottom:16px}
-    .pr-div{border:none;border-top:1px solid rgba(255,255,255,.08);margin:16px 0}
-    .pr-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-    .pr-feats li{font-size:12px;color:rgba(255,255,255,.58);display:flex;align-items:flex-start;gap:6px}
-    .pr-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
-    .btn-pr{display:block;text-align:center;padding:11px;border-radius:2px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s}
-    .btn-wh{border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
-    .btn-wh:hover{border-color:rgba(255,255,255,.45);color:#fff}
-    .btn-gy{background:var(--yellow);color:var(--navy)}
-    .btn-gy:hover{opacity:.9}
-
-    /* CTA */
-    .final{background:var(--warm);padding:72px 60px;text-align:center}
-    .final-in{max-width:560px;margin:0 auto}
-    .final-in .s-title{margin-bottom:12px}
-    .final-in .s-body{margin:0 auto 28px;text-align:center}
-    .final-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-    .btn-wa-big{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:14px 22px;border-radius:4px;font-size:14px;font-weight:600;transition:background .2s}
-    .btn-wa-big:hover{background:#1BBE5A}
-    .btn-mail{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--char);text-decoration:none;padding:14px 22px;border-radius:4px;border:1px solid var(--border);font-size:14px;font-weight:600;transition:border-color .2s}
-    .btn-mail:hover{border-color:var(--char)}
-    .final-note{margin-top:22px;font-size:12px;color:var(--stone)}
-
-    footer{background:var(--char);padding:24px 60px;display:flex;justify-content:space-between;align-items:center}
-    .f-brand{font-family:'Playfair Display',serif;font-size:16px;color:var(--yellow)}
-    .f-brand small{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,.25);display:block}
-    .f-copy{font-size:12px;color:rgba(255,255,255,.25)}
-
-    @media(max-width:960px){
-      .hero-nav{padding:24px}.nav-links{display:none}.hero-body{padding:40px 24px 80px}
-      .info-sec{padding:56px 24px}.info-inner{grid-template-columns:1fr;gap:40px}
-      .features{padding:56px 24px}.feat-grid{grid-template-columns:1fr 1fr}
-      .divider{padding:56px 24px}.pricing{padding:56px 24px}.pr-grid{grid-template-columns:1fr}
-      .final{padding:56px 24px}footer{padding:20px;flex-direction:column;gap:10px;text-align:center}
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --accent:     #1D4ED8;
+      --accent-rgb: 29,78,216;
+      --accent-lt:  #DBEAFE;
+      --dark:  #0A0A0A;
+      --dark2: #111111;
+      --mid:   #1C1C1C;
+      --stone: #6B6560;
+      --warm:  #F9F7F4;
+      --white: #FFFFFF;
+      --border:#E8E2D9;
+      --navy:  #07101C;
+      --gold:  #C9A84C;
+      --yellow:#F4C430;
     }
-    @media(max-width:580px){.feat-grid{grid-template-columns:1fr}}
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--white); color:var(--dark); -webkit-font-smoothing:antialiased; }
+
+    /* ── AGENCY BAR ─────────────────────────────── */
+    .ab {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      background:rgba(7,16,28,0.96); backdrop-filter:blur(8px);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:9px 32px; gap:12px;
+    }
+    .ab-l { display:flex; align-items:center; gap:10px; }
+    .ab-badge {
+      background:var(--yellow); color:var(--navy);
+      padding:2px 10px; border-radius:3px;
+      font-size:9px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;
+    }
+    .ab-text { color:rgba(255,255,255,.55); font-size:12px; }
+    .ab-text strong { color:rgba(255,255,255,.85); font-weight:500; }
+    .ab-cta {
+      background:var(--accent); color:#fff;
+      text-decoration:none; padding:6px 16px; border-radius:3px;
+      font-size:11px; font-weight:600; letter-spacing:.3px; white-space:nowrap;
+      transition:opacity .2s;
+    }
+    .ab-cta:hover { opacity:.85; }
+
+    /* ── HERO ───────────────────────────────────── */
+    .hero {
+      position:relative;
+      height:100vh; min-height:640px;
+      display:flex; flex-direction:column;
+      overflow:hidden;
+      background:var(--dark2);
+    }
+    .hero-img {
+      position:absolute; inset:0;
+      background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAG8ADvhKc3UwxDlW0jKUtV63OMfC-Y-RFqI_4pz6MTqoAsfyKR_GteNM0mHS-k5H9VvllAE3j9scs2_GYerMxnHfl6gaoKuUlY157o8vR-QQuPRMgIMXYUVS-YON5x2NzunoHiLOg=w408-h351-k-no=w1600-h1067-k-no');
+      background-size:cover; background-position:center;
+      will-change:transform;
+    }
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,.05) 0%,
+        rgba(0,0,0,.15) 35%,
+        rgba(0,0,0,.6)  65%,
+        rgba(0,0,0,.88) 100%
+      );
+    }
+    .hero-overlay-side {
+      position:absolute; inset:0;
+      background:linear-gradient(
+        to right,
+        rgba(0,0,0,.35) 0%,
+        transparent 60%
+      );
+    }
+
+    /* NAV */
+    .hero-nav {
+      position:relative; z-index:2;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:0 56px;
+      height:76px; margin-top:40px;
+    }
+    .nav-logo {
+      font-family:'Cormorant Garamond',serif;
+      font-size:22px; font-weight:500; color:#fff;
+      letter-spacing:.5px; text-decoration:none;
+    }
+    .nav-logo small {
+      display:block; font-family:'Inter',sans-serif;
+      font-size:8.5px; font-weight:400; letter-spacing:3px;
+      text-transform:uppercase; color:rgba(255,255,255,.35);
+      margin-top:2px;
+    }
+    .nav-links { display:flex; gap:28px; list-style:none; }
+    .nav-links a {
+      color:rgba(255,255,255,.6); text-decoration:none;
+      font-size:13px; font-weight:400; letter-spacing:.3px;
+      transition:color .2s;
+    }
+    .nav-links a:hover { color:#fff; }
+    .nav-cta {
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      color:#fff; text-decoration:none;
+      padding:9px 20px; border-radius:3px;
+      font-size:12px; font-weight:500; letter-spacing:.3px;
+      backdrop-filter:blur(4px); transition:background .2s, border-color .2s;
+    }
+    .nav-cta:hover { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.4); }
+
+    /* HERO BODY */
+    .hero-body {
+      position:absolute; z-index:2;
+      bottom:0; left:0; right:0;
+      padding:0 56px 72px;
+    }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:8px;
+      margin-bottom:18px;
+    }
+    .eyebrow-line {
+      width:28px; height:1px; background:var(--accent); opacity:.8;
+    }
+    .eyebrow-text {
+      font-size:11px; font-weight:500; letter-spacing:3px;
+      text-transform:uppercase; color:var(--accent);
+    }
+    .hero-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(44px,7vw,96px);
+      font-weight:500; color:#fff; line-height:1.05;
+      margin-bottom:18px; max-width:800px;
+    }
+    .hero-sub {
+      font-size:15px; line-height:1.7;
+      color:rgba(255,255,255,.55);
+      max-width:480px; margin-bottom:36px;
+    }
+    .hero-actions {
+      display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    }
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--accent); color:#fff;
+      text-decoration:none; padding:14px 28px; border-radius:3px;
+      font-size:13px; font-weight:600; letter-spacing:.3px;
+      transition:opacity .2s;
+    }
+    .btn-primary:hover { opacity:.88; }
+    .btn-outline {
+      display:inline-flex; align-items:center; gap:6px;
+      border:1px solid rgba(255,255,255,.3); color:rgba(255,255,255,.75);
+      text-decoration:none; padding:13px 24px; border-radius:3px;
+      font-size:13px; font-weight:400;
+      transition:border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color:rgba(255,255,255,.65); color:#fff; }
+
+    /* HERO BADGE */
+    .hero-rating {
+      position:absolute; z-index:2;
+      top:50%; right:56px; transform:translateY(-50%);
+      background:rgba(255,255,255,.08); backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:8px; padding:18px 22px;
+      text-align:center; min-width:130px;
+    }
+    .hr-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:44px; font-weight:600; color:#fff; line-height:1;
+    }
+    .hr-stars { font-size:16px; color:#FBBF24; margin:6px 0 4px; letter-spacing:2px; }
+    .hr-lbl { font-size:10px; color:rgba(255,255,255,.35); letter-spacing:1.5px; text-transform:uppercase; }
+
+    /* ── SERVICES ───────────────────────────────── */
+    .services {
+      padding:96px 56px; background:var(--white);
+    }
+    .sec-header {
+      max-width:560px; margin-bottom:56px;
+    }
+    .sec-eye {
+      font-size:10px; letter-spacing:4px; text-transform:uppercase;
+      color:var(--accent); font-weight:600; margin-bottom:12px;
+    }
+    .sec-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(28px,3.5vw,48px); font-weight:500;
+      line-height:1.2; color:var(--dark);
+    }
+    .svc-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
+      background:var(--border);
+    }
+    .svc-card {
+      background:var(--white);
+      padding:36px 28px;
+      transition:background .25s;
+    }
+    .svc-card:hover { background:var(--warm); }
+    .svc-icon {
+      font-size:32px; margin-bottom:18px;
+      display:block;
+    }
+    .svc-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:19px; font-weight:500; color:var(--dark);
+      margin-bottom:10px; line-height:1.3;
+    }
+    .svc-desc {
+      font-size:13px; color:var(--stone); line-height:1.7;
+    }
+
+    /* ── ABOUT ──────────────────────────────────── */
+    .about {
+      padding:96px 56px; background:var(--warm);
+    }
+    .about-inner {
+      max-width:1140px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start;
+    }
+    .about-copy {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(22px,2.5vw,32px); font-weight:400;
+      line-height:1.55; color:var(--dark); margin-bottom:28px;
+      font-style:italic;
+    }
+    .about-body {
+      font-size:14.5px; line-height:1.85; color:var(--stone); margin-bottom:32px;
+    }
+    .about-cta {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--dark); color:#fff;
+      text-decoration:none; padding:13px 24px; border-radius:3px;
+      font-size:13px; font-weight:500;
+      transition:background .2s;
+    }
+    .about-cta:hover { background:var(--accent); }
+    .info-stack { display:flex; flex-direction:column; gap:14px; }
+    .info-chip {
+      display:flex; align-items:flex-start; gap:14px;
+      background:var(--white); border:1px solid var(--border);
+      border-radius:6px; padding:16px 18px;
+      box-shadow:0 1px 4px rgba(0,0,0,.04);
+    }
+    .info-chip > span { font-size:18px; flex-shrink:0; margin-top:1px; }
+    .info-chip strong {
+      display:block; font-size:11px; font-weight:600; letter-spacing:.5px;
+      text-transform:uppercase; color:var(--stone); margin-bottom:3px;
+    }
+    .info-chip p { font-size:13.5px; color:var(--dark); line-height:1.45; }
+    .rating-big {
+      background:var(--dark); border-radius:8px; padding:36px;
+      text-align:center; margin-top:14px;
+    }
+    .rb-num {
+      font-family:'Cormorant Garamond',serif;
+      font-size:80px; font-weight:600; line-height:1; color:var(--yellow);
+    }
+    .rb-stars { font-size:24px; color:#FBBF24; margin:10px 0 6px; letter-spacing:3px; }
+    .rb-lbl { font-size:10px; color:rgba(255,255,255,.3); letter-spacing:2px; text-transform:uppercase; }
+
+    /* ── STAT STRIP ─────────────────────────────── */
+    .stat-strip {
+      background:var(--dark); padding:48px 56px;
+      display:grid; grid-template-columns:repeat(3,1fr);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+    .sst {
+      padding:0 32px;
+      border-right:1px solid rgba(255,255,255,.08);
+      text-align:center;
+    }
+    .sst:last-child { border-right:none; }
+    .sst-val {
+      font-family:'Cormorant Garamond',serif;
+      font-size:52px; font-weight:500; line-height:1; color:var(--yellow);
+      margin-bottom:8px; display:block;
+    }
+    .sst-lbl { font-size:12px; color:rgba(255,255,255,.35); line-height:1.5; }
+
+    /* ── HOURS ──────────────────────────────────── */
+    .hours-sec {
+      padding:72px 56px; background:var(--white);
+      display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;
+      max-width:100%;
+    }
+    .hours-label {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(26px,3vw,40px); font-weight:400; line-height:1.3;
+      color:var(--dark); margin-bottom:28px;
+    }
+    .hours-list {
+      list-style:none; display:flex; flex-direction:column; gap:8px;
+    }
+    .hours-list li {
+      font-size:13.5px; color:var(--stone);
+      padding:10px 0; border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between;
+    }
+    .contact-card {
+      background:var(--warm); border:1px solid var(--border);
+      border-radius:10px; padding:40px 36px;
+    }
+    .cc-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:22px; font-weight:500; margin-bottom:24px; color:var(--dark);
+    }
+    .cc-btns { display:flex; flex-direction:column; gap:10px; }
+    .btn-wa-full {
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      background:#25D366; color:#fff; text-decoration:none;
+      padding:14px 20px; border-radius:5px;
+      font-size:13px; font-weight:600;
+      transition:background .2s;
+    }
+    .btn-wa-full:hover { background:#1fbd59; }
+    .btn-dark-outline {
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--border); color:var(--dark);
+      text-decoration:none; padding:13px 20px; border-radius:5px;
+      font-size:13px; font-weight:500;
+      transition:border-color .2s;
+    }
+    .btn-dark-outline:hover { border-color:var(--dark); }
+
+    /* ── DIVIDER / REVEAL ───────────────────────── */
+    .reveal {
+      background:var(--accent); padding:72px 56px; text-align:center;
+      position:relative; overflow:hidden;
+    }
+    .reveal::before {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg,rgba(0,0,0,.25) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .rv { position:relative; z-index:1; max-width:680px; margin:0 auto; }
+    .rv-pill {
+      display:inline-block;
+      background:rgba(255,255,255,.15); color:#fff;
+      padding:5px 18px; border-radius:20px;
+      font-size:10px; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; margin-bottom:24px;
+    }
+    .rv h2 {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(28px,4vw,48px); font-weight:400;
+      color:#fff; line-height:1.25; margin-bottom:14px;
+    }
+    .rv p { font-size:15px; line-height:1.75; color:rgba(255,255,255,.7); }
+
+    /* ── PRICING ────────────────────────────────── */
+    .pricing {
+      background:var(--dark2); padding:96px 56px;
+    }
+    .pr-hdr {
+      text-align:center; max-width:500px; margin:0 auto 56px;
+    }
+    .pr-hdr .sec-eye { color:rgba(201,168,76,.7); }
+    .pr-hdr .sec-title { color:#fff; }
+    .pr-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:16px; max-width:960px; margin:0 auto;
+      align-items:start;
+    }
+    .pr-card {
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:8px; padding:36px 28px; position:relative;
+      transition:border-color .2s;
+    }
+    .pr-card:hover { border-color:rgba(255,255,255,.18); }
+    .pr-card.pop {
+      background:rgba(var(--accent-rgb),.08);
+      border-color:rgba(var(--accent-rgb),.4);
+    }
+    .pop-badge {
+      position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+      background:var(--accent); color:#fff;
+      font-size:9px; font-weight:800; letter-spacing:1.2px;
+      text-transform:uppercase; padding:4px 14px; border-radius:10px;
+      white-space:nowrap;
+    }
+    .pr-tier {
+      font-size:9px; letter-spacing:2.5px; text-transform:uppercase;
+      color:rgba(255,255,255,.25); margin-bottom:6px;
+    }
+    .pr-card.pop .pr-tier { color:var(--accent); opacity:.8; }
+    .pr-name {
+      font-family:'Cormorant Garamond',serif;
+      font-size:24px; font-weight:500; color:#fff; margin-bottom:20px;
+    }
+    .pr-price { display:flex; align-items:flex-end; gap:4px; margin-bottom:5px; }
+    .pr-cur { font-size:14px; color:rgba(255,255,255,.4); padding-bottom:6px; }
+    .pr-amt {
+      font-family:'Cormorant Garamond',serif;
+      font-size:46px; font-weight:600; line-height:1; color:#fff;
+    }
+    .pr-recur {
+      font-size:11px; color:rgba(255,255,255,.28); margin-bottom:24px;
+    }
+    .pr-divider { border:none; border-top:1px solid rgba(255,255,255,.07); margin:20px 0; }
+    .pr-feats {
+      list-style:none; display:flex; flex-direction:column;
+      gap:10px; margin-bottom:28px;
+    }
+    .pr-feats li {
+      font-size:12.5px; color:rgba(255,255,255,.5);
+      display:flex; align-items:flex-start; gap:8px; line-height:1.4;
+    }
+    .pr-feats li::before { content:'✓'; color:var(--accent); font-weight:700; flex-shrink:0; }
+    .pr-btn {
+      display:block; text-align:center;
+      padding:12px 20px; border-radius:4px;
+      font-size:13px; font-weight:600;
+      text-decoration:none; transition:all .2s;
+    }
+    .pr-ghost {
+      border:1px solid rgba(255,255,255,.15);
+      color:rgba(255,255,255,.55);
+    }
+    .pr-ghost:hover { border-color:rgba(255,255,255,.4); color:#fff; }
+    .pr-fill {
+      background:var(--accent); color:#fff; border:1px solid var(--accent);
+    }
+    .pr-fill:hover { opacity:.88; }
+
+    /* ── FINAL CTA ──────────────────────────────── */
+    .final {
+      padding:96px 56px; background:var(--warm); text-align:center;
+    }
+    .final-inner { max-width:540px; margin:0 auto; }
+    .final-title {
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(30px,4vw,50px); font-weight:400;
+      line-height:1.25; color:var(--dark); margin-bottom:14px;
+    }
+    .final-sub {
+      font-size:14.5px; line-height:1.8; color:var(--stone); margin-bottom:36px;
+    }
+    .final-btns { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+    .btn-wa-final {
+      display:inline-flex; align-items:center; gap:9px;
+      background:#25D366; color:#fff;
+      text-decoration:none; padding:15px 28px; border-radius:4px;
+      font-size:14px; font-weight:600; transition:background .2s;
+    }
+    .btn-wa-final:hover { background:#1fbd59; }
+    .btn-secondary {
+      display:inline-flex; align-items:center;
+      border:1px solid var(--border); color:var(--dark);
+      text-decoration:none; padding:14px 24px; border-radius:4px;
+      font-size:13px; font-weight:500; transition:border-color .2s;
+    }
+    .btn-secondary:hover { border-color:var(--dark); }
+    .final-note {
+      margin-top:20px; font-size:11.5px; color:rgba(107,101,96,.6);
+    }
+
+    /* ── FOOTER ─────────────────────────────────── */
+    footer {
+      background:var(--dark); padding:24px 56px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .f-brand {
+      font-family:'Cormorant Garamond',serif;
+      font-size:16px; font-weight:500; color:var(--yellow);
+    }
+    .f-brand small {
+      display:block; font-family:'Inter',sans-serif;
+      font-size:9px; color:rgba(255,255,255,.2); margin-top:2px; letter-spacing:1px;
+    }
+    .f-copy { font-size:11px; color:rgba(255,255,255,.18); }
+
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media(max-width:1024px) {
+      .hero-nav { padding:0 32px; }
+      .hero-body { padding:0 32px 56px; }
+      .hero-rating { display:none; }
+      .services, .about, .stat-strip, .hours-sec, .pricing, .final, .reveal { padding-left:32px; padding-right:32px; }
+      .svc-grid { grid-template-columns:1fr 1fr; }
+      .about-inner { grid-template-columns:1fr; gap:40px; }
+      .stat-strip { grid-template-columns:1fr; gap:32px; }
+      .sst { border-right:none; border-bottom:1px solid rgba(255,255,255,.08); padding:0 0 24px; text-align:left; }
+      .sst:last-child { border-bottom:none; }
+      .hours-sec { grid-template-columns:1fr; gap:32px; }
+      .pr-grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:640px) {
+      .hero-title { font-size:clamp(36px,10vw,56px); }
+      .svc-grid { grid-template-columns:1fr; gap:0; }
+      .nav-links { display:none; }
+      footer { flex-direction:column; gap:8px; text-align:center; padding:20px 24px; }
+    }
   </style>
 </head>
 <body>
 
+<!-- AGENCY BAR -->
 <div class="ab">
   <div class="ab-l">
     <span class="ab-badge">Demo gratuita</span>
@@ -148,175 +516,204 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg" style="background-image:url('https://lh3.googleusercontent.com/gps-cs-s/APNQkAG8ADvhKc3UwxDlW0jKUtV63OMfC-Y-RFqI_4pz6MTqoAsfyKR_GteNM0mHS-k5H9VvllAE3j9scs2_GYerMxnHfl6gaoKuUlY157o8vR-QQuPRMgIMXYUVS-YON5x2NzunoHiLOg=w408-h351-k-no')"></div>
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-overlay-side"></div>
+
   <nav class="hero-nav">
-    <div class="logo">M odontologia Tandil<small>Consultorio · Tandil</small></div>
-    <ul class="nav-links">
-      <li><a href="#">Inicio</a></li>
-      <li><a href="#">Servicios</a></li>
-      <li><a href="#">Nosotros</a></li>
-      <li><a href="#">Contacto</a></li>
-    </ul>
+    <a href="#" class="nav-logo">M odontologia Tandil<small>Consultorio · Tandil</small></a>
+    <ul class="nav-links"><li><a href="#">Tratamientos</a></li><li><a href="#">Equipo</a></li><li><a href="#">Turnos</a></li><li><a href="#">Contacto</a></li></ul>
+    <a href="https://wa.me/549542494655969" class="nav-cta" target="_blank">Pedir turno</a>
   </nav>
+
+  <div class="hero-rating">
+    <div class="hr-num">5</div>
+    <div class="hr-stars">★★★★★</div>
+    <div class="hr-lbl">Google Maps</div>
+  </div>
+
   <div class="hero-body">
-    <p class="eyebrow">Montevideo 1078, B7000 Tandil, Provincia de Buenos Aires, Argentina</p>
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Dentista</span>
+    </div>
     <h1 class="hero-title">M odontologia Tandil</h1>
     <p class="hero-sub">Más pacientes te buscan online de lo que creés.</p>
-    <div class="hero-ctas">
-      <a href="https://wa.me/542494655969" class="btn-wa" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Escribinos
-      </a>
-      <a href="#propuesta" class="btn-ghost">Ver propuesta →</a>
-    </div>
-    <div class="hero-meta">
-      <span class="hero-pill">⭐ 5 en Google</span>
-      <span class="hero-pill">📍 Montevideo 1078, B7000 Tandil, Prov</span>
-      <span class="hero-pill">🕐 miércoles: 8 AM to 7 PM · jueves: 8 AM t</span>
+    <div class="hero-actions">
+      <a href="https://wa.me/549542494655969" class="btn-primary" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg> Pedir turno</a>
+      <a href="#servicios" class="btn-outline">Ver servicios ↓</a>
     </div>
   </div>
 </section>
 
-<!-- INFO -->
-<section class="info-sec">
-  <div class="info-inner">
+<!-- SERVICES -->
+<section id="servicios" class="services">
+  <div class="sec-header">
+    <p class="sec-eye">Servicios</p>
+    <h2 class="sec-title">Lo que ofrecemos</h2>
+  </div>
+  <div class="svc-grid">
+        <div class="svc-card">
+          <div class="svc-icon">🦷</div>
+          <h3 class="svc-title">Odontología general</h3>
+          <p class="svc-desc">Revisaciones, limpiezas, obturaciones y tratamientos preventivos.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">✨</div>
+          <h3 class="svc-title">Estética dental</h3>
+          <p class="svc-desc">Blanqueamiento, carillas y sonrisa de diseño.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">🔩</div>
+          <h3 class="svc-title">Implantes</h3>
+          <p class="svc-desc">Reemplazo definitivo de piezas dentales con tecnología de última generación.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">📐</div>
+          <h3 class="svc-title">Ortodoncia</h3>
+          <p class="svc-desc">Brackets tradicionales y alineadores transparentes Invisalign.</p>
+        </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-inner">
     <div>
-      <p class="s-eye">Quiénes somos</p>
-      <h2 class="s-title">M odontologia Tandil</h2>
-      <p class="s-body">El 77% de los pacientes busca profesionales de salud en Google antes de elegir. Una web profesional con tus especialidades, equipo y turnos online te pone adelante desde el primer resultado.</p>
-      <div class="info-list">
-        <div class="info-item"><div class="info-icon">📍</div><div><strong>Dirección</strong><span>Montevideo 1078, B7000 Tandil, Provincia de Buenos Aires, Argentina</span></div></div>
-        <div class="info-item"><div class="info-icon">📞</div><div><strong>Teléfono</strong><span>+54 249 465-5969</span></div></div>
-        <div class="info-item"><div class="info-icon">🕐</div><div><strong>Horario</strong><span>miércoles: 8 AM to 7 PM · jueves: 8 AM to 7 PM</span></div></div>
-        <div class="info-item"><div class="info-icon">📷</div><div><strong>Categoría</strong><span>Dentista</span></div></div>
-      </div>
+      <p class="sec-eye">Nosotros</p>
+      <p class="about-copy">"Tu salud, nuestra prioridad"</p>
+      <p class="about-body">M odontologia Tandil es uno de los mejores referentes de dentista en Tandil, con 5 puntos en Google. Cada detalle está pensado para brindar la mejor experiencia posible.<br><br>
+        Nos encontrás en <strong>Montevideo 1078, B7000 Tandil, Provincia de Buenos Aires, Argentina</strong>.
+         · <strong>+54 249 465-5969</strong>
+      </p>
+      <a href="https://wa.me/549542494655969" class="about-cta" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg> Contactar por WhatsApp</a>
     </div>
     <div>
-      <div class="rating-box">
-        <div class="rating-big">5</div>
-        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-        <div class="rating-label">Calificación en Google</div>
+      <div class="info-stack">
+        <div class="info-chip"><span>📍</span><div><strong>Dirección</strong><p>Montevideo 1078, B7000 Tandil, Provincia de Buenos Aires, Argentina</p></div></div><div class="info-chip"><span>📞</span><div><strong>Teléfono</strong><p>+54 249 465-5969</p></div></div><div class="info-chip"><span>🕐</span><div><strong>Horarios</strong><p>miércoles: 8 AM to 7 PM · jueves: 8 AM to 7 PM</p></div></div>
+      </div>
+      <div class="rating-big">
+        <div class="rb-num">5</div>
+        <div class="rb-stars">★★★★★</div>
+        <div class="rb-lbl">Calificación en Google Maps</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="feat-header" style="max-width:1200px;margin:0 auto 48px">
-    <p class="s-eye">Lo que incluiría tu web</p>
-    <h2 class="s-title">Funciones pensadas para tu negocio</h2>
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="sst">
+    <span class="sst-val">80%</span>
+    <span class="sst-lbl">de los pacientes busca su dentista en Google antes de llamar</span>
   </div>
-  <div class="feat-grid">
+  <div class="sst">
+    <span class="sst-val">5 días</span>
+    <span class="sst-lbl">Para tener tu sitio web publicado y activo</span>
+  </div>
+  <div class="sst">
+    <span class="sst-val">1</span>
+    <span class="sst-lbl">Sitio web actual — mejorable con una propuesta profesional</span>
+  </div>
+</div>
+
+<!-- HORARIOS Y CONTACTO -->
+<section class="hours-sec">
+  <div>
+    <p class="sec-eye">Horarios</p>
+    <h2 class="hours-label">Cuando estamos<br>para vos</h2>
+    <ul class="hours-list"><li>miércoles: 8 AM to 7 PM · jueves: 8 AM to 7 PM</li></ul>
+  </div>
+  <div>
+    <div class="contact-card">
+      <h3 class="cc-title">¿Querés comunicarte?</h3>
+      <div class="cc-btns">
+        <a href="https://wa.me/549542494655969" class="btn-wa-full" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg> Escribir por WhatsApp</a>
+        <a href="tel:+54 249 465-5969" class="btn-dark-outline">📞 Llamar: +54 249 465-5969</a>
+        <a href="https://maps.google.com/?q=Montevideo+1078,+B7000+Tandil,+Provincia+de+Buenos+Aires,+Argentina,+Tandil" class="btn-dark-outline" target="_blank">📍 Ver en Google Maps</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVEAL / PITCH -->
+<div id="propuesta" class="reveal">
+  <div class="rv">
+    <span class="rv-pill">📋 Propuesta de Altavista Web</span>
+    <h2>Lo que acabás de ver<br>es la demo de tu nueva web</h2>
+    <p>¿Querés que tus pacientes te encuentren antes que a la competencia?<br>
     
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📋</div>
-          <h3 class="feat-t">Servicios y especialidades</h3>
-          <p class="feat-d">Describí claramente qué hacés para que el paciente llegue sabiendo qué esperar.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">📅</div>
-          <h3 class="feat-t">Turnos online</h3>
-          <p class="feat-d">Pedido de turno directo desde la web, con confirmación por WhatsApp.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">👨‍⚕️</div>
-          <h3 class="feat-t">Perfil del profesional</h3>
-          <p class="feat-d">Tu formación, experiencia y certificaciones. La confianza empieza antes de la consulta.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-inc">Incluido</span>
-          <div class="feat-ico">💬</div>
-          <h3 class="feat-t">WhatsApp integrado</h3>
-          <p class="feat-d">Consultas previas y confirmación de turnos en un clic.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">📍</div>
-          <h3 class="feat-t">Ubicación exacta</h3>
-          <p class="feat-d">Dirección, horario de atención y cómo llegar — sin excusas para no ir.</p>
-        </div>
-        <div class="feat">
-          <span class="feat-tag t-pro">Pro</span>
-          <div class="feat-ico">⭐</div>
-          <h3 class="feat-t">Reseñas verificadas</h3>
-          <p class="feat-d">Las opiniones de tus pacientes actuales que convencen a los nuevos.</p>
-        </div>
-  </div>
-</section>
-
-<!-- DIVIDER -->
-<div id="propuesta" class="divider">
-  <div class="dv">
-    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
-    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
-    <p>¿Querés que tus pacientes te encuentren antes que a la competencia?<br>En 5 días podés tener este sitio publicado con tu dominio, tus fotos reales y todas las funciones activas.</p>
+    Podés tener este sitio publicado en 5 días hábiles, con tu dominio, tus fotos reales y todas las funciones activas.</p>
   </div>
 </div>
 
 <!-- PRICING -->
 <section class="pricing">
   <div class="pr-hdr">
-    <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
-    <h2 class="s-title">Elegí el plan que te conviene</h2>
-    <p class="s-body">Sin contratos largos. Empezás cuando querés.</p>
+    <p class="sec-eye" style="color:rgba(201,168,76,.65)">Inversión</p>
+    <h2 class="sec-title">Elegí el plan<br>que te conviene</h2>
   </div>
   <div class="pr-grid">
     <div class="pr-card">
-      <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
-      <div class="pr-amt"><sup>USD </sup>450</div>
-      <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
-      <hr class="pr-div">
+      <p class="pr-tier">Starter</p>
+      <h3 class="pr-name">Presencia</h3>
+      <div class="pr-price"><span class="pr-cur">USD</span><span class="pr-amt">450</span></div>
+      <p class="pr-recur">+ USD 60 / mes</p>
+      <hr class="pr-divider">
       <ul class="pr-feats">
-        <li>Landing page profesional</li><li>Galería y servicios</li>
-        <li>Formulario de contacto</li><li>WhatsApp integrado</li>
-        <li>SEO local Tandil</li><li>Dominio + hosting incluido</li>
+        <li>Landing page profesional</li>
+        <li>Galería y servicios</li>
+        <li>Formulario de contacto</li>
+        <li>WhatsApp integrado</li>
+        <li>SEO local Tandil</li>
+        <li>Dominio + hosting incluido</li>
       </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+M+odontologia+Tandil+y+me+interesa+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
+      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+M+odontologia+Tandil+y+me+interesa+plan+Presencia" class="pr-btn pr-ghost" target="_blank">Consultar</a>
     </div>
     <div class="pr-card pop">
-      <div class="pop-lbl">Más elegido</div>
-      <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
-      <div class="pr-amt"><sup>USD </sup>900</div>
-      <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
-      <hr class="pr-div">
+      <span class="pop-badge">Más elegido</span>
+      <p class="pr-tier">Recomendado</p>
+      <h3 class="pr-name">Sitio Completo</h3>
+      <div class="pr-price"><span class="pr-cur">USD</span><span class="pr-amt">900</span></div>
+      <p class="pr-recur">+ USD 100 / mes</p>
+      <hr class="pr-divider">
       <ul class="pr-feats">
-        <li>Todo el plan Presencia</li><li>Secciones completas</li>
-        <li>Blog / novedades</li><li>Google Analytics</li>
-        <li>SEO completo optimizado</li><li>Diseño a medida</li>
+        <li>Todo el plan Presencia</li>
+        <li>5 a 8 secciones completas</li>
+        <li>Blog / novedades</li>
+        <li>Google Analytics</li>
+        <li>SEO completo optimizado</li>
+        <li>Diseño a medida</li>
       </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+M+odontologia+Tandil+y+me+interesa+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
+      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+M+odontologia+Tandil+y+me+interesa+Sitio+Completo" class="pr-btn pr-fill" target="_blank">Lo quiero →</a>
     </div>
     <div class="pr-card">
-      <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
-      <div class="pr-amt"><sup>USD </sup>1.800</div>
-      <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
-      <hr class="pr-div">
+      <p class="pr-tier">Premium</p>
+      <h3 class="pr-name">Sitio + Motor</h3>
+      <div class="pr-price"><span class="pr-cur">USD</span><span class="pr-amt">1.800</span></div>
+      <p class="pr-recur">+ USD 160 / mes</p>
+      <hr class="pr-divider">
       <ul class="pr-feats">
-        <li>Todo el Sitio Completo</li><li>Turnos / reservas online</li>
-        <li>Panel de gestión propio</li><li>Actualizaciones ilimitadas</li>
+        <li>Todo el Sitio Completo</li>
+        <li>Turnos / reservas online</li>
+        <li>Panel de gestión propio</li>
+        <li>Actualizaciones ilimitadas</li>
         <li>Soporte prioritario</li>
       </ul>
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+M+odontologia+Tandil+y+me+interesa+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
+      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+M+odontologia+Tandil+y+me+interesa+plan+Premium" class="pr-btn pr-ghost" target="_blank">Consultar</a>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
+<!-- FINAL CTA -->
 <section class="final">
-  <div class="final-in">
-    <p class="s-eye" style="text-align:center">¿Hablamos?</p>
-    <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
-    <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — soy de Tandil y armé esta propuesta especialmente para M odontologia Tandil. Si te interesa avanzar, charlamos sin compromiso.</p>
+  <div class="final-inner">
+    <p class="sec-eye" style="text-align:center">¿Hablamos?</p>
+    <h2 class="final-title">Esta demo la hicimos<br>en 1 hora. Tu sitio<br>completo, en 5 días.</h2>
+    <p class="final-sub">Hola, soy <strong>Santiago Funes</strong> — soy de Tandil y armé esta propuesta especialmente para M odontologia Tandil. Si te interesa avanzar, charlamos sin compromiso.</p>
     <div class="final-btns">
-      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+M+odontologia+Tandil+y+me+interesa" class="btn-wa-big" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-        Hablar con Santiago
-      </a>
-      <a href="mailto:santiagomfunes@gmail.com?subject=Demo M odontologia Tandil — me interesa" class="btn-mail">✉️ Enviar email</a>
+      <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+M+odontologia+Tandil+y+me+interesa" class="btn-wa-final" target="_blank"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg> Hablar con Santiago</a>
+      <a href="mailto:santiagomfunes@gmail.com?subject=Demo M odontologia Tandil" class="btn-secondary">✉️ Email</a>
     </div>
     <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
   </div>
@@ -324,7 +721,7 @@
 
 <footer>
   <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
-  <p class="f-copy">© 2025 · Demo para M odontologia Tandil · Tandil, Buenos Aires</p>
+  <p class="f-copy">© 2025 · Demo para M odontologia Tandil</p>
 </footer>
 
 </body>

@@ -3,409 +3,1070 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudio Pascua — Demo de tu nueva web | Altavista Web</title>
+  <title>Estudio Pascua — Arquitectura · Tandil</title>
+  <meta name="description" content="Estudio de arquitectura en Tandil, Buenos Aires. Viviendas, remodelaciones y fideicomisos. Josefina Pascua, arquitecta.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ── RESET & BASE ─────────────────────────────────────────────── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --charcoal: #1A1A1A; --stone: #6B6560; --cream: #F5F0E8;
-      --warm-white: #FAFAF8; --gold: #B8954A; --border: #E5DDD0;
-      --white: #FFFFFF; --navy: #08111C; --yellow: #F4C430;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--warm-white); color: var(--charcoal); }
 
-    /* BARRA AGENCIA */
+    :root {
+      --ink:        #111111;
+      --ink-60:     rgba(17,17,17,.6);
+      --ink-35:     rgba(17,17,17,.35);
+      --cream:      #FAFAF8;
+      --cream-dark: #F2EFE9;
+      --linen:      #EDE9E1;
+      --gold:       #B8954A;
+      --gold-light: rgba(184,149,74,.12);
+      --white:      #FFFFFF;
+      --border:     rgba(17,17,17,.1);
+      --border-lgt: rgba(17,17,17,.06);
+
+      /* agency bar */
+      --navy:       #07101C;
+      --amber:      #F4C430;
+
+      --f-serif: 'Cormorant Garamond', Georgia, serif;
+      --f-sans:  'Inter', system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(.22,1,.36,1);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--f-sans);
+      background: var(--cream);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── AGENCY BAR ───────────────────────────────────────────────── */
     .ab {
-      position: fixed; top:0; left:0; right:0; z-index:1000;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
       background: var(--navy);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 24px; gap: 16px;
+      padding: 9px 28px; gap: 16px;
+      border-bottom: 1px solid rgba(244,196,48,.15);
     }
-    .ab-l { display:flex; align-items:center; gap:10px; }
-    .ab-badge {
-      background: var(--yellow); color: var(--navy);
-      padding: 2px 9px; border-radius:4px;
-      font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase;
+    .ab-l { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .ab-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--amber); flex-shrink: 0;
+      animation: pulse 2s infinite;
     }
-    .ab-text { color:rgba(255,255,255,.7); font-size:13px; }
-    .ab-text strong { color:#fff; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: .4; }
+    }
+    .ab-text { color: rgba(255,255,255,.65); font-size: 12.5px; line-height: 1.4; }
+    .ab-text strong { color: #fff; font-weight: 500; }
     .ab-cta {
-      background: var(--yellow); color: var(--navy);
-      text-decoration:none; padding:7px 16px; border-radius:20px;
-      font-size:12px; font-weight:700; white-space:nowrap;
+      background: var(--amber); color: var(--navy);
+      text-decoration: none; padding: 6px 15px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; white-space: nowrap;
+      transition: opacity .2s;
     }
-    .ab-cta:hover { opacity:.85; }
+    .ab-cta:hover { opacity: .85; }
 
-    .demo { padding-top:44px; }
+    /* ── DEMO WRAPPER ─────────────────────────────────────────────── */
+    .demo { padding-top: 40px; }
 
-    /* HERO */
+    /* ── NAVIGATION ───────────────────────────────────────────────── */
+    .site-nav {
+      position: fixed; top: 40px; left: 0; right: 0; z-index: 500;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      transition: background .4s, backdrop-filter .4s, box-shadow .4s;
+    }
+    .site-nav.scrolled {
+      background: rgba(250,250,248,.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+    .nav-logo {
+      font-family: var(--f-serif); font-size: 20px; font-weight: 400;
+      color: var(--white); letter-spacing: .3px; text-decoration: none;
+      line-height: 1;
+      transition: color .3s;
+    }
+    .site-nav.scrolled .nav-logo { color: var(--ink); }
+    .nav-logo small {
+      display: block; font-family: var(--f-sans); font-size: 8.5px;
+      font-weight: 400; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,.45); margin-top: 4px;
+      transition: color .3s;
+    }
+    .site-nav.scrolled .nav-logo small { color: var(--ink-35); }
+    .nav-links {
+      display: flex; gap: 36px; list-style: none; align-items: center;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,.6); text-decoration: none; font-size: 13px;
+      font-weight: 400; letter-spacing: .5px; transition: color .2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .site-nav.scrolled .nav-links a { color: var(--ink-60); }
+    .site-nav.scrolled .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      color: rgba(255,255,255,.6) !important;
+      border: 1px solid rgba(255,255,255,.25) !important;
+      padding: 8px 20px !important; border-radius: 2px !important;
+      transition: color .2s, border-color .2s !important;
+    }
+    .nav-cta:hover { color: #fff !important; border-color: rgba(255,255,255,.6) !important; }
+    .site-nav.scrolled .nav-cta {
+      color: var(--ink) !important;
+      border-color: var(--border) !important;
+    }
+    .site-nav.scrolled .nav-cta:hover {
+      color: var(--ink) !important;
+      border-color: var(--ink) !important;
+    }
+    .nav-ham {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px;
+    }
+    .nav-ham span { display: block; width: 24px; height: 1.5px; background: #fff; transition: background .3s; }
+    .site-nav.scrolled .nav-ham span { background: var(--ink); }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
     .hero {
-      position:relative; min-height:100vh;
-      display:flex; flex-direction:column; background:#111; overflow:hidden;
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
     }
     .hero-bg {
-      position:absolute; inset:0;
-      background-size:cover; background-position:center;
-      filter:brightness(.38);
+      position: absolute; inset: 0;
+      background-image: url('assets/estudio-pascua/proj-07.jpg');
+      background-size: cover; background-position: center 30%;
+      transform: scale(1.04);
+      animation: hero-ken 14s var(--ease-out) forwards;
     }
-    .hero-nav {
-      position:relative; z-index:2;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:32px 60px;
+    @keyframes hero-ken {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.00); }
     }
-    .logo {
-      font-family:'Playfair Display',serif; font-size:20px; font-weight:500;
-      color:#fff; letter-spacing:.5px;
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(8,12,18,.72) 0%,
+        rgba(8,12,18,.45) 45%,
+        rgba(8,12,18,.22) 100%
+      );
     }
-    .logo small {
-      display:block; font-family:'Inter',sans-serif; font-size:9px; font-weight:400;
-      letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-top:3px;
+    /* Subtle grain texture */
+    .hero-overlay::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      opacity: .4; pointer-events: none;
     }
-    .nav-links { display:flex; gap:32px; list-style:none; }
-    .nav-links a { color:rgba(255,255,255,.6); text-decoration:none; font-size:13px; transition:color .2s; }
-    .nav-links a:hover { color:#fff; }
-    .hero-body {
-      position:relative; z-index:2; flex:1;
-      display:flex; flex-direction:column; justify-content:center;
-      padding:60px 60px 100px; max-width:680px;
+    .hero-content {
+      position: relative; z-index: 2; flex: 1;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 52px 88px; max-width: 860px;
     }
-    .eyebrow { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+    .hero-eyebrow {
+      font-size: 10px; font-weight: 500; letter-spacing: 3.5px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 28px; height: 1px; background: var(--gold);
+    }
     .hero-title {
-      font-family:'Playfair Display',serif; font-size:clamp(38px,5.5vw,70px);
-      font-weight:400; color:#fff; line-height:1.1; margin-bottom:22px;
+      font-family: var(--f-serif); font-weight: 300;
+      font-size: clamp(44px, 6.5vw, 88px);
+      color: var(--white); line-height: 1.05; letter-spacing: -.02em;
+      margin-bottom: 28px;
     }
-    .hero-sub { font-size:17px; line-height:1.75; color:rgba(255,255,255,.58); max-width:460px; margin-bottom:38px; }
-    .hero-ctas { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
-    .btn-g { background:var(--gold); color:#fff; padding:13px 26px; border-radius:2px; text-decoration:none; font-size:13px; font-weight:600; transition:background .2s; }
-    .btn-g:hover { background:#9E7D3F; }
-    .btn-txt { color:rgba(255,255,255,.6); text-decoration:none; font-size:13px; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:2px; transition:color .2s; }
-    .btn-txt:hover { color:#fff; border-color:rgba(255,255,255,.7); }
-
-    /* SECCIONES */
-    .sec { padding:96px 60px; }
-    .inner { max-width:1200px; margin:0 auto; }
-    .s-eye { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px; }
-    .s-title { font-family:'Playfair Display',serif; font-size:clamp(26px,3.5vw,46px); font-weight:400; line-height:1.2; color:var(--charcoal); margin-bottom:16px; }
-    .s-body { font-size:16px; line-height:1.8; color:var(--stone); max-width:520px; }
-
-    /* SERVICIOS */
-    .services { background:var(--warm-white); }
-    .svc-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; gap:40px; }
-    .svc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
-    .svc { background:var(--charcoal); padding:48px 28px 40px; color:#fff; position:relative; }
-    .svc:nth-child(2){background:#252525} .svc:nth-child(3){background:#2C2C2C} .svc:nth-child(4){background:#333}
-    .svc-n { position:absolute; top:14px; right:18px; font-family:'Playfair Display',serif; font-size:52px; color:rgba(255,255,255,.05); font-weight:700; line-height:1; }
-    .svc-icon { font-size:26px; margin-bottom:16px; display:block; }
-    .svc-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:500; margin-bottom:10px; line-height:1.3; }
-    .svc-desc { font-size:13px; color:rgba(255,255,255,.44); line-height:1.6; }
-
-    /* PORTFOLIO */
-    .portfolio { background:#fff; }
-    .pf-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:44px; }
-    .lk { color:var(--stone); text-decoration:none; font-size:14px; border-bottom:1px solid rgba(107,101,96,.4); padding-bottom:1px; transition:color .2s; }
-    .lk:hover { color:var(--charcoal); border-color:var(--charcoal); }
-    .pf-grid { display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:280px 280px; gap:10px; }
-    .pf { position:relative; overflow:hidden; background:#E0DAD3; }
-    .pf:first-child { grid-row:1/3; }
-    .pf img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
-    .pf:hover img { transform:scale(1.05); }
-    .pf-ov {
-      position:absolute; inset:0;
-      background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%);
-      opacity:0; transition:opacity .3s;
-      display:flex; flex-direction:column; justify-content:flex-end; padding:20px;
+    .hero-title em {
+      font-style: italic; color: rgba(255,255,255,.55);
     }
-    .pf:hover .pf-ov { opacity:1; }
-    .pf-ov h3 { font-family:'Playfair Display',serif; color:#fff; font-size:17px; font-weight:500; }
-    .pf-ov p { color:rgba(255,255,255,.6); font-size:12px; margin-top:3px; }
-
-    /* ARQUITECTA */
-    .arq { background:var(--cream); }
-    .arq-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-    .arq-img { position:relative; }
-    .arq-img img { width:100%; height:480px; object-fit:cover; }
-    .arq-badge {
-      position:absolute; bottom:-20px; right:-20px;
-      background:var(--charcoal); color:#fff; padding:20px 24px; text-align:center;
+    .hero-desc {
+      font-size: 16px; line-height: 1.8; color: rgba(255,255,255,.52);
+      max-width: 440px; margin-bottom: 44px; font-weight: 300;
     }
-    .arq-badge .big { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; line-height:1.2; display:block; }
-    .arq-badge .sm { font-size:10px; color:rgba(255,255,255,.4); letter-spacing:1px; display:block; margin-top:4px; }
+    .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--white); color: var(--ink);
+      text-decoration: none; padding: 13px 28px; border-radius: 2px;
+      font-size: 13px; font-weight: 500; letter-spacing: .3px;
+      transition: background .2s, color .2s;
+    }
+    .btn-primary:hover { background: var(--cream-dark); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,.65); text-decoration: none; font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,.7); }
+    .hero-scroll {
+      position: absolute; bottom: 36px; right: 52px; z-index: 2;
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(255,255,255,.35); font-size: 10px;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      writing-mode: vertical-rl; text-orientation: mixed;
+      transform: rotate(180deg);
+    }
+    .hero-scroll::before {
+      content: ''; display: block; width: 1px; height: 44px;
+      background: rgba(255,255,255,.2);
+      animation: scroll-line 2s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0%,100% { opacity: .3; transform: scaleY(1); }
+      50%      { opacity: 1; transform: scaleY(.5); }
+    }
+
+    /* ── SECTION UTILS ────────────────────────────────────────────── */
+    .sec { padding: 100px 52px; }
+    .inner { max-width: 1200px; margin: 0 auto; }
+    .s-eye {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .s-eye::before {
+      content: ''; display: block; width: 22px; height: 1px; background: var(--gold);
+    }
+    .s-title {
+      font-family: var(--f-serif); font-size: clamp(30px, 4vw, 52px);
+      font-weight: 400; line-height: 1.1; color: var(--ink);
+      letter-spacing: -.02em; margin-bottom: 18px;
+    }
+    .s-body {
+      font-size: 16px; line-height: 1.85; color: var(--ink-60);
+      max-width: 520px; font-weight: 300;
+    }
+
+    /* ── STATS BAND ───────────────────────────────────────────────── */
+    .stats-band {
+      background: var(--ink); display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat-item {
+      padding: 48px 40px; border-right: 1px solid rgba(255,255,255,.07);
+      text-align: center;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--f-serif); font-size: clamp(36px, 4vw, 54px);
+      font-weight: 300; color: var(--white); letter-spacing: -.03em;
+      line-height: 1; margin-bottom: 8px;
+    }
+    .stat-lbl {
+      font-size: 11px; font-weight: 400; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,.35);
+    }
+
+    /* ── PORTFOLIO ────────────────────────────────────────────────── */
+    .portfolio { background: var(--white); }
+    .pf-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 52px; gap: 32px;
+    }
+    .pf-ig-link {
+      color: var(--ink-60); text-decoration: none; font-size: 13px;
+      border-bottom: 1px solid var(--border); padding-bottom: 2px;
+      transition: color .2s, border-color .2s; white-space: nowrap;
+    }
+    .pf-ig-link:hover { color: var(--ink); border-color: var(--ink); }
+
+    .pf-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .pf-item {
+      position: relative; overflow: hidden;
+      background: var(--linen); cursor: pointer;
+    }
+    .pf-item:nth-child(1) { grid-row: span 2; }
+    .pf-item:nth-child(7) { grid-column: span 2; }
+
+    .pf-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; aspect-ratio: 4/3;
+      transition: transform .7s var(--ease-out);
+    }
+    .pf-item:nth-child(1) img { aspect-ratio: unset; height: 100%; min-height: 520px; }
+    .pf-item:nth-child(7) img { aspect-ratio: 16/7; height: auto; }
+    .pf-item:hover img { transform: scale(1.04); }
+
+    .pf-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,.82) 0%, rgba(10,10,10,.1) 55%, transparent 100%);
+      opacity: 0; transition: opacity .35s;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 24px 22px;
+    }
+    .pf-item:hover .pf-overlay { opacity: 1; }
+    .pf-overlay-tag {
+      font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+    }
+    .pf-overlay-name {
+      font-family: var(--f-serif); font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 400; color: var(--white); line-height: 1.2;
+    }
+    .pf-overlay-year {
+      font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px;
+    }
+
+    /* always-visible label on mobile */
+    .pf-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 16px 18px 14px;
+      background: linear-gradient(to top, rgba(10,10,10,.7) 0%, transparent 100%);
+      display: none;
+    }
+    .pf-label h3 { font-family: var(--f-serif); font-size: 17px; color: #fff; }
+    .pf-label p  { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
+
+    /* ── SERVICIOS ────────────────────────────────────────────────── */
+    .servicios { background: var(--cream-dark); }
+    .svc-layout {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start;
+    }
+    .svc-sticky { position: sticky; top: 120px; }
+    .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .svc-card {
+      background: var(--white); padding: 44px 32px 40px;
+      position: relative; overflow: hidden;
+      transition: box-shadow .3s;
+    }
+    .svc-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,.08); }
+    .svc-n {
+      position: absolute; top: 18px; right: 22px;
+      font-family: var(--f-serif); font-size: 64px; font-weight: 300;
+      color: var(--border); line-height: 1;
+    }
+    .svc-icon {
+      width: 44px; height: 44px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .svc-icon svg { width: 28px; height: 28px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .svc-name {
+      font-family: var(--f-serif); font-size: 22px; font-weight: 400;
+      color: var(--ink); margin-bottom: 10px; line-height: 1.25;
+    }
+    .svc-desc { font-size: 14px; color: var(--ink-60); line-height: 1.7; font-weight: 300; }
+    .svc-bar {
+      display: block; width: 28px; height: 2px; background: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    /* ── LA ARQUITECTA ────────────────────────────────────────────── */
+    .arquitecta { background: var(--white); }
+    .arq-layout { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: center; }
+    .arq-visual { position: relative; }
+    .arq-photo {
+      width: 100%; height: 560px; object-fit: cover; object-position: center top;
+      display: block; filter: saturate(.9);
+    }
+    .arq-accent {
+      position: absolute; bottom: -1px; right: -1px;
+      background: var(--ink); padding: 24px 28px;
+      border-top-left-radius: 0;
+    }
+    .arq-accent-num {
+      font-family: var(--f-serif); font-size: 28px; font-weight: 300;
+      color: var(--white); line-height: 1; display: block;
+    }
+    .arq-accent-lbl {
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,.35); display: block; margin-top: 5px;
+    }
+    .arq-content { padding-right: 20px; }
     .arq-quote {
-      font-family:'Playfair Display',serif; font-style:italic; font-size:19px;
-      color:var(--charcoal); line-height:1.5; margin:24px 0 20px;
-      padding-left:18px; border-left:2px solid var(--gold);
+      font-family: var(--f-serif); font-style: italic;
+      font-size: clamp(20px, 2.5vw, 28px); font-weight: 300;
+      color: var(--ink); line-height: 1.5; margin: 24px 0 22px;
+      padding-left: 20px;
+      border-left: 2px solid var(--gold);
     }
-    .arq-stats { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:28px; }
-    .arq-stat { border-top:1px solid var(--border); padding-top:12px; }
-    .arq-stat .num { font-family:'Playfair Display',serif; font-size:32px; color:var(--charcoal); }
-    .arq-stat .lbl { font-size:12px; color:var(--stone); margin-top:2px; }
+    .arq-bio {
+      font-size: 15.5px; line-height: 1.9; color: var(--ink-60);
+      font-weight: 300; margin-bottom: 36px;
+    }
+    .arq-datos {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .arq-dato {
+      padding: 20px 0; border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .arq-dato:nth-child(even) { border-right: none; padding-left: 24px; }
+    .arq-dato .d-num {
+      font-family: var(--f-serif); font-size: 30px; font-weight: 300;
+      color: var(--ink); line-height: 1;
+    }
+    .arq-dato .d-lbl {
+      font-size: 11.5px; color: var(--ink-35); margin-top: 4px; font-weight: 400;
+    }
+    .arq-social {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--ink-60); text-decoration: none; font-size: 13px;
+      margin-top: 24px; border-bottom: 1px solid var(--border);
+      padding-bottom: 2px; transition: color .2s;
+    }
+    .arq-social:hover { color: var(--ink); }
 
-    /* CONTACTO */
-    .contacto { background:var(--charcoal); color:#fff; }
-    .ct-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-    .contacto .s-title { color:#fff; }
-    .contacto .s-body { color:rgba(255,255,255,.44); margin-bottom:36px; }
-    .ct-info { display:flex; flex-direction:column; gap:18px; }
-    .ct-item { display:flex; align-items:flex-start; gap:12px; }
-    .ct-icon { width:36px; height:36px; background:rgba(255,255,255,.07); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-    .ct-item strong { display:block; font-size:13px; font-weight:600; margin-bottom:1px; }
-    .ct-item span { font-size:13px; color:rgba(255,255,255,.44); }
-    .wa-btn {
-      display:inline-flex; align-items:center; gap:8px;
-      background:#25D366; color:#fff; text-decoration:none;
-      padding:12px 20px; border-radius:4px; font-size:14px; font-weight:600;
-      margin-top:8px; transition:background .2s;
+    /* ── CONTACTO ─────────────────────────────────────────────────── */
+    .contacto { background: var(--ink); }
+    .ct-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+    .contacto .s-eye { color: rgba(184,149,74,.8); }
+    .contacto .s-eye::before { background: rgba(184,149,74,.6); }
+    .contacto .s-title { color: var(--white); }
+    .contacto .s-body { color: rgba(255,255,255,.42); margin-bottom: 44px; }
+    .ct-info { display: flex; flex-direction: column; gap: 20px; margin-bottom: 36px; }
+    .ct-item { display: flex; align-items: flex-start; gap: 14px; }
+    .ct-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .wa-btn:hover { background:#1BBE5A; }
-    .ct-form { display:flex; flex-direction:column; gap:13px; }
-    .ct-row { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
-    .ct-f { display:flex; flex-direction:column; gap:5px; }
-    .ct-f label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.33); }
-    .ct-f input, .ct-f select, .ct-f textarea {
-      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
-      color:#fff; padding:11px 14px; font-family:'Inter',sans-serif; font-size:14px;
-      outline:none; border-radius:2px; transition:border-color .2s;
+    .ct-dot svg { width: 14px; height: 14px; stroke: rgba(255,255,255,.5); fill: none; stroke-width: 1.5; }
+    .ct-item-text strong { display: block; font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 2px; }
+    .ct-item-text span { font-size: 13px; color: rgba(255,255,255,.42); }
+    .wa-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #25D366; color: var(--white); text-decoration: none;
+      padding: 13px 22px; border-radius: 2px; font-size: 14px; font-weight: 500;
+      transition: background .2s;
     }
-    .ct-f input:focus, .ct-f select:focus, .ct-f textarea:focus { border-color:var(--gold); }
-    .ct-f textarea { resize:vertical; min-height:88px; }
-    .ct-f select option { background:#1A1A1A; }
+    .wa-cta:hover { background: #1EBA5A; }
+    .wa-cta svg { width: 18px; height: 18px; fill: #fff; }
+
+    /* form */
+    .ct-form { display: flex; flex-direction: column; gap: 14px; }
+    .ct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .ct-field { display: flex; flex-direction: column; gap: 6px; }
+    .ct-field label {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,.3); font-weight: 500;
+    }
+    .ct-field input, .ct-field select, .ct-field textarea {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+      color: var(--white); padding: 12px 16px; font-family: var(--f-sans);
+      font-size: 14px; font-weight: 300; outline: none; border-radius: 1px;
+      transition: border-color .2s; width: 100%;
+    }
+    .ct-field input::placeholder,
+    .ct-field textarea::placeholder { color: rgba(255,255,255,.2); }
+    .ct-field input:focus,
+    .ct-field select:focus,
+    .ct-field textarea:focus { border-color: var(--gold); }
+    .ct-field textarea { resize: vertical; min-height: 96px; }
+    .ct-field select option { background: #1a1a1a; color: #fff; }
     .btn-send {
-      background:var(--gold); color:#fff; border:none;
-      padding:12px 22px; font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
-      cursor:pointer; border-radius:2px; align-self:flex-start; transition:background .2s;
+      background: var(--gold); color: var(--white); border: none;
+      padding: 13px 26px; font-family: var(--f-sans); font-size: 13px;
+      font-weight: 500; cursor: pointer; border-radius: 2px;
+      align-self: flex-start; transition: background .2s; letter-spacing: .3px;
     }
-    .btn-send:hover { background:#9E7D3F; }
+    .btn-send:hover { background: #9e7d3f; }
 
-    /* DIVISOR PITCH */
-    .divider {
-      background:var(--navy); padding:80px 60px; text-align:center; position:relative; overflow:hidden;
+    /* ── DIVIDER PITCH ────────────────────────────────────────────── */
+    #propuesta {
+      background: var(--navy); padding: 88px 52px; text-align: center;
+      position: relative; overflow: hidden;
+      border-top: 1px solid rgba(244,196,48,.12);
     }
-    .divider::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%,rgba(244,196,48,.07) 0%,transparent 65%); }
-    .dv { position:relative; z-index:1; max-width:700px; margin:0 auto; }
-    .dv-badge { display:inline-block; background:rgba(244,196,48,.12); color:var(--yellow); border:1px solid rgba(244,196,48,.25); padding:5px 16px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:26px; }
-    .dv h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3.5vw,42px); color:#fff; font-weight:400; line-height:1.3; margin-bottom:14px; }
-    .dv h2 em { color:var(--yellow); font-style:normal; }
-    .dv p { color:rgba(255,255,255,.5); font-size:16px; line-height:1.7; }
-
-    /* FEATURES */
-    .features { background:var(--warm-white); }
-    .feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:52px; }
-    .feat {
-      background:#fff; border:1px solid var(--border); padding:30px 24px; border-radius:4px;
-      position:relative; transition:border-color .2s,box-shadow .2s;
+    #propuesta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 80%, rgba(244,196,48,.06) 0%, transparent 65%);
+      pointer-events: none;
     }
-    .feat:hover { border-color:var(--gold); box-shadow:0 4px 18px rgba(184,149,74,.08); }
-    .feat-tag { position:absolute; top:13px; right:13px; font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:2px 8px; border-radius:8px; }
-    .t-inc { background:#E8F5E9; color:#2E7D32; }
-    .t-pro { background:rgba(184,149,74,.12); color:var(--gold); }
-    .feat-ico { font-size:26px; margin-bottom:12px; }
-    .feat-t { font-family:'Playfair Display',serif; font-size:16px; font-weight:500; margin-bottom:7px; color:var(--charcoal); }
-    .feat-d { font-size:13px; color:var(--stone); line-height:1.6; }
-
-    /* PRICING */
-    .pricing { background:var(--charcoal); }
-    .pr-hdr { text-align:center; margin-bottom:52px; }
-    .pr-hdr .s-title { color:#fff; }
-    .pr-hdr .s-body { color:rgba(255,255,255,.4); margin:0 auto; text-align:center; }
-    .pr-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; }
-    .pr-card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); padding:34px 26px; border-radius:4px; position:relative; }
-    .pr-card.pop { background:rgba(244,196,48,.07); border-color:rgba(244,196,48,.35); }
-    .pop-lbl { position:absolute; top:-11px; left:50%; transform:translateX(-50%); background:var(--yellow); color:var(--navy); font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 14px; border-radius:10px; white-space:nowrap; }
-    .pr-tier { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:5px; }
-    .pr-card.pop .pr-tier { color:var(--yellow); }
-    .pr-name { font-family:'Playfair Display',serif; font-size:24px; color:#fff; font-weight:500; margin-bottom:18px; }
-    .pr-amt { font-family:'Playfair Display',serif; font-size:36px; font-weight:600; color:#fff; }
-    .pr-amt sup { font-size:16px; vertical-align:super; }
-    .pr-mo { font-size:12px; color:rgba(255,255,255,.38); margin-top:4px; margin-bottom:18px; }
-    .pr-div { border:none; border-top:1px solid rgba(255,255,255,.08); margin:18px 0; }
-    .pr-feats { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:26px; }
-    .pr-feats li { font-size:13px; color:rgba(255,255,255,.58); display:flex; align-items:flex-start; gap:7px; }
-    .pr-feats li::before { content:'✓'; color:var(--gold); font-weight:700; flex-shrink:0; }
-    .btn-pr { display:block; text-align:center; padding:11px; border-radius:2px; font-size:13px; font-weight:600; text-decoration:none; transition:all .2s; }
-    .btn-wh { border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.65); }
-    .btn-wh:hover { border-color:rgba(255,255,255,.45); color:#fff; }
-    .btn-gy { background:var(--yellow); color:var(--navy); }
-    .btn-gy:hover { opacity:.9; }
-
-    /* CTA FINAL */
-    .final { background:var(--warm-white); text-align:center; }
-    .final-in { max-width:580px; margin:0 auto; }
-    .final-in .s-title { margin-bottom:14px; }
-    .final-in .s-body { margin:0 auto 32px; }
-    .final-btns { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-    .btn-wa-big { display:inline-flex; align-items:center; gap:8px; background:#25D366; color:#fff; text-decoration:none; padding:14px 24px; border-radius:4px; font-size:14px; font-weight:600; transition:background .2s; }
-    .btn-wa-big:hover { background:#1BBE5A; }
-    .btn-mail { display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--charcoal); text-decoration:none; padding:14px 24px; border-radius:4px; border:1px solid var(--border); font-size:14px; font-weight:600; transition:border-color .2s; }
-    .btn-mail:hover { border-color:var(--charcoal); }
-    .final-note { margin-top:24px; font-size:12px; color:var(--stone); }
-
-    /* FOOTER */
-    footer { background:var(--charcoal); padding:26px 60px; display:flex; justify-content:space-between; align-items:center; }
-    .f-brand { font-family:'Playfair Display',serif; font-size:16px; color:var(--yellow); }
-    .f-brand small { font-family:'Inter',sans-serif; font-size:11px; color:rgba(255,255,255,.25); display:block; }
-    .f-copy { font-size:12px; color:rgba(255,255,255,.25); }
-
-    /* RESPONSIVE */
-    @media(max-width:960px){
-      .hero-nav{padding:24px} .nav-links{display:none} .hero-body{padding:40px 24px 80px}
-      .sec{padding:64px 24px} .svc-grid{grid-template-columns:1fr 1fr}
-      .pf-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto} .pf:first-child{grid-row:auto}
-      .arq-inner,.ct-inner{grid-template-columns:1fr;gap:40px}
-      .feat-grid{grid-template-columns:1fr 1fr} .pr-grid{grid-template-columns:1fr}
-      .divider{padding:60px 24px} footer{padding:22px;flex-direction:column;gap:10px;text-align:center}
+    .pitch-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+    .pitch-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(244,196,48,.1); color: var(--amber);
+      border: 1px solid rgba(244,196,48,.22); padding: 6px 18px;
+      border-radius: 20px; font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 30px;
     }
-    @media(max-width:580px){
-      .svc-grid,.feat-grid{grid-template-columns:1fr}
-      .pf-grid{grid-template-columns:1fr;grid-template-rows:auto}
-      .arq-stats{grid-template-columns:1fr 1fr} .ct-row{grid-template-columns:1fr}
+    .pitch-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--amber); display: block;
+    }
+    .pitch-title {
+      font-family: var(--f-serif); font-size: clamp(26px, 4vw, 46px);
+      font-weight: 300; color: var(--white); line-height: 1.25;
+      margin-bottom: 18px; letter-spacing: -.02em;
+    }
+    .pitch-title em { color: var(--amber); font-style: italic; }
+    .pitch-body {
+      font-size: 16px; line-height: 1.75; color: rgba(255,255,255,.48);
+      font-weight: 300;
+    }
+    .pitch-body strong { color: rgba(255,255,255,.75); font-weight: 500; }
+
+    /* ── FEATURES ─────────────────────────────────────────────────── */
+    .features { background: var(--cream); }
+    .feat-header { max-width: 540px; margin-bottom: 56px; }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+    .feat-card {
+      background: var(--white); padding: 36px 28px;
+      position: relative; transition: box-shadow .3s;
+    }
+    .feat-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,.06); z-index: 1; }
+    .feat-tag {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 9.5px; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 10px;
+    }
+    .t-inc { background: #E8F4EC; color: #2E7D4F; }
+    .t-pro { background: var(--gold-light); color: var(--gold); }
+    .feat-icon {
+      width: 38px; height: 38px; margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-icon svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .feat-name {
+      font-family: var(--f-serif); font-size: 19px; font-weight: 400;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .feat-desc { font-size: 13.5px; color: var(--ink-60); line-height: 1.65; font-weight: 300; }
+
+    /* ── PRICING ──────────────────────────────────────────────────── */
+    .pricing { background: var(--ink); }
+    .pr-header { text-align: center; margin-bottom: 56px; }
+    .pr-header .s-eye { justify-content: center; }
+    .pr-header .s-eye::before { display: none; }
+    .pr-header .s-title { color: var(--white); }
+    .pr-header .s-body { margin: 0 auto; text-align: center; color: rgba(255,255,255,.38); }
+    .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,.07); }
+    .pr-card {
+      background: #141414; padding: 40px 32px 36px;
+      position: relative;
+      transition: background .3s;
+    }
+    .pr-card.popular { background: #1a1712; border-top: 2px solid var(--gold); }
+    .pr-badge {
+      display: inline-block; background: var(--gold); color: var(--ink);
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding: 4px 12px; margin-bottom: 20px;
+      border-radius: 1px;
+    }
+    .pr-tier {
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,.28); margin-bottom: 6px; font-weight: 500;
+    }
+    .pr-name {
+      font-family: var(--f-serif); font-size: 26px; font-weight: 400;
+      color: var(--white); margin-bottom: 24px;
+    }
+    .pr-price {
+      font-family: var(--f-serif); font-size: 42px; font-weight: 300;
+      color: var(--white); line-height: 1;
+    }
+    .pr-price sup { font-size: 16px; vertical-align: super; }
+    .pr-cadence {
+      font-size: 12px; color: rgba(255,255,255,.32);
+      margin-top: 6px; margin-bottom: 28px;
+    }
+    .pr-div { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 0 0 24px; }
+    .pr-feats { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+    .pr-feats li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13.5px; color: rgba(255,255,255,.55); font-weight: 300; line-height: 1.4;
+    }
+    .pr-feats li::before {
+      content: '';
+      display: block; width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8.5l3.5 3.5 6.5-7' stroke='%23B8954A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: contain; background-repeat: no-repeat;
+    }
+    .pr-cta {
+      display: block; text-align: center; padding: 12px 16px; border-radius: 2px;
+      font-size: 13px; font-weight: 500; text-decoration: none;
+      letter-spacing: .3px; transition: all .2s;
+    }
+    .pr-cta-outline {
+      border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.55);
+    }
+    .pr-cta-outline:hover { border-color: rgba(255,255,255,.4); color: var(--white); }
+    .pr-cta-gold {
+      background: var(--gold); color: var(--white);
+    }
+    .pr-cta-gold:hover { background: #9e7d3f; }
+
+    /* ── CTA FINAL ────────────────────────────────────────────────── */
+    .cta-final { background: var(--linen); text-align: center; padding: 100px 52px; }
+    .cta-inner { max-width: 560px; margin: 0 auto; }
+    .cta-inner .s-title { margin-bottom: 16px; }
+    .cta-inner .s-eye { justify-content: center; }
+    .cta-inner .s-eye::before { display: none; }
+    .cta-body {
+      font-size: 16px; line-height: 1.8; color: var(--ink-60);
+      margin: 0 auto 36px; font-weight: 300;
+    }
+    .cta-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .btn-wa-lg {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #25D366; color: var(--white); text-decoration: none;
+      padding: 14px 26px; border-radius: 2px; font-size: 14px; font-weight: 500;
+      transition: background .2s;
+    }
+    .btn-wa-lg:hover { background: #1EBA5A; }
+    .btn-wa-lg svg { width: 18px; height: 18px; fill: #fff; }
+    .btn-mail-lg {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: var(--ink);
+      text-decoration: none; padding: 14px 26px;
+      border: 1px solid var(--border); border-radius: 2px;
+      font-size: 14px; font-weight: 500; transition: border-color .2s;
+    }
+    .btn-mail-lg:hover { border-color: var(--ink); }
+    .btn-mail-lg svg { width: 16px; height: 16px; stroke: var(--ink); fill: none; stroke-width: 1.5; }
+    .cta-footnote { margin-top: 24px; font-size: 12px; color: var(--ink-35); }
+
+    /* ── FOOTER ───────────────────────────────────────────────────── */
+    footer {
+      background: var(--ink); padding: 28px 52px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .f-brand {
+      font-family: var(--f-serif); font-size: 16px; font-weight: 400;
+      color: var(--amber); line-height: 1;
+    }
+    .f-brand small {
+      font-family: var(--f-sans); font-size: 10px;
+      color: rgba(255,255,255,.22); display: block; margin-top: 4px;
+      letter-spacing: .5px;
+    }
+    .f-copy { font-size: 11.5px; color: rgba(255,255,255,.22); }
+
+    /* ── MOBILE NAV ───────────────────────────────────────────────── */
+    .mobile-menu {
+      display: none; position: fixed; inset: 40px 0 0 0; z-index: 490;
+      background: rgba(250,250,248,.98); backdrop-filter: blur(16px);
+      flex-direction: column; justify-content: center; align-items: center; gap: 36px;
+      padding: 40px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--f-serif); font-size: 34px; font-weight: 300;
+      color: var(--ink); text-decoration: none; letter-spacing: -.02em;
+      transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .sec { padding: 80px 36px; }
+      .site-nav { padding: 20px 36px; }
+      #propuesta { padding: 72px 36px; }
+      .cta-final { padding: 80px 36px; }
+      footer { padding: 24px 36px; }
+      .svc-layout { grid-template-columns: 1fr; gap: 48px; }
+      .svc-sticky { position: static; }
+      .arq-layout { grid-template-columns: 1fr 1fr; gap: 52px; }
+      .ct-layout { grid-template-columns: 1fr; gap: 48px; }
+      .stats-band { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3),
+      .stat-item:nth-child(4) { border-top: 1px solid rgba(255,255,255,.07); }
+    }
+
+    @media (max-width: 768px) {
+      .sec { padding: 64px 24px; }
+      .site-nav { padding: 18px 24px; }
+      #propuesta { padding: 64px 24px; }
+      .cta-final { padding: 64px 24px; }
+      footer { padding: 22px 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .hero-content { padding: 0 24px 72px; }
+      .hero-scroll { display: none; }
+      .nav-links { display: none; }
+      .nav-ham { display: flex; }
+      .pf-item:nth-child(1) { grid-column: 1 / -1; grid-row: auto; }
+      .pf-item:nth-child(1) img { min-height: 280px; aspect-ratio: 4/3; height: 100%; }
+      .pf-item:nth-child(7) { grid-column: auto; }
+      .pf-item:nth-child(7) img { aspect-ratio: 4/3; }
+      .pf-overlay { opacity: 1; }
+      .pf-label { display: block; }
+      .arq-layout { grid-template-columns: 1fr; gap: 40px; }
+      .arq-photo { height: 380px; }
+      .arq-accent { right: 0; bottom: 0; }
+      .arq-content { padding-right: 0; }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
+      .pr-grid { grid-template-columns: 1fr; gap: 1px; }
+      .ct-row { grid-template-columns: 1fr; }
+      .svc-grid { grid-template-columns: 1fr; }
+      .pf-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+
+    @media (max-width: 580px) {
+      .feat-grid { grid-template-columns: 1fr; }
+      .ab { padding: 9px 16px; }
+      .ab-text { font-size: 11.5px; }
+      .arq-datos { grid-template-columns: 1fr 1fr; }
+      .stats-band { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- BARRA AGENCIA -->
-<div class="ab">
+<!-- BARRA AGENCIA (fija arriba) -->
+<div class="ab" role="banner">
   <div class="ab-l">
-    <span class="ab-badge">Demo gratuita</span>
-    <span class="ab-text">Altavista Web preparó esta propuesta para <strong>Estudio Pascua</strong></span>
+    <span class="ab-dot" aria-hidden="true"></span>
+    <span class="ab-text">Demo gratuita &middot; <strong>Altavista Web</strong> preparó esta propuesta para <strong>Estudio Pascua</strong></span>
   </div>
   <a href="#propuesta" class="ab-cta">Ver propuesta →</a>
 </div>
 
+<!-- MOBILE MENU -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menú móvil">
+  <a href="#portfolio" onclick="closeMobile()">Proyectos</a>
+  <a href="#servicios" onclick="closeMobile()">Servicios</a>
+  <a href="#arquitecta" onclick="closeMobile()">Nosotros</a>
+  <a href="#contacto" onclick="closeMobile()">Contacto</a>
+</nav>
+
 <div class="demo">
 
-  <!-- HERO: foto real de Instagram (Vivienda Quequén) -->
-  <section class="hero">
-    <div class="hero-bg" style="background-image:url('assets/estudio-pascua/foto-03.jpg')"></div>
-    <nav class="hero-nav">
-      <div class="logo">
-        Estudio Pascua
-        <small>Arquitectura · Tandil</small>
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Proyectos</a></li>
-        <li><a href="#">Servicios</a></li>
-        <li><a href="#">La arquitecta</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
-    <div class="hero-body">
-      <p class="eyebrow">Sarmiento 85 · Tandil, Buenos Aires</p>
-      <h1 class="hero-title">Hacemos de la arquitectura<br><em style="color:var(--gold);font-style:normal">un modo de vida.</em></h1>
-      <p class="hero-sub">Acompañamos cada proyecto para que construir sea un proceso transparente y placentero — desde el anteproyecto hasta la entrega de llaves.</p>
-      <div class="hero-ctas">
-        <a href="#" class="btn-g">Ver proyectos</a>
-        <a href="#" class="btn-txt">Consultar presupuesto →</a>
+  <!-- NAV -->
+  <nav class="site-nav" id="siteNav" aria-label="Navegación principal">
+    <a href="#" class="nav-logo">
+      Estudio Pascua
+      <small>Arquitectura &middot; Tandil</small>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#portfolio">Proyectos</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#arquitecta">Nosotros</a></li>
+      <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+    </ul>
+    <div class="nav-ham" id="navHam" onclick="toggleMobile()" aria-label="Abrir menú" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Portada">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Sarmiento 85 &middot; Tandil, Buenos Aires</p>
+      <h1 class="hero-title">
+        Hacemos de la<br>
+        arquitectura<br>
+        <em>un modo de vida.</em>
+      </h1>
+      <p class="hero-desc">Acompañamos cada proyecto para que construir sea un proceso transparente y placentero — desde el anteproyecto hasta la entrega de llaves.</p>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+          Ver proyectos
+        </a>
+        <a href="#contacto" class="btn-ghost">Consultar presupuesto →</a>
       </div>
     </div>
+    <div class="hero-scroll" aria-hidden="true">Scroll</div>
   </section>
 
-  <!-- SERVICIOS -->
-  <section class="sec services">
-    <div class="inner">
-      <div class="svc-header">
-        <div>
-          <p class="s-eye">Lo que hacemos</p>
-          <h2 class="s-title">Nuestros servicios</h2>
-        </div>
-        <p class="s-body">Desde viviendas a medida hasta desarrollos y fideicomisos. Cada proyecto con criterio técnico, diseño cuidado y compromiso real.</p>
-      </div>
-      <div class="svc-grid">
-        <div class="svc"><span class="svc-n">01</span><span class="svc-icon">🏠</span><h3 class="svc-name">Viviendas unifamiliares</h3><p class="svc-desc">Diseño y dirección técnica de casas a medida, pensadas para las personas que las van a habitar.</p></div>
-        <div class="svc"><span class="svc-n">02</span><span class="svc-icon">🔨</span><h3 class="svc-name">Remodelaciones y refacciones</h3><p class="svc-desc">Transformamos espacios existentes con criterio arquitectónico, respetando lo que ya funciona.</p></div>
-        <div class="svc"><span class="svc-n">03</span><span class="svc-icon">🏗️</span><h3 class="svc-name">Desarrollos y fideicomisos</h3><p class="svc-desc">Proyectos de inversión al costo con diseño funcional — como Roca 36 y Alberdi 865.</p></div>
-        <div class="svc"><span class="svc-n">04</span><span class="svc-icon">📐</span><h3 class="svc-name">Dirección de obra</h3><p class="svc-desc">Supervisión técnica desde el inicio hasta la habilitación y entrega final.</p></div>
-      </div>
+  <!-- BAND DE STATS -->
+  <div class="stats-band" aria-label="Números clave del estudio">
+    <div class="stat-item">
+      <div class="stat-num">8+</div>
+      <div class="stat-lbl">Proyectos activos</div>
     </div>
-  </section>
+    <div class="stat-item">
+      <div class="stat-num">1.9K</div>
+      <div class="stat-lbl">Seguidores Instagram</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">192</div>
+      <div class="stat-lbl">Publicaciones</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-lbl">Habilitaciones en regla</div>
+    </div>
+  </div>
 
-  <!-- PORTFOLIO: fotos reales de Instagram -->
-  <section class="sec portfolio">
+  <!-- PORTFOLIO -->
+  <section class="sec portfolio" id="portfolio" aria-label="Proyectos">
     <div class="inner">
       <div class="pf-header">
         <div>
           <p class="s-eye">Trabajo reciente</p>
           <h2 class="s-title">Proyectos</h2>
         </div>
-        <a href="https://www.instagram.com/estudio_pascua/" target="_blank" class="lk">Ver en @estudio_pascua →</a>
+        <a href="https://www.instagram.com/estudio_pascua/" target="_blank" rel="noopener" class="pf-ig-link">
+          Ver todos en @estudio_pascua →
+        </a>
       </div>
       <div class="pf-grid">
-        <div class="pf"><img src="assets/estudio-pascua/proj-01.jpg" alt="Vivienda Quequén"><div class="pf-ov"><h3>Vivienda Quequén</h3><p>Anteproyecto · Tandil, 2025</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-02.jpg" alt="Alberdi 865 — Anteproyecto"><div class="pf-ov"><h3>Alberdi 865</h3><p>Nuevo desarrollo · Tandil, 2025</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-03.jpg" alt="Fideicomiso Roca 36"><div class="pf-ov"><h3>Fideicomiso Roca 36</h3><p>2 y 3 ambientes · Tandil, 2026</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-04.jpg" alt="Alberdi 865 — Obra"><div class="pf-ov"><h3>Alberdi 865 — Obra</h3><p>Seguimiento de obra · Tandil, 2025</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-05.jpg" alt="Garibaldi 170"><div class="pf-ov"><h3>Garibaldi 170</h3><p>Nuevo desarrollo · Tandil, 2024</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-06.jpg" alt="Fideicomiso 25 de Mayo 562"><div class="pf-ov"><h3>25 de Mayo 562</h3><p>Fideicomiso · Tandil, 2023</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-07.jpg" alt="Constitución 530"><div class="pf-ov"><h3>Constitución 530</h3><p>Edificio de oficinas · Tandil, 2023</p></div></div>
-        <div class="pf"><img src="assets/estudio-pascua/proj-08.jpg" alt="Fideicomiso Mitre 173"><div class="pf-ov"><h3>Mitre 173</h3><p>Fideicomiso · Tandil, 2023</p></div></div>
+        <!-- 1 — doble alto -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-01.jpg" alt="Vivienda Quequén — Anteproyecto 2025" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Anteproyecto &middot; 2025</div>
+            <div class="pf-overlay-name">Vivienda Quequén</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>Vivienda Quequén</h3><p>Anteproyecto · 2025</p></div>
+        </div>
+        <!-- 2 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-02.jpg" alt="Alberdi 865 — Nuevo desarrollo 2025" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Nuevo desarrollo &middot; 2025</div>
+            <div class="pf-overlay-name">Alberdi 865</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>Alberdi 865</h3><p>Nuevo desarrollo · 2025</p></div>
+        </div>
+        <!-- 3 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-03.jpg" alt="Fideicomiso Roca 36 — 2 y 3 ambientes 2026" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Fideicomiso &middot; 2026</div>
+            <div class="pf-overlay-name">Fideicomiso Roca 36</div>
+            <div class="pf-overlay-year">2 y 3 ambientes · Tandil</div>
+          </div>
+          <div class="pf-label"><h3>Fideicomiso Roca 36</h3><p>2 y 3 ambientes · 2026</p></div>
+        </div>
+        <!-- 4 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-04.jpg" alt="Alberdi 865 — Seguimiento de obra 2025" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Dirección de obra &middot; 2025</div>
+            <div class="pf-overlay-name">Alberdi 865 — Obra</div>
+            <div class="pf-overlay-year">Seguimiento en sitio · Tandil</div>
+          </div>
+          <div class="pf-label"><h3>Alberdi 865 — Obra</h3><p>Dirección de obra · 2025</p></div>
+        </div>
+        <!-- 5 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-05.jpg" alt="Garibaldi 170 — Nuevo desarrollo 2024" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Nuevo desarrollo &middot; 2024</div>
+            <div class="pf-overlay-name">Garibaldi 170</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>Garibaldi 170</h3><p>Nuevo desarrollo · 2024</p></div>
+        </div>
+        <!-- 6 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-06.jpg" alt="25 de Mayo 562 — Fideicomiso 2023" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Fideicomiso &middot; 2023</div>
+            <div class="pf-overlay-name">25 de Mayo 562</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>25 de Mayo 562</h3><p>Fideicomiso · 2023</p></div>
+        </div>
+        <!-- 7 — ancho completo -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-07.jpg" alt="Constitución 530 — Edificio de oficinas 2023" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Oficinas · 2023</div>
+            <div class="pf-overlay-name">Constitución 530 — Edificio de Oficinas</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>Constitución 530</h3><p>Edificio de oficinas · 2023</p></div>
+        </div>
+        <!-- 8 -->
+        <div class="pf-item">
+          <img src="assets/estudio-pascua/proj-08.jpg" alt="Mitre 173 — Fideicomiso 2023" loading="lazy">
+          <div class="pf-overlay" aria-hidden="true">
+            <div class="pf-overlay-tag">Fideicomiso &middot; 2023</div>
+            <div class="pf-overlay-name">Mitre 173</div>
+            <div class="pf-overlay-year">Tandil, Buenos Aires</div>
+          </div>
+          <div class="pf-label"><h3>Mitre 173</h3><p>Fideicomiso · 2023</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="sec servicios" id="servicios" aria-label="Servicios">
+    <div class="inner">
+      <div class="svc-layout">
+        <div class="svc-sticky">
+          <p class="s-eye">Lo que hacemos</p>
+          <h2 class="s-title">Nuestros<br>servicios</h2>
+          <p class="s-body">Cada proyecto es único. Trabajamos con criterio técnico, diseño cuidado y compromiso real con el resultado final.</p>
+        </div>
+        <div class="svc-grid">
+          <div class="svc-card">
+            <span class="svc-n">01</span>
+            <div class="svc-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5V20H3V9.5z"/><path d="M9 20v-6h6v6"/></svg>
+            </div>
+            <span class="svc-bar" aria-hidden="true"></span>
+            <h3 class="svc-name">Viviendas unifamiliares</h3>
+            <p class="svc-desc">Diseño y dirección técnica de casas a medida, pensadas para las personas que las van a habitar.</p>
+          </div>
+          <div class="svc-card">
+            <span class="svc-n">02</span>
+            <div class="svc-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <span class="svc-bar" aria-hidden="true"></span>
+            <h3 class="svc-name">Remodelaciones</h3>
+            <p class="svc-desc">Transformamos espacios existentes con criterio arquitectónico, respetando lo que ya funciona.</p>
+          </div>
+          <div class="svc-card">
+            <span class="svc-n">03</span>
+            <div class="svc-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="9" width="18" height="12"/><path d="M3 9l9-6 9 6"/><line x1="9" y1="21" x2="9" y2="12"/><line x1="15" y1="21" x2="15" y2="12"/></svg>
+            </div>
+            <span class="svc-bar" aria-hidden="true"></span>
+            <h3 class="svc-name">Desarrollos y fideicomisos</h3>
+            <p class="svc-desc">Proyectos de inversión al costo con diseño funcional — como Roca 36 y Alberdi 865.</p>
+          </div>
+          <div class="svc-card">
+            <span class="svc-n">04</span>
+            <div class="svc-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+            </div>
+            <span class="svc-bar" aria-hidden="true"></span>
+            <h3 class="svc-name">Dirección de obra</h3>
+            <p class="svc-desc">Supervisión técnica desde el inicio hasta la habilitación y entrega final al propietario.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- LA ARQUITECTA -->
-  <section class="sec arq">
+  <section class="sec arquitecta" id="arquitecta" aria-label="La arquitecta">
     <div class="inner">
-      <div class="arq-inner">
-        <div class="arq-img">
-          <img src="assets/estudio-pascua/foto-02.jpg" alt="Josefina Pascua — Estudio Pascua">
-          <div class="arq-badge">
-            <span class="big">1.949</span>
-            <span class="sm">seguidores · @estudio_pascua</span>
+      <div class="arq-layout">
+        <div class="arq-visual">
+          <img src="assets/estudio-pascua/foto-02.jpg" class="arq-photo" alt="Josefina Pascua — Arquitecta, Estudio Pascua, Tandil">
+          <div class="arq-accent">
+            <span class="arq-accent-num">1.9K</span>
+            <span class="arq-accent-lbl">Seguidores · @estudio_pascua</span>
           </div>
         </div>
-        <div>
+        <div class="arq-content">
           <p class="s-eye">La arquitecta</p>
           <h2 class="s-title">Josefina Pascua</h2>
-          <div class="arq-quote">"Hacemos de la arquitectura un modo de vida."</div>
-          <p class="s-body">Josefina Pascua es arquitecta con base en Tandil, Buenos Aires. Fundó el Estudio Pascua con el objetivo de acompañar y asesorar a sus clientes para que construir sea un proceso transparente y placentero — desde el primer boceto hasta la entrega de llaves.<br><br>Sus proyectos combinan funcionalidad, estética local y compromiso técnico. Hoy el estudio trabaja en viviendas unifamiliares, remodelaciones y desarrollos inmobiliarios en Tandil y la región.</p>
-          <div class="arq-stats">
-            <div class="arq-stat"><div class="num">192</div><div class="lbl">Publicaciones en Instagram</div></div>
-            <div class="arq-stat"><div class="num">Tandil</div><div class="lbl">Raíz y base de trabajo</div></div>
-            <div class="arq-stat"><div class="num">3+</div><div class="lbl">Proyectos activos en 2025-26</div></div>
-            <div class="arq-stat"><div class="num">100%</div><div class="lbl">Habilitaciones en regla</div></div>
+          <blockquote class="arq-quote">
+            "Hacemos de la arquitectura un modo de vida."
+          </blockquote>
+          <p class="arq-bio">
+            Josefina Pascua es arquitecta con base en Tandil, Buenos Aires. Fundó el Estudio Pascua con el objetivo de acompañar y asesorar a sus clientes para que construir sea un proceso transparente y placentero — desde el primer boceto hasta la entrega de llaves.
+            <br><br>
+            Sus proyectos combinan funcionalidad, estética local y compromiso técnico. Hoy el estudio trabaja en viviendas unifamiliares, remodelaciones y desarrollos inmobiliarios en Tandil y la región.
+          </p>
+          <div class="arq-datos">
+            <div class="arq-dato">
+              <div class="d-num">192</div>
+              <div class="d-lbl">Publicaciones en Instagram</div>
+            </div>
+            <div class="arq-dato">
+              <div class="d-num">Tandil</div>
+              <div class="d-lbl">Raíz y base de trabajo</div>
+            </div>
+            <div class="arq-dato">
+              <div class="d-num">3+</div>
+              <div class="d-lbl">Proyectos activos 2025–26</div>
+            </div>
+            <div class="arq-dato">
+              <div class="d-num">100%</div>
+              <div class="d-lbl">Habilitaciones en regla</div>
+            </div>
           </div>
+          <a href="https://www.instagram.com/estudio_pascua/" target="_blank" rel="noopener" class="arq-social">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            @estudio_pascua en Instagram
+          </a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CONTACTO -->
-  <section class="sec contacto">
+  <section class="sec contacto" id="contacto" aria-label="Contacto">
     <div class="inner">
-      <div class="ct-inner">
+      <div class="ct-layout">
         <div>
           <p class="s-eye">Hablemos</p>
           <h2 class="s-title">¿Tenés un proyecto en mente?</h2>
           <p class="s-body">Contanos qué necesitás y te respondemos en menos de 24 horas. Sin compromiso.</p>
           <div class="ct-info">
-            <div class="ct-item"><div class="ct-icon">📍</div><div><strong>Dirección</strong><span>Sarmiento 85, Tandil, Buenos Aires</span></div></div>
-            <div class="ct-item"><div class="ct-icon">✉️</div><div><strong>Email</strong><span>arquitecturapascua@outlook.com</span></div></div>
-            <div class="ct-item"><div class="ct-icon">📷</div><div><strong>Instagram</strong><span>@estudio_pascua</span></div></div>
+            <div class="ct-item">
+              <div class="ct-dot">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>
+              </div>
+              <div class="ct-item-text">
+                <strong>Dirección</strong>
+                <span>Sarmiento 85, Tandil, Buenos Aires</span>
+              </div>
+            </div>
+            <div class="ct-item">
+              <div class="ct-dot">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="ct-item-text">
+                <strong>Email</strong>
+                <span>arquitecturapascua@outlook.com</span>
+              </div>
+            </div>
+            <div class="ct-item">
+              <div class="ct-dot">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="rgba(255,255,255,.5)"/></svg>
+              </div>
+              <div class="ct-item-text">
+                <strong>Instagram</strong>
+                <span>@estudio_pascua</span>
+              </div>
+            </div>
           </div>
-          <a href="https://wa.me/5492494014550" class="wa-btn" target="_blank">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
-            Escribir a Josefina por WhatsApp (+5492494014550)
+          <a href="https://wa.me/5492494014550" class="wa-cta" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
+            Escribir por WhatsApp
           </a>
         </div>
-        <form class="ct-form" onsubmit="return false;">
+        <form class="ct-form" onsubmit="return false;" aria-label="Formulario de presupuesto">
           <div class="ct-row">
-            <div class="ct-f"><label>Nombre</label><input type="text" placeholder="Tu nombre completo"></div>
-            <div class="ct-f"><label>Teléfono</label><input type="tel" placeholder="+54 249..."></div>
+            <div class="ct-field">
+              <label for="ct-nombre">Nombre *</label>
+              <input type="text" id="ct-nombre" name="nombre" placeholder="Tu nombre completo" required autocomplete="name">
+            </div>
+            <div class="ct-field">
+              <label for="ct-tel">Teléfono *</label>
+              <input type="tel" id="ct-tel" name="telefono" placeholder="+54 249 …" required autocomplete="tel">
+            </div>
           </div>
-          <div class="ct-f"><label>Email</label><input type="email" placeholder="hola@ejemplo.com"></div>
-          <div class="ct-f">
-            <label>Tipo de proyecto</label>
-            <select>
+          <div class="ct-field">
+            <label for="ct-email">Email</label>
+            <input type="email" id="ct-email" name="email" placeholder="hola@ejemplo.com" autocomplete="email">
+          </div>
+          <div class="ct-field">
+            <label for="ct-tipo">Tipo de proyecto</label>
+            <select id="ct-tipo" name="tipo">
               <option>Vivienda nueva</option>
               <option>Remodelación o refacción</option>
               <option>Emprendimiento / inversión</option>
+              <option>Fideicomiso / desarrollo</option>
               <option>Dirección técnica</option>
               <option>Consulta general</option>
             </select>
           </div>
-          <div class="ct-f"><label>Contanos tu proyecto</label><textarea placeholder="Ubicación aproximada, superficie estimada, plazo..."></textarea></div>
+          <div class="ct-field">
+            <label for="ct-msg">Contanos tu proyecto</label>
+            <textarea id="ct-msg" name="mensaje" placeholder="Ubicación aproximada, superficie estimada, plazo..."></textarea>
+          </div>
           <button type="submit" class="btn-send">Enviar consulta →</button>
         </form>
       </div>
@@ -414,106 +1075,211 @@
 
 </div><!-- /demo -->
 
-<!-- TRANSICIÓN AL PITCH -->
-<div id="propuesta" class="divider">
-  <div class="dv">
-    <div class="dv-badge">📋 Propuesta de Altavista Web</div>
-    <h2>Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
-    <p>Encontramos que <strong style="color:rgba(255,255,255,.75)">arquitecturapascua.com.ar</strong> no está activo — clientes que buscan una arquitecta en Tandil no te encuentran en Google. En 5 días podés tener este sitio publicado, con tus fotos reales, tu dominio y todas las funciones activas.</p>
+<!-- ── DIVISOR PITCH ─────────────────────────────────────────────── -->
+<div id="propuesta" aria-label="Propuesta de Altavista Web">
+  <div class="pitch-inner">
+    <div class="pitch-badge">Propuesta de Altavista Web</div>
+    <h2 class="pitch-title">Lo que acabás de ver es<br><em>una demo de tu nueva web</em></h2>
+    <p class="pitch-body">
+      Encontramos que <strong>arquitecturapascua.com.ar</strong> no está activo — clientes que buscan una arquitecta en Tandil no te encuentran en Google. En 5 días podés tener este sitio publicado con tus fotos reales, tu dominio y todas las funciones activas.
+    </p>
   </div>
 </div>
 
-<!-- FEATURES -->
-<section class="sec features">
+<!-- ── FEATURES ──────────────────────────────────────────────────── -->
+<section class="sec features" aria-label="Qué incluye">
   <div class="inner">
-    <div style="max-width:560px">
+    <div class="feat-header">
       <p class="s-eye">Qué incluye</p>
       <h2 class="s-title">Todo lo que un estudio de arquitectura necesita online</h2>
     </div>
     <div class="feat-grid">
-      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">🖼️</div><h3 class="feat-t">Portfolio interactivo</h3><p class="feat-d">Galería organizada por categorías con tus fotos reales de @estudio_pascua en alta resolución.</p></div>
-      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">📋</div><h3 class="feat-t">Formulario de consulta</h3><p class="feat-d">Capturá tipo de proyecto, superficie, zona y contacto. Llega directo a tu email y WhatsApp.</p></div>
-      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">🔍</div><h3 class="feat-t">SEO local Tandil</h3><p class="feat-d">"Arquitecta en Tandil", "estudio de arquitectura Tandil". Aparecés cuando los clientes te buscan en Google.</p></div>
-      <div class="feat"><span class="feat-tag t-inc">Incluido</span><div class="feat-ico">💬</div><h3 class="feat-t">WhatsApp integrado</h3><p class="feat-d">Botón directo a tu WhatsApp en cada página. El cliente te consulta sin barreras.</p></div>
-      <div class="feat"><span class="feat-tag t-pro">Pro</span><div class="feat-ico">📄</div><h3 class="feat-t">Ficha de proyecto</h3><p class="feat-d">Página individual por proyecto — fotos, descripción técnica y CTA. Ideal para presentaciones.</p></div>
-      <div class="feat"><span class="feat-tag t-pro">Pro</span><div class="feat-ico">📊</div><h3 class="feat-t">Analytics + Search Console</h3><p class="feat-d">Sabés cuánta gente te busca, qué proyectos miran más y desde dónde llegaron.</p></div>
+      <div class="feat-card">
+        <span class="feat-tag t-inc">Incluido</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3 class="feat-name">Portfolio interactivo</h3>
+        <p class="feat-desc">Galería organizada con tus fotos reales de @estudio_pascua en alta resolución, con hover elegante.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-tag t-inc">Incluido</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3 class="feat-name">Formulario de consulta</h3>
+        <p class="feat-desc">Capturá tipo de proyecto, superficie, zona y contacto. Llega directo a tu email y WhatsApp.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-tag t-inc">Incluido</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3 class="feat-name">SEO local Tandil</h3>
+        <p class="feat-desc">"Arquitecta en Tandil", "estudio de arquitectura Tandil". Aparecés cuando los clientes te buscan en Google.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-tag t-inc">Incluido</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <h3 class="feat-name">WhatsApp integrado</h3>
+        <p class="feat-desc">Botón directo a tu WhatsApp en cada página. El cliente te consulta sin barreras de fricción.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-tag t-pro">Pro</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        </div>
+        <h3 class="feat-name">Ficha de proyecto</h3>
+        <p class="feat-desc">Página individual por proyecto — fotos, descripción técnica y CTA. Ideal para presentaciones a clientes.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-tag t-pro">Pro</span>
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="feat-name">Analytics + Search Console</h3>
+        <p class="feat-desc">Sabés cuánta gente te busca, qué proyectos miran más y desde dónde llegaron.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="sec pricing">
+<!-- ── PRICING ───────────────────────────────────────────────────── -->
+<section class="sec pricing" aria-label="Planes y precios">
   <div class="inner">
-    <div class="pr-hdr">
-      <p class="s-eye" style="color:rgba(244,196,48,.6)">Inversión</p>
+    <div class="pr-header">
+      <p class="s-eye">Inversión</p>
       <h2 class="s-title">Elegí el plan que te conviene</h2>
       <p class="s-body">Sin contratos largos. Empezás cuando querés y crecés al ritmo de tu estudio.</p>
     </div>
     <div class="pr-grid">
+      <!-- Starter -->
       <div class="pr-card">
-        <p class="pr-tier">Starter</p><h3 class="pr-name">Presencia</h3>
-        <div class="pr-amt"><sup>USD </sup>450</div>
-        <p class="pr-mo">+ USD 60 / mes mantenimiento</p>
+        <p class="pr-tier">Starter</p>
+        <h3 class="pr-name">Presencia</h3>
+        <div class="pr-price"><sup>USD </sup>450</div>
+        <p class="pr-cadence">+ USD 60 / mes mantenimiento</p>
         <hr class="pr-div">
         <ul class="pr-feats">
-          <li>Landing page profesional</li><li>Portfolio básico (hasta 8 proyectos)</li>
-          <li>Formulario de contacto</li><li>WhatsApp integrado</li>
-          <li>SEO local básico</li><li>Dominio + hosting incluido</li>
+          <li>Landing page profesional</li>
+          <li>Portfolio básico (hasta 8 proyectos)</li>
+          <li>Formulario de contacto</li>
+          <li>WhatsApp integrado</li>
+          <li>SEO local básico</li>
+          <li>Dominio + hosting incluido</li>
         </ul>
-        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Presencia" class="btn-pr btn-wh" target="_blank">Consultar</a>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Presencia" class="pr-cta pr-cta-outline" target="_blank" rel="noopener">Consultar →</a>
       </div>
-      <div class="pr-card pop">
-        <div class="pop-lbl">Más elegido</div>
-        <p class="pr-tier">Recomendado</p><h3 class="pr-name">Sitio Completo</h3>
-        <div class="pr-amt"><sup>USD </sup>900</div>
-        <p class="pr-mo">+ USD 100 / mes mantenimiento</p>
+      <!-- Popular -->
+      <div class="pr-card popular">
+        <div class="pr-badge">Más elegido</div>
+        <p class="pr-tier">Recomendado</p>
+        <h3 class="pr-name">Sitio Completo</h3>
+        <div class="pr-price"><sup>USD </sup>900</div>
+        <p class="pr-cadence">+ USD 100 / mes mantenimiento</p>
         <hr class="pr-div">
         <ul class="pr-feats">
-          <li>Todo el plan Presencia</li><li>Portfolio completo con filtros</li>
-          <li>Página individual por proyecto</li><li>Sección "La arquitecta"</li>
-          <li>Google Analytics + Search Console</li><li>SEO completo optimizado</li>
+          <li>Todo el plan Presencia</li>
+          <li>Portfolio completo con filtros</li>
+          <li>Página individual por proyecto</li>
+          <li>Sección "La arquitecta"</li>
+          <li>Google Analytics + Search Console</li>
+          <li>SEO completo optimizado</li>
         </ul>
-        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+Sitio+Completo" class="btn-pr btn-gy" target="_blank">Lo quiero →</a>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+Sitio+Completo" class="pr-cta pr-cta-gold" target="_blank" rel="noopener">Lo quiero →</a>
       </div>
+      <!-- Premium -->
       <div class="pr-card">
-        <p class="pr-tier">Premium</p><h3 class="pr-name">Sitio + Motor</h3>
-        <div class="pr-amt"><sup>USD </sup>1.800</div>
-        <p class="pr-mo">+ USD 160 / mes mantenimiento</p>
+        <p class="pr-tier">Premium</p>
+        <h3 class="pr-name">Sitio + Motor</h3>
+        <div class="pr-price"><sup>USD </sup>1.800</div>
+        <p class="pr-cadence">+ USD 160 / mes mantenimiento</p>
         <hr class="pr-div">
         <ul class="pr-feats">
-          <li>Todo el Sitio Completo</li><li>Fichas PDF por proyecto</li>
-          <li>Panel de consultas / leads</li><li>Actualizaciones ilimitadas</li>
+          <li>Todo el Sitio Completo</li>
+          <li>Fichas PDF por proyecto</li>
+          <li>Panel de consultas / leads</li>
+          <li>Actualizaciones ilimitadas</li>
           <li>Soporte prioritario</li>
         </ul>
-        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Premium" class="btn-pr btn-wh" target="_blank">Consultar</a>
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+de+Estudio+Pascua+y+me+interesa+el+plan+Premium" class="pr-cta pr-cta-outline" target="_blank" rel="noopener">Consultar →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="sec final">
+<!-- ── CTA FINAL ─────────────────────────────────────────────────── -->
+<section class="cta-final" aria-label="Contacto final">
   <div class="inner">
-    <div class="final-in">
-      <p class="s-eye" style="text-align:center">¿Hablamos?</p>
+    <div class="cta-inner">
+      <p class="s-eye">¿Hablamos?</p>
       <h2 class="s-title">Esta demo la hicimos en 1 hora.<br>Tu sitio completo, en 5 días.</h2>
-      <p class="s-body">Hola, soy <strong>Santiago Funes</strong> — vivo en Tandil y armé esta propuesta especialmente para ustedes. Si les interesa avanzar, charlamos sin ningún compromiso.</p>
-      <div class="final-btns">
-        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Estudio+Pascua+y+me+interesa+saber+m%C3%A1s" class="btn-wa-big" target="_blank">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
+      <p class="cta-body">Hola, soy <strong>Santiago Funes</strong> — vivo en Tandil y armé esta propuesta especialmente para ustedes. Si les interesa avanzar, charlamos sin ningún compromiso.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/5492494557754?text=Hola+Santiago%2C+vi+la+demo+del+sitio+para+Estudio+Pascua+y+me+interesa+saber+m%C3%A1s" class="btn-wa-lg" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.531 5.874L.057 23.486l5.77-1.512A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.426.897.914-3.344-.234-.374A9.818 9.818 0 0112 2.182c5.428 0 9.818 4.39 9.818 9.818 0 5.427-4.39 9.818-9.818 9.818z"/></svg>
           Hablar con Santiago
         </a>
-        <a href="mailto:santiagomfunes@gmail.com?subject=Demo Estudio Pascua — me interesa" class="btn-mail">✉️ Enviar email</a>
+        <a href="mailto:santiagomfunes@gmail.com?subject=Demo Estudio Pascua — me interesa" class="btn-mail-lg">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Enviar email
+        </a>
       </div>
-      <p class="final-note">Sin compromiso · Sin contrato inicial · Respuesta en menos de 24hs</p>
+      <p class="cta-footnote">Sin compromiso &middot; Sin contrato inicial &middot; Respuesta en menos de 24hs</p>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="f-brand">Altavista Web<small>Páginas web para negocios de Tandil</small></div>
-  <p class="f-copy">© 2025 · Demo para Estudio Pascua · @estudio_pascua · Sarmiento 85, Tandil</p>
+  <div class="f-brand">
+    Altavista Web
+    <small>Páginas web para negocios de Tandil</small>
+  </div>
+  <p class="f-copy">&copy; 2025 &middot; Demo para Estudio Pascua &middot; @estudio_pascua &middot; Sarmiento 85, Tandil</p>
 </footer>
+
+<script>
+  /* NAV scroll state */
+  const nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* Mobile menu */
+  function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMobile() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  /* Intersection observer: fade-up on scroll */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.svc-card, .feat-card, .pf-item, .stat-item, .pr-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    io.observe(el);
+  });
+
+  /* Stagger grid children */
+  document.querySelectorAll('.svc-grid, .pf-grid, .feat-grid, .pr-grid, .stats-band').forEach(grid => {
+    Array.from(grid.children).forEach((child, i) => {
+      child.style.transitionDelay = `${i * 60}ms`;
+    });
+  });
+</script>
 
 </body>
 </html>
