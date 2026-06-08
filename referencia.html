@@ -1038,63 +1038,6 @@
   </div>
 </div>
 
-<!-- ===================== TAB: MERCADO ===================== -->
-<div id="view-mercado" class="view">
-  <div class="main-content">
-
-    <div class="mercado-filters">
-      <div class="mf-title">Buscar propiedades en mercado</div>
-      <div class="mf-row">
-        <div>
-          <label>Operacion</label>
-          <select id="mf-operacion">
-            <option value="venta" selected>Venta</option>
-            <option value="alquiler">Alquiler</option>
-            <option value="">Todas</option>
-          </select>
-        </div>
-        <div>
-          <label>Tipologia</label>
-          <select id="mf-tipologia">
-            <option value="">Todas</option>
-            <option value="departamento">Departamento</option>
-            <option value="casa">Casa</option>
-            <option value="ph">PH</option>
-            <option value="terreno">Terreno</option>
-            <option value="lote">Lote</option>
-            <option value="local">Local</option>
-            <option value="oficina">Oficina</option>
-          </select>
-        </div>
-        <div>
-          <label>Precio max (USD)</label>
-          <input type="number" id="mf-precio-max" placeholder="Ej: 100000" min="0" />
-        </div>
-        <div>
-          <label>Dormitorios min</label>
-          <input type="number" id="mf-dorms-min" placeholder="Ej: 2" min="0" max="10" />
-        </div>
-      </div>
-      <div class="mf-row" style="grid-template-columns: 1fr;">
-        <div>
-          <label>Buscar en zona / direccion</label>
-          <input type="text" id="mf-zona" placeholder="Ej: centro, sierras, pringles..." />
-        </div>
-      </div>
-      <div class="mf-actions">
-        <button class="btn-primary" id="btn-buscar-mercado" onclick="buscarMercado()">Buscar</button>
-        <span class="mf-count" id="mf-count"></span>
-      </div>
-    </div>
-
-    <div id="mf-loading" class="loading-text" style="display:none;">Consultando Supabase...</div>
-    <div id="mf-error" style="display:none; color:#e07060; font-size:0.85rem; margin-bottom:1rem;"></div>
-    <div id="mf-grid" class="prop-grid"></div>
-    <button class="btn-load-more" id="btn-load-more" style="display:none;" onclick="cargarMasMercado()">Cargar mas resultados</button>
-
-  </div>
-</div>
-
 <!-- ===================== TAB: REFERENCIA ===================== -->
 <div id="view-referencia" class="view">
   <div class="main-content">
