@@ -6,748 +6,658 @@
   <title>Ilusión Óptica — Tandil</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --ivory: #fdf3dd;
       --green: #6d6e5e;
       --taupe: #8b796d;
       --black: #323232;
-      --t: 220ms ease;
+      --t: 180ms ease;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Onest', sans-serif;
-      background: var(--ivory);
-      color: var(--black);
-      font-size: 16px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
-    a { text-decoration: none; color: inherit; cursor: pointer; }
-
-    /* SCROLL PROGRESS */
-    #prog {
-      position: fixed; top: 0; left: 0; height: 2px;
-      width: 0%; background: var(--green); z-index: 9999;
-      transition: width 60ms linear;
-    }
+    body { font-family: 'Onest', sans-serif; background: #f7f4ef; color: var(--black); -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
 
     /* NAV */
     nav {
-      position: fixed; top: 2px; left: 0; right: 0; z-index: 100;
-      transition: background var(--t), box-shadow var(--t);
+      position: sticky; top: 0; z-index: 100;
+      background: var(--green);
+      box-shadow: 0 2px 12px rgba(50,50,50,0.15);
     }
     .nav-in {
-      max-width: 1280px; margin: 0 auto; padding: 0 40px;
-      height: 72px; display: flex; align-items: center; justify-content: space-between;
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
     .nav-logo {
-      display: flex; flex-direction: column; gap: 1px;
-      color: var(--ivory); transition: color var(--t);
-    }
-    .nav-logo-word {
-      display: flex; align-items: center;
+      display: flex; flex-direction: column;
       font-family: 'Outfit', sans-serif; font-weight: 900;
-      font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1;
+      font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1;
+      color: var(--ivory);
     }
-    .nav-logo-eye {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 1.15em; height: 1.15em; position: relative; margin: 0 1px;
+    .nav-logo-word { display: flex; align-items: center; }
+    .nav-eye { display: inline-flex; align-items: center; width: 1.1em; height: 1.1em; margin: 0 1px; }
+    .nav-eye svg { width: 100%; height: 100%; }
+    .nav-logo-sub { font-size: 0.45rem; letter-spacing: 0.5em; opacity: 0.65; font-weight: 600; text-transform: uppercase; margin-top: 2px; padding-left: 0.1em; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-search {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(253,243,221,0.12); border: 1px solid rgba(253,243,221,0.2);
+      border-radius: 8px; padding: 7px 12px;
     }
-    .nav-logo-eye svg { width: 100%; height: 100%; }
-    .nav-logo-sub {
-      font-family: 'Outfit', sans-serif; font-size: 0.48rem;
-      font-weight: 400; letter-spacing: 0.5em; text-transform: uppercase;
-      padding-left: 0.1em; opacity: 0.75;
+    .nav-search input {
+      background: transparent; border: none; outline: none;
+      color: var(--ivory); font-family: 'Onest', sans-serif; font-size: 0.875rem;
+      width: 180px;
     }
-    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
-    .nav-links a {
-      padding: 8px 16px; border-radius: 100px; font-size: 0.875rem;
-      font-weight: 500; color: var(--ivory);
-      transition: background var(--t), color var(--t);
+    .nav-search input::placeholder { color: rgba(253,243,221,0.45); }
+    .nav-search svg { color: rgba(253,243,221,0.5); flex-shrink: 0; }
+    .cart-btn {
+      position: relative; display: flex; align-items: center; gap: 8px;
+      background: var(--ivory); color: var(--green);
+      border: none; border-radius: 8px; padding: 8px 16px;
+      font-family: 'Onest', sans-serif; font-size: 0.875rem; font-weight: 700;
+      cursor: pointer; transition: background var(--t), transform 100ms ease;
     }
-    .nav-links a:hover { background: rgba(253,243,221,0.15); }
+    .cart-btn:hover { background: #f5e8c4; transform: translateY(-1px); }
+    .cart-badge {
+      position: absolute; top: -6px; right: -6px;
+      background: #e04e3a; color: white; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 0.65rem; font-weight: 800;
+      display: none; align-items: center; justify-content: center;
+    }
+    .cart-badge.show { display: flex; }
     .hamburger {
       display: none; flex-direction: column; gap: 5px;
-      cursor: pointer; padding: 8px; border: none; background: transparent;
+      cursor: pointer; padding: 6px; border: none; background: transparent;
     }
-    .hamburger span {
-      display: block; width: 22px; height: 2px; border-radius: 2px;
-      background: var(--ivory); transition: transform var(--t), opacity var(--t), background var(--t);
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    .mob-menu {
-      display: none; position: fixed; top: 74px; left: 0; right: 0;
-      background: var(--ivory); border-bottom: 1px solid rgba(109,110,94,0.15);
-      padding: 16px 40px 28px; z-index: 99;
-      box-shadow: 0 8px 32px rgba(50,50,50,0.08);
-    }
-    .mob-menu.open { display: block; }
-    .mob-menu a {
-      display: block; padding: 14px 0;
-      border-bottom: 1px solid rgba(109,110,94,0.1);
-      font-weight: 500; color: var(--green); font-size: 1rem;
-    }
-    .mob-menu a:last-child { border-bottom: none; }
+    .hamburger span { display: block; width: 20px; height: 2px; background: var(--ivory); border-radius: 2px; }
 
-    /* HERO */
-    .hero {
-      min-height: 100dvh; background: var(--green);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; padding: 100px 40px 80px; text-align: center;
+    /* HERO MINI */
+    .hero-mini {
+      background: var(--green); padding: 20px 24px 28px;
+      text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05);
     }
-    /* decorative brand graphic elements */
-    .h-deco-circle {
-      position: absolute; top: 14%; left: 7%;
-      width: 72px; height: 72px; border-radius: 50%;
-      border: 1.5px solid rgba(253,243,221,0.18);
+    .hero-mini h1 {
+      font-family: 'Onest', sans-serif; font-size: 1rem; font-weight: 400;
+      color: rgba(253,243,221,0.7); letter-spacing: 0.06em;
     }
-    .h-deco-half {
-      position: absolute; bottom: 11%; right: 8%;
-      width: 100px; height: 50px;
-      background: rgba(253,243,221,0.07);
-      border-radius: 100px 100px 0 0;
-    }
-    .h-deco-line {
-      position: absolute; bottom: 20%; left: 9%;
-      width: 64px; height: 1.5px;
-      background: rgba(253,243,221,0.22);
-    }
-    .h-deco-pill {
-      position: absolute; top: 18%; right: 9%;
-      width: 48px; height: 22px; border-radius: 100px;
-      background: rgba(253,243,221,0.1);
-    }
-    /* hero logo */
-    .hero-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
-    .hero-logo-word {
-      display: flex; align-items: center;
-      font-family: 'Outfit', sans-serif; font-weight: 900;
-      font-size: clamp(3.8rem, 9vw, 7.5rem);
-      letter-spacing: -0.02em; line-height: 1; color: var(--ivory);
-    }
-    .hero-eye {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 0.88em; height: 0.88em;
-      position: relative; top: -0.04em; margin: 0 0.02em;
-    }
-    .hero-eye svg { width: 100%; height: 100%; }
-    .hero-logo-sub {
-      font-family: 'Outfit', sans-serif; font-size: clamp(0.65rem, 1.2vw, 0.9rem);
-      font-weight: 400; letter-spacing: 0.6em; text-transform: uppercase;
-      color: rgba(253,243,221,0.7); margin-top: 6px; padding-left: 0.6em;
-    }
-    .hero-rule { width: 36px; height: 1.5px; background: rgba(253,243,221,0.35); margin: 0 auto 28px; }
-    .hero-tagline {
-      font-size: clamp(0.95rem, 1.8vw, 1.2rem); font-weight: 300;
-      color: rgba(253,243,221,0.75); max-width: 440px; line-height: 1.75;
-      letter-spacing: 0.03em;
-    }
-    .hero-scroll {
-      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: rgba(253,243,221,0.4); font-size: 0.65rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-    }
-    .hero-scroll-bar {
-      width: 1px; height: 36px;
-      background: linear-gradient(to bottom, rgba(253,243,221,0.5), transparent);
-      animation: scrollBar 2s ease-in-out infinite;
-    }
-    @keyframes scrollBar { 0%,100%{opacity:1}50%{opacity:0.2} }
 
-    /* INTRO */
-    .intro { background: var(--ivory); padding: 96px 40px; }
-    .intro-in {
-      max-width: 1280px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    /* FILTERS */
+    .filters {
+      background: white; border-bottom: 1px solid #e8e4dd;
+      position: sticky; top: 64px; z-index: 90;
     }
-    .intro-q {
-      font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 800; color: var(--green); line-height: 1.15;
+    .filters-in {
+      max-width: 1280px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; gap: 8px;
+      overflow-x: auto; height: 52px;
+      scrollbar-width: none;
     }
-    .intro-q em { font-style: italic; font-weight: 400; font-family: 'Onest', sans-serif; }
-    .intro-body { display: flex; flex-direction: column; gap: 24px; }
-    .intro-txt { font-size: 1rem; color: var(--taupe); line-height: 1.75; }
-    .pills { display: flex; flex-wrap: wrap; gap: 10px; }
-    .pill {
-      padding: 8px 20px; border-radius: 100px; font-size: 0.75rem;
-      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    .filters-in::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      flex-shrink: 0; padding: 6px 16px; border-radius: 100px;
+      border: 1.5px solid #d8d4cc; background: transparent;
+      font-family: 'Onest', sans-serif; font-size: 0.8rem; font-weight: 600;
+      color: var(--taupe); cursor: pointer;
+      transition: all var(--t); white-space: nowrap;
     }
-    .pill-o { border: 1.5px solid var(--green); color: var(--green); }
-    .pill-f { background: var(--green); color: var(--ivory); }
+    .filter-btn:hover { border-color: var(--green); color: var(--green); }
+    .filter-btn.active { background: var(--green); border-color: var(--green); color: var(--ivory); }
+    .filter-sep { width: 1px; height: 24px; background: #e0dbd4; flex-shrink: 0; margin: 0 4px; }
 
-    /* SHARED SECTION BITS */
-    .max { max-width: 1280px; margin: 0 auto; }
-    .sec-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--taupe); margin-bottom: 12px; }
-    .sec-tag.lt { color: rgba(253,243,221,0.55); }
-    h2 { font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--green); line-height: 1.15; margin-bottom: 16px; }
-    h2.lt { color: var(--ivory); }
-    .sec-sub { font-size: 1rem; color: var(--taupe); line-height: 1.7; max-width: 500px; }
-    .sec-sub.lt { color: rgba(253,243,221,0.65); }
-    .sec-hd { margin-bottom: 56px; }
-    .sec-hd.c { text-align: center; }
-    .sec-hd.c .sec-sub { margin: 0 auto; }
+    /* MAIN */
+    .main { max-width: 1280px; margin: 0 auto; padding: 24px 24px 80px; }
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e8e4dd;
+    }
+    .results-count { font-size: 0.85rem; color: var(--taupe); font-weight: 500; }
+    .sort-sel {
+      font-family: 'Onest', sans-serif; font-size: 0.8rem; color: var(--green);
+      border: 1.5px solid #d8d4cc; border-radius: 6px; padding: 5px 10px;
+      background: white; cursor: pointer; outline: none;
+    }
 
-    /* COLECCIONES */
-    .colec { background: var(--ivory); padding: 96px 40px; }
-    .col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .col-card {
-      background: white; border-radius: 20px; overflow: hidden;
+    /* PRODUCT GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: white; border-radius: 12px; overflow: hidden;
+      border: 1px solid #e8e4dd;
       transition: transform var(--t), box-shadow var(--t);
+      display: flex; flex-direction: column;
     }
-    .col-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(50,50,50,0.1); }
-    .col-visual { aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .cv-green { background: var(--green); }
-    .cv-taupe { background: var(--taupe); }
-    .cv-black { background: var(--black); }
-    .col-body { padding: 28px 28px 32px; }
-    .col-etiq { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--taupe); margin-bottom: 8px; }
-    .col-title { font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: var(--green); margin-bottom: 10px; }
-    .col-desc { font-size: 0.875rem; color: var(--taupe); line-height: 1.65; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(50,50,50,0.1); }
+    .card-img {
+      aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .card-img.brand-rayban { background: linear-gradient(135deg, #2c2c2c, #4a4a4a); }
+    .card-img.brand-ocli { background: linear-gradient(135deg, var(--green), #5a5b4d); }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .card-img-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px;
+    }
+    .card-img-placeholder svg { opacity: 0.3; }
+    .card-img-placeholder span {
+      font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 800;
+      color: rgba(255,255,255,0.5); letter-spacing: 0.05em; text-align: center;
+    }
+    .card-marca-badge {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px; padding: 3px 8px;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: white;
+    }
+    .card-stock-badge {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(224,78,58,0.9);
+      border-radius: 6px; padding: 3px 8px;
+      font-size: 0.65rem; font-weight: 700; color: white;
+    }
+    .card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .card-name { font-size: 0.9rem; font-weight: 600; color: var(--black); line-height: 1.3; }
+    .card-desc { font-size: 0.75rem; color: var(--taupe); line-height: 1.55; flex: 1; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .card-price {
+      font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--green);
+    }
+    .card-price span { font-size: 0.7rem; font-weight: 500; color: var(--taupe); margin-right: 2px; }
+    .add-btn {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--green); color: var(--ivory); border: none;
+      border-radius: 7px; padding: 7px 12px;
+      font-family: 'Onest', sans-serif; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; transition: background var(--t), transform 100ms ease;
+    }
+    .add-btn:hover { background: #5a5b4d; }
+    .add-btn:active { transform: scale(0.96); }
+    .add-btn.added { background: #2d7a47; }
 
-    /* MARCAS */
-    .marcas { background: var(--taupe); padding: 64px 40px; }
-    .marcas-label {
-      text-align: center; font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: rgba(253,243,221,0.55); margin-bottom: 32px;
+    /* EMPTY STATE */
+    .empty {
+      grid-column: 1 / -1; text-align: center; padding: 64px 24px;
+      color: var(--taupe);
     }
-    .marcas-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-    .marca-item {
-      padding: 12px 28px; border-radius: 100px;
-      border: 1.5px solid rgba(253,243,221,0.3);
-      font-family: 'Outfit', sans-serif; font-size: 0.875rem; font-weight: 600;
-      color: rgba(253,243,221,0.75); letter-spacing: 0.04em;
-      transition: border-color var(--t), color var(--t), background var(--t);
-    }
-    .marca-item:hover { border-color: var(--ivory); color: var(--ivory); background: rgba(253,243,221,0.08); }
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+    .empty h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+    .empty p { font-size: 0.875rem; }
 
-    /* SEP QUOTE */
-    .sep { background: var(--black); padding: 72px 40px; text-align: center; }
-    .sep p {
-      font-family: 'Onest', sans-serif; font-style: italic; font-weight: 300;
-      font-size: clamp(1.2rem, 2.2vw, 1.8rem); color: rgba(253,243,221,0.7);
-      max-width: 660px; margin: 0 auto; line-height: 1.65; letter-spacing: 0.02em;
-    }
-    .sep cite { display: block; font-style: normal; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(253,243,221,0.35); margin-top: 20px; }
+    /* SKELETON */
+    .skeleton { background: #e8e4dd; border-radius: 12px; overflow: hidden; }
+    .sk-img { aspect-ratio: 4/3; background: linear-gradient(90deg, #e8e4dd 25%, #f0ece4 50%, #e8e4dd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    .sk-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .sk-line { height: 12px; border-radius: 6px; background: linear-gradient(90deg, #e8e4dd 25%, #f0ece4 50%, #e8e4dd 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    .sk-line.short { width: 60%; }
+    .sk-line.price { width: 40%; height: 16px; margin-top: 4px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    /* POR QUÉ */
-    .porque { background: var(--green); padding: 96px 40px; }
-    .pq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
-    .pq-card {
-      padding: 36px; background: rgba(253,243,221,0.05);
-      border: 1px solid rgba(253,243,221,0.12); border-radius: 16px;
-      transition: background var(--t), border-color var(--t);
+    /* CART OVERLAY */
+    .cart-overlay {
+      position: fixed; inset: 0; background: rgba(50,50,50,0.45);
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity var(--t);
     }
-    .pq-card:hover { background: rgba(253,243,221,0.09); border-color: rgba(253,243,221,0.22); }
-    .pq-num {
-      font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900;
-      color: rgba(253,243,221,0.13); line-height: 1; margin-bottom: 16px;
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-panel {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100vw);
+      background: white; z-index: 201; display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 280ms ease;
+      box-shadow: -4px 0 32px rgba(50,50,50,0.15);
     }
-    .pq-t { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--ivory); margin-bottom: 10px; }
-    .pq-d { font-size: 0.875rem; color: rgba(253,243,221,0.55); line-height: 1.7; }
+    .cart-overlay.open .cart-panel { transform: translateX(0); }
+    .cart-header {
+      padding: 20px 24px 16px; border-bottom: 1px solid #e8e4dd;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-title { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--black); }
+    .cart-close {
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: #f0ece4; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--black); transition: background var(--t);
+    }
+    .cart-close:hover { background: #e0dbd4; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .cart-empty { text-align: center; padding: 48px 0; color: var(--taupe); }
+    .cart-empty svg { margin: 0 auto 12px; display: block; opacity: 0.3; }
+    .cart-empty p { font-size: 0.875rem; }
+    .cart-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px; border-radius: 10px; background: #f7f4ef;
+    }
+    .ci-img {
+      width: 60px; height: 50px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .ci-img.brand-rayban { background: linear-gradient(135deg, #2c2c2c, #4a4a4a); }
+    .ci-img.brand-ocli { background: linear-gradient(135deg, var(--green), #5a5b4d); }
+    .ci-info { flex: 1; min-width: 0; }
+    .ci-name { font-size: 0.82rem; font-weight: 600; color: var(--black); line-height: 1.3; margin-bottom: 2px; }
+    .ci-brand { font-size: 0.7rem; color: var(--taupe); margin-bottom: 8px; }
+    .ci-controls { display: flex; align-items: center; gap: 0; }
+    .qty-btn {
+      width: 26px; height: 26px; border-radius: 6px; border: 1.5px solid #d8d4cc;
+      background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--black); font-weight: 700;
+      transition: border-color var(--t), background var(--t);
+    }
+    .qty-btn:hover { border-color: var(--green); background: #f0f4ee; }
+    .qty-num { width: 32px; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--black); }
+    .ci-price { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--green); margin-top: 6px; }
+    .ci-remove { background: none; border: none; cursor: pointer; color: #ccc; padding: 4px; transition: color var(--t); }
+    .ci-remove:hover { color: #e04e3a; }
+    .cart-footer { padding: 16px 24px 24px; border-top: 1px solid #e8e4dd; display: flex; flex-direction: column; gap: 12px; }
+    .cart-subtotal { display: flex; justify-content: space-between; align-items: center; }
+    .cart-subtotal-label { font-size: 0.875rem; color: var(--taupe); font-weight: 500; }
+    .cart-total-val { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--black); }
+    .checkout-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 15px; border-radius: 10px; border: none;
+      background: #25D366; color: white;
+      font-family: 'Onest', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background var(--t), transform 100ms ease;
+    }
+    .checkout-btn:hover { background: #1fb55a; transform: translateY(-1px); }
+    .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .cart-note { font-size: 0.72rem; color: var(--taupe); text-align: center; }
 
-    /* TESTIMONIOS */
-    .testimonios { background: var(--ivory); padding: 96px 40px; }
-    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .test-card {
-      padding: 32px 28px; background: white; border-radius: 16px;
-      border: 1px solid rgba(109,110,94,0.1);
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--black); color: white;
+      padding: 12px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 500;
+      z-index: 300; transition: transform 280ms ease;
+      white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
-    .stars { color: var(--taupe); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 16px; }
-    .test-txt { font-size: 0.9rem; color: #555; line-height: 1.75; margin-bottom: 20px; font-style: italic; }
-    .test-aut { display: flex; align-items: center; gap: 12px; }
-    .test-av {
-      width: 38px; height: 38px; border-radius: 50%; background: var(--green);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--ivory); font-weight: 700; font-size: 0.78rem;
-    }
-    .test-nm { font-weight: 600; color: var(--green); font-size: 0.875rem; }
-    .test-lc { font-size: 0.7rem; color: var(--taupe); }
-
-    /* VISITANOS */
-    .visitanos { background: var(--black); padding: 96px 40px; }
-    .vis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-    .vis-rows { display: flex; flex-direction: column; gap: 28px; margin-top: 40px; }
-    .vis-row { display: flex; gap: 18px; align-items: flex-start; }
-    .vis-ico {
-      width: 44px; height: 44px; min-width: 44px; border-radius: 10px;
-      background: rgba(253,243,221,0.08); display: flex; align-items: center;
-      justify-content: center; color: var(--ivory);
-    }
-    .vis-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(253,243,221,0.4); margin-bottom: 4px; }
-    .vis-val { color: rgba(253,243,221,0.85); font-weight: 500; line-height: 1.55; }
-    .vis-box {
-      background: rgba(253,243,221,0.05); border: 1px solid rgba(253,243,221,0.12);
-      border-radius: 20px; padding: 48px 44px; display: flex; flex-direction: column; gap: 18px;
-    }
-    .vis-box-t { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--ivory); }
-    .vis-box-s { font-size: 0.9rem; color: rgba(253,243,221,0.55); line-height: 1.7; }
-    .vis-btn {
-      display: inline-flex; align-items: center; gap: 10px; width: fit-content;
-      padding: 13px 28px; border-radius: 100px; font-weight: 700; font-size: 0.875rem;
-      transition: background var(--t), transform 100ms ease, border-color var(--t), color var(--t);
-    }
-    .vis-btn-wa { background: var(--ivory); color: var(--black); }
-    .vis-btn-wa:hover { background: #f5e8c4; transform: translateY(-1px); }
-    .vis-btn-ig { border: 1.5px solid rgba(253,243,221,0.25); color: rgba(253,243,221,0.7); }
-    .vis-btn-ig:hover { border-color: rgba(253,243,221,0.6); color: var(--ivory); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
     /* FOOTER */
-    footer { background: #1c1c1c; padding: 36px 40px; }
-    .foot-in {
-      max-width: 1280px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-    }
-    .foot-logo { display: flex; flex-direction: column; gap: 3px; }
-    .foot-logo-word {
-      display: flex; align-items: center;
-      font-family: 'Outfit', sans-serif; font-weight: 900;
-      font-size: 1.3rem; letter-spacing: -0.02em; color: var(--ivory); line-height: 1;
-    }
-    .foot-eye { display: inline-flex; align-items: center; justify-content: center; width: 1.1em; height: 1.1em; margin: 0 1px; }
-    .foot-eye svg { width: 100%; height: 100%; }
-    .foot-sub { font-size: 0.58rem; letter-spacing: 0.45em; color: rgba(253,243,221,0.3); text-transform: uppercase; padding-left: 0.1em; font-family: 'Outfit', sans-serif; }
-    .foot-links { display: flex; gap: 20px; }
-    .foot-links a { font-size: 0.78rem; color: rgba(253,243,221,0.4); transition: color var(--t); }
-    .foot-links a:hover { color: var(--ivory); }
-    .foot-copy { font-size: 0.72rem; color: rgba(253,243,221,0.25); }
-
-    /* WA FLOAT */
-    .wa-float {
-      position: fixed; bottom: 28px; right: 28px; z-index: 200;
-      width: 54px; height: 54px; border-radius: 50%; background: #25D366;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
-      transition: transform var(--t), box-shadow var(--t);
-    }
-    .wa-float:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(37,211,102,0.5); }
-
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+    footer { background: var(--black); padding: 28px 24px; text-align: center; }
+    footer p { font-size: 0.75rem; color: rgba(253,243,221,0.35); }
 
     /* RESPONSIVE */
-    @media(max-width:1024px){
-      .col-grid { grid-template-columns: 1fr 1fr; }
-      .test-grid { grid-template-columns: 1fr 1fr; }
-      .pq-grid { gap: 16px; }
-    }
+    @media(max-width:1100px){ .grid { grid-template-columns: repeat(3, 1fr); } }
     @media(max-width:768px){
-      .intro,.colec,.porque,.testimonios,.visitanos{padding:64px 24px;}
-      .marcas,.sep,.footer{padding:56px 24px;}
-      nav .nav-links { display: none; }
-      .hamburger { display: flex; }
-      .intro-in,.vis-grid { grid-template-columns: 1fr; gap: 40px; }
-      .col-grid { grid-template-columns: 1fr; }
-      .test-grid { grid-template-columns: 1fr; }
-      .pq-grid { grid-template-columns: 1fr; }
-      .nav-in,.foot-in { padding-left: 24px; padding-right: 24px; }
-      .foot-in { flex-direction: column; align-items: flex-start; gap: 20px; }
-      footer { padding: 36px 24px; }
-      .vis-box { padding: 32px 28px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-search { display: none; }
+      .hero-mini { padding: 14px 24px 20px; }
     }
     @media(max-width:480px){
-      .hero { padding: 90px 24px 72px; }
-      .marcas-grid { gap: 8px; }
-      .marca-item { padding: 10px 20px; font-size: 0.8rem; }
+      .grid { grid-template-columns: 1fr; }
+      .cart-panel { width: 100vw; }
     }
+
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
 
-<div id="prog"></div>
-
 <!-- NAV -->
-<nav id="nav">
+<nav>
   <div class="nav-in">
-    <a class="nav-logo" href="#" id="nav-logo">
+    <a class="nav-logo" href="#">
       <div class="nav-logo-word">
         ILUSI
-        <span class="nav-logo-eye">
-          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="22" cy="22" r="16" stroke="currentColor" stroke-width="4.5" fill="none"/>
-            <circle cx="22" cy="22" r="5.5" fill="currentColor"/>
-          </svg>
+        <span class="nav-eye">
+          <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="16" stroke="#fdf3dd" stroke-width="4.5"/><circle cx="22" cy="22" r="5.5" fill="#fdf3dd"/></svg>
         </span>
         N
       </div>
-      <div class="nav-logo-sub">Ó p t i c a</div>
+      <div class="nav-logo-sub">Ó p t i c a · T a n d i l</div>
     </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="#colecciones">Colecciones</a></li>
-      <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#visitanos">Visitanos</a></li>
-      <li>
-        <a href="https://instagram.com/ilusion.optica" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          Instagram
-        </a>
-      </li>
-    </ul>
-    <button class="hamburger" id="hbg" aria-label="Menú">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-right">
+      <div class="nav-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar producto...">
+      </div>
+      <button class="cart-btn" id="cart-btn" onclick="openCart()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Carrito
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+    </div>
   </div>
 </nav>
-<div class="mob-menu" id="mob">
-  <a href="#colecciones">Colecciones</a>
-  <a href="#nosotros">Nosotros</a>
-  <a href="#visitanos">Visitanos</a>
-  <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+
+<!-- HERO MINI -->
+<div class="hero-mini">
+  <h1>Lentes de sol · Colección 2025</h1>
 </div>
 
-<!-- HERO -->
-<section class="hero" id="inicio">
-  <div class="h-deco-circle"></div>
-  <div class="h-deco-half"></div>
-  <div class="h-deco-line"></div>
-  <div class="h-deco-pill"></div>
-
-  <div class="hero-logo">
-    <div class="hero-logo-word">
-      ILUSI
-      <span class="hero-eye">
-        <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="44" cy="44" r="32" stroke="#fdf3dd" stroke-width="7" fill="none"/>
-          <circle cx="44" cy="44" r="11" fill="#fdf3dd"/>
-        </svg>
-      </span>
-      N
-    </div>
-    <div class="hero-logo-sub">Ó p t i c a</div>
+<!-- FILTERS -->
+<div class="filters">
+  <div class="filters-in">
+    <button class="filter-btn active" data-filter="all">Todo</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" data-filter="marca-Ray-Ban">Ray-Ban</button>
+    <button class="filter-btn" data-filter="marca-Ocli">Ocli</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" data-filter="precio-bajo">Menor precio</button>
+    <button class="filter-btn" data-filter="precio-alto">Mayor precio</button>
   </div>
-
-  <div class="hero-rule"></div>
-
-  <p class="hero-tagline">
-    Donde cada mirada encuentra<br>su mejor versión.
-  </p>
-
-  <div class="hero-scroll">
-    <div class="hero-scroll-bar"></div>
-    Scroll
-  </div>
-</section>
-
-<!-- INTRO -->
-<section class="intro" id="nosotros">
-  <div class="intro-in max">
-    <div>
-      <h2 class="intro-q">
-        Lentes que cuentan<br><em>quién sos.</em>
-      </h2>
-    </div>
-    <div class="intro-body">
-      <p class="intro-txt">En Ilusión Óptica encontrás las últimas colecciones de anteojos, lentes de sol y contacto. Un espacio donde la moda y la salud visual se encuentran para darte la mejor experiencia.</p>
-      <div class="pills">
-        <span class="pill pill-o">Moda</span>
-        <span class="pill pill-f">Excelencia</span>
-        <span class="pill pill-o">Salud Visual</span>
-        <span class="pill pill-f">Exclusividad</span>
-        <span class="pill pill-o">Tandil</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- COLECCIONES -->
-<section class="colec" id="colecciones">
-  <div class="max">
-    <div class="sec-hd">
-      <div class="sec-tag">Nuestras colecciones</div>
-      <h2>Encontrá tu estilo</h2>
-      <p class="sec-sub">Desde monturas graduadas hasta lentes de sol de diseño. Siempre las últimas tendencias.</p>
-    </div>
-    <div class="col-grid">
-
-      <!-- Anteojos graduados -->
-      <div class="col-card">
-        <div class="col-visual cv-green">
-          <svg width="200" height="110" viewBox="0 0 200 110" fill="none">
-            <rect x="4" y="22" width="80" height="58" rx="22" stroke="rgba(253,243,221,0.45)" stroke-width="5" fill="rgba(253,243,221,0.06)"/>
-            <path d="M84 51 L116 51" stroke="rgba(253,243,221,0.45)" stroke-width="5" stroke-linecap="round"/>
-            <rect x="116" y="22" width="80" height="58" rx="22" stroke="rgba(253,243,221,0.45)" stroke-width="5" fill="rgba(253,243,221,0.06)"/>
-            <path d="M4 38 L-8 32" stroke="rgba(253,243,221,0.3)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M196 38 L208 32" stroke="rgba(253,243,221,0.3)" stroke-width="4" stroke-linecap="round"/>
-            <ellipse cx="32" cy="40" rx="14" ry="8" fill="rgba(253,243,221,0.12)" transform="rotate(-15 32 40)"/>
-            <ellipse cx="144" cy="40" rx="14" ry="8" fill="rgba(253,243,221,0.12)" transform="rotate(-15 144 40)"/>
-          </svg>
-        </div>
-        <div class="col-body">
-          <div class="col-etiq">Colección</div>
-          <div class="col-title">Anteojos Graduados</div>
-          <p class="col-desc">Las últimas tendencias en monturas para quienes buscan estilo y corrección visual. Materiales premium, acabados únicos, asesoramiento personalizado.</p>
-        </div>
-      </div>
-
-      <!-- Lentes de Sol -->
-      <div class="col-card">
-        <div class="col-visual cv-taupe">
-          <svg width="200" height="110" viewBox="0 0 200 110" fill="none">
-            <rect x="2" y="16" width="88" height="72" rx="26" stroke="rgba(253,243,221,0.55)" stroke-width="5" fill="rgba(253,243,221,0.09)"/>
-            <path d="M90 52 L110 52" stroke="rgba(253,243,221,0.55)" stroke-width="5" stroke-linecap="round"/>
-            <rect x="110" y="16" width="88" height="72" rx="26" stroke="rgba(253,243,221,0.55)" stroke-width="5" fill="rgba(253,243,221,0.09)"/>
-            <path d="M2 34 L-10 28" stroke="rgba(253,243,221,0.35)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M198 34 L210 28" stroke="rgba(253,243,221,0.35)" stroke-width="4" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="col-body">
-          <div class="col-etiq">Colección</div>
-          <div class="col-title">Lentes de Sol</div>
-          <p class="col-desc">Diseños contemporáneos con protección UV400. Desde clásicos atemporales hasta los modelos más actuales de las mejores marcas internacionales.</p>
-        </div>
-      </div>
-
-      <!-- Lentes de Contacto -->
-      <div class="col-card">
-        <div class="col-visual cv-black">
-          <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
-            <ellipse cx="65" cy="65" rx="55" ry="38" stroke="rgba(253,243,221,0.2)" stroke-width="2" fill="none"/>
-            <circle cx="65" cy="65" r="28" stroke="rgba(253,243,221,0.18)" stroke-width="2" fill="none"/>
-            <circle cx="65" cy="65" r="18" stroke="rgba(253,243,221,0.15)" stroke-width="2" fill="rgba(253,243,221,0.05)"/>
-            <circle cx="65" cy="65" r="7" fill="rgba(253,243,221,0.45)"/>
-            <circle cx="70" cy="60" r="2.5" fill="rgba(253,243,221,0.75)"/>
-          </svg>
-        </div>
-        <div class="col-body">
-          <div class="col-etiq">Colección</div>
-          <div class="col-title">Lentes de Contacto</div>
-          <p class="col-desc">Amplia variedad de lentes de contacto blandas y rígidas. Con asesoramiento profesional para garantizarte el máximo confort visual diario.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- MARCAS -->
-<section class="marcas">
-  <div class="max">
-    <div class="marcas-label">Marcas que trabajamos</div>
-    <div class="marcas-grid">
-      <span class="marca-item">Ray-Ban</span>
-      <span class="marca-item">Oakley</span>
-      <span class="marca-item">Carrera</span>
-      <span class="marca-item">Guess</span>
-      <span class="marca-item">Tommy Hilfiger</span>
-      <span class="marca-item">Vogue</span>
-      <span class="marca-item">Silhouette</span>
-      <span class="marca-item">Prada</span>
-    </div>
-  </div>
-</section>
-
-<!-- QUOTE -->
-<div class="sep">
-  <p>
-    "Ver bien es el primer paso<br>para vivir plenamente."
-    <cite>Ilusión Óptica · Tandil</cite>
-  </p>
 </div>
 
-<!-- POR QUÉ -->
-<section class="porque">
-  <div class="max">
-    <div class="sec-tag lt">Por qué elegirnos</div>
-    <h2 class="lt">Ilusión Óptica.<br>Tandil.</h2>
-    <p class="sec-sub lt">Más de una década acompañando las miradas de nuestra comunidad.</p>
-    <div class="pq-grid">
-      <div class="pq-card">
-        <div class="pq-num">01</div>
-        <div class="pq-t">Atención Personalizada</div>
-        <p class="pq-d">Cada cliente es único. Te asesoramos con dedicación para encontrar la montura perfecta para tu cara, estilo y necesidad visual.</p>
+<!-- MAIN -->
+<div class="main">
+  <div class="results-bar">
+    <span class="results-count" id="results-count">Cargando...</span>
+    <select class="sort-sel" id="sort-sel" onchange="applySort()">
+      <option value="default">Ordenar por</option>
+      <option value="precio-asc">Precio: menor a mayor</option>
+      <option value="precio-desc">Precio: mayor a menor</option>
+      <option value="nombre-asc">Nombre A–Z</option>
+    </select>
+  </div>
+  <div class="grid" id="grid">
+    <!-- Skeletons while loading -->
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-line price"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-line price"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-line price"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line short"></div><div class="sk-line price"></div></div></div>
+  </div>
+</div>
+
+<!-- CART OVERLAY + PANEL -->
+<div class="cart-overlay" id="cart-overlay" onclick="handleOverlayClick(event)">
+  <div class="cart-panel" id="cart-panel">
+    <div class="cart-header">
+      <div class="cart-title">Tu carrito</div>
+      <button class="cart-close" onclick="closeCart()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-label">Total</span>
+        <span class="cart-total-val" id="cart-total">$0</span>
       </div>
-      <div class="pq-card">
-        <div class="pq-num">02</div>
-        <div class="pq-t">Las Mejores Marcas</div>
-        <p class="pq-d">Trabajamos con las marcas más reconocidas del mercado óptico, garantizando calidad, durabilidad y las últimas tendencias.</p>
-      </div>
-      <div class="pq-card">
-        <div class="pq-num">03</div>
-        <div class="pq-t">Obras Sociales</div>
-        <p class="pq-d">Convenios con más de 50 obras sociales y prepagas. Atendemos a toda la familia con los mejores beneficios disponibles.</p>
-      </div>
-      <div class="pq-card">
-        <div class="pq-num">04</div>
-        <div class="pq-t">Entrega en 48 hs</div>
-        <p class="pq-d">La mayoría de los trabajos se entregan en 48 a 72 horas. Rápido, sin sacrificar calidad ni precisión en cada lente.</p>
-      </div>
+      <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Pedir por WhatsApp
+      </button>
+      <p class="cart-note">Te contactamos para confirmar disponibilidad y coordinar el pago.</p>
     </div>
   </div>
-</section>
+</div>
 
-<!-- TESTIMONIOS -->
-<section class="testimonios">
-  <div class="max">
-    <div class="sec-hd c">
-      <div class="sec-tag">Lo que dicen</div>
-      <h2>Nuestros clientes</h2>
-    </div>
-    <div class="test-grid">
-      <div class="test-card">
-        <div class="stars">★★★★★</div>
-        <p class="test-txt">"Hace años que vengo y siempre es una experiencia increíble. Me ayudaron a encontrar la montura perfecta. El servicio es impecable."</p>
-        <div class="test-aut">
-          <div class="test-av">ML</div>
-          <div><div class="test-nm">María Laura R.</div><div class="test-lc">Tandil · cliente desde 2015</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="stars">★★★★★</div>
-        <p class="test-txt">"Increíble variedad de monturas y un asesoramiento que marca la diferencia. Me fui con los anteojos perfectos para mi cara y mi estilo."</p>
-        <div class="test-aut">
-          <div class="test-av">JP</div>
-          <div><div class="test-nm">Juan Pablo M.</div><div class="test-lc">Tandil · Google Maps</div></div>
-        </div>
-      </div>
-      <div class="test-card">
-        <div class="stars">★★★★★</div>
-        <p class="test-txt">"El lugar en Tandil para comprar anteojos. Atención personalizada, marcas premium y precios accesibles. Totalmente recomendado."</p>
-        <div class="test-aut">
-          <div class="test-av">SC</div>
-          <div><div class="test-nm">Sofía C.</div><div class="test-lc">Tandil · Instagram</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-<!-- VISITANOS -->
-<section class="visitanos" id="visitanos">
-  <div class="max">
-    <div class="vis-grid">
-      <div>
-        <div class="sec-tag lt">Encontranos</div>
-        <h2 class="lt">Visitanos<br>en Tandil</h2>
-        <p class="sec-sub lt">Vení a conocer nuestra colección y vivir la experiencia Ilusión en persona.</p>
-        <div class="vis-rows">
-          <div class="vis-row">
-            <div class="vis-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div>
-              <div class="vis-lbl">Dirección</div>
-              <!-- ↓ ACTUALIZAR -->
-              <div class="vis-val">Calle Ejemplo 1234<br>Tandil, Buenos Aires</div>
-            </div>
-          </div>
-          <div class="vis-row">
-            <div class="vis-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div>
-              <div class="vis-lbl">Horarios</div>
-              <div class="vis-val">Lun–Vie: 9:00–13:00 · 16:00–20:00<br>Sábados: 9:00–13:00</div>
-            </div>
-          </div>
-          <div class="vis-row">
-            <div class="vis-ico">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.5 3.36 2 2 0 0 1 3.52 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.12 6.12l1.32-1.32a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            </div>
-            <div>
-              <div class="vis-lbl">WhatsApp</div>
-              <!-- ↓ ACTUALIZAR -->
-              <div class="vis-val">+54 249 XXX-XXXX</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="vis-box">
-        <div class="vis-box-t">¿Tenés una consulta?</div>
-        <p class="vis-box-s">Escribinos por WhatsApp o Instagram y te respondemos a la brevedad. También podés pasar directamente por el local.</p>
-        <!-- ↓ ACTUALIZAR número -->
-        <a href="https://wa.me/5492490000000" target="_blank" rel="noopener" class="vis-btn vis-btn-wa">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Escribinos por WhatsApp
-        </a>
-        <!-- ↓ ACTUALIZAR usuario de Instagram -->
-        <a href="https://instagram.com" target="_blank" rel="noopener" class="vis-btn vis-btn-ig">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          Seguinos en Instagram
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <div class="foot-in">
-    <div class="foot-logo">
-      <div class="foot-logo-word">
-        ILUSI
-        <span class="foot-eye">
-          <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="16" stroke="#fdf3dd" stroke-width="4.5" fill="none"/><circle cx="22" cy="22" r="5.5" fill="#fdf3dd"/></svg>
-        </span>
-        N
-      </div>
-      <div class="foot-sub">Ó p t i c a · T a n d i l</div>
-    </div>
-    <div class="foot-links">
-      <a href="#colecciones">Colecciones</a>
-      <a href="#nosotros">Nosotros</a>
-      <a href="#visitanos">Visitanos</a>
-      <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
-    </div>
-    <div class="foot-copy">© 2025 Ilusión Óptica Tandil</div>
-  </div>
+  <p>© 2025 Ilusión Óptica Tandil · Todos los derechos reservados</p>
 </footer>
 
-<!-- WA FLOAT -->
-<!-- ↓ ACTUALIZAR número -->
-<a class="wa-float" href="https://wa.me/5492490000000" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
-
 <script>
-  const prog = document.getElementById('prog');
-  const nav = document.getElementById('nav');
-  const navLogo = document.getElementById('nav-logo');
-  const navLinks = document.getElementById('nav-links');
-  const hbg = document.getElementById('hbg');
+  const SUPA_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+  const SUPA_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+  // ↓ ACTUALIZAR con número real de WhatsApp
+  const WA_NUMBER = '5492490000000';
 
-  function updateNav() {
-    const heroBottom = document.querySelector('.hero').offsetHeight - 60;
-    const past = window.scrollY > heroBottom;
+  const { createClient } = supabase;
+  const db = createClient(SUPA_URL, SUPA_KEY);
 
-    nav.style.background = past ? 'rgba(253,243,221,0.96)' : 'transparent';
-    nav.style.backdropFilter = past ? 'blur(18px)' : 'none';
-    nav.style.boxShadow = past ? '0 1px 0 rgba(109,110,94,0.12)' : 'none';
+  let allProducts = [];
+  let filtered = [];
+  let cart = JSON.parse(localStorage.getItem('ilusion_cart') || '[]');
+  let currentFilter = 'all';
+  let currentSort = 'default';
+  let searchTerm = '';
 
-    const col = past ? 'var(--green)' : 'var(--ivory)';
-    navLogo.style.color = col;
-    navLinks.querySelectorAll('a').forEach(a => a.style.color = col);
-    hbg.querySelectorAll('span').forEach(s => s.style.background = col);
+  // ── LOAD PRODUCTS ──
+  async function loadProducts() {
+    const { data, error } = await db
+      .from('ilusion_productos')
+      .select('*')
+      .eq('activo', true)
+      .order('marca', { ascending: true })
+      .order('nombre', { ascending: true });
 
-    const pct = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1) * 100;
-    prog.style.width = pct + '%';
+    if (error) { console.error(error); return; }
+    allProducts = data;
+    applyFilters();
   }
 
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
+  // ── FILTER + SORT ──
+  function applyFilters() {
+    let result = [...allProducts];
 
-  // Hamburger
-  const mob = document.getElementById('mob');
-  hbg.addEventListener('click', () => {
-    hbg.classList.toggle('open');
-    mob.classList.toggle('open');
-  });
-  mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    hbg.classList.remove('open');
-    mob.classList.remove('open');
-  }));
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      result = result.filter(p => p.nombre.toLowerCase().includes(q) || p.marca.toLowerCase().includes(q));
+    }
 
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const t = document.querySelector(a.getAttribute('href'));
-      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+    if (currentFilter !== 'all') {
+      if (currentFilter.startsWith('marca-')) {
+        const m = currentFilter.replace('marca-', '');
+        result = result.filter(p => p.marca === m);
+      } else if (currentFilter === 'precio-bajo') {
+        result = [...result].sort((a, b) => a.precio - b.precio);
+      } else if (currentFilter === 'precio-alto') {
+        result = [...result].sort((a, b) => b.precio - a.precio);
+      }
+    }
+
+    if (currentSort === 'precio-asc') result.sort((a,b) => a.precio - b.precio);
+    else if (currentSort === 'precio-desc') result.sort((a,b) => b.precio - a.precio);
+    else if (currentSort === 'nombre-asc') result.sort((a,b) => a.nombre.localeCompare(b.nombre));
+
+    filtered = result;
+    renderGrid();
+  }
+
+  function applySort() {
+    currentSort = document.getElementById('sort-sel').value;
+    applyFilters();
+  }
+
+  // ── RENDER GRID ──
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('results-count');
+    count.textContent = `${filtered.length} producto${filtered.length !== 1 ? 's' : ''}`;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><h3>Sin resultados</h3><p>Intentá con otro filtro o búsqueda</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+      const brandClass = p.marca === 'Ray-Ban' ? 'brand-rayban' : 'brand-ocli';
+      const inCart = cart.find(c => c.id === p.id);
+      const lowStock = p.stock > 0 && p.stock <= 3;
+      const noStock = p.stock === 0;
+
+      return `
+      <div class="card">
+        <div class="card-img ${brandClass}">
+          ${p.imagen_url
+            ? `<img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy">`
+            : `<div class="card-img-placeholder">
+                <svg width="40" height="26" viewBox="0 0 200 110" fill="none">
+                  <rect x="4" y="22" width="80" height="58" rx="22" stroke="rgba(255,255,255,0.4)" stroke-width="5" fill="rgba(255,255,255,0.06)"/>
+                  <path d="M84 51 L116 51" stroke="rgba(255,255,255,0.4)" stroke-width="5" stroke-linecap="round"/>
+                  <rect x="116" y="22" width="80" height="58" rx="22" stroke="rgba(255,255,255,0.4)" stroke-width="5" fill="rgba(255,255,255,0.06)"/>
+                </svg>
+                <span>${p.marca}</span>
+               </div>`
+          }
+          <div class="card-marca-badge">${p.marca}</div>
+          ${lowStock ? `<div class="card-stock-badge">¡Últimas ${p.stock}!</div>` : ''}
+          ${noStock ? `<div class="card-stock-badge">Sin stock</div>` : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-name">${p.nombre}</div>
+          <div class="card-desc">${p.descripcion || ''}</div>
+          <div class="card-footer">
+            <div class="card-price"><span>$</span>${Number(p.precio).toLocaleString('es-AR')}</div>
+            <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCart('${p.id}')" ${noStock ? 'disabled' : ''}>
+              ${inCart
+                ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> En carrito`
+                : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Agregar`
+              }
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── FILTER BUTTONS ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      applyFilters();
     });
   });
+
+  // ── SEARCH ──
+  document.getElementById('search-input').addEventListener('input', e => {
+    searchTerm = e.target.value.trim();
+    applyFilters();
+  });
+
+  // ── CART ──
+  function addToCart(id) {
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+    const existing = cart.find(c => c.id === id);
+    if (existing) {
+      existing.qty = Math.min(existing.qty + 1, product.stock);
+    } else {
+      cart.push({ id: product.id, nombre: product.nombre, marca: product.marca, precio: product.precio, qty: 1, stock: product.stock });
+    }
+    saveCart();
+    renderGrid();
+    updateCartBadge();
+    showToast(`"${product.nombre.split(' ').slice(0,3).join(' ')}" agregado al carrito`);
+    if (!document.getElementById('cart-overlay').classList.contains('open')) {
+      setTimeout(openCart, 300);
+    }
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(c => c.id !== id);
+    saveCart();
+    renderCartPanel();
+    updateCartBadge();
+    renderGrid();
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(c => c.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, Math.min(item.qty + delta, item.stock));
+    saveCart();
+    renderCartPanel();
+  }
+
+  function saveCart() {
+    localStorage.setItem('ilusion_cart', JSON.stringify(cart));
+  }
+
+  function updateCartBadge() {
+    const total = cart.reduce((s, c) => s + c.qty, 0);
+    const badge = document.getElementById('cart-badge');
+    badge.textContent = total;
+    badge.classList.toggle('show', total > 0);
+  }
+
+  function renderCartPanel() {
+    const container = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="cart-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <p>Tu carrito está vacío.<br>¡Agregá algún producto!</p>
+      </div>`;
+      totalEl.textContent = '$0';
+      checkoutBtn.disabled = true;
+      return;
+    }
+
+    const total = cart.reduce((s, c) => s + c.precio * c.qty, 0);
+    totalEl.textContent = '$' + total.toLocaleString('es-AR');
+    checkoutBtn.disabled = false;
+
+    container.innerHTML = cart.map(item => {
+      const brandClass = item.marca === 'Ray-Ban' ? 'brand-rayban' : 'brand-ocli';
+      return `
+      <div class="cart-item">
+        <div class="ci-img ${brandClass}">
+          <svg width="32" height="20" viewBox="0 0 200 110" fill="none">
+            <rect x="4" y="22" width="80" height="58" rx="22" stroke="rgba(255,255,255,0.4)" stroke-width="5" fill="rgba(255,255,255,0.06)"/>
+            <path d="M84 51 L116 51" stroke="rgba(255,255,255,0.4)" stroke-width="5" stroke-linecap="round"/>
+            <rect x="116" y="22" width="80" height="58" rx="22" stroke="rgba(255,255,255,0.4)" stroke-width="5" fill="rgba(255,255,255,0.06)"/>
+          </svg>
+        </div>
+        <div class="ci-info">
+          <div class="ci-name">${item.nombre}</div>
+          <div class="ci-brand">${item.marca}</div>
+          <div class="ci-controls">
+            <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+          </div>
+          <div class="ci-price">$${(item.precio * item.qty).toLocaleString('es-AR')}</div>
+        </div>
+        <button class="ci-remove" onclick="removeFromCart('${item.id}')" title="Eliminar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  function openCart() {
+    renderCartPanel();
+    document.getElementById('cart-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCart() {
+    document.getElementById('cart-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('cart-overlay')) closeCart();
+  }
+
+  // ── CHECKOUT VIA WHATSAPP ──
+  function checkout() {
+    if (cart.length === 0) return;
+    const total = cart.reduce((s, c) => s + c.precio * c.qty, 0);
+    let msg = '¡Hola! Quiero hacer un pedido de Ilusión Óptica:\n\n';
+    cart.forEach(item => {
+      msg += `• ${item.nombre} (${item.marca}) x${item.qty} — $${(item.precio * item.qty).toLocaleString('es-AR')}\n`;
+    });
+    msg += `\n*Total: $${total.toLocaleString('es-AR')}*\n\n¿Están disponibles?`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── INIT ──
+  updateCartBadge();
+  loadProducts();
 </script>
 </body>
 </html>
