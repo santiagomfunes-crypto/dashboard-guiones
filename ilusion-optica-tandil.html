@@ -232,6 +232,9 @@
     .card-img.brand-ocli {
       background: linear-gradient(145deg, #555647 0%, var(--green) 50%, #7a7b6c 100%);
     }
+    .card-img.brand-infinit {
+      background: linear-gradient(145deg, #1e1e1e 0%, #333 60%, #444 100%);
+    }
     .card-img.brand-other {
       background: linear-gradient(145deg, var(--taupe) 0%, #a8978c 100%);
     }
@@ -391,6 +394,7 @@
     }
     .ci-img.brand-rayban { background: linear-gradient(135deg, #2a2a2a, #444); }
     .ci-img.brand-ocli { background: linear-gradient(135deg, var(--green), #5a5b4d); }
+    .ci-img.brand-infinit { background: linear-gradient(135deg, #1e1e1e, #3a3a3a); }
     .ci-img.brand-other { background: linear-gradient(135deg, var(--taupe), #a8978c); }
     .ci-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
     .ci-info { flex: 1; min-width: 0; }
@@ -522,8 +526,7 @@
       </button>
       <div class="hero-brands">
         <span class="hero-brands-label">Marcas</span>
-        <span class="hero-brand-pill">Ray-Ban</span>
-        <span class="hero-brand-pill">Ocli</span>
+        <span class="hero-brand-pill">Infinit</span>
       </div>
     </div>
     <div class="hero-visual">
@@ -592,8 +595,7 @@
   <div class="filters-in">
     <button class="filter-btn active" data-filter="all">Todo</button>
     <div class="filter-sep"></div>
-    <button class="filter-btn" data-filter="marca-Ray-Ban">Ray-Ban</button>
-    <button class="filter-btn" data-filter="marca-Ocli">Ocli</button>
+    <button class="filter-btn" data-filter="marca-Infinit">Infinit</button>
     <div class="filter-sep"></div>
     <button class="filter-btn" data-filter="precio-bajo">Menor precio</button>
     <button class="filter-btn" data-filter="precio-alto">Mayor precio</button>
@@ -723,6 +725,7 @@
   function brandClass(marca) {
     if (marca === 'Ray-Ban') return 'brand-rayban';
     if (marca === 'Ocli') return 'brand-ocli';
+    if (marca === 'Infinit') return 'brand-infinit';
     return 'brand-other';
   }
 
