@@ -427,6 +427,135 @@
     .checkout-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
     .cart-note { font-size: 0.72rem; color: var(--taupe); text-align: center; line-height: 1.5; }
 
+    /* ─── PRODUCT MODAL ──────────────────────────────── */
+    .pmodal-overlay {
+      position: fixed; inset: 0; background: rgba(20,20,20,0.65);
+      z-index: 250; display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none;
+      transition: opacity 220ms ease;
+      backdrop-filter: blur(4px);
+    }
+    .pmodal-overlay.open { opacity: 1; pointer-events: all; }
+    .pmodal {
+      background: white; border-radius: 18px;
+      width: 100%; max-width: 880px; max-height: 90vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      transform: scale(0.95) translateY(12px);
+      transition: transform 250ms ease;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    }
+    .pmodal-overlay.open .pmodal { transform: scale(1) translateY(0); }
+
+    /* Gallery side */
+    .pmodal-gallery {
+      background: var(--bg); display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+    .pmodal-main-img {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative; min-height: 320px;
+    }
+    .pmodal-main-img img {
+      width: 100%; height: 100%; object-fit: contain;
+      transition: opacity 180ms ease;
+    }
+    .pmodal-main-img.loading img { opacity: 0; }
+    .pmodal-img-placeholder {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+    }
+    .pmodal-img-placeholder svg { opacity: 0.15; }
+    .pmodal-img-placeholder span {
+      font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.2rem;
+      letter-spacing: 0.12em; color: rgba(0,0,0,0.15); text-transform: uppercase;
+    }
+    .pmodal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: white; border: none; border-radius: 50%; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12); cursor: pointer;
+      transition: all 150ms; z-index: 2; color: var(--black);
+    }
+    .pmodal-nav:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); transform: translateY(-50%) scale(1.05); }
+    .pmodal-nav.prev { left: 12px; }
+    .pmodal-nav.next { right: 12px; }
+    .pmodal-nav.hidden { opacity: 0; pointer-events: none; }
+    .pmodal-thumbs {
+      display: flex; gap: 8px; padding: 12px 14px;
+      overflow-x: auto; scrollbar-width: none; flex-shrink: 0;
+      background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .pmodal-thumbs::-webkit-scrollbar { display: none; }
+    .pmodal-thumb {
+      width: 56px; height: 42px; border-radius: 7px; flex-shrink: 0;
+      object-fit: cover; cursor: pointer; border: 2px solid transparent;
+      transition: border-color 150ms, opacity 150ms; opacity: 0.6;
+    }
+    .pmodal-thumb:hover { opacity: 0.85; }
+    .pmodal-thumb.active { border-color: var(--green); opacity: 1; }
+    .pmodal-img-counter {
+      position: absolute; bottom: 60px; right: 12px;
+      background: rgba(0,0,0,0.45); color: white;
+      font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 12px;
+    }
+
+    /* Info side */
+    .pmodal-info {
+      padding: 32px 28px 24px; display: flex; flex-direction: column;
+      overflow-y: auto; position: relative;
+    }
+    .pmodal-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 34px; height: 34px; border-radius: 50%; border: none;
+      background: rgba(0,0,0,0.06); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--black); transition: background 150ms;
+    }
+    .pmodal-close:hover { background: rgba(0,0,0,0.12); }
+    .pmodal-brand-tag {
+      display: inline-block; padding: 3px 11px; border-radius: 6px;
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 12px;
+      background: rgba(109,110,94,0.1); color: var(--green);
+    }
+    .pmodal-name {
+      font-family: 'Outfit', sans-serif; font-weight: 900;
+      font-size: 1.4rem; line-height: 1.15; letter-spacing: -0.02em;
+      color: var(--black); margin-bottom: 6px;
+    }
+    .pmodal-cat {
+      font-size: 0.78rem; color: var(--taupe); font-weight: 500; margin-bottom: 20px;
+    }
+    .pmodal-divider { height: 1px; background: #e8e3db; margin: 0 0 20px; }
+    .pmodal-price-block { margin-bottom: 20px; }
+    .pmodal-price-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--taupe); margin-bottom: 4px; }
+    .pmodal-price-val {
+      font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 900;
+      color: var(--black); letter-spacing: -0.03em; line-height: 1;
+    }
+    .pmodal-desc {
+      font-size: 0.875rem; color: var(--taupe); line-height: 1.7;
+      flex: 1; margin-bottom: 24px;
+    }
+    .pmodal-add-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 15px; border-radius: 10px; border: none;
+      background: var(--green); color: var(--ivory);
+      font-family: 'Onest', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background var(--t), transform 100ms ease;
+    }
+    .pmodal-add-btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .pmodal-add-btn.added { background: #357a4a; }
+    .pmodal-add-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    @media(max-width: 700px) {
+      .pmodal { grid-template-columns: 1fr; max-height: 95vh; }
+      .pmodal-gallery { min-height: 260px; max-height: 300px; }
+      .pmodal-info { padding: 20px 20px 20px; }
+      .pmodal-name { font-size: 1.15rem; }
+    }
+
     /* ─── TOAST ───────────────────────────────────────── */
     .toast {
       position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -665,6 +794,51 @@
   </div>
 </div>
 
+<!-- PRODUCT MODAL -->
+<div class="pmodal-overlay" id="pmodal-overlay" onclick="handlePModalOverlay(event)">
+  <div class="pmodal" id="pmodal" role="dialog" aria-modal="true">
+    <div class="pmodal-gallery" id="pmodal-gallery">
+      <div class="pmodal-main-img" id="pmodal-main-img">
+        <div class="pmodal-img-placeholder" id="pmodal-placeholder">
+          <svg width="64" height="40" viewBox="0 0 200 110" fill="none">
+            <rect x="4" y="22" width="80" height="58" rx="22" stroke="#aaa" stroke-width="5" fill="rgba(0,0,0,0.03)"/>
+            <path d="M84 51 L116 51" stroke="#aaa" stroke-width="5" stroke-linecap="round"/>
+            <rect x="116" y="22" width="80" height="58" rx="22" stroke="#aaa" stroke-width="5" fill="rgba(0,0,0,0.03)"/>
+          </svg>
+          <span id="pmodal-placeholder-brand"></span>
+        </div>
+        <img id="pmodal-img" src="" alt="" onload="this.parentElement.classList.remove('loading')" onerror="document.getElementById('pmodal-placeholder').style.display='flex'; this.style.display='none'">
+        <button class="pmodal-nav prev" id="pmodal-prev" onclick="pmodalNav(-1)" aria-label="Foto anterior">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="pmodal-nav next" id="pmodal-next" onclick="pmodalNav(1)" aria-label="Foto siguiente">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="pmodal-img-counter" id="pmodal-counter"></div>
+      </div>
+      <div class="pmodal-thumbs" id="pmodal-thumbs"></div>
+    </div>
+    <div class="pmodal-info">
+      <button class="pmodal-close" onclick="closePModal()" aria-label="Cerrar">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="pmodal-brand-tag" id="pmodal-brand"></div>
+      <div class="pmodal-name" id="pmodal-name"></div>
+      <div class="pmodal-cat" id="pmodal-cat"></div>
+      <div class="pmodal-divider"></div>
+      <div class="pmodal-price-block">
+        <div class="pmodal-price-label">Precio</div>
+        <div class="pmodal-price-val" id="pmodal-price"></div>
+      </div>
+      <p class="pmodal-desc" id="pmodal-desc"></p>
+      <button class="pmodal-add-btn" id="pmodal-add-btn" onclick="pmodalAddToCart()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Agregar al carrito
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- CART -->
 <div class="cart-overlay" id="cart-overlay" onclick="handleOverlayClick(event)">
   <div class="cart-panel" id="cart-panel">
@@ -721,6 +895,110 @@
   let currentFilter = 'all';
   let currentSort = 'default';
   let searchTerm = '';
+
+  // ── PRODUCT MODAL ──
+  let pmodalProduct = null;
+  let pmodalImgIdx = 0;
+
+  function openPModal(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return;
+    pmodalProduct = p;
+    pmodalImgIdx = 0;
+
+    const imgs = p.imagenes_urls && p.imagenes_urls.length ? p.imagenes_urls : (p.imagen_url ? [p.imagen_url] : []);
+    const catLabel = { sol:'Lentes de sol', recetados:'Recetados', deportivos:'Deportivos', ninos:'Niños' }[p.categoria] || '';
+
+    document.getElementById('pmodal-brand').textContent = p.marca;
+    document.getElementById('pmodal-name').textContent = p.nombre;
+    document.getElementById('pmodal-cat').textContent = catLabel;
+    document.getElementById('pmodal-price').textContent = '$' + Number(p.precio).toLocaleString('es-AR');
+    document.getElementById('pmodal-desc').textContent = p.descripcion || '';
+    document.getElementById('pmodal-placeholder-brand').textContent = p.marca;
+
+    renderPModalImage(imgs, 0);
+    renderPModalThumbs(imgs);
+    updatePModalAddBtn();
+
+    document.getElementById('pmodal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function renderPModalImage(imgs, idx) {
+    const imgEl = document.getElementById('pmodal-img');
+    const placeholder = document.getElementById('pmodal-placeholder');
+    const counter = document.getElementById('pmodal-counter');
+    const main = document.getElementById('pmodal-main-img');
+
+    if (imgs.length === 0) {
+      imgEl.style.display = 'none';
+      placeholder.style.display = 'flex';
+      counter.textContent = '';
+    } else {
+      placeholder.style.display = 'none';
+      imgEl.style.display = 'block';
+      main.classList.add('loading');
+      imgEl.src = imgs[idx];
+      counter.textContent = `${idx + 1} / ${imgs.length}`;
+    }
+
+    document.getElementById('pmodal-prev').classList.toggle('hidden', idx === 0);
+    document.getElementById('pmodal-next').classList.toggle('hidden', idx >= imgs.length - 1);
+  }
+
+  function renderPModalThumbs(imgs) {
+    const container = document.getElementById('pmodal-thumbs');
+    if (imgs.length <= 1) { container.style.display = 'none'; return; }
+    container.style.display = 'flex';
+    container.innerHTML = imgs.map((src, i) =>
+      `<img class="pmodal-thumb ${i === 0 ? 'active' : ''}" src="${src}" alt="Foto ${i+1}" loading="lazy" onclick="pmodalGoTo(${i})">`
+    ).join('');
+  }
+
+  function pmodalNav(dir) {
+    const p = pmodalProduct;
+    if (!p) return;
+    const imgs = p.imagenes_urls && p.imagenes_urls.length ? p.imagenes_urls : (p.imagen_url ? [p.imagen_url] : []);
+    pmodalImgIdx = Math.max(0, Math.min(pmodalImgIdx + dir, imgs.length - 1));
+    pmodalGoTo(pmodalImgIdx);
+  }
+
+  function pmodalGoTo(idx) {
+    const p = pmodalProduct;
+    if (!p) return;
+    const imgs = p.imagenes_urls && p.imagenes_urls.length ? p.imagenes_urls : (p.imagen_url ? [p.imagen_url] : []);
+    pmodalImgIdx = idx;
+    renderPModalImage(imgs, idx);
+    document.querySelectorAll('.pmodal-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
+  }
+
+  function updatePModalAddBtn() {
+    if (!pmodalProduct) return;
+    const btn = document.getElementById('pmodal-add-btn');
+    const inCart = cart.find(c => c.id === pmodalProduct.id);
+    const noStock = pmodalProduct.stock === 0;
+    btn.disabled = noStock;
+    btn.className = 'pmodal-add-btn' + (inCart ? ' added' : '');
+    btn.innerHTML = inCart
+      ? `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> En carrito`
+      : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Agregar al carrito`;
+  }
+
+  function pmodalAddToCart() {
+    if (!pmodalProduct) return;
+    addToCart(pmodalProduct.id, /* fromModal */ true);
+    updatePModalAddBtn();
+  }
+
+  function closePModal() {
+    document.getElementById('pmodal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    pmodalProduct = null;
+  }
+
+  function handlePModalOverlay(e) {
+    if (e.target === document.getElementById('pmodal-overlay')) closePModal();
+  }
 
   function brandClass(marca) {
     if (marca === 'Ray-Ban') return 'brand-rayban';
@@ -797,7 +1075,7 @@
       const desc = p.descripcion || '';
       const catLabel = { sol:'Lentes de sol', recetados:'Recetados', deportivos:'Deportivos', ninos:'Niños' }[p.categoria] || p.categoria || '';
 
-      return `<div class="card">
+      return `<div class="card" onclick="openPModal('${p.id}')" style="cursor:pointer;">
         <div class="card-img ${bc}">
           ${p.imagen_url
             ? `<img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy">`
@@ -823,7 +1101,7 @@
               <div class="card-price-label">Precio</div>
               <div class="card-price-val">$${Number(p.precio).toLocaleString('es-AR')}</div>
             </div>
-            <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCart('${p.id}')" ${noStock ? 'disabled' : ''}>
+            <button class="add-btn ${inCart ? 'added' : ''}" onclick="event.stopPropagation(); addToCart('${p.id}')" ${noStock ? 'disabled' : ''}>
               ${inCart
                 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> En carrito`
                 : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Agregar`
@@ -851,7 +1129,7 @@
   });
 
   // ── CART ──
-  function addToCart(id) {
+  function addToCart(id, fromModal = false) {
     const product = allProducts.find(p => p.id === id);
     if (!product) return;
     const existing = cart.find(c => c.id === id);
@@ -864,7 +1142,7 @@
     renderGrid();
     updateCartBadge();
     showToast(`"${product.nombre.split(' ').slice(0,3).join(' ')}" agregado`);
-    if (!document.getElementById('cart-overlay').classList.contains('open')) {
+    if (!fromModal && !document.getElementById('cart-overlay').classList.contains('open')) {
       setTimeout(openCart, 280);
     }
   }
@@ -973,6 +1251,15 @@
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
+
+  // ── KEYBOARD ──
+  document.addEventListener('keydown', e => {
+    const pOpen = document.getElementById('pmodal-overlay').classList.contains('open');
+    const cOpen = document.getElementById('cart-overlay').classList.contains('open');
+    if (e.key === 'Escape') { if (pOpen) closePModal(); else if (cOpen) closeCart(); }
+    if (pOpen && e.key === 'ArrowLeft')  pmodalNav(-1);
+    if (pOpen && e.key === 'ArrowRight') pmodalNav(1);
+  });
 
   // ── INIT ──
   updateCartBadge();
