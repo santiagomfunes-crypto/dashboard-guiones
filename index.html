@@ -94,6 +94,9 @@
             <button class="clear-btn" onclick="clearFilters()">Limpiar</button>
         </div>
         <div class="content" id="content"></div>
+        <div id="load-more-wrap" style="display:none;text-align:center;padding:24px 16px 8px">
+            <button id="load-more-btn" onclick="loadMore()" style="background:#8B6F3A;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px">Cargar mas guiones</button>
+        </div>
 
     <!-- VIEW: FILMADOS -->
     </div>
@@ -834,6 +837,7 @@ function normTema(t){return TEMA_NORM[t]||t;}
 
 var sb=window.supabase.createClient(SB_URL,SB_KEY);
 var allG=[],curId=null,curRat=0,allVotos=[],curUserEmail='';
+var guionesOffset=0,guionesHasMore=false;
 var BADGE_MAP={'santiagomfunes@gmail.com':'S','celina.colombo15@gmail.com':'C','huergomarcos@gmail.com':'M'};
 var BADGE_COLOR={'S':'#8B6F3A','C':'#2D6A9F','M':'#2D8C5A'};
 
@@ -900,9 +904,27 @@ function enterApp(){
 }
 
 function loadAll(){
-    sb.from('guiones').select('*').order('id').then(function(res){
+    guionesOffset=0;
+    sb.from('guiones').select('*').order('id',{ascending:false}).range(0,49).then(function(res){
         if(res.error){toast('Error: '+res.error.message,true);return;}
         allG=res.data||[];
+        guionesHasMore=(allG.length===50);
+        var lmw=document.getElementById('load-more-wrap');
+        if(lmw)lmw.style.display=guionesHasMore?'block':'none';
+        loadVotos(function(){doFilter();});
+    });
+}
+function loadMore(){
+    var btn=document.getElementById('load-more-btn');
+    if(btn){btn.textContent='Cargando...';btn.disabled=true;}
+    guionesOffset+=50;
+    sb.from('guiones').select('*').order('id',{ascending:false}).range(guionesOffset,guionesOffset+49).then(function(res){
+        if(btn){btn.textContent='Cargar mas guiones';btn.disabled=false;}
+        var more=res.data||[];
+        allG=allG.concat(more);
+        guionesHasMore=(more.length===50);
+        var lmw=document.getElementById('load-more-wrap');
+        if(lmw)lmw.style.display=guionesHasMore?'block':'none';
         loadVotos(function(){doFilter();});
     });
 }
@@ -1495,7 +1517,7 @@ var allBriefing=[];
 function loadBriefing(){
     var el=document.getElementById('briefing-list');
     el.innerHTML='<div style="color:#ccc;text-align:center;padding:20px">Cargando...</div>';
-    sb.from('newsletter').select('*').order('id',{ascending:false}).then(function(res){
+    sb.from('newsletter').select('*').order('id',{ascending:false}).limit(20).then(function(res){
         allBriefing=res.data||[];
         renderBriefing();
     });
