@@ -191,14 +191,14 @@ async function loadGuiones(){
   if(!sbOk){ showLoader(false); return; }
   let all=[], from=0, ps=1000;
   while(true){
-    const {data,error} = await sbClient.from('guiones').select('id,titulo,angulo,hook,cuerpo,estado').range(from,from+ps-1);
+    const {data,error} = await sbClient.from('guiones').select('id,titulo,angulo,hook,texto,status').range(from,from+ps-1);
     if(error||!data?.length) break;
     all.push(...data);
     if(data.length<ps) break;
     from+=ps;
   }
-  // Filter only listo / aprobado — skip already filmado/publicado
-  guiones = all.filter(g=>!['filmado','publicado'].includes(g.estado));
+  // Mostrar todos — el usuario decide cuáles quedan
+  guiones = all;
   // Shuffle for fresh feel
   for(let i=guiones.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[guiones[i],guiones[j]]=[guiones[j],guiones[i]];}
   showLoader(false);
@@ -220,7 +220,7 @@ function showCard(){
   angEl.style.background=colors.bg; angEl.style.color=colors.tx;
   document.getElementById('c-titulo').textContent=g.titulo||'Sin título';
   document.getElementById('c-hook').textContent=g.hook||'—';
-  document.getElementById('c-cuerpo').textContent=g.cuerpo||'—';
+  document.getElementById('c-cuerpo').textContent=g.texto||'—';
   checks=[false,false,false,false];
   renderChecks();
   const card=document.getElementById('main-card');
