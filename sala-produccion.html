@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sala de Producción — SFRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#F5F5F3;--card:#ffffff;--card2:#F5F5F3;--border:#E8E4DD;
+  --gold:#8B6F3A;--gold-lt:#D4A853;--text:#1a1a2e;--muted:#777;--dim:#bbb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:16px;min-height:100vh;max-width:1280px;margin:0 auto;padding:0 24px;}
+
+/* ── Header ── */
+.hdr{padding:14px 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:50;}
+.hdr-title{font-family:'Cinzel',serif;font-size:16px;font-weight:600;letter-spacing:2px;color:var(--gold);}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.sync-indicator{width:9px;height:9px;border-radius:50%;background:var(--dim);}
+.sync-indicator.ok{background:#4CAF50;box-shadow:0 0 6px #4CAF5070;}
+.sync-indicator.err{background:#C8453A;}
+.queue-chip{background:var(--gold);color:#fff;font-size:13px;font-weight:700;padding:5px 14px;border-radius:14px;cursor:pointer;display:none;}
+.queue-chip.show{display:inline-block;}
+
+/* ── Voter selector ── */
+.voter-sel{display:flex;gap:4px;background:#F0EDE8;border-radius:10px;padding:3px;}
+.voter-btn{padding:5px 14px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:#999;letter-spacing:.3px;transition:all .15s;}
+.voter-btn.on{background:#fff;color:var(--gold);box-shadow:0 1px 4px #0001;}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:0;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;align-items:stretch;margin:0 -24px;padding:0 24px;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:12px 18px;font-size:12px;font-weight:600;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;color:#999;white-space:nowrap;transition:all .15s;letter-spacing:.3px;}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── Views ── */
+.view{display:none;padding:24px 0 100px;}
+.view.on{display:block;}
+
+/* ── Filters ── */
+.filters{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;flex-wrap:wrap;}
+.filters::-webkit-scrollbar{display:none;}
+.fsel{background:#fff;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:'Montserrat',sans-serif;}
+
+/* ── Guion Cards Grid ── */
+#guiones-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px;}
+#guiones-list .empty{grid-column:1/-1;}
+
+.g-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .15s;position:relative;box-shadow:0 1px 3px #0001;display:flex;flex-direction:column;gap:10px;}
+.g-card:hover{border-color:#8B6F3A55;box-shadow:0 4px 14px #0002;}
+.g-card.selected{border-color:var(--gold);box-shadow:0 3px 12px #8B6F3A22;}
+.g-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.g-titulo{font-size:14px;font-weight:700;line-height:1.4;flex:1;color:var(--text);}
+.g-sel{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.g-sel.on{background:var(--gold);border-color:var(--gold);}
+.g-sel svg{width:13px;height:13px;fill:#fff;display:none;}
+.g-sel.on svg{display:block;}
+.g-hook{font-size:12px;color:var(--muted);line-height:1.55;font-style:italic;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.g-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.ang-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:7px;letter-spacing:.5px;text-transform:uppercase;}
+.meta-pill{font-size:10px;color:#999;background:#F5F5F3;padding:2px 9px;border-radius:5px;}
+.st-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.4px;text-transform:uppercase;}
+.st-listo{background:#F5F5F3;color:#999;}
+.st-aprobado{background:#FDF8E8;color:#8B6F3A;border:1px solid #D4A83A44;}
+.st-filmado{background:#E8F5EE;color:#2D8C5A;}
+.st-publicado{background:#E8F0FD;color:#4A90D9;}
+
+/* ── Vote row ── */
+.vote-row{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);margin-top:auto;}
+.vote-btns{display:flex;gap:6px;}
+.v-btn{border:1.5px solid var(--border);background:#fff;border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer;transition:all .15s;line-height:1;color:var(--muted);}
+.v-btn:hover{border-color:var(--gold);}
+.v-btn.v-up-on{background:#FDF8E8;border-color:var(--gold);color:var(--gold);}
+.v-btn.v-dn-on{background:#FDE8E8;border-color:#C8453A;color:#C8453A;}
+.vote-others{display:flex;gap:6px;align-items:center;}
+.v-other{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:3px;}
+.v-other-name{font-weight:600;}
+.v-other-ico{font-size:12px;}
+
+/* ── Para filmar view ── */
+.pf-section{margin-bottom:32px;}
+.pf-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.pf-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;}
+.pf-grid .empty{grid-column:1/-1;}
+.pf-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 1px 3px #0001;}
+.pf-card.both-yes{border-color:#D4A85360;box-shadow:0 3px 10px #8B6F3A15;}
+.pf-card-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--text);}
+.pf-card-hook{font-size:12px;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pf-votes{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.pf-vote-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;display:flex;align-items:center;gap:4px;}
+.pf-vote-yes{background:#FDF8E8;color:var(--gold);}
+.pf-vote-no{background:#FDE8E8;color:#C8453A;}
+.pf-vote-null{background:#F5F5F3;color:#bbb;}
+
+/* ── Queue bottom bar ── */
+.queue-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:calc(100% - 48px);max-width:1280px;background:#fff;border-top:2px solid var(--gold);padding:14px 24px;transition:transform .3s;z-index:200;box-shadow:0 -2px 12px #0002;border-radius:12px 12px 0 0;}
+.queue-bar.show{transform:translateX(-50%) translateY(0);}
+.queue-bar-inner{display:flex;justify-content:space-between;align-items:center;}
+.queue-info{font-size:15px;font-weight:700;color:var(--gold);}
+.queue-sub{font-size:13px;color:#999;margin-top:2px;}
+.queue-list{margin-top:10px;display:none;}
+.queue-list.open{display:block;}
+.queue-item-row{font-size:13px;color:var(--text);padding:4px 0;display:flex;align-items:center;gap:8px;}
+.queue-item-row::before{content:'▶';font-size:9px;color:var(--gold);}
+.queue-cta{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;}
+.queue-clear{background:transparent;color:#bbb;border:none;font-size:13px;cursor:pointer;margin-top:6px;width:100%;text-align:center;padding:4px;}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:52px 16px;color:var(--muted);}
+.empty-icon{font-size:36px;margin-bottom:14px;}
+.empty p{font-size:15px;line-height:1.6;}
+
+/* ── Nuevo guion form ── */
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.form-2col .full-col{grid-column:1/-1;}
+.form-block{margin-bottom:22px;}
+.form-label{display:block;font-size:11px;font-weight:700;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+
+.ang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ang-opt{padding:14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .15s;background:#fff;}
+.ang-opt.on{border-width:2px;}
+.ang-opt-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.ang-opt-emo{font-size:12px;color:#999;}
+
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{padding:8px 16px;border-radius:18px;border:1px solid var(--border);font-size:13px;cursor:pointer;transition:all .15s;color:#999;background:#fff;}
+.chip.on{border-color:var(--gold);color:var(--gold);background:#FDF8E8;}
+
+.dur-row{display:flex;gap:10px;}
+.dur-opt{flex:1;text-align:center;padding:12px 4px;border-radius:10px;border:1px solid var(--border);font-size:15px;cursor:pointer;transition:all .15s;color:#999;background:#fff;}
+.dur-opt span{display:block;font-size:12px;color:#bbb;margin-top:3px;}
+.dur-opt.on{border-color:var(--gold);color:var(--gold);background:#FDF8E8;}
+
+.input-field{width:100%;background:#F5F5F3;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px 14px;font-size:15px;resize:vertical;font-family:'Montserrat',sans-serif;line-height:1.5;}
+.input-field:focus{outline:none;border-color:var(--gold);background:#fff;}
+.input-field::placeholder{color:#bbb;}
+
+.hint-box{background:#FDF8E8;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:14px;font-size:14px;line-height:1.65;color:#777;margin-top:8px;}
+.hint-box strong{color:var(--text);}
+
+.btn-primary{width:100%;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.5px;margin-top:4px;}
+.btn-primary:active{opacity:.85;}
+.btn-secondary{width:100%;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;}
+
+.hook-suggest-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.hook-suggest-item{background:#F5F5F3;border:1px solid var(--border);border-radius:10px;padding:14px;font-size:14px;color:var(--text);cursor:pointer;transition:border-color .15s;line-height:1.55;}
+.hook-suggest-item:hover{border-color:var(--gold);}
+
+/* ── Frameworks tab ── */
+.fw-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fw-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:0;}
+.fw-card h3{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;}
+.fw-card p{font-size:13px;color:#777;line-height:1.6;}
+.fw-example{margin-top:12px;background:#F5F5F3;border-radius:10px;padding:14px;font-size:13px;color:var(--text);font-style:italic;line-height:1.6;border-left:3px solid var(--gold);}
+.fw-steps{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.fw-step{display:flex;gap:12px;align-items:flex-start;}
+.fw-step-label{font-size:10px;font-weight:700;color:var(--gold);width:76px;flex-shrink:0;padding-top:2px;letter-spacing:.5px;}
+.fw-step-text{font-size:13px;color:#777;line-height:1.5;}
+.fw-step-text strong{color:var(--text);}
+.voz-do{color:#2D8C5A;}
+.voz-dont{color:#C8453A;}
+.voz-tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;margin-right:6px;}
+.voz-tag.si{background:#E8F5EE;color:#2D8C5A;}
+.voz-tag.no{background:#FDE8E8;color:#C8453A;}
+
+/* ── Rendimiento tab ── */
+.stat-row{display:flex;gap:12px;margin-bottom:18px;}
+.stat-box{flex:1;background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px;text-align:center;box-shadow:0 1px 2px #0001;}
+.stat-val{font-size:28px;font-weight:800;color:var(--gold);}
+.stat-lbl{font-size:12px;color:#999;margin-top:5px;text-transform:uppercase;letter-spacing:1px;}
+.ang-stat-row{display:flex;flex-direction:column;gap:10px;}
+.ang-stat{background:#F5F5F3;border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;}
+.ang-stat-bar-wrap{height:5px;background:#E8E4DD;border-radius:3px;margin-top:5px;width:100%;}
+.ang-stat-bar{height:5px;border-radius:3px;}
+
+/* ── Notify toast ── */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:#1a1a2e;color:#fff;border:1px solid #3a3a5c;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media (max-width: 700px) {
+  body{padding:0 12px;}
+  #guiones-list{grid-template-columns:1fr;}
+  .pf-grid{grid-template-columns:1fr;}
+  .form-2col{grid-template-columns:1fr;}
+  .form-2col .full-col{grid-column:1;}
+  .fw-2col{grid-template-columns:1fr;}
+  .tabs{margin:0 -12px;padding:0 12px;}
+  .queue-bar{width:calc(100% - 24px);}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-title">Sala de Producción</div>
+  <div class="hdr-right">
+    <span id="queue-chip" class="queue-chip" onclick="toggleQueueBar()">0 para mañana</span>
+    <div class="voter-sel">
+      <button class="voter-btn on" id="voter-santiago" onclick="setVoter('santiago')">Santiago</button>
+      <button class="voter-btn" id="voter-santino" onclick="setVoter('santino')">Santino</button>
+    </div>
+    <div id="sync-dot" class="sync-indicator" title="Supabase"></div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('seleccionar',this)">Mañana filmamos</button>
+  <button class="tab" onclick="switchTab('parafilmar',this)">Para filmar</button>
+  <button class="tab" onclick="switchTab('nuevo',this)">+ Nuevo</button>
+  <button class="tab" onclick="switchTab('frameworks',this)">Frameworks</button>
+  <button class="tab" onclick="switchTab('rendimiento',this)">Rendimiento</button>
+</div>
+
+<!-- ══ TAB: SELECCIONAR ══ -->
+<div class="view on" id="v-seleccionar">
+  <div class="filters">
+    <select class="fsel" id="f-ang" onchange="renderGuiones()">
+      <option value="">Todos los ángulos</option>
+      <option value="problema">Problema</option>
+      <option value="solucion">Solución</option>
+      <option value="producto">Producto</option>
+      <option value="contrario">Contrario</option>
+      <option value="autoridad">Autoridad</option>
+      <option value="prediccion">Predicción</option>
+      <option value="comparacion">Comparación</option>
+      <option value="historia">Historia</option>
+    </select>
+    <select class="fsel" id="f-st" onchange="renderGuiones()">
+      <option value="listo">Listos para filmar</option>
+      <option value="aprobado">Aprobados</option>
+      <option value="">Todos</option>
+    </select>
+    <select class="fsel" id="f-dur" onchange="renderGuiones()">
+      <option value="">Cualquier duración</option>
+      <option value="30">30s</option>
+      <option value="60">60s</option>
+      <option value="90">90s</option>
+    </select>
+  </div>
+  <div id="guiones-list"></div>
+</div>
+
+<!-- ══ TAB: PARA FILMAR ══ -->
+<div class="view" id="v-parafilmar">
+  <div class="pf-section">
+    <div class="pf-section-title">Ambos aprobaron</div>
+    <div class="pf-grid" id="pf-ambos"></div>
+  </div>
+  <div class="pf-section">
+    <div class="pf-section-title">Un voto a favor</div>
+    <div class="pf-grid" id="pf-uno"></div>
+  </div>
+</div>
+
+<!-- ══ TAB: NUEVO ══ -->
+<div class="view" id="v-nuevo">
+  <div class="form-2col">
+
+    <!-- Col izquierda -->
+    <div>
+      <!-- Ángulo -->
+      <div class="form-block">
+        <label class="form-label">1. Ángulo</label>
+        <div class="ang-grid" id="ang-grid"></div>
+      </div>
+
+      <!-- Framework -->
+      <div class="form-block">
+        <label class="form-label">2. Framework</label>
+        <div class="chip-row" id="fw-chips">
+          <span class="chip on" data-fw="ppos" onclick="selFw(this)">PPOS</span>
+          <span class="chip" data-fw="pas" onclick="selFw(this)">PAS</span>
+          <span class="chip" data-fw="aida" onclick="selFw(this)">AIDA</span>
+          <span class="chip" data-fw="bab" onclick="selFw(this)">BAB</span>
+        </div>
+        <div id="fw-hint" class="hint-box"></div>
+      </div>
+
+      <!-- Tono -->
+      <div class="form-block">
+        <label class="form-label">3. Tono</label>
+        <div class="chip-row" id="tono-chips">
+          <span class="chip on" data-tono="urgente" onclick="selTono(this)">Urgente</span>
+          <span class="chip" data-tono="educativo" onclick="selTono(this)">Educativo</span>
+          <span class="chip" data-tono="aspiracional" onclick="selTono(this)">Aspiracional</span>
+          <span class="chip" data-tono="polemico" onclick="selTono(this)">Polémico</span>
+          <span class="chip" data-tono="confianza" onclick="selTono(this)">Confianza</span>
+        </div>
+      </div>
+
+      <!-- Duración -->
+      <div class="form-block">
+        <label class="form-label">4. Duración</label>
+        <div class="dur-row">
+          <div class="dur-opt on" data-dur="30" onclick="selDur(this)">30s<span>Reel corto</span></div>
+          <div class="dur-opt" data-dur="60" onclick="selDur(this)">60s<span>Estándar</span></div>
+          <div class="dur-opt" data-dur="90" onclick="selDur(this)">90s<span>Largo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Col derecha -->
+    <div>
+      <!-- Título -->
+      <div class="form-block">
+        <label class="form-label">5. Título / tema</label>
+        <input type="text" class="input-field" id="n-titulo" placeholder="Ej: 'Por qué Tandil duplicó su precio en 3 años'" style="height:44px;resize:none;" />
+      </div>
+
+      <!-- Hook -->
+      <div class="form-block">
+        <label class="form-label">6. Hook (primeras 2 oraciones)</label>
+        <textarea class="input-field" id="n-hook" rows="3" placeholder="La frase de apertura. Arrancá con un dato, una afirmación que divide, o una historia..."></textarea>
+        <button class="btn-secondary" style="margin-top:8px" onclick="sugerirHooks()">Sugerir hooks según ángulo →</button>
+        <div id="hook-suggestions" class="hook-suggest-list" style="display:none"></div>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="form-block">
+        <label class="form-label">7. Guion completo</label>
+        <textarea class="input-field" id="n-cuerpo" rows="7" placeholder="Escribí el guion completo acá. Objetivo: 200-350 palabras."></textarea>
+        <div id="word-count" style="font-size:10px;color:var(--muted);text-align:right;margin-top:4px;"></div>
+      </div>
+
+      <!-- Guardar -->
+      <button class="btn-primary" onclick="guardarGuion()">Guardar guion</button>
+      <button class="btn-secondary" style="margin-top:8px" onclick="guardarYAgregar()">Guardar + agregar a mañana</button>
+    </div>
+
+  </div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- ══ TAB: FRAMEWORKS ══ -->
+<div class="view" id="v-frameworks">
+  <div class="fw-2col" style="margin-bottom:16px;">
+    <div class="fw-card" style="grid-column:1/-1">
+      <h3>Los 8 ángulos — PPOS expandido</h3>
+      <p>Cada tema se trabaja desde múltiples ángulos. Combiná para no repetir energía.</p>
+      <div id="ang-ref-list" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
+  </div>
+
+  <div class="fw-2col">
+    <div class="fw-card">
+      <h3>Estructura probada (reel 20K views)</h3>
+      <div class="fw-steps">
+        <div class="fw-step"><span class="fw-step-label">HOOK</span><span class="fw-step-text"><strong>Dato que sorprende o afirmación que divide.</strong> Máx 2 oraciones. Primeros 3 segundos.</span></div>
+        <div class="fw-step"><span class="fw-step-label">CREDENCIAL</span><span class="fw-step-text">Por qué Santiago tiene autoridad en esto. 1 oración. <strong>Nunca "mi vieja hizo edificios".</strong></span></div>
+        <div class="fw-step"><span class="fw-step-label">CUERPO</span><span class="fw-step-text">Contexto + 3-4 datos duros + ejemplo real conversacional. Sin muletillas.</span></div>
+        <div class="fw-step"><span class="fw-step-label">CIERRE</span><span class="fw-step-text"><strong>Opinión personal fuerte.</strong> Sin medias tintas. Sin "depende".</span></div>
+      </div>
+      <div class="fw-example">"Tandil creció un 20% en la última década. La mayoría de los pibes de acá se quejan de los precios. Yo entendí rápido que eso no cambia solo. Entonces a los 20 armé un sistema para analizar el mercado antes de que nadie más lo vea. Hoy tengo más de 900 propiedades en base de datos. Así trabajo. ¿Vas a seguir esperando que los precios bajen?"</div>
+    </div>
+
+    <div class="fw-card">
+      <h3>Voz de Santiago — reglas básicas</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div><span class="voz-tag si">SÍ</span>Arrancá con dato que sorprende o afirmación divisiva</div>
+        <div><span class="voz-tag si">SÍ</span>Historia personal específica (el placard, la denuncia, la primera venta)</div>
+        <div><span class="voz-tag si">SÍ</span>Datos duros dichos naturalmente, como si los supiera de memoria</div>
+        <div><span class="voz-tag si">SÍ</span>De "vos", rioplatense natural, hablar limpio</div>
+        <div><span class="voz-tag si">SÍ</span>El sector como contraste: "la mayoría de los martilleros no sabe X"</div>
+        <div style="margin-top:6px;"><span class="voz-tag no">NO</span>Preguntas retóricas: "¿Sabías que...?"</div>
+        <div><span class="voz-tag no">NO</span>CTA de venta directa: "escribime que te asesoro"</div>
+        <div><span class="voz-tag no">NO</span>Motivación vacía: "vos podés", "los sueños se cumplen"</div>
+        <div><span class="voz-tag no">NO</span>Sonar turístico / folleto de ciudad</div>
+        <div><span class="voz-tag no">NO</span>Mencionar Estudio Pascua o "me crié en un estudio de arquitectura"</div>
+      </div>
+    </div>
+
+    <div class="fw-card">
+      <h3>PAS — Problema · Agitación · Solución</h3>
+      <p>El más directo. Ideal para reels de urgencia.</p>
+      <div class="fw-steps">
+        <div class="fw-step"><span class="fw-step-label">PROBLEMA</span><span class="fw-step-text">Nombrá el dolor real que la audiencia siente</span></div>
+        <div class="fw-step"><span class="fw-step-label">AGITACIÓN</span><span class="fw-step-text">Intensificá el impacto. Hacelo urgente. Datos duros.</span></div>
+        <div class="fw-step"><span class="fw-step-label">SOLUCIÓN</span><span class="fw-step-text">Tu insight o perspectiva como la respuesta</span></div>
+      </div>
+      <div class="fw-example">El 30% de Tandil alquila porque no puede comprar. Y la ciudad sigue creciendo. Si eso no te genera urgencia, seguí esperando que los precios bajen. Spoiler: no bajan.</div>
+    </div>
+
+    <div class="fw-card">
+      <h3>AIDA — Atención · Interés · Deseo · Acción</h3>
+      <p>Para reels narrativos. Te da más libertad de historia.</p>
+      <div class="fw-steps">
+        <div class="fw-step"><span class="fw-step-label">ATENCIÓN</span><span class="fw-step-text">Hook fuerte — dato, pregunta o afirmación divisiva</span></div>
+        <div class="fw-step"><span class="fw-step-label">INTERÉS</span><span class="fw-step-text">Historia o dato que construye contexto</span></div>
+        <div class="fw-step"><span class="fw-step-label">DESEO</span><span class="fw-step-text">Pintá el resultado o la oportunidad que se pierde</span></div>
+        <div class="fw-step"><span class="fw-step-label">ACCIÓN</span><span class="fw-step-text">Opinión fuerte o CTA implícito (no "contactame")</span></div>
+      </div>
+    </div>
+
+    <div class="fw-card">
+      <h3>BAB — Before · After · Bridge</h3>
+      <p>Para testimonios y transformaciones. Muy potente en historia personal.</p>
+      <div class="fw-steps">
+        <div class="fw-step"><span class="fw-step-label">ANTES</span><span class="fw-step-text">Estado del problema o situación inicial</span></div>
+        <div class="fw-step"><span class="fw-step-label">DESPUÉS</span><span class="fw-step-text">El estado deseable — resultado, oportunidad</span></div>
+        <div class="fw-step"><span class="fw-step-label">PUENTE</span><span class="fw-step-text">Cómo se llega de uno al otro (tu insight)</span></div>
+      </div>
+      <div class="fw-example">Antes: buscabas departamento y todos te parecían caros. Después: entendés que un 2 ambientes en Tandil todavía es la mitad de Buenos Aires. El puente: saber qué comparar y con qué datos.</div>
+    </div>
+
+    <div class="fw-card">
+      <h3>Fórmulas de hook</h3>
+      <div class="fw-steps">
+        <div class="fw-step"><span class="fw-step-label">DATO</span><span class="fw-step-text">"[X]% de [grupo] [acción]. Y la mayoría no lo sabe."</span></div>
+        <div class="fw-step"><span class="fw-step-label">DIVISIVO</span><span class="fw-step-text">"Me encanta cuando me dicen [opinión común]. Voy a explicarte por qué están equivocados."</span></div>
+        <div class="fw-step"><span class="fw-step-label">HISTORIA</span><span class="fw-step-text">"El año pasado un cliente me dijo [cita]. Hoy [resultado inesperado]."</span></div>
+        <div class="fw-step"><span class="fw-step-label">PREDICCIÓN</span><span class="fw-step-text">"[Mercado] va a [evento] en [plazo]. La pregunta es qué hacés vos hasta entonces."</span></div>
+        <div class="fw-step"><span class="fw-step-label">COMPARACIÓN</span><span class="fw-step-text">"[Precio X] en [ciudad]. [Precio Y] acá. La mitad. Y nadie lo está diciendo."</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- ══ TAB: RENDIMIENTO ══ -->
+<div class="view" id="v-rendimiento">
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val" id="s-publicados">—</div><div class="stat-lbl">Publicados</div></div>
+    <div class="stat-box"><div class="stat-val" id="s-filmados">—</div><div class="stat-lbl">Filmados</div></div>
+    <div class="stat-box"><div class="stat-val" id="s-listos">—</div><div class="stat-lbl">Listos</div></div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Mix de ángulos — guiones publicados</div>
+  <div id="ang-stats" class="ang-stat-row"></div>
+  <div style="margin-top:20px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Publicados recientes</div>
+  <div id="publicados-list"></div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- Queue bar -->
+<div id="queue-bar" class="queue-bar">
+  <div>
+    <div class="queue-bar-inner">
+      <div>
+        <div class="queue-info" id="qb-count">0 guiones para mañana</div>
+        <div class="queue-sub" id="qb-sub">Tocá para ver la lista</div>
+      </div>
+      <button class="queue-cta" onclick="confirmarQueue()">Confirmar ✓</button>
+    </div>
+    <div id="queue-list-div" class="queue-list"></div>
+    <button class="queue-clear" onclick="clearQueue()">Limpiar selección</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+// ═══ CONFIG ═══
+const SUPABASE_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+
+// ═══ ÁNGULOS ═══
+const ANGULOS = [
+  { id:'problema',    name:'Problema',    emo:'Urgencia, frustración',      bg:'#FDEAEA', col:'#C8453A' },
+  { id:'solucion',    name:'Solución',    emo:'Alivio, claridad',           bg:'#E8F5EE', col:'#2D8C5A' },
+  { id:'producto',    name:'Producto',    emo:'Deseo, aspiración',          bg:'#E8F0FD', col:'#4A90D9' },
+  { id:'contrario',   name:'Contrario',   emo:'Provocación, debate',        bg:'#FDF4E8', col:'#C87A2D' },
+  { id:'autoridad',   name:'Autoridad',   emo:'Confianza, credibilidad',    bg:'#F0E8FD', col:'#7A4ABF' },
+  { id:'prediccion',  name:'Predicción',  emo:'FOMO, visión',               bg:'#E8FDFD', col:'#2D9C9C' },
+  { id:'comparacion', name:'Comparación', emo:'Sorpresa, oportunidad',      bg:'#FDFDE8', col:'#8C8C2D' },
+  { id:'historia',    name:'Historia',    emo:'Conexión, prueba social',    bg:'#FDE8F2', col:'#BF4A7A' },
+];
+const ANG_MAP = Object.fromEntries(ANGULOS.map(a=>[a.id,a]));
+
+const ANG_REF = {
+  problema:    'Mostrá el dolor real. "El 30% de Tandil alquila porque no puede comprar. Y la ciudad sigue creciendo."',
+  solucion:    'Presentá la respuesta que la gente no ve. "Todo el mundo se queja de los precios. Nadie entiende por qué suben realmente."',
+  producto:    'Pintá Tandil como la oportunidad ideal. "Ciudad con 20% de crecimiento, universidad, polo tech, sierras. ¿Cuánto crees que sale un 2 ambientes?"',
+  contrario:   'Tomá la posición opuesta. "Me encanta cuando me dicen que Tandil era mejor antes. ¿Antes cuándo?"',
+  autoridad:   'Tu credencial desde adentro. "Analicé 900+ propiedades con IA. Esto es lo que nadie en el mercado está viendo."',
+  prediccion:  'Proyectá con datos actuales. "Tandil va a tener 160K habitantes en 2030. La pregunta es cuándo comprás vos."',
+  comparacion: 'Compará para revelar valor. "Un 2 ambientes en Palermo: 130K dólares. En Tandil con vista a las sierras: 60K. La mitad."',
+  historia:    'Contá una operación real. "El año pasado un cliente me dijo que estaba loco por comprar en Tandil. Hoy su depto vale un 20% más."',
+};
+
+const FW_HINTS = {
+  ppos: '<strong>P · P · O · S</strong> — Cuatro ángulos de un mismo tema.<br>1. Problema (qué duele) → 2. Producto (qué querés vender) → 3. Opuesto/Contrario (la polémica) → 4. Solución (el insight)<br><em>Uno de estos por video. Cuatro videos de un tema = 4 semanas de contenido.</em>',
+  pas:  '<strong>Problema → Agitación → Solución</strong><br>Nombrá el dolor → hacelo urgente con datos → tu perspectiva como respuesta. Mejor para reels cortos de urgencia.',
+  aida: '<strong>Atención → Interés → Deseo → Acción</strong><br>Hook fuerte → contexto que engancha → pintá la oportunidad → opinión fuerte. Más narrativo.',
+  bab:  '<strong>Antes → Después → Puente</strong><br>Situación inicial → estado deseable → cómo se llega. Ideal para historias de clientes o historia personal.',
+};
+
+const HOOK_SUGERENCIAS = {
+  problema:    ['El [X]% de Tandil alquila porque no puede comprar. Y la ciudad sigue creciendo.','Hay algo que nadie te dice cuando alquilás: cada peso que pagás es patrimonio que no vas a tener nunca.'],
+  solucion:    ['Todos ven un edificio nuevo y piensan "nos están llenando de cemento". Yo veo 40 familias que van a tener dónde vivir.','Mucha gente cree que Tandil está caro. No está caro. No saben comparar.'],
+  producto:    ['Ciudad con 20% de crecimiento, universidad, polo tech, sierras, a 4 horas de Buenos Aires. ¿Cuánto pensás que sale un depto?','Si me preguntás dónde poner dólares en Argentina hoy, la respuesta sigue siendo la misma.'],
+  contrario:   ['Me encanta cuando me dicen "Tandil era mejor antes". ¿Antes cuándo?','Todo el mundo te dice que esperes. Que los precios van a bajar. Llevan cinco años esperando.'],
+  autoridad:   ['Analicé más de 900 propiedades en Tandil. Esto es lo que el mercado todavía no está viendo.','A los 20 años armé un sistema para estudiar el mercado antes de que nadie más lo haga. No es magia. Es información.'],
+  prediccion:  ['Tandil va a tener 160 mil habitantes en 2030. La pregunta es si vas a comprar antes o después de que se note en los precios.','Hay una sola cosa que sigue subiendo en Argentina sin importar lo que pase: el ladrillo en ciudades que crecen.'],
+  comparacion: ['Un 2 ambientes en Palermo: 130 mil dólares. En Tandil con vista a las sierras: 60 mil. La mitad. Y nadie lo está diciendo.','El interior argentino está cotizando en dólares pero todavía nadie lo percibe como inversión seria. Eso es la ventana.'],
+  historia:    ['El año pasado un cliente me dijo que estaba loco por comprar en Tandil. Hoy su departamento vale un 20% más.','La primera venta que hice fue diferente a lo que imaginaba. Fue exactamente así.'],
+};
+
+const TONO_HINTS = {
+  urgente:      'Dato que quema. Tensión en cada oración.',
+  educativo:    'Explicar sin vender. La audiencia aprende algo útil.',
+  aspiracional: 'Pintá el futuro posible. Qué se gana actuando ahora.',
+  polemico:     'Afirmación que divide. Mitad está de acuerdo, mitad no.',
+  confianza:    'Experiencia concreta, no opinión. Yo lo hice, así lo hice.',
+};
+
+// ═══ SEED DATA ═══
+const SEED_GUIONES = [
+  {id:'s01',titulo:'El error más caro que comete la gente al comprar en Tandil',angulo:'problema',hook:'La mayoría de las personas que compraron en Tandil en los últimos 3 años cometieron el mismo error. Y les costó entre 20 y 40 mil dólares.',tema:'compra inteligente',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s02',titulo:'Por qué los alquileres en Tandil son un desastre (y qué hacer)',angulo:'problema',hook:'Estás pagando más del 30% de tu sueldo en alquiler y el propietario te puede pedir la propiedad en cualquier momento. Así no se puede vivir.',tema:'alquiler vs compra',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s03',titulo:'El barrio que parecía buen negocio y resultó trampa',angulo:'problema',hook:'En 2021 todo el mundo compraba en ese barrio. Hoy los mismos dueños me llaman para vender con pérdida.',tema:'barrios riesgosos',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s04',titulo:'Compraste en pozo y el proyecto se frenó — qué hacer',angulo:'problema',hook:'Miles de familias en Argentina tienen plata inmovilizada en proyectos que nunca terminaron. Te explico exactamente cuáles son tus opciones.',tema:'compra en pozo',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s05',titulo:'3 cosas que nadie te dice antes de comprar tu primer depto',angulo:'problema',hook:'Nadie en la inmobiliaria te va a decir esto porque no les conviene. A mí me lo ocultaron cuando compré mi primer depto y la pasé muy mal.',tema:'compradores primerizos',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s06',titulo:'Por qué en Tandil es difícil conseguir casa con perros',angulo:'problema',hook:'Tenés un perro mediano y buscás casa en Tandil. Te voy a ser honesto: el 80% del stock disponible te va a decir que no.',tema:'pet-friendly',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s07',titulo:'El problema de comprar lote en zona serrana sin saber esto',angulo:'problema',hook:'Compraste el lote, te vino la emoción, y después te enterás que no podés construir lo que querías. Tres casos reales de Tandil.',tema:'lotes serranos',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s08',titulo:'¿Por qué hay tantas propiedades sin precio en Zonaprop?',angulo:'problema',hook:'Entrás a Zonaprop, encontrás la propiedad ideal, pero no tiene precio. Eso no es accidente. Es una táctica que vas a querer conocer.',tema:'portales inmobiliarios',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s09',titulo:'Alquilar no es tirar la plata (aunque todos lo digan)',angulo:'contrario',hook:'Todo el mundo te dice que alquilar es tirar la plata. Son los mismos que compraron un depto en Buenos Aires y perdieron 40% en dólares.',tema:'alquiler vs compra',tipo:'organico',status:'listo',created_at:'2026-06-01'},
+  {id:'s10',titulo:'El lote no siempre es mejor inversión que el depto',angulo:'contrario',hook:'Te vendieron la idea de que lote vacío = inversión segura. Pero nadie habla de los impuestos, el mantenimiento y los 10 años sin generar renta.',tema:'lote vs depto',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s11',titulo:'No todas las zonas nuevas de Tandil son negocio',angulo:'contrario',hook:'Hay tres barrios nuevos en Tandil que los desarrolladores están vendiendo como "el futuro". Uno solo tiene chances reales. Los otros dos van a tardar 15 años.',tema:'barrios nuevos',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s12',titulo:'Los mejores momentos para comprar no son cuando todos compran',angulo:'contrario',hook:'El mejor negocio inmobiliario de mi carrera lo cerré en 2020, cuando todo el mundo tenía miedo. Así funciona el ciclo real.',tema:'timing del mercado',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s13',titulo:'Por qué no recomiendo comprar en el centro de Tandil hoy',angulo:'contrario',hook:'Soy inmobiliario en Tandil y te voy a decir algo que ningún colega te diría: el centro hoy no es la mejor zona para comprar.',tema:'zonas Tandil',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s14',titulo:'La cochera no siempre suma valor a tu propiedad',angulo:'contrario',hook:'Estás pagando 15 mil dólares extra por la cochera porque "el precio de venta sube". En algunos barrios de Tandil, la cochera no te la van a pagar.',tema:'valuación',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s15',titulo:'Construir en Tandil hoy: ¿sigue siendo negocio?',angulo:'contrario',hook:'En 2021 construir salía un 30% menos que comprar terminado. Ese diferencial desapareció. Te cuento los números actuales.',tema:'construcción vs compra',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s16',titulo:'Por qué los fideicomisos al costo no son para todos',angulo:'contrario',hook:'El fideicomiso al costo parece maravilloso en el papel. Pero hay tres condiciones que nadie te aclara antes de firmar.',tema:'fideicomisos',tipo:'organico',status:'listo',created_at:'2026-06-02'},
+  {id:'s17',titulo:'Así tasé 80 propiedades en Tandil este año — método real',angulo:'autoridad',hook:'Taso entre 5 y 10 propiedades por semana en Tandil. Esto es exactamente cómo funciona el proceso desde adentro.',tema:'proceso tasación',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s18',titulo:'Qué me preguntan los que compraron bien en Tandil',angulo:'autoridad',hook:'Hay preguntas que solo hacen los compradores inteligentes. Después de 6 años en el mercado, las reconozco en los primeros 5 minutos.',tema:'compradores inteligentes',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s19',titulo:'Cómo leí el crecimiento de Tandil antes que otros',angulo:'autoridad',hook:'En 2019 empecé a ver señales que para mí indicaban que Tandil iba a crecer fuerte. Estas son las tres señales que me guiaron.',tema:'crecimiento Tandil',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s20',titulo:'Lo que aprendí de 300 visitas a propiedades en un año',angulo:'autoridad',hook:'Visité más de 300 propiedades el año pasado. Hay un defecto que encontré en el 60% de ellas y que casi nadie menciona en los avisos.',tema:'inspección propiedades',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s21',titulo:'Por qué los que vienen de Buenos Aires pagan de más en Tandil',angulo:'autoridad',hook:'Hay un patrón que veo seguido: compradores de CABA que llegan a Tandil y pagan 15-20% más que el precio de mercado. Te explico por qué.',tema:'compradores foráneos',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s22',titulo:'Mi análisis del mercado inmobiliario Tandil — cierre 2025',angulo:'autoridad',hook:'Cierro el año con datos concretos: precio promedio por zona, velocidad de venta, qué se vendió y qué se quedó en cartera.',tema:'mercado anual',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s23',titulo:'Cómo negocio el precio cuando represento al comprador',angulo:'autoridad',hook:'Represento compradores, no vendedores. Mi trabajo es conseguirte el mejor precio. Así es exactamente cómo lo hago.',tema:'negociación',tipo:'organico',status:'listo',created_at:'2026-06-03'},
+  {id:'s24',titulo:'Donde va a crecer Tandil en los próximos 5 años',angulo:'prediccion',hook:'Tandil tiene tres ejes de expansión activos. El que llegue primero a esas zonas va a multiplicar su inversión. El que llegue tarde va a pagar el premium.',tema:'crecimiento urbano',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s25',titulo:'El tipo de depto que va a escasear en Tandil en 2027',angulo:'prediccion',hook:'Hay un formato de vivienda que hoy todavía tiene oferta razonable en Tandil. En 24 meses va a ser difícil conseguirlo a precio accesible.',tema:'tendencias producto',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s26',titulo:'Qué le va a pasar al precio del m2 en Tandil este año',angulo:'prediccion',hook:'No te voy a dar una cifra inventada. Te voy a decir cuáles son los tres factores que van a determinar si el m2 sube, baja o se mantiene en 2026.',tema:'precios 2026',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s27',titulo:'Por qué el polo tecnológico de Tandil va a mover el mercado',angulo:'prediccion',hook:'Hay 4.000 empleados nuevos proyectados para el polo IT de Tandil en los próximos tres años. Todos van a necesitar dónde vivir.',tema:'polo IT Tandil',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s28',titulo:'Tandil como destino de segunda residencia — la tendencia que viene',angulo:'prediccion',hook:'Cada mes cierro operaciones con familias de CABA, Mar del Plata y Córdoba que compran en Tandil para fin de semana o como plan B.',tema:'segunda residencia',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s29',titulo:'Los barrios que van a cambiar más en los próximos 3 años',angulo:'prediccion',hook:'Hay tres barrios de Tandil que hoy están en transición. En 3 años van a ser completamente distintos. Cuáles son y por qué.',tema:'barrios en transformación',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s30',titulo:'¿Qué pasa si la tasa hipotecaria baja en Argentina?',angulo:'prediccion',hook:'Si Argentina logra bajar la inflación y activar los créditos hipotecarios, el mercado inmobiliario de ciudades como Tandil va a experimentar algo que no vimos en 15 años.',tema:'crédito hipotecario',tipo:'organico',status:'listo',created_at:'2026-06-04'},
+  {id:'s31',titulo:'Tandil vs Bariloche: dónde conviene más comprar',angulo:'comparacion',hook:'Dos ciudades turísticas con demografía en crecimiento. Los números de retorno son muy distintos. Comparación directa.',tema:'ciudades emergentes',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s32',titulo:'Depto en pozo vs depto usado: qué conviene en Tandil ahora',angulo:'comparacion',hook:'En Tandil hoy el precio del m2 en pozo y del usado se está acercando mucho. En algunos barrios ya se cruzaron. Datos reales.',tema:'pozo vs usado',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s33',titulo:'Casa con pileta vs depto en zona baja: la decisión más común',angulo:'comparacion',hook:'El 40% de las consultas que recibo son familias que dudan entre estas dos opciones. La respuesta depende de 3 preguntas que casi nadie se hace.',tema:'casas vs deptos',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s34',titulo:'Alquilar en el centro vs comprar en la periferia de Tandil',angulo:'comparacion',hook:'Con el mismo dinero que pagás de alquiler en el centro durante 10 años, en la periferia ya terminaste de pagar una propiedad. Los números.',tema:'alquiler vs compra',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s35',titulo:'Tandil vs CABA: por qué el dinero hace más en el interior',angulo:'comparacion',hook:'Con 80 mil dólares en Buenos Aires comprás un monoambiente. En Tandil comprás una casa de 3 dormitorios con jardín. No es magia, es mercado.',tema:'comparativa ciudades',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s36',titulo:'Invertir en ladrillo vs invertir en dólares en el colchón',angulo:'comparacion',hook:'Los dólares en el colchón no rinden. El ladrillo en una ciudad en crecimiento sí. Comparo las dos opciones con datos de los últimos 5 años.',tema:'inversión vs ahorro',tipo:'organico',status:'listo',created_at:'2026-06-05'},
+  {id:'s37',titulo:'La familia que esperó 2 años y compró al precio perfecto',angulo:'historia',hook:'Me escribieron cuando el mercado estaba en su peor momento. Decidieron esperar. Dos años después cerramos la operación de sus vidas.',tema:'timing correcto',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s38',titulo:'Cómo empecé en el mercado inmobiliario de Tandil',angulo:'historia',hook:'No fue planificado. Empecé haciendo changas de pintura en propiedades que se vendían. Una tarde el dueño me preguntó si quería aprender el negocio.',tema:'historia personal',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s39',titulo:'La venta más difícil de mi carrera (y lo que me enseñó)',angulo:'historia',hook:'Fueron 14 meses, 3 compradores que se cayeron y un vendedor que quería más de lo que valía el mercado. Esta historia me cambió cómo trabajo.',tema:'historia real negociación',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s40',titulo:'El ingeniero que vendió su depto en CABA y se mudó a Tandil',angulo:'historia',hook:'Marcos tenía 38 años, un depto en Palermo y un trabajo remoto. Vendió todo y en 6 meses armó su vida en Tandil. Así le fue.',tema:'mudanza a Tandil',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s41',titulo:'Cómo Tandil me formó como persona y como profesional',angulo:'historia',hook:'Nací acá. Estudié acá. Me formé viendo crecer esta ciudad desde adentro. Eso me da algo que un inmobiliario de afuera no puede tener.',tema:'identidad Tandil',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s42',titulo:'La inversión que parecía arriesgada y se triplicó',angulo:'historia',hook:'En 2018 un cliente me llamó para hacer una operación que en ese momento me parecía demasiado cara. Me convenció. En 2023 vendimos al triple.',tema:'inversión exitosa',tipo:'organico',status:'listo',created_at:'2026-06-06'},
+  {id:'s43',titulo:'Cómo comprar tu primera propiedad en Tandil paso a paso',angulo:'solucion',hook:'No necesitás saber nada de bienes raíces para comprar bien. Necesitás seguir un proceso probado. Este es el que uso con mis clientes.',tema:'guía compradores',tipo:'organico',status:'listo',created_at:'2026-06-07'},
+  {id:'s44',titulo:'Qué hacer cuando el tasador y la inmobiliaria no se ponen de acuerdo',angulo:'solucion',hook:'Es más común de lo que pensás: dos valuaciones distintas para la misma propiedad. Así resolvés ese conflicto sin perder la operación.',tema:'tasación conflicto',tipo:'organico',status:'listo',created_at:'2026-06-07'},
+  {id:'s45',titulo:'Cómo protegerte legalmente al comprar una propiedad usada',angulo:'solucion',hook:'Hay 4 documentos que tenés que revisar antes de firmar cualquier cosa. Si no los ves, el problema es tuyo y no hay forma de deshacerlo.',tema:'seguridad jurídica',tipo:'organico',status:'listo',created_at:'2026-06-07'},
+  {id:'s46',titulo:'Cómo vender más rápido en un mercado con mucha oferta',angulo:'solucion',hook:'El mercado tiene mucha oferta y tu propiedad no se mueve. Hay 3 ajustes concretos que aplicamos y en promedio aceleramos la venta en 45 días.',tema:'estrategia venta',tipo:'organico',status:'listo',created_at:'2026-06-07'},
+  {id:'s47',titulo:'Cómo calcular si una propiedad para alquiler tiene sentido',angulo:'solucion',hook:'La fórmula que uso para decidir si un departamento para alquilar tiene retorno real. Tardás 5 minutos y te evita cometer errores costosos.',tema:'retorno alquiler',tipo:'organico',status:'listo',created_at:'2026-06-07'},
+  {id:'s48',titulo:'Esta propiedad en pleno Tandil no dura mucho en cartera',angulo:'producto',hook:'Tres dormitorios, 90m2, a 4 cuadras del centro de Tandil. Precio justo de mercado y libre para entrar. Así es por adentro.',tema:'propiedad específica',tipo:'organico',status:'listo',created_at:'2026-06-08'},
+  {id:'s49',titulo:'Lote en zona premium de Tandil con todas las comodidades',angulo:'producto',hook:'500m2 en uno de los barrios con mayor crecimiento de Tandil. Todos los servicios, escritura limpia y posibilidad de financiación.',tema:'lote en venta',tipo:'organico',status:'listo',created_at:'2026-06-08'},
+  {id:'s50',titulo:'Depto ideal para inversión con alquiler garantizado',angulo:'producto',hook:'2 ambientes, piso alto, amenities, en el barrio con mejor rendimiento de alquiler en Tandil. Ya tiene inquilino interesado.',tema:'inversión alquiler',tipo:'organico',status:'listo',created_at:'2026-06-08'},
+];
+
+// ═══ STATE ═══
+let guiones = [];
+let queue = JSON.parse(localStorage.getItem('sfre_queue') || '[]');
+let selAngulo = 'problema';
+let selFwKey = 'ppos';
+let selTono_ = 'urgente';
+let selDur_ = 30;
+let sbClient = null;
+let sbOk = false;
+let currentVoter = localStorage.getItem('sfre_voter') || 'santiago';
+window.VOTOS = {}; // { guionId: { santiago: true/false/null, santino: true/false/null } }
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded', async () => {
+  initVoterUI();
+  buildAngGrid();
+  buildAngRef();
+  updateFwHint();
+  renderQueueBar();
+
+  try {
+    sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    await loadGuiones();
+    await loadVotes();
+    sbOk = true;
+    setSyncDot('ok');
+  } catch(e) {
+    setSyncDot('err');
+    loadFromLocal();
+    renderGuiones();
+  }
+
+  document.getElementById('n-cuerpo').addEventListener('input', updateWordCount);
+});
+
+function setSyncDot(state) {
+  const d = document.getElementById('sync-dot');
+  d.className = 'sync-indicator ' + state;
+  d.title = state === 'ok' ? 'Supabase conectado' : 'Sin conexión — modo local';
+}
+
+// ═══ VOTER ═══
+function initVoterUI() {
+  document.getElementById('voter-santiago').classList.toggle('on', currentVoter === 'santiago');
+  document.getElementById('voter-santino').classList.toggle('on', currentVoter === 'santino');
+}
+
+function setVoter(voter) {
+  currentVoter = voter;
+  localStorage.setItem('sfre_voter', voter);
+  document.getElementById('voter-santiago').classList.toggle('on', voter === 'santiago');
+  document.getElementById('voter-santino').classList.toggle('on', voter === 'santino');
+  renderGuiones();
+}
+
+// ═══ SUPABASE ═══
+async function loadGuiones() {
+  let allGuiones = [];
+  let from = 0;
+  const pageSize = 100;
+
+  while (true) {
+    const { data, error } = await sbClient
+      .from('guiones')
+      .select('id,titulo,angulo,hook,tema,tipo,status,created_at')
+      .in('status', ['listo','aprobado','filmado','publicado'])
+      .order('created_at', { ascending: false })
+      .range(from, from + pageSize - 1);
+
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    allGuiones = allGuiones.concat(data);
+    if (data.length < pageSize) break;
+    from += pageSize;
+  }
+
+  guiones = allGuiones;
+  localStorage.setItem('sfre_guiones_cache', JSON.stringify(guiones));
+  renderGuiones();
+  renderRendimiento();
+}
+
+async function loadVotes() {
+  if (!sbClient) return;
+  try {
+    const { data, error } = await sbClient.from('sala_votos').select('*');
+    if (error) return;
+    window.VOTOS = {};
+    (data || []).forEach(v => {
+      if (!window.VOTOS[String(v.guion_id)]) window.VOTOS[String(v.guion_id)] = {};
+      window.VOTOS[String(v.guion_id)][v.voter] = v.voto;
+    });
+    renderGuiones();
+    renderParaFilmar();
+  } catch(e) {}
+}
+
+async function castVote(guionId, voto) {
+  guionId = String(guionId);
+  const voter = currentVoter;
+
+  if (!window.VOTOS[guionId]) window.VOTOS[guionId] = {};
+  const prev = window.VOTOS[guionId][voter];
+
+  // Toggle off if same vote
+  if (prev === voto) {
+    window.VOTOS[guionId][voter] = null;
+    updateCardVoteUI(guionId);
+    renderParaFilmar();
+    if (sbOk && sbClient) {
+      await sbClient.from('sala_votos').delete().eq('guion_id', guionId).eq('voter', voter);
+    }
+    return;
+  }
+
+  window.VOTOS[guionId][voter] = voto;
+  updateCardVoteUI(guionId);
+  renderParaFilmar();
+
+  if (sbOk && sbClient) {
+    await sbClient.from('sala_votos').upsert(
+      { guion_id: guionId, voter, voto, updated_at: new Date().toISOString() },
+      { onConflict: 'guion_id,voter' }
+    );
+  }
+}
+
+function updateCardVoteUI(guionId) {
+  const card = document.getElementById('card-'+guionId);
+  if (!card) return;
+  const voter = currentVoter;
+  const other = voter === 'santiago' ? 'santino' : 'santiago';
+  const myVote = window.VOTOS[guionId]?.[voter] ?? null;
+  const otherVote = window.VOTOS[guionId]?.[other] ?? null;
+
+  const upBtn = card.querySelector('.v-up');
+  const dnBtn = card.querySelector('.v-dn');
+  if (upBtn) {
+    upBtn.className = 'v-btn v-up' + (myVote === true ? ' v-up-on' : '');
+  }
+  if (dnBtn) {
+    dnBtn.className = 'v-btn v-dn' + (myVote === false ? ' v-dn-on' : '');
+  }
+
+  const otherEl = card.querySelector('.v-other-ico');
+  if (otherEl) {
+    otherEl.textContent = otherVote === true ? '👍' : otherVote === false ? '👎' : '—';
+  }
+}
+
+function loadFromLocal() {
+  const cached = localStorage.getItem('sfre_guiones_cache');
+  const local = JSON.parse(localStorage.getItem('sfre_guiones_local') || '[]');
+  const fromStorage = [...local, ...(cached ? JSON.parse(cached) : [])];
+  guiones = fromStorage.length > 0 ? fromStorage : [...SEED_GUIONES];
+}
+
+// ═══ RENDER GUIONES ═══
+function renderGuiones() {
+  const ang = document.getElementById('f-ang').value;
+  const st  = document.getElementById('f-st').value;
+
+  let list = [...guiones];
+  if (ang) list = list.filter(g => (g.angulo||'') === ang);
+  if (st)  list = list.filter(g => (g.status||'listo') === st);
+
+  const container = document.getElementById('guiones-list');
+
+  if (!list.length) {
+    const empty = guiones.length === 0
+      ? '<div class="empty"><div class="empty-icon">📂</div><p>No se cargaron guiones todavía.</p></div>'
+      : '<div class="empty"><div class="empty-icon">🔍</div><p>No hay guiones con ese filtro.</p></div>';
+    container.innerHTML = empty;
+    return;
+  }
+
+  const voter = currentVoter;
+  const other = voter === 'santiago' ? 'santino' : 'santiago';
+  const otherLabel = other.charAt(0).toUpperCase() + other.slice(1);
+
+  container.innerHTML = list.map(g => {
+    const a = ANG_MAP[g.angulo] || { col:'#8A7A6A', bg:'#F5F5F3', name: g.angulo||'—' };
+    const inQueue = queue.includes(String(g.id));
+    const stBadge = getStBadge(g.status);
+    const myVote = window.VOTOS[String(g.id)]?.[voter] ?? null;
+    const otherVote = window.VOTOS[String(g.id)]?.[other] ?? null;
+
+    return `
+    <div class="g-card${inQueue?' selected':''}" id="card-${g.id}">
+      <div class="g-card-top">
+        <div class="g-titulo">${esc(g.titulo||'Sin título')}</div>
+        <button class="g-sel${inQueue?' on':''}" onclick="toggleQueue('${g.id}',event)" title="Agregar a mañana">
+          <svg viewBox="0 0 14 14"><polyline points="2,7 5.5,11 12,3"/></svg>
+        </button>
+      </div>
+      ${g.hook ? `<div class="g-hook">${esc(g.hook)}</div>` : ''}
+      <div class="g-meta">
+        <span class="ang-badge" style="background:${a.bg};color:${a.col}">${a.name}</span>
+        ${stBadge}
+        ${g.tema ? `<span class="meta-pill">${esc(g.tema)}</span>` : ''}
+      </div>
+      <div class="vote-row">
+        <div class="vote-btns">
+          <button class="v-btn v-up${myVote===true?' v-up-on':''}" onclick="castVote('${g.id}',true)" title="Me gusta">👍</button>
+          <button class="v-btn v-dn${myVote===false?' v-dn-on':''}" onclick="castVote('${g.id}',false)" title="No me gusta">👎</button>
+        </div>
+        <div class="vote-others">
+          <div class="v-other">
+            <span class="v-other-name">${otherLabel}:</span>
+            <span class="v-other-ico">${otherVote===true?'👍':otherVote===false?'👎':'—'}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ PARA FILMAR ═══
+function renderParaFilmar() {
+  const ambosEl = document.getElementById('pf-ambos');
+  const unoEl   = document.getElementById('pf-uno');
+  if (!ambosEl || !unoEl) return;
+
+  const ambos = [];
+  const uno   = [];
+
+  guiones.forEach(g => {
+    const id = String(g.id);
+    const s = window.VOTOS[id]?.['santiago'] ?? null;
+    const t = window.VOTOS[id]?.['santino']  ?? null;
+    if (s === true && t === true) ambos.push(g);
+    else if (s === true || t === true) uno.push(g);
+  });
+
+  ambosEl.innerHTML = ambos.length
+    ? ambos.map(g => pfCard(g, true)).join('')
+    : '<div class="empty" style="padding:24px"><div class="empty-icon">🎬</div><p>Voten los guiones que quieren filmar.<br>Cuando ambos aprueben uno, aparece acá.</p></div>';
+
+  unoEl.innerHTML = uno.length
+    ? uno.map(g => pfCard(g, false)).join('')
+    : '<div class="empty" style="padding:20px"><p style="font-size:13px">Sin guiones con un voto a favor todavía.</p></div>';
+}
+
+function pfCard(g, bothYes) {
+  const a = ANG_MAP[g.angulo] || { col:'#8A7A6A', bg:'#F5F5F3', name: g.angulo||'—' };
+  const id = String(g.id);
+  const s = window.VOTOS[id]?.['santiago'] ?? null;
+  const t = window.VOTOS[id]?.['santino']  ?? null;
+
+  const pill = (name, vote) => {
+    if (vote === true)  return `<span class="pf-vote-pill pf-vote-yes">👍 ${name}</span>`;
+    if (vote === false) return `<span class="pf-vote-pill pf-vote-no">👎 ${name}</span>`;
+    return `<span class="pf-vote-pill pf-vote-null">${name}: —</span>`;
+  };
+
+  return `<div class="pf-card${bothYes?' both-yes':''}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">
+      <div class="pf-card-title">${esc(g.titulo||'Sin título')}</div>
+      <span class="ang-badge" style="background:${a.bg};color:${a.col};flex-shrink:0">${a.name}</span>
+    </div>
+    ${g.hook ? `<div class="pf-card-hook">${esc(g.hook)}</div>` : ''}
+    <div class="pf-votes">
+      ${pill('Santiago', s)}
+      ${pill('Santino', t)}
+    </div>
+  </div>`;
+}
+
+function getStBadge(status) {
+  const m = { listo:'st-listo', aprobado:'st-aprobado', filmado:'st-filmado', publicado:'st-publicado' };
+  const l = { listo:'Listo', aprobado:'Para filmar', filmado:'Filmado', publicado:'Publicado' };
+  return `<span class="st-badge ${m[status]||'st-listo'}">${l[status]||status}</span>`;
+}
+
+// ═══ QUEUE ═══
+function toggleQueue(id, e) {
+  e && e.stopPropagation();
+  id = String(id);
+  const idx = queue.indexOf(id);
+  if (idx >= 0) queue.splice(idx, 1);
+  else queue.push(id);
+  localStorage.setItem('sfre_queue', JSON.stringify(queue));
+  renderQueueBar();
+  const card = document.getElementById('card-'+id);
+  if (card) {
+    card.classList.toggle('selected', queue.includes(id));
+    const btn = card.querySelector('.g-sel');
+    if (btn) btn.classList.toggle('on', queue.includes(id));
+  }
+}
+
+function renderQueueBar() {
+  const n = queue.length;
+  const chip = document.getElementById('queue-chip');
+  const bar = document.getElementById('queue-bar');
+  chip.textContent = n + ' para mañana';
+  chip.classList.toggle('show', n > 0);
+  bar.classList.toggle('show', n > 0);
+  document.getElementById('qb-count').textContent = n + (n===1?' guion':' guiones') + ' para mañana';
+
+  const listDiv = document.getElementById('queue-list-div');
+  const inQueue = guiones.filter(g => queue.includes(String(g.id)));
+  if (inQueue.length) {
+    listDiv.innerHTML = '<div style="height:6px;"></div>' + inQueue.map(g =>
+      `<div class="queue-item-row">${esc(g.titulo||'Sin título')}</div>`
+    ).join('');
+  }
+}
+
+function toggleQueueBar() {
+  document.getElementById('queue-list-div').classList.toggle('open');
+}
+
+function clearQueue() {
+  queue = [];
+  localStorage.setItem('sfre_queue', JSON.stringify(queue));
+  renderQueueBar();
+  renderGuiones();
+}
+
+async function confirmarQueue() {
+  if (!queue.length) return;
+  if (sbOk && sbClient) {
+    const { error } = await sbClient
+      .from('guiones')
+      .update({ status: 'aprobado' })
+      .in('id', queue.map(Number));
+    if (!error) {
+      showToast(`✅ ${queue.length} guiones marcados como "Para filmar"`);
+      queue = [];
+      localStorage.setItem('sfre_queue', JSON.stringify(queue));
+      await loadGuiones();
+      renderQueueBar();
+      return;
+    }
+  }
+  showToast('Sin conexión — guardado en local (' + queue.length + ' guiones)');
+}
+
+// ═══ NUEVO GUION ═══
+function buildAngGrid() {
+  const grid = document.getElementById('ang-grid');
+  grid.innerHTML = ANGULOS.map(a =>
+    `<div class="ang-opt${a.id===selAngulo?' on':''}" data-ang="${a.id}" onclick="selAng(this)"
+      style="${a.id===selAngulo?`border-color:${a.col};background:${a.bg}80;`:''}">
+      <div class="ang-opt-name" style="color:${a.col}">${a.name}</div>
+      <div class="ang-opt-emo">${a.emo}</div>
+    </div>`
+  ).join('');
+}
+
+function selAng(el) {
+  selAngulo = el.dataset.ang;
+  buildAngGrid();
+  document.getElementById('hook-suggestions').style.display = 'none';
+}
+
+function selFw(el) {
+  selFwKey = el.dataset.fw;
+  document.querySelectorAll('#fw-chips .chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  updateFwHint();
+}
+
+function updateFwHint() {
+  document.getElementById('fw-hint').innerHTML = FW_HINTS[selFwKey] || '';
+}
+
+function selTono(el) {
+  selTono_ = el.dataset.tono;
+  document.querySelectorAll('#tono-chips .chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function selDur(el) {
+  selDur_ = parseInt(el.dataset.dur);
+  document.querySelectorAll('.dur-opt').forEach(d => d.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function sugerirHooks() {
+  const sugs = HOOK_SUGERENCIAS[selAngulo] || [];
+  const listEl = document.getElementById('hook-suggestions');
+  if (!sugs.length) { listEl.style.display = 'none'; return; }
+  listEl.innerHTML = sugs.map(s =>
+    `<div class="hook-suggest-item" onclick="useHook(this)">${esc(s)}</div>`
+  ).join('');
+  listEl.style.display = 'flex';
+}
+
+function useHook(el) {
+  document.getElementById('n-hook').value = el.textContent;
+  document.getElementById('hook-suggestions').style.display = 'none';
+  document.getElementById('n-cuerpo').focus();
+}
+
+function updateWordCount() {
+  const words = document.getElementById('n-cuerpo').value.trim().split(/\s+/).filter(Boolean).length;
+  const el = document.getElementById('word-count');
+  el.textContent = words + ' palabras ' + (words < 200 ? '(mín 200)' : words > 350 ? '(máx 350)' : '✓');
+  el.style.color = words < 200 || words > 350 ? '#C8453A' : '#2D8C5A';
+}
+
+function buildGuionObj() {
+  return {
+    titulo: document.getElementById('n-titulo').value.trim(),
+    hook:   document.getElementById('n-hook').value.trim(),
+    contenido: document.getElementById('n-cuerpo').value.trim(),
+    angulo: selAngulo,
+    tono:   selTono_,
+    duracion_seg: selDur_,
+    framework: selFwKey,
+    tipo:   'organico',
+    status: 'listo',
+    created_at: new Date().toISOString(),
+  };
+}
+
+async function guardarGuion() {
+  const obj = buildGuionObj();
+  if (!obj.titulo) { showToast('⚠ Ponele un título al guion'); return; }
+  await saveGuion(obj, false);
+}
+
+async function guardarYAgregar() {
+  const obj = buildGuionObj();
+  if (!obj.titulo) { showToast('⚠ Ponele un título al guion'); return; }
+  await saveGuion(obj, true);
+}
+
+async function saveGuion(obj, addToQueue) {
+  let savedId = null;
+
+  if (sbOk && sbClient) {
+    const { data, error } = await sbClient.from('guiones').insert(obj).select('id').single();
+    if (!error && data) {
+      savedId = String(data.id);
+      showToast('✅ Guardado en Supabase');
+      await loadGuiones();
+    } else {
+      savedLocal(obj);
+      savedId = obj.id;
+      showToast('Guardado local (Supabase sin cuota)');
+    }
+  } else {
+    savedLocal(obj);
+    savedId = obj.id;
+    showToast('Guardado localmente');
+  }
+
+  if (addToQueue && savedId) {
+    queue.push(String(savedId));
+    localStorage.setItem('sfre_queue', JSON.stringify(queue));
+    renderQueueBar();
+  }
+  resetForm();
+  switchTab('seleccionar', document.querySelector('.tab'));
+}
+
+function savedLocal(obj) {
+  obj.id = 'local_' + Date.now();
+  const local = JSON.parse(localStorage.getItem('sfre_guiones_local') || '[]');
+  local.unshift(obj);
+  localStorage.setItem('sfre_guiones_local', JSON.stringify(local));
+  guiones.unshift(obj);
+  renderGuiones();
+}
+
+function resetForm() {
+  document.getElementById('n-titulo').value = '';
+  document.getElementById('n-hook').value = '';
+  document.getElementById('n-cuerpo').value = '';
+  document.getElementById('hook-suggestions').style.display = 'none';
+  document.getElementById('word-count').textContent = '';
+}
+
+// ═══ ÁNGULOS REF ═══
+function buildAngRef() {
+  const container = document.getElementById('ang-ref-list');
+  container.innerHTML = ANGULOS.map(a =>
+    `<div style="background:${a.bg};border-radius:8px;padding:10px 12px;">
+      <div style="color:${a.col};font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">${a.name} — ${a.emo}</div>
+      <div style="font-size:12px;color:var(--text);line-height:1.5;font-style:italic;">${ANG_REF[a.id]}</div>
+    </div>`
+  ).join('');
+}
+
+// ═══ RENDIMIENTO ═══
+function renderRendimiento() {
+  const pub = guiones.filter(g => g.status === 'publicado').length;
+  const fil = guiones.filter(g => g.status === 'filmado').length;
+  const lis = guiones.filter(g => g.status === 'listo').length;
+  document.getElementById('s-publicados').textContent = pub;
+  document.getElementById('s-filmados').textContent = fil;
+  document.getElementById('s-listos').textContent = lis;
+
+  const pubGs = guiones.filter(g => g.status === 'publicado');
+  const angCount = {};
+  pubGs.forEach(g => { angCount[g.angulo||'otro'] = (angCount[g.angulo||'otro']||0)+1; });
+  const sorted = Object.entries(angCount).sort((a,b)=>b[1]-a[1]);
+  const maxVal = sorted[0]?.[1] || 1;
+
+  document.getElementById('ang-stats').innerHTML = sorted.map(([ang,cnt]) => {
+    const a = ANG_MAP[ang] || { col:'#8A7A6A', bg:'#F5F5F3', name: ang };
+    const pct = Math.round(cnt/pubGs.length*100);
+    return `<div class="ang-stat">
+      <div style="flex:1;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <span style="color:${a.col};font-size:11px;font-weight:700;">${a.name}</span>
+          <span style="color:var(--muted);font-size:11px;">${cnt} (${pct}%)</span>
+        </div>
+        <div class="ang-stat-bar-wrap"><div class="ang-stat-bar" style="width:${Math.round(cnt/maxVal*100)}%;background:${a.col};"></div></div>
+      </div>
+    </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:12px;">Sin publicados todavía</div>';
+
+  const recents = guiones.filter(g => g.status === 'publicado').slice(0,5);
+  document.getElementById('publicados-list').innerHTML = recents.map(g => {
+    const a = ANG_MAP[g.angulo] || { col:'#8A7A6A', name: g.angulo||'—' };
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px;">${esc(g.titulo||'Sin título')}</div>
+      <span class="ang-badge" style="background:${ANG_MAP[g.angulo]?.bg||'#F5F5F3'};color:${a.col}">${a.name}</span>
+    </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:12px;">Sin publicados</div>';
+}
+
+// ═══ TABS ═══
+function switchTab(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('v-'+name).classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (name === 'parafilmar') renderParaFilmar();
+}
+
+// ═══ UTILS ═══
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
