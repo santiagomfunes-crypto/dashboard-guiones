@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Comercial · Altavista Otero</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --blue:#2563EB;--blue-d:#1D4ED8;--blue-l:#DBEAFE;
+  --gray:#4B5563;--gray-l:#F3F4F6;
+  --violet:#7C3AED;--violet-l:#EDE9FE;
+  --green:#059669;--green-l:#D1FAE5;
+  --bg:#F1F5F9;--card:#fff;--border:#E2E8F0;
+  --text:#0F172A;--text2:#334155;--muted:#64748B;
+  --r:14px;--sh:0 1px 3px rgba(15,23,42,.06),0 6px 20px rgba(15,23,42,.05)
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:#0F172A;padding:52px 72px 44px;
+  position:relative;overflow:hidden
+}
+.hdr::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 120% at 15% 60%,rgba(37,99,235,.18) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 80% at 85% 20%,rgba(124,58,237,.12) 0%,transparent 60%)
+}
+.hdr-in{
+  position:relative;max-width:1120px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:40px
+}
+.hdr-eye{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);font-weight:500;margin-bottom:16px
+}
+.hdr h1{
+  font-size:52px;font-weight:900;letter-spacing:-.035em;
+  color:#fff;line-height:1;margin-bottom:14px
+}
+.hdr h1 em{font-style:normal;color:#60A5FA}
+.hdr-desc{font-size:15px;color:rgba(255,255,255,.45);line-height:1.65;max-width:480px}
+.hdr-kpis{display:flex;gap:32px;flex-shrink:0;align-items:flex-end}
+.hdr-kpi{text-align:right}
+.hdr-kpi-v{font-size:30px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.hdr-kpi-l{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1120px;margin:0 auto;padding:0 72px}
+.sec{padding:52px 0 0}
+.sec-eye{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:5px}
+.sec-ttl{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:28px}
+
+/* ── TEAM CARDS ── */
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+.tc{
+  background:var(--card);border-radius:var(--r);padding:24px;
+  box-shadow:var(--sh);border-top:3px solid transparent;
+  transition:transform .2s,box-shadow .2s
+}
+.tc:hover{transform:translateY(-3px);box-shadow:0 4px 6px rgba(15,23,42,.07),0 20px 48px rgba(15,23,42,.09)}
+.tc-santiago{border-top-color:var(--blue)}
+.tc-santi{border-top-color:var(--gray)}
+.tc-agency{border-top-color:var(--violet)}
+.tc-juan{border-top-color:var(--green)}
+
+.tc-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:14px
+}
+.tc-santiago .tc-icon{background:var(--blue-l)}
+.tc-santi .tc-icon{background:var(--gray-l)}
+.tc-agency .tc-icon{background:var(--violet-l)}
+.tc-juan .tc-icon{background:var(--green-l)}
+
+.tc-name{font-size:16px;font-weight:700}
+.tc-role{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;margin-bottom:12px;margin-top:2px}
+.tc-santiago .tc-role{color:var(--blue)}
+.tc-santi .tc-role{color:var(--gray)}
+.tc-agency .tc-role{color:var(--violet)}
+.tc-juan .tc-role{color:var(--green)}
+
+.tc-comm{font-size:38px;font-weight:900;letter-spacing:-.04em;margin-bottom:16px;line-height:1}
+.tc-santiago .tc-comm{color:var(--blue)}
+.tc-santi .tc-comm{color:var(--gray)}
+.tc-agency .tc-comm{color:var(--violet)}
+.tc-juan .tc-comm{color:var(--green)}
+.tc-comm small{font-size:17px;font-weight:600;opacity:.65;letter-spacing:-.01em}
+
+.tc-div{height:1px;background:var(--border);margin-bottom:14px}
+
+.tc-tasks{list-style:none;display:flex;flex-direction:column;gap:7px}
+.tc-tasks li{font-size:12.5px;color:var(--text2);padding-left:14px;position:relative;line-height:1.4}
+.tc-tasks li::before{content:'·';position:absolute;left:0;font-size:18px;line-height:1}
+.tc-santiago .tc-tasks li::before{color:var(--blue)}
+.tc-santi .tc-tasks li::before{color:var(--gray)}
+.tc-agency .tc-tasks li::before{color:var(--violet)}
+.tc-juan .tc-tasks li::before{color:var(--green)}
+
+/* ── FLOW ── */
+.flow-card{
+  background:var(--card);border-radius:var(--r);
+  padding:28px 20px 18px;box-shadow:var(--sh);overflow-x:auto
+}
+.flow-steps{display:flex;min-width:880px}
+
+.flow-step{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;position:relative
+}
+.flow-step:not(:last-child)::after{
+  content:'';position:absolute;top:19px;left:50%;
+  width:100%;height:2px;background:var(--border);z-index:0
+}
+
+.flow-node{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:13px;font-weight:800;
+  position:relative;z-index:1;margin-bottom:9px;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.12)
+}
+.fn-blue{background:var(--blue)}
+.fn-gray{background:var(--gray)}
+.fn-violet{background:var(--violet)}
+.fn-green{background:var(--green)}
+
+.flow-txt{font-size:11px;color:var(--text2);text-align:center;line-height:1.35;padding:0 3px;margin-bottom:4px}
+.flow-who{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.fw-blue{color:var(--blue)}.fw-gray{color:var(--gray)}.fw-violet{color:var(--violet)}.fw-green{color:var(--green)}
+
+.flow-legend{
+  display:flex;gap:24px;margin-top:18px;padding-top:16px;
+  border-top:1px solid var(--border)
+}
+.fl-item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text2)}
+.fl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── CALCULATOR ── */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.cpanel{background:var(--card);border-radius:var(--r);padding:28px;box-shadow:var(--sh)}
+
+.scenarios{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.sc-btn{
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text2);padding:7px 15px;border-radius:9px;
+  font-size:13px;font-weight:500;cursor:pointer;
+  transition:all .18s;font-family:inherit
+}
+.sc-btn:hover{background:var(--bg)}
+.sc-btn.active{
+  background:var(--blue);border-color:var(--blue);
+  color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.32)
+}
+
+.sg{margin-bottom:22px}
+.sg-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.sg-lbl{font-size:13.5px;font-weight:600;color:var(--text)}
+.sg-val{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:-.02em}
+.sg-unit{font-size:13px;color:var(--muted)}
+
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:5px;
+  border-radius:3px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--blue) 0%,var(--blue) 0%,var(--border) 0%)
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.4);
+  transition:transform .15s;cursor:pointer
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+
+.trow{
+  padding-top:18px;margin-top:18px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:13px
+}
+.titem{display:flex;justify-content:space-between;align-items:center}
+.tlbl{font-size:13.5px;color:var(--text2)}
+
+.tsw{position:relative;width:42px;height:23px;flex-shrink:0}
+.tsw input{display:none}
+.ttrack{
+  position:absolute;inset:0;border-radius:12px;
+  background:var(--border);cursor:pointer;transition:background .2s
+}
+.ttrack::before{
+  content:'';position:absolute;width:17px;height:17px;
+  top:3px;left:3px;border-radius:50%;background:#fff;
+  transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)
+}
+.tsw input:checked+.ttrack{background:var(--blue)}
+.tsw input:checked+.ttrack::before{transform:translateX(19px)}
+
+/* Results */
+.res-total{
+  background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);
+  border-radius:10px;padding:22px 24px;margin-bottom:22px
+}
+.rt-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px}
+.rt-val{font-size:40px;font-weight:900;color:#fff;letter-spacing:-.035em;margin-bottom:4px}
+.rt-sub{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:6px}
+.rt-annual{font-size:13px;color:rgba(255,255,255,.45)}
+.rt-annual b{color:#60A5FA;font-weight:700}
+
+.rbars{display:flex;flex-direction:column;gap:15px}
+.rbar{display:flex;flex-direction:column;gap:6px}
+.rbar-top{display:flex;justify-content:space-between;align-items:center}
+.rbar-name{
+  font-size:13.5px;font-weight:600;color:var(--text);
+  display:flex;align-items:center;gap:8px
+}
+.rdot{width:9px;height:9px;border-radius:50%}
+.rbar-right{display:flex;align-items:baseline;gap:5px}
+.ramt{font-size:17px;font-weight:900;letter-spacing:-.02em}
+.rpct{font-size:11px;color:var(--muted)}
+.rtrack{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.rfill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── ATTRIBUTION ── */
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.acard{background:var(--card);border-radius:var(--r);padding:24px;box-shadow:var(--sh)}
+.acard-icon{font-size:26px;margin-bottom:11px}
+.acard-ttl{font-size:15px;font-weight:700;margin-bottom:9px}
+.acard-body{font-size:13px;color:var(--text2);line-height:1.65}
+.atag{
+  display:inline-flex;align-items:center;padding:4px 13px;
+  border-radius:100px;font-size:11.5px;font-weight:600;margin-top:13px
+}
+
+/* ── COMMISSION TABLE ── */
+.ctable-wrap{
+  background:var(--card);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden
+}
+table{width:100%;border-collapse:collapse}
+thead th{
+  background:#F8FAFC;padding:12px 20px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  border-bottom:1px solid var(--border)
+}
+tbody td{padding:14px 20px;font-size:13.5px;color:var(--text2);border-bottom:1px solid var(--border)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#FAFBFC}
+.ct-who{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--text)}
+.ct-badge{
+  display:inline-flex;padding:3px 10px;border-radius:6px;
+  font-size:12px;font-weight:700;letter-spacing:.02em
+}
+
+/* ── FOOTER ── */
+footer{
+  margin-top:52px;padding:24px 72px;background:#0F172A;
+  display:flex;justify-content:space-between;align-items:center
+}
+footer p{font-size:13px;color:rgba(255,255,255,.3)}
+footer strong{color:rgba(255,255,255,.55)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div>
+      <p class="hdr-eye">Altavista Otero · Tandil, Buenos Aires</p>
+      <h1>Mapa <em>Comercial</em></h1>
+      <p class="hdr-desc">Estructura de equipo, comisiones y flujo operativo de la inmobiliaria.</p>
+    </div>
+    <div class="hdr-kpis">
+      <div class="hdr-kpi">
+        <div class="hdr-kpi-v">4</div>
+        <div class="hdr-kpi-l">Personas</div>
+      </div>
+      <div class="hdr-kpi">
+        <div class="hdr-kpi-v">9</div>
+        <div class="hdr-kpi-l">Pasos</div>
+      </div>
+      <div class="hdr-kpi">
+        <div class="hdr-kpi-v">4–8%</div>
+        <div class="hdr-kpi-l">Comisión</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- EQUIPO -->
+<section class="sec">
+  <p class="sec-eye">Estructura del equipo</p>
+  <h2 class="sec-ttl">Roles y comisiones</h2>
+  <div class="tgrid">
+
+    <div class="tc tc-santiago">
+      <div class="tc-icon">🏆</div>
+      <div class="tc-name">Santiago</div>
+      <div class="tc-role">Dueño · Director</div>
+      <div class="tc-comm">65%</div>
+      <div class="tc-div"></div>
+      <ul class="tc-tasks">
+        <li>Captar propiedades</li>
+        <li>Negociar con propietarios</li>
+        <li>Realizar visitas con clientes</li>
+        <li>Cerrar ventas</li>
+        <li>Estrategia general</li>
+      </ul>
+    </div>
+
+    <div class="tc tc-santi">
+      <div class="tc-icon">⚡</div>
+      <div class="tc-name">Santi</div>
+      <div class="tc-role">Operativo</div>
+      <div class="tc-comm">5%</div>
+      <div class="tc-div"></div>
+      <ul class="tc-tasks">
+        <li>Responder consultas &lt;1 hora</li>
+        <li>Coordinar visitas</li>
+        <li>Publicar en Zonaprop, Argenprop, ML</li>
+        <li>Filmar propiedades</li>
+        <li>Primer contacto con clientes</li>
+      </ul>
+    </div>
+
+    <div class="tc tc-agency">
+      <div class="tc-icon">📡</div>
+      <div class="tc-name">Agencia</div>
+      <div class="tc-role">Marketing Digital</div>
+      <div class="tc-comm">10%</div>
+      <div class="tc-div"></div>
+      <ul class="tc-tasks">
+        <li>Estrategia de captación digital</li>
+        <li>Campañas segmentadas para inversores</li>
+        <li>Producción y edición de contenido</li>
+        <li>Métricas y análisis</li>
+        <li>Dirige el contenido que filma Santi</li>
+      </ul>
+    </div>
+
+    <div class="tc tc-juan">
+      <div class="tc-icon">⚖️</div>
+      <div class="tc-name">Juan</div>
+      <div class="tc-role">Martillero Oficial</div>
+      <div class="tc-comm">20% <small>+ 50/50</small></div>
+      <div class="tc-div"></div>
+      <ul class="tc-tasks">
+        <li>Firma como martillero en toda operación</li>
+        <li>Postventa y escrituras</li>
+        <li>Operaciones compartidas: cliente suyo + propiedad nuestra → 50/50</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- FLUJO -->
+<section class="sec">
+  <p class="sec-eye">Proceso de ventas</p>
+  <h2 class="sec-ttl">Flujo de una venta</h2>
+  <div class="flow-card">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-node fn-violet">1</div>
+        <p class="flow-txt">Lead entra</p>
+        <span class="flow-who fw-violet">Agencia</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-gray">2</div>
+        <p class="flow-txt">Respuesta &lt;1h</p>
+        <span class="flow-who fw-gray">Santi</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-gray">3</div>
+        <p class="flow-txt">Calificación del lead</p>
+        <span class="flow-who fw-gray">Santi</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-gray">4</div>
+        <p class="flow-txt">Agenda visita</p>
+        <span class="flow-who fw-gray">Santi</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-gray">5</div>
+        <p class="flow-txt">Filma la propiedad</p>
+        <span class="flow-who fw-gray">Santi</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-blue">6</div>
+        <p class="flow-txt">Visita con el cliente</p>
+        <span class="flow-who fw-blue">Santiago</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-blue">7</div>
+        <p class="flow-txt">Negociación</p>
+        <span class="flow-who fw-blue">Santiago</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-blue">8</div>
+        <p class="flow-txt">Cierre y reserva</p>
+        <span class="flow-who fw-blue">Santiago</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-node fn-green">9</div>
+        <p class="flow-txt">Escritura y postventa</p>
+        <span class="flow-who fw-green">Juan</span>
+      </div>
+    </div>
+    <div class="flow-legend">
+      <div class="fl-item"><div class="fl-dot" style="background:var(--blue)"></div>Santiago</div>
+      <div class="fl-item"><div class="fl-dot" style="background:var(--gray)"></div>Santi</div>
+      <div class="fl-item"><div class="fl-dot" style="background:var(--violet)"></div>Agencia</div>
+      <div class="fl-item"><div class="fl-dot" style="background:var(--green)"></div>Juan</div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="sec">
+  <p class="sec-eye">Proyección financiera</p>
+  <h2 class="sec-ttl">Calculadora de escenarios</h2>
+  <div class="calc-grid">
+
+    <!-- Controls -->
+    <div class="cpanel">
+      <div class="scenarios">
+        <button class="sc-btn active" onclick="setScen(1,180000,5,this)">1 venta/mes</button>
+        <button class="sc-btn" onclick="setScen(3,180000,5,this)">3 ventas/mes</button>
+        <button class="sc-btn" onclick="setScen(5,200000,5,this)">5 ventas/mes ★</button>
+        <button class="sc-btn" onclick="setScen(8,200000,6,this)">8 ventas/mes</button>
+      </div>
+
+      <div class="sg">
+        <div class="sg-hdr">
+          <span class="sg-lbl">Ventas por mes</span>
+          <span><span class="sg-val" id="v-v">1</span> <span class="sg-unit">ventas</span></span>
+        </div>
+        <input type="range" id="r-v" min="1" max="10" value="1" oninput="onSl()">
+      </div>
+
+      <div class="sg">
+        <div class="sg-hdr">
+          <span class="sg-lbl">Precio promedio</span>
+          <span><span class="sg-unit">USD </span><span class="sg-val" id="v-p">180,000</span></span>
+        </div>
+        <input type="range" id="r-p" min="150000" max="250000" step="5000" value="180000" oninput="onSl()">
+      </div>
+
+      <div class="sg">
+        <div class="sg-hdr">
+          <span class="sg-lbl">Comisión</span>
+          <span><span class="sg-val" id="v-c">5</span><span class="sg-unit">%</span></span>
+        </div>
+        <input type="range" id="r-c" min="4" max="8" step="0.5" value="5" oninput="onSl()">
+      </div>
+
+      <div class="trow">
+        <div class="titem">
+          <span class="tlbl">Lead viene de la agencia</span>
+          <label class="tsw">
+            <input type="checkbox" id="t-a" checked onchange="calc()">
+            <span class="ttrack"></span>
+          </label>
+        </div>
+        <div class="titem">
+          <span class="tlbl">Operación compartida con Juan (50/50)</span>
+          <label class="tsw">
+            <input type="checkbox" id="t-s" onchange="calc()">
+            <span class="ttrack"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="cpanel">
+      <div class="res-total">
+        <p class="rt-lbl">Comisión mensual total</p>
+        <p class="rt-val" id="r-tot">$9,000</p>
+        <p class="rt-sub" id="r-sub">1 venta × $180,000 × 5%</p>
+        <p class="rt-annual">Proyección anual: <b id="r-ann">$108,000</b></p>
+      </div>
+
+      <div class="rbars">
+        <div class="rbar">
+          <div class="rbar-top">
+            <span class="rbar-name"><span class="rdot" style="background:var(--blue)"></span>Santiago</span>
+            <span class="rbar-right">
+              <span class="ramt" id="a-san" style="color:var(--blue)">$5,850</span>
+              <span class="rpct" id="p-san">65%</span>
+            </span>
+          </div>
+          <div class="rtrack"><div class="rfill" id="b-san" style="background:var(--blue);width:65%"></div></div>
+        </div>
+
+        <div class="rbar">
+          <div class="rbar-top">
+            <span class="rbar-name"><span class="rdot" style="background:var(--green)"></span>Juan</span>
+            <span class="rbar-right">
+              <span class="ramt" id="a-ju" style="color:var(--green)">$1,800</span>
+              <span class="rpct" id="p-ju">20%</span>
+            </span>
+          </div>
+          <div class="rtrack"><div class="rfill" id="b-ju" style="background:var(--green);width:20%"></div></div>
+        </div>
+
+        <div class="rbar">
+          <div class="rbar-top">
+            <span class="rbar-name"><span class="rdot" style="background:var(--violet)"></span>Agencia</span>
+            <span class="rbar-right">
+              <span class="ramt" id="a-ag" style="color:var(--violet)">$900</span>
+              <span class="rpct" id="p-ag">10%</span>
+            </span>
+          </div>
+          <div class="rtrack"><div class="rfill" id="b-ag" style="background:var(--violet);width:10%"></div></div>
+        </div>
+
+        <div class="rbar">
+          <div class="rbar-top">
+            <span class="rbar-name"><span class="rdot" style="background:var(--gray)"></span>Santi</span>
+            <span class="rbar-right">
+              <span class="ramt" id="a-sa" style="color:var(--gray)">$450</span>
+              <span class="rpct" id="p-sa">5%</span>
+            </span>
+          </div>
+          <div class="rtrack"><div class="rfill" id="b-sa" style="background:var(--gray);width:5%"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ATRIBUCIÓN -->
+<section class="sec">
+  <p class="sec-eye">Reglas de negocio</p>
+  <h2 class="sec-ttl">Atribución de comisiones</h2>
+  <div class="agrid">
+
+    <div class="acard">
+      <div class="acard-icon">📡</div>
+      <h3 class="acard-ttl">Lead de agencia</h3>
+      <p class="acard-body">El lead entra por campañas digitales gestionadas por la agencia. La agencia cobra su 10% sobre el total de la comisión. Distribución base: Santiago 65% · Santi 5% · Agencia 10% · Juan 20%.</p>
+      <span class="atag" style="background:var(--violet-l);color:var(--violet)">✓ Agencia cobra 10%</span>
+    </div>
+
+    <div class="acard">
+      <div class="acard-icon">🤝</div>
+      <h3 class="acard-ttl">Lead referido o directo</h3>
+      <p class="acard-body">El lead llega por referido, contacto directo de Santiago o red propia. La agencia no participó en la captación, por lo que no cobra. Su 10% se suma a Santiago. Distribución: Santiago 75% · Santi 5% · Juan 20%.</p>
+      <span class="atag" style="background:var(--gray-l);color:var(--gray)">✗ Agencia no cobra</span>
+    </div>
+
+    <div class="acard">
+      <div class="acard-icon">⚖️</div>
+      <h3 class="acard-ttl">Operación compartida con Juan</h3>
+      <p class="acard-body">Juan trae un cliente propio a una propiedad de la inmobiliaria. La comisión total se divide 50/50. Juan cobra su mitad completa. Nuestra mitad (50%) se distribuye entre Santiago, Santi y Agencia en las mismas proporciones.</p>
+      <span class="atag" style="background:var(--green-l);color:var(--green)">50 / 50 con Juan</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- TABLA DE ESCENARIOS -->
+<section class="sec" style="padding-bottom:0">
+  <p class="sec-eye">Referencia rápida</p>
+  <h2 class="sec-ttl">Comparativo de escenarios (5% comisión · USD 180K prom.)</h2>
+  <div class="ctable-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Escenario</th>
+          <th>Comisión total/mes</th>
+          <th>Santiago (65%)</th>
+          <th>Agencia (10%)</th>
+          <th>Juan (20%)</th>
+          <th>Santi (5%)</th>
+          <th>Anual (×12)</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <p><strong>Altavista Otero</strong> · Mapa Comercial 2026</p>
+  <p>Tandil, Buenos Aires</p>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id)
+
+function fU(n){ return '$'+Math.round(n).toLocaleString('en-US') }
+
+function sliderPct(el){
+  const mn=+el.min,mx=+el.max,v=+el.value
+  const p=((v-mn)/(mx-mn))*100
+  el.style.background=`linear-gradient(to right,#2563EB ${p}%,#E2E8F0 ${p}%)`
+}
+
+function calc(){
+  const v=+$('r-v').value, p=+$('r-p').value, c=+$('r-c').value
+  const agency=$('t-a').checked, shared=$('t-s').checked
+  const tot=v*p*c/100
+
+  let pS,pSa,pA,pJ
+  if(shared){
+    pJ=50
+    const h=50
+    if(agency){ pS=(65/80)*h; pSa=(5/80)*h; pA=(10/80)*h }
+    else       { pS=(65/70)*h; pSa=(5/70)*h; pA=0 }
+  } else {
+    pJ=20
+    if(agency){ pS=65; pSa=5; pA=10 }
+    else      { pS=75; pSa=5; pA=0  }
+  }
+
+  $('r-tot').textContent=fU(tot)
+  $('r-sub').textContent=`${v} venta${v>1?'s':''} × $${p.toLocaleString('en-US')} × ${c}%`
+  $('r-ann').textContent=fU(tot*12)
+
+  function set(who,pct,amt){
+    $('a-'+who).textContent=fU(amt)
+    $('p-'+who).textContent=pct.toFixed(1).replace('.0','')+'%'
+    $('b-'+who).style.width=pct+'%'
+  }
+  set('san',pS,tot*pS/100)
+  set('sa',pSa,tot*pSa/100)
+  set('ag',pA,tot*pA/100)
+  set('ju',pJ,tot*pJ/100)
+}
+
+function onSl(){
+  $('v-v').textContent=$('r-v').value
+  $('v-p').textContent=(+$('r-p').value).toLocaleString('en-US')
+  $('v-c').textContent=$('r-c').value
+  sliderPct($('r-v')); sliderPct($('r-p')); sliderPct($('r-c'))
+  calc()
+}
+
+function setScen(v,p,c,btn){
+  $('r-v').value=v; $('r-p').value=p; $('r-c').value=c
+  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'))
+  btn.classList.add('active')
+  onSl()
+}
+
+// Build reference table
+const rows=[
+  {label:'1 venta/mes (hoy)', v:1},
+  {label:'3 ventas/mes',      v:3},
+  {label:'5 ventas/mes (meta)',v:5},
+  {label:'8 ventas/mes',      v:8},
+]
+const tbody=$('tbl-body')
+rows.forEach(r=>{
+  const tot=r.v*180000*0.05
+  const tr=document.createElement('tr')
+  tr.innerHTML=`
+    <td><strong>${r.label}</strong></td>
+    <td><strong>${fU(tot)}</strong></td>
+    <td style="color:var(--blue);font-weight:700">${fU(tot*.65)}</td>
+    <td style="color:var(--violet);font-weight:700">${fU(tot*.10)}</td>
+    <td style="color:var(--green);font-weight:700">${fU(tot*.20)}</td>
+    <td style="color:var(--gray);font-weight:700">${fU(tot*.05)}</td>
+    <td style="color:var(--text2);font-weight:700">${fU(tot*12)}</td>
+  `
+  tbody.appendChild(tr)
+})
+
+// Init
+onSl()
+</script>
+</body>
+</html>
