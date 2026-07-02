@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Operativo · Santi</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --blue:#2563EB;--blue-l:#DBEAFE;--blue-d:#1E40AF;
+  --amber:#D97706;--amber-l:#FEF3C7;--amber-d:#92400E;
+  --green:#059669;--green-l:#D1FAE5;
+  --violet:#7C3AED;--violet-l:#EDE9FE;
+  --red:#DC2626;--red-l:#FEE2E2;
+  --gray:#4B5563;--gray-l:#F3F4F6;
+  --bg:#F1F5F9;--card:#fff;--border:#E2E8F0;
+  --text:#0F172A;--text2:#334155;--muted:#64748B;
+  --r:12px;--sh:0 1px 3px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.05);
+  --sidebar:260px
+}
+
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:#0F172A;height:100vh;position:sticky;top:0;
+  overflow-y:auto;display:flex;flex-direction:column
+}
+.sb-brand{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-brand-name{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.sb-brand-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
+.sb-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(5,150,105,.2);border:1px solid rgba(5,150,105,.35);
+  color:#34D399;border-radius:20px;padding:4px 10px;
+  font-size:11px;font-weight:600;margin-top:10px
+}
+.sb-nav{padding:12px 8px;flex:1}
+.sb-section{margin-bottom:2px}
+.sb-section-lbl{
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.2);font-weight:600;
+  padding:10px 12px 4px
+}
+.sb-link{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 12px;border-radius:8px;
+  font-size:12.5px;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all .15s;text-decoration:none;
+  border:none;background:none;width:100%;text-align:left
+}
+.sb-link:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sb-link.active{background:rgba(37,99,235,.25);color:#93C5FD}
+.sb-link .ico{font-size:14px;flex-shrink:0}
+.sb-new{
+  font-size:9px;font-weight:700;letter-spacing:.08em;
+  background:rgba(5,150,105,.3);color:#34D399;
+  padding:2px 5px;border-radius:4px;margin-left:auto
+}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;padding:0 0 80px}
+
+/* ── HEADER ── */
+.hdr{background:#0F172A;padding:40px 48px 36px;position:relative;overflow:hidden}
+.hdr::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 50% 100% at 10% 70%,rgba(37,99,235,.15) 0%,transparent 65%),
+             radial-gradient(ellipse 35% 60% at 90% 10%,rgba(217,119,6,.1) 0%,transparent 60%)
+}
+.hdr-in{position:relative;display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.hdr-eye{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-bottom:10px}
+.hdr h1{font-size:40px;font-weight:900;letter-spacing:-.03em;color:#fff;line-height:1;margin-bottom:8px}
+.hdr h1 em{font-style:normal;color:#60A5FA}
+.hdr-desc{font-size:14px;color:rgba(255,255,255,.4);line-height:1.6;max-width:420px}
+.hdr-meta{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0}
+.meta-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 18px;text-align:right}
+.meta-card-v{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.meta-card-l{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.meta-row{display:flex;gap:10px}
+
+/* ── GOLD RULE ── */
+.gold-rule{background:linear-gradient(135deg,#92400E 0%,#D97706 60%,#F59E0B 100%);padding:20px 48px;display:flex;align-items:center;gap:16px}
+.gr-ico{font-size:26px;flex-shrink:0}
+.gr-ttl{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;letter-spacing:-.01em}
+.gr-body{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5}
+.gr-badge{
+  margin-left:auto;flex-shrink:0;
+  background:rgba(0,0,0,.25);border-radius:8px;
+  padding:8px 16px;text-align:center;border:1px solid rgba(255,255,255,.15)
+}
+.gr-badge-v{font-size:20px;font-weight:900;color:#FEF3C7}
+.gr-badge-l{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em}
+
+/* ── CONTENT ── */
+.content{padding:36px 48px}
+.sec{margin-bottom:40px;scroll-margin-top:20px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.sec-ico{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0
+}
+.sec-ttl{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.sec-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.new-tag{
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  background:var(--green-l);color:var(--green);
+  padding:3px 8px;border-radius:5px;
+}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:14px}
+.card-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.card-hdr-ttl{font-size:13.5px;font-weight:700}
+.card-body{padding:16px 20px}
+
+/* Checklist */
+.cl-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.cl-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .1s
+}
+.cl-item:last-child{border-bottom:none}
+.cl-item:hover{background:var(--gray-l);margin:0 -20px;padding-left:20px;padding-right:20px}
+.cl-cb{
+  width:18px;height:18px;border:2px solid var(--border);
+  border-radius:5px;flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s
+}
+.cl-item.done .cl-cb{background:var(--green);border-color:var(--green)}
+.cl-item.done .cl-cb::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+.cl-item.done .cl-txt{text-decoration:line-through;color:var(--muted)}
+.cl-txt{font-size:13.5px;color:var(--text2);line-height:1.4;flex:1}
+.cl-time{font-size:11px;color:var(--muted);flex-shrink:0;margin-top:2px;white-space:nowrap}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:left;background:#F8FAFC;border-bottom:1px solid var(--border)}
+.tbl td{padding:12px 14px;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.45}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#FAFBFC}
+.tbl-key{font-weight:700;color:var(--text);width:220px}
+
+/* Info blocks */
+.info{
+  border-radius:10px;padding:14px 18px;
+  display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;
+  font-size:13px;line-height:1.55
+}
+.info-amber{background:var(--amber-l);border-left:3px solid var(--amber)}
+.info-blue{background:var(--blue-l);border-left:3px solid var(--blue)}
+.info-green{background:var(--green-l);border-left:3px solid var(--green)}
+.info-red{background:var(--red-l);border-left:3px solid var(--red)}
+.info-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.info b{display:block;font-weight:700;margin-bottom:3px;color:var(--text)}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;flex-shrink:0
+}
+.step-body{flex:1}
+.step-ttl{font-size:13.5px;font-weight:700;margin-bottom:4px}
+.step-desc{font-size:12.5px;color:var(--text2);line-height:1.5}
+.step-badge{
+  font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:5px;
+  margin-top:6px;display:inline-block
+}
+
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi-card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh)}
+.kpi-val{font-size:24px;font-weight:900;letter-spacing:-.02em;margin-bottom:4px}
+.kpi-lbl{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:8px;line-height:1.4}
+.kpi-bar-wrap{height:5px;background:var(--border);border-radius:3px}
+.kpi-bar{height:100%;border-radius:3px}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:5px}
+
+/* Template box */
+.tmpl{
+  background:#F8FAFC;border:1px solid var(--border);border-radius:10px;
+  padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.65;
+  font-family:'SF Mono',Monaco,monospace;
+  position:relative
+}
+.tmpl-lbl{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px
+}
+.tmpl span{background:var(--blue-l);color:var(--blue-d);border-radius:3px;padding:1px 5px}
+
+/* Grid 2-col */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* Divider */
+.div{height:1px;background:var(--border);margin:24px 0}
+
+/* Badge */
+.badge{display:inline-flex;padding:3px 10px;border-radius:6px;font-size:11.5px;font-weight:700}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;overflow-x:auto}
+  .sb-nav{display:flex;flex-direction:row;padding:8px;gap:4px;white-space:nowrap}
+  .sb-brand{display:none}
+  .sb-section-lbl{display:none}
+  .sb-link{padding:6px 12px;font-size:12px}
+  .hdr{padding:24px 20px}
+  .gold-rule{padding:16px 20px;flex-wrap:wrap}
+  .gr-badge{margin-left:0}
+  .content{padding:20px}
+  .g2{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .hdr h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-name">Manual Operativo</div>
+    <div class="sb-brand-sub">Altavista Otero · 2026</div>
+    <div class="sb-pill">🟢 Activo</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">
+      <div class="sb-section-lbl">Diario</div>
+      <a class="sb-link active" href="#checklist" onclick="nav(this)"><span class="ico">☐</span>Checklist diaria</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Propiedades</div>
+      <a class="sb-link" href="#carpeta" onclick="nav(this)"><span class="ico">📁</span>Carpeta completa</a>
+      <a class="sb-link" href="#portales" onclick="nav(this)"><span class="ico">🌐</span>Publicación portales <span class="sb-new">NUEVO</span></a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Clientes</div>
+      <a class="sb-link" href="#consultas" onclick="nav(this)"><span class="ico">💬</span>Consultas</a>
+      <a class="sb-link" href="#visitas" onclick="nav(this)"><span class="ico">🏠</span>Protocolo visitas</a>
+      <a class="sb-link" href="#seguimiento" onclick="nav(this)"><span class="ico">📊</span>Seguimiento</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Propietarios</div>
+      <a class="sb-link" href="#propietarios" onclick="nav(this)"><span class="ico">🤝</span>Primer contacto <span class="sb-new">NUEVO</span></a>
+      <a class="sb-link" href="#activos" onclick="nav(this)"><span class="ico">📣</span>Propietarios activos <span class="sb-new">NUEVO</span></a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Operaciones</div>
+      <a class="sb-link" href="#escribanias" onclick="nav(this)"><span class="ico">⚖️</span>Escribanías</a>
+      <a class="sb-link" href="#contenido" onclick="nav(this)"><span class="ico">🎥</span>Filmación</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-lbl">Métricas</div>
+      <a class="sb-link" href="#kpis" onclick="nav(this)"><span class="ico">📈</span>KPIs del mes</a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-in">
+      <div>
+        <p class="hdr-eye">Coordinador Operativo · Altavista Otero</p>
+        <h1>Manual de <em>Santi</em></h1>
+        <p class="hdr-desc">Guía operativa completa. Lun–Vie 9:00–13:00. Cada tarea que hacés bien libera tiempo de Santiago para cerrar una venta.</p>
+      </div>
+      <div class="hdr-meta">
+        <div class="meta-row">
+          <div class="meta-card">
+            <div class="meta-card-v">$600K</div>
+            <div class="meta-card-l">Fijo mensual</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-card-v">5%</div>
+            <div class="meta-card-l">Por venta</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.25);text-align:right">Reporta a: Santiago (Director)</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- GOLD RULE -->
+  <div class="gold-rule">
+    <span class="gr-ico">⚠️</span>
+    <div>
+      <div class="gr-ttl">Regla de oro — irrompible</div>
+      <div class="gr-body">Un cliente nunca debe llegar a una visita sin haber recibido antes toda la información de la propiedad. Ese error costó una venta. No puede repetirse.</div>
+    </div>
+    <div class="gr-badge">
+      <div class="gr-badge-v">–1h</div>
+      <div class="gr-badge-l">Mínimo antes</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CHECKLIST DIARIA -->
+    <section class="sec" id="checklist">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#EFF6FF">☐</div>
+        <div>
+          <div class="sec-ttl">Checklist diaria</div>
+          <div class="sec-sub">Lun–Vie · 9:00–13:00 · En orden, sin saltear nada</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span style="font-size:14px">🌅</span><span class="card-hdr-ttl">Al entrar — 9:00</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Revisar todos los mensajes: WhatsApp, mail, portales (Zonaprop, Argenprop, ML, IG/FB)</span><span class="cl-time">9:00</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Verificar visitas agendadas para hoy y preparar carpetas</span><span class="cl-time">9:15</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Responder todos los mensajes pendientes del día anterior</span><span class="cl-time">9:30</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span style="font-size:14px">⚡</span><span class="card-hdr-ttl">Media mañana — 10:00</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Enviar info de propiedades a clientes con visita hoy (mínimo 1h antes del horario)</span><span class="cl-time">según visita</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Actualizar estado de cada lead activo en el seguimiento</span><span class="cl-time">10:00</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Llamar a escribanías por operaciones en curso con plazos pendientes</span><span class="cl-time">10:30</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span style="font-size:14px">📡</span><span class="card-hdr-ttl">Martes y jueves — portales</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Verificar que todas las propiedades en portales tengan info y fotos actualizadas</span><span class="cl-time">mar y jue</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Confirmar precios: si hubo cambio de precio, actualizar en todos los portales Y en la web el mismo día</span><span class="cl-time">mar y jue</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span style="font-size:14px">📊</span><span class="card-hdr-ttl">Cierre — 13:00</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Reportar a Santiago: resumen de consultas recibidas, visitas del día, novedades de operaciones activas</span><span class="cl-time">13:00</span></li>
+          </ul>
+          <div class="info info-blue" style="margin-top:12px">
+            <span class="info-ico">💡</span>
+            <div>El reporte diario no falla. Si no hay novedades, igual se manda: "Todo tranquilo, sin novedades."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARPETA COMPLETA -->
+    <section class="sec" id="carpeta">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#FEF3C7">📁</div>
+        <div>
+          <div class="sec-ttl">Carpeta completa de cada propiedad</div>
+          <div class="sec-sub">Obligatorio antes de publicar o mostrar</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Info básica obligatoria</span></div>
+          <div class="card-body">
+            <table class="tbl">
+              <tr><td class="tbl-key">Dirección</td><td>Calle, número, piso, unidad</td></tr>
+              <tr><td class="tbl-key">Precio</td><td>USD actualizado</td></tr>
+              <tr><td class="tbl-key">Superficie</td><td>Total y cubierta en m²</td></tr>
+              <tr><td class="tbl-key">Ambientes</td><td>Ambientes, dormitorios, baños, toilette</td></tr>
+              <tr><td class="tbl-key">Expensas</td><td>Monto mensual actualizado</td></tr>
+              <tr><td class="tbl-key">Estado</td><td>A estrenar / usado / refaccionado</td></tr>
+              <tr><td class="tbl-key">Antigüedad</td><td>Año de construcción</td></tr>
+              <tr><td class="tbl-key">Cochera/baulera</td><td>Sí / No / precio extra</td></tr>
+              <tr><td class="tbl-key">Orientación</td><td>Norte, sur, frente, contrafrente</td></tr>
+              <tr><td class="tbl-key">Piso y vista</td><td>Piso número y tipo de vista</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Documentación requerida</span></div>
+          <div class="card-body">
+            <ul class="cl-list">
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Escritura o título de propiedad (copia escaneada)</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Plano de la propiedad (si está disponible)</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Reglamento de copropiedad (en edificios)</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Últimas 3 boletas de expensas</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Certificado de deuda de expensas actualizado</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Datos del propietario: nombre, DNI, teléfono</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Datos del administrador del edificio y teléfono</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Material visual obligatorio</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Mínimo 10 fotos con buena luz natural (frente, hall, living, cocina, dormitorios, baños, balcón, vista)</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Video de recorrido completo filmado por Santi (ver sección Filmación)</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Plano esquemático si está disponible</span></li>
+          </ul>
+          <div class="info info-amber" style="margin-top:12px">
+            <span class="info-ico">⚠️</span>
+            <div><b>Actualización obligatoria</b>Si cambia el precio, las expensas o el estado: actualizar la carpeta el mismo día. Las carpetas desactualizadas generan pérdida de ventas.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PUBLICACIÓN EN PORTALES -->
+    <section class="sec" id="portales">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#DCFCE7">🌐</div>
+        <div>
+          <div class="sec-ttl">Publicación en portales <span class="new-tag">NUEVO</span></div>
+          <div class="sec-sub">Zonaprop · Argenprop · MercadoLibre · Web propia</div>
+        </div>
+      </div>
+
+      <div class="info info-amber">
+        <span class="info-ico">🏠</span>
+        <div><b>Condición obligatoria antes de publicar</b>El departamento tiene que estar vacío al momento de la visita. Se publican con las fotos del departamento amoblado (las que se tienen de antes). Nunca publicar un depto ocupado.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Secuencia de publicación — propiedad nueva</span></div>
+        <div class="card-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-num" style="background:var(--blue)">1</div>
+              <div class="step-body">
+                <div class="step-ttl">Carpeta completa primero</div>
+                <div class="step-desc">No se publica hasta que la carpeta tenga info básica + fotos + video. La carpeta va antes que el portal.</div>
+                <span class="step-badge" style="background:var(--blue-l);color:var(--blue-d)">Días 1–3 de la captación</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:var(--blue)">2</div>
+              <div class="step-body">
+                <div class="step-ttl">Título del aviso</div>
+                <div class="step-desc">Formato: [Tipo] en [Barrio] — [m²] — [Ambientes] — [Característica principal]. Ejemplo: <em>Departamento en Centro — 65 m² — 2 Ambientes — A estrenar</em>. Sin mayúsculas excesivas ni signos de exclamación.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:var(--blue)">3</div>
+              <div class="step-body">
+                <div class="step-ttl">Descripción del aviso</div>
+                <div class="step-desc">Párrafo 1: características principales (superficie, ambientes, estado). Párrafo 2: detalles interiores (cocina, baños, orientación, vista). Párrafo 3: ubicación y acceso. Párrafo 4: precio, expensas y contacto. Sin errores de tipeo. Santiago revisa la primera vez.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:var(--blue)">4</div>
+              <div class="step-body">
+                <div class="step-ttl">Fotos en orden</div>
+                <div class="step-desc">Primera foto: la mejor del living o la vista. Segunda: frente del edificio. Resto: cocina, dormitorios, baños, balcón. Nunca subir fotos oscuras o borrosas.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:var(--violet)">5</div>
+              <div class="step-body">
+                <div class="step-ttl">Subir a la web propia</div>
+                <div class="step-desc">Después de los portales, cargar la propiedad en la web de la inmobiliaria con la misma info y fotos. El precio en la web tiene que coincidir siempre con los portales.</div>
+                <span class="step-badge" style="background:var(--violet-l);color:var(--violet)">propiedades.santiagofunes.com.ar</span>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:var(--green)">6</div>
+              <div class="step-body">
+                <div class="step-ttl">Confirmar con Santiago</div>
+                <div class="step-desc">Enviar link de cada publicación a Santiago para revisión. Guardar los links en la carpeta de la propiedad.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Actualización de precio</span></div>
+        <div class="card-body">
+          <div class="info info-red">
+            <span class="info-ico">🔴</span>
+            <div><b>Regla inmediata</b>Cuando Santiago comunica un cambio de precio: actualizar en todos los portales Y en la web el mismo día. No esperar al martes/jueves. Confirmar a Santiago cuando esté hecho.</div>
+          </div>
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Actualizar precio en Zonaprop</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Actualizar precio en Argenprop</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Actualizar precio en MercadoLibre</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Actualizar precio en la web propia</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Confirmar a Santiago que todos los portales están actualizados</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info info-blue">
+        <span class="info-ico">📋</span>
+        <div><b>Herramienta de seguimiento — pendiente de definir</b>El manual menciona "registrar" en varios puntos pero no especifica dónde. Santiago y Santi deben definir si usan una planilla de Google Sheets, Notion u otra herramienta. Una vez definido, documentar aquí el link.</div>
+      </div>
+    </section>
+
+    <!-- CONSULTAS -->
+    <section class="sec" id="consultas">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#DBEAFE">💬</div>
+        <div>
+          <div class="sec-ttl">Atención de consultas</div>
+          <div class="sec-sub">Tiempo máximo de respuesta: 1 hora en horario de oficina</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Canales a monitorear</span></div>
+          <div class="card-body">
+            <table class="tbl">
+              <tr><td class="tbl-key">WhatsApp</td><td>Cada 30 min en horario de oficina</td></tr>
+              <tr><td class="tbl-key">Zonaprop</td><td>Al entrar y a las 11:00</td></tr>
+              <tr><td class="tbl-key">Argenprop</td><td>Al entrar y a las 11:00</td></tr>
+              <tr><td class="tbl-key">MercadoLibre</td><td>Al entrar y a las 11:00</td></tr>
+              <tr><td class="tbl-key">Mail</td><td>Al entrar y a las 11:00</td></tr>
+              <tr><td class="tbl-key">Instagram / Facebook</td><td>Al entrar y a las 11:00</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Protocolo de respuesta</span></div>
+          <div class="card-body">
+            <div class="steps">
+              <div class="step">
+                <div class="step-num" style="background:var(--blue)">1</div>
+                <div class="step-body"><div class="step-desc">Leer el mensaje completo antes de responder</div></div>
+              </div>
+              <div class="step">
+                <div class="step-num" style="background:var(--blue)">2</div>
+                <div class="step-body"><div class="step-desc">Identificar qué propiedad le interesa y qué info necesita</div></div>
+              </div>
+              <div class="step">
+                <div class="step-num" style="background:var(--blue)">3</div>
+                <div class="step-body"><div class="step-desc">Responder con info básica inmediatamente</div></div>
+              </div>
+              <div class="step">
+                <div class="step-num" style="background:var(--blue)">4</div>
+                <div class="step-body"><div class="step-desc">Si muestra interés real, ofrecer coordinar visita</div></div>
+              </div>
+              <div class="step">
+                <div class="step-num" style="background:var(--amber)">5</div>
+                <div class="step-body"><div class="step-desc">Si requiere negociación: avisar a Santiago de inmediato</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Registro de cada consulta</span></div>
+        <div class="card-body">
+          <table class="tbl">
+            <thead><tr><th>Dato</th><th>Detalle</th></tr></thead>
+            <tbody>
+              <tr><td class="tbl-key">Nombre y teléfono</td><td>Del interesado</td></tr>
+              <tr><td class="tbl-key">Propiedad</td><td>Por cuál consulta</td></tr>
+              <tr><td class="tbl-key">Canal</td><td>WhatsApp, portal, referido, IG…</td></tr>
+              <tr><td class="tbl-key">Fecha y hora</td><td>Del primer contacto</td></tr>
+              <tr><td class="tbl-key">Estado</td><td>Respondido / visita agendada / sin respuesta / descartado</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISITAS -->
+    <section class="sec" id="visitas">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#FEF3C7">🏠</div>
+        <div>
+          <div class="sec-ttl">Protocolo antes de cada visita</div>
+          <div class="sec-sub">Se ejecuta SIN EXCEPCIÓN en cada visita agendada</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Confirmar con Santiago que la visita está agendada y puede asistir</span><span class="cl-time">al agendar</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Verificar que la carpeta de esa propiedad está completa y actualizada</span><span class="cl-time">al agendar</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Coordinar acceso a la propiedad con el propietario o encargado</span><span class="cl-time">día anterior</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Preparar el mensaje de WhatsApp con toda la info de la propiedad</span><span class="cl-time">2hs antes</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Enviar info completa al cliente por WhatsApp ← REGLA DE ORO</span><span class="cl-time">mín. 1h antes</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Confirmar asistencia del cliente con mensaje de recordatorio</span><span class="cl-time">1h antes</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Avisar a Santiago que la info fue enviada y el cliente confirmó</span><span class="cl-time">1h antes</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Hacer seguimiento post-visita (dentro de las 24hs)</span><span class="cl-time">+24hs</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Mensaje tipo — información pre-visita</span></div>
+        <div class="card-body">
+          <div class="tmpl-lbl">WhatsApp · copiar y completar</div>
+          <div class="tmpl">Hola <span>[nombre]</span>, te enviamos la info completa de la propiedad que vas a visitar hoy a las <span>[hora]</span>.<br><br>📍 Dirección: <span>[dirección]</span><br>💰 Precio: USD <span>[precio]</span><br>📐 Superficie: <span>[m²]</span><br><span>[datos adicionales relevantes]</span><br><br>Cualquier consulta, Santiago está disponible al <span>[teléfono]</span>. ¡Hasta pronto!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEGUIMIENTO -->
+    <section class="sec" id="seguimiento">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#D1FAE5">📊</div>
+        <div>
+          <div class="sec-ttl">Seguimiento de operaciones</div>
+          <div class="sec-sub">Desde la primera consulta hasta la escritura</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Etapas de una operación</span></div>
+        <div class="card-body">
+          <div class="steps">
+            <div class="step"><div class="step-num" style="background:#94A3B8">1</div><div class="step-body"><div class="step-ttl">Consulta recibida</div><div class="step-desc">Cliente hizo una consulta. No hay visita todavía.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--blue)">2</div><div class="step-body"><div class="step-ttl">Visita agendada</div><div class="step-desc">Coordinada la visita. Santi envía info previa.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--blue)">3</div><div class="step-body"><div class="step-ttl">Visita realizada</div><div class="step-desc">Santiago mostró la propiedad. Hay interés.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--amber)">4</div><div class="step-body"><div class="step-ttl">Negociación</div><div class="step-desc">Se discuten condiciones de precio o forma de pago.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--amber)">5</div><div class="step-body"><div class="step-ttl">Reserva firmada</div><div class="step-desc">Santi contacta a la escribanía asignada.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--green)">6</div><div class="step-body"><div class="step-ttl">Boleto de compraventa</div><div class="step-desc">Santi hace seguimiento con escribanía.</div></div></div>
+            <div class="step"><div class="step-num" style="background:var(--green)">7</div><div class="step-body"><div class="step-ttl">Escritura ✓</div><div class="step-desc">Operación cerrada. Registrar el cierre.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Seguimiento post-visita</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">A las 24 horas: mensaje al cliente preguntando si tiene consultas</span><span class="cl-time">+24h</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">A los 3 días: llamado si no hubo respuesta al mensaje</span><span class="cl-time">+3 días</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">A los 7 días: seguimiento final si no tomó decisión</span><span class="cl-time">+7 días</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Registrar en cada contacto la respuesta y el próximo paso</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIMER CONTACTO PROPIETARIOS -->
+    <section class="sec" id="propietarios">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#EDE9FE">🤝</div>
+        <div>
+          <div class="sec-ttl">Primer contacto con propietarios <span class="new-tag">NUEVO</span></div>
+          <div class="sec-sub">Cuando Santiago incorpora una propiedad nueva</div>
+        </div>
+      </div>
+
+      <div class="info info-blue">
+        <span class="info-ico">📌</span>
+        <div>Cuando Santiago capta una propiedad, Santi se encarga de la parte operativa del onboarding: obtener la documentación y coordinar el acceso. Siempre presentarse como parte del equipo de Santiago.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Protocolo de presentación</span></div>
+        <div class="card-body">
+          <div class="tmpl-lbl">Primer mensaje al propietario — WhatsApp</div>
+          <div class="tmpl">Hola <span>[nombre]</span>, soy Santi, parte del equipo de Santiago Funes. Me encargo del área operativa de la inmobiliaria.<br><br>Le escribo para coordinar todo lo que necesitamos de su parte para tener la propiedad lista lo antes posible: documentación, acceso para fotos y video, y datos del administrador del edificio si corresponde.<br><br>¿Cuándo le viene bien que nos coordinemos?</div>
+          <div style="margin-top:16px">
+            <div class="tmpl-lbl">Tono y forma</div>
+            <ul style="margin-top:8px;padding-left:16px;font-size:13px;color:var(--text2);display:flex;flex-direction:column;gap:6px;line-height:1.5">
+              <li>Siempre tratar de "usted" en el primer contacto</li>
+              <li>Presentarse como "equipo de Santiago Funes", no como inmobiliaria genérica</li>
+              <li>Ser concreto: decir exactamente qué se necesita y para cuándo</li>
+              <li>Si el propietario quiere hablar con Santiago, derivar sin problema</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Documentación a solicitar al propietario</span></div>
+        <div class="card-body">
+          <ul class="cl-list">
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Escritura o título (copia escaneada o foto clara)</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Últimas 3 boletas de expensas</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Certificado de deuda de expensas actualizado</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Datos del administrador del edificio (nombre y teléfono)</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Plano de la propiedad si lo tiene</span></li>
+            <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Coordinar acceso a la unidad para fotos y video</span></li>
+          </ul>
+          <div class="info info-green" style="margin-top:14px">
+            <span class="info-ico">🚀</span>
+            <div><b>Futuro: automatización parcial</b>Los mensajes de bienvenida al propietario y los recordatorios de documentación pendiente son candidatos a automatizarse con WhatsApp Business en una próxima etapa. Por ahora, manual.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROPIETARIOS ACTIVOS -->
+    <section class="sec" id="activos">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#D1FAE5">📣</div>
+        <div>
+          <div class="sec-ttl">Comunicación con propietarios activos <span class="new-tag">NUEVO</span></div>
+          <div class="sec-sub">El propietario quiere saber si su propiedad se mueve</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-hdr-ttl">Frecuencia de contacto</span></div>
+        <div class="card-body">
+          <table class="tbl">
+            <thead><tr><th>Situación</th><th>Quién habla</th><th>Qué se comunica</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Se hizo una visita</td>
+                <td>Santi o Santiago</td>
+                <td>Informar al propietario que se mostró la propiedad. Feedback general del cliente si lo hay.</td>
+              </tr>
+              <tr>
+                <td>Hay interés real / negociación</td>
+                <td>Santiago</td>
+                <td>Santiago lo llama directamente para coordinar.</td>
+              </tr>
+              <tr>
+                <td>No hubo visitas en 2 semanas</td>
+                <td>Santi</td>
+                <td>Actualizar al propietario con un resumen de consultas recibidas.</td>
+              </tr>
+              <tr>
+                <td>Cambio de precio o condiciones</td>
+                <td>Santiago</td>
+                <td>Santiago negocia con el propietario. Santi implementa el cambio en portales.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="info info-blue" style="margin-top:14px">
+            <span class="info-ico">💬</span>
+            <div>La coordinación exacta entre Santi y Santiago para cada caso se irá ajustando con el tiempo. El criterio base: Santi maneja las actualizaciones de rutina; Santiago interviene cuando hay negociación o decisión importante.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESCRIBANÍAS -->
+    <section class="sec" id="escribanias">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#EDE9FE">⚖️</div>
+        <div>
+          <div class="sec-ttl">Comunicación con escribanías</div>
+          <div class="sec-sub">Desde la reserva hasta la escritura</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Al firmarse la reserva</span></div>
+          <div class="card-body">
+            <ul class="cl-list">
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Solicitar a Santiago los datos de la escribanía asignada</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Presentarse con la escribanía como contacto de seguimiento</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Solicitar listado de documentación pendiente</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Registrar todos los plazos acordados</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Seguimiento regular</span></div>
+          <div class="card-body">
+            <ul class="cl-list">
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Llamar cada 5 días hábiles si no hay novedades</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Si no atienden: enviar mail y registrar el intento</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Si en 48h no hay respuesta: avisar a Santiago de inmediato</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Registrar cada contacto: fecha, hora y resultado</span></li>
+            </ul>
+            <div class="info info-red" style="margin-top:12px">
+              <span class="info-ico">🔴</span>
+              <div><b>Escalamiento</b>Si la escribanía no responde en 48h o hay demora injustificada: avisar a Santiago de inmediato. No esperar. No resolver solo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILMACIÓN -->
+    <section class="sec" id="contenido">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#FEF3C7">🎥</div>
+        <div>
+          <div class="sec-ttl">Filmación y contenido</div>
+          <div class="sec-sub">Santi filma. La agencia dirige y edita.</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Video de recorrido — cada propiedad nueva</span></div>
+          <div class="card-body">
+            <ul class="cl-list">
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Coordinar con Santiago cuándo ir a filmar (dentro de los 3 días de incorporar la propiedad)</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Filmar en horizontal (modo paisaje) con buena luz natural</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Recorrido completo: entrada, living, cocina, dormitorios, baños, balcón</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Mínimo 2 minutos de material en bruto</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Enviar video a la agencia para edición dentro de las 24hs</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><span class="card-hdr-ttl">Filmación de Santiago</span></div>
+          <div class="card-body">
+            <ul class="cl-list">
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Cuando Santiago necesita ser filmado, Santi opera la cámara</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Coordinarlo con al menos 24hs de anticipación</span></li>
+              <li class="cl-item" onclick="toggle(this)"><div class="cl-cb"></div><span class="cl-txt">Enviar el material a la agencia el mismo día</span></li>
+            </ul>
+            <div class="div"></div>
+            <div class="tmpl-lbl">Fotos de propiedades</div>
+            <ul style="margin-top:8px;padding-left:16px;font-size:13px;color:var(--text2);display:flex;flex-direction:column;gap:5px;line-height:1.4">
+              <li>Mínimo 10 fotos por propiedad antes de publicar</li>
+              <li>Luz natural siempre que sea posible</li>
+              <li>Ordenar y limpiar el espacio antes de fotografiar</li>
+              <li>Subir a la carpeta de la propiedad el mismo día</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="sec" id="kpis">
+      <div class="sec-hdr">
+        <div class="sec-ico" style="background:#DBEAFE">📈</div>
+        <div>
+          <div class="sec-ttl">Indicadores de desempeño</div>
+          <div class="sec-sub">Revisión el primer lunes de cada mes con Santiago</div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--green)">< 1h</div>
+          <div class="kpi-lbl">Tiempo de respuesta a consultas en horario de oficina</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--green);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--blue)">100%</div>
+          <div class="kpi-lbl">Propiedades activas con carpeta completa</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--blue);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--amber)">100%</div>
+          <div class="kpi-lbl">Visitas con info enviada mínimo 1h antes</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--amber);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--blue)">100%</div>
+          <div class="kpi-lbl">Visitas con seguimiento a las 24hs</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--blue);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--violet)">3 días</div>
+          <div class="kpi-lbl">Video listo desde que se incorpora una propiedad nueva</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--violet);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--green)">13:00</div>
+          <div class="kpi-lbl">Reporte diario a Santiago — sin excepción</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--green);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--gray)">5 días</div>
+          <div class="kpi-lbl">Máximo sin contactar a cada escribanía en curso</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--gray);width:100%"></div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" style="color:var(--green)">$600K</div>
+          <div class="kpi-lbl">Fijo mensual · más 5% por cada venta cerrada</div>
+          <div class="kpi-bar-wrap"><div class="kpi-bar" style="background:var(--green);width:80%"></div></div>
+          <div class="kpi-sub">El 5% depende de qué tan bien preparás el terreno</div>
+        </div>
+      </div>
+
+      <div class="info info-amber" style="margin-top:24px">
+        <span class="info-ico">⭐</span>
+        <div><b>Recordá siempre</b>Tu trabajo no es vender — es hacer que Santiago pueda vender más. Cada tarea que hacés bien libera tiempo de Santiago para cerrar una operación más. Tu 5% por venta depende directamente de qué tan bien preparás el terreno.</div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function toggle(el){
+  el.classList.toggle('done')
+}
+function nav(el){
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'))
+  el.classList.add('active')
+}
+// Active link on scroll
+const secs = document.querySelectorAll('.sec[id]')
+const links = document.querySelectorAll('.sb-link[href]')
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'))
+      const a=document.querySelector('.sb-link[href="#'+e.target.id+'"]')
+      if(a)a.classList.add('active')
+    }
+  })
+},{rootMargin:'-30% 0px -60% 0px'})
+secs.forEach(s=>obs.observe(s))
+</script>
+</body>
+</html>
