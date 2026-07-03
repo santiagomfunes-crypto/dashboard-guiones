@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Profesionalización — SFRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', sans-serif; color: #0B1F33; background: #fff; }
+
+/* ── PORTADA ── */
+.portada {
+  background: #0B1F33;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 40px;
+  page-break-after: always;
+  position: relative;
+}
+.portada::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7AB591 0%, transparent 100%);
+}
+.portada-label {
+  font-size: 9px;
+  letter-spacing: 6px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 60px;
+}
+.portada h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  color: #fff;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  max-width: 640px;
+}
+.portada-sub {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+  line-height: 1.7;
+  max-width: 460px;
+  margin-bottom: 64px;
+}
+.portada-metas {
+  display: flex;
+  gap: 48px;
+  margin-bottom: 64px;
+}
+.meta-item {
+  text-align: center;
+}
+.meta-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: #7AB591;
+  display: block;
+}
+.meta-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-top: 4px;
+  display: block;
+}
+.meta-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.1);
+}
+.portada-fecha {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 40px;
+}
+
+/* ── ÍNDICE ── */
+.indice {
+  padding: 80px;
+  border-bottom: 1px solid #D9DEE3;
+  page-break-after: always;
+}
+.sec-label {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #7AB591;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.indice h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: #0B1F33;
+  margin-bottom: 40px;
+}
+.indice-parte {
+  margin-bottom: 32px;
+}
+.indice-parte-titulo {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #7AB591;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E8EDF2;
+}
+.indice-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F3F6;
+}
+.indice-num {
+  font-size: 10px;
+  color: #7AB591;
+  font-weight: 600;
+  min-width: 24px;
+}
+.indice-titulo {
+  font-size: 12px;
+  color: #2C4460;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ── SECCIONES ── */
+.seccion {
+  padding: 80px;
+  border-bottom: 1px solid #D9DEE3;
+}
+@media print {
+  .seccion { page-break-inside: avoid; }
+}
+.seccion h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: #0B1F33;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.seccion h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B1F33;
+  margin: 32px 0 12px;
+  letter-spacing: .3px;
+}
+.seccion h4 {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4A6282;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 24px 0 8px;
+}
+.seccion p {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #3A5070;
+  margin-bottom: 16px;
+  max-width: 720px;
+}
+.seccion ul, .seccion ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.seccion li {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #3A5070;
+  margin-bottom: 6px;
+  max-width: 700px;
+}
+
+/* ── PRINCIPIO RECTOR ── */
+.cita {
+  border-left: 3px solid #7AB591;
+  padding: 20px 24px;
+  margin: 24px 0;
+  background: #F7FAF8;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  color: #0B1F33;
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+/* ── TABLAS ── */
+.tabla-wrap {
+  margin: 24px 0;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+thead tr {
+  background: #0B1F33;
+  color: #fff;
+}
+thead th {
+  padding: 12px 16px;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+}
+tbody tr {
+  border-bottom: 1px solid #E8EDF2;
+}
+tbody tr:nth-child(even) {
+  background: #F7F9FB;
+}
+tbody td {
+  padding: 12px 16px;
+  color: #3A5070;
+  line-height: 1.6;
+  vertical-align: top;
+}
+tbody td:first-child {
+  font-weight: 500;
+  color: #0B1F33;
+  min-width: 160px;
+}
+
+/* ── GRILLA CAUSAS ── */
+.causa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.causa-card {
+  border: 1px solid #E0E8F0;
+  border-radius: 4px;
+  padding: 20px;
+}
+.causa-card-titulo {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0B1F33;
+  margin-bottom: 8px;
+}
+.causa-card-texto {
+  font-size: 12px;
+  color: #3A5070;
+  line-height: 1.7;
+}
+
+/* ── DIVISION AUTOM/HUMANO ── */
+.dos-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+.col-card {
+  border: 1px solid #E0E8F0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.col-card-header {
+  padding: 12px 16px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.col-card-header.verde { background: #E8F5EE; color: #2D7A50; }
+.col-card-header.rojo { background: #FEE8E8; color: #B02020; }
+.col-card ul {
+  padding: 16px;
+  list-style: none;
+}
+.col-card li {
+  font-size: 12px;
+  color: #3A5070;
+  padding: 6px 0;
+  border-bottom: 1px solid #F0F3F6;
+  line-height: 1.5;
+}
+.col-card li:last-child { border-bottom: none; }
+
+/* ── TABLERO MESES ── */
+.tablero-meses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+.mes-card {
+  border: 1px solid #D9DEE3;
+  border-radius: 4px;
+  padding: 20px;
+}
+.mes-num {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #7AB591;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.mes-foco {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0B1F33;
+  margin-bottom: 12px;
+}
+.mes-card ul {
+  padding-left: 16px;
+  list-style: disc;
+}
+.mes-card li {
+  font-size: 11px;
+  color: #3A5070;
+  line-height: 1.65;
+  margin-bottom: 4px;
+}
+
+/* ── ETAPAS PIPELINE ── */
+.pipeline {
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #D9DEE3;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.pipeline-etapa {
+  display: grid;
+  grid-template-columns: 36px 160px 1fr 1fr;
+  align-items: start;
+  gap: 0;
+  border-bottom: 1px solid #E8EDF2;
+}
+.pipeline-etapa:last-child { border-bottom: none; }
+.pipeline-etapa:nth-child(even) { background: #F7F9FB; }
+.pe-num {
+  background: #0B1F33;
+  color: #7AB591;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  padding: 14px 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pe-nombre {
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0B1F33;
+}
+.pe-def {
+  padding: 14px 16px;
+  font-size: 12px;
+  color: #3A5070;
+  line-height: 1.5;
+}
+.pe-paso {
+  padding: 14px 16px;
+  font-size: 12px;
+  color: #3A5070;
+  line-height: 1.5;
+}
+
+/* ── CÍRCULOS REFERIDOS ── */
+.circulos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+.circulo-card {
+  border: 1px solid #D9DEE3;
+  border-radius: 4px;
+  padding: 20px;
+  border-top: 3px solid #7AB591;
+}
+.circulo-num {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #7AB591;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.circulo-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B1F33;
+  margin-bottom: 8px;
+}
+.circulo-quienes {
+  font-size: 11px;
+  color: #5A7290;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.circulo-como {
+  font-size: 11px;
+  color: #3A5070;
+  line-height: 1.65;
+}
+
+/* ── TABLERO INDICADORES ── */
+.tablero-indicadores {
+  margin: 24px 0;
+  border: 1px solid #D9DEE3;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ti-header {
+  background: #0B1F33;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 12px 16px;
+  gap: 8px;
+}
+.ti-header span {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+}
+.ti-header span:first-child { text-align: left; }
+.ti-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px 16px;
+  gap: 8px;
+  border-bottom: 1px solid #E8EDF2;
+  align-items: center;
+}
+.ti-row:nth-child(even) { background: #F7F9FB; }
+.ti-row:last-child { border-bottom: none; }
+.ti-row span {
+  font-size: 11px;
+  color: #3A5070;
+  text-align: center;
+}
+.ti-row span:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: #0B1F33;
+}
+.ti-row.sub span:first-child {
+  padding-left: 16px;
+  font-weight: 400;
+  color: #5A7290;
+  font-size: 11px;
+}
+
+/* ── PLANTILLAS WA ── */
+.plantilla {
+  background: #F0F7F3;
+  border: 1px solid #C3DDD0;
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin: 16px 0;
+}
+.plantilla-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #5A9E7A;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.plantilla-texto {
+  font-size: 13px;
+  color: #1A3A28;
+  line-height: 1.75;
+  font-style: italic;
+}
+
+/* ── FÓRMULA CONTENIDO ── */
+.contenido-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+.contenido-card {
+  border: 1px solid #E0E8F0;
+  border-radius: 4px;
+  padding: 20px;
+}
+.contenido-tipo {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0B1F33;
+  margin-bottom: 4px;
+}
+.contenido-freq {
+  font-size: 10px;
+  color: #7AB591;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.contenido-ejemplo {
+  font-size: 11px;
+  color: #3A5070;
+  line-height: 1.65;
+}
+
+/* ── CIERRE ── */
+.cierre {
+  padding: 100px 80px;
+  background: #0B1F33;
+  text-align: center;
+}
+.cierre-texto {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto 32px;
+}
+.cierre-nota {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+}
+
+/* ── PRINT ── */
+@media print {
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .portada { page-break-after: always; }
+  .indice { page-break-after: always; }
+  .seccion { page-break-before: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="portada">
+  <div class="portada-label">Santiago Funes Real Estate · Tandil, 2026</div>
+  <h1>Manual de Profesionalización</h1>
+  <div class="portada-sub">Sistemas, procesos y automatizaciones para pasar<br>de 1–2 a 5 ventas mensuales en 6 meses</div>
+  <div class="portada-metas">
+    <div class="meta-item">
+      <span class="meta-num">1–2</span>
+      <span class="meta-label">Ventas / mes<br>Punto de partida</span>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-num">5</span>
+      <span class="meta-label">Ventas / mes<br>Meta a 6 meses</span>
+    </div>
+    <div class="meta-divider"></div>
+    <div class="meta-item">
+      <span class="meta-num">7</span>
+      <span class="meta-label">Sistemas<br>Modelo</span>
+    </div>
+  </div>
+  <div class="portada-fecha">Uso interno · Relaciones + referidos</div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="indice">
+  <div class="sec-label">Tabla de contenidos</div>
+  <h2>Índice</h2>
+
+  <div class="indice-parte">
+    <div class="indice-parte-titulo">Parte 1 — Fundamentos</div>
+    <div class="indice-item"><span class="indice-num">01</span><span class="indice-titulo">El diagnóstico: por qué 1–2 ventas por mes es el techo actual</span></div>
+    <div class="indice-item"><span class="indice-num">02</span><span class="indice-titulo">El principio rector: sistemas de relación, no de volumen</span></div>
+  </div>
+
+  <div class="indice-parte">
+    <div class="indice-parte-titulo">Parte 2 — Los 7 sistemas</div>
+    <div class="indice-item"><span class="indice-num">03</span><span class="indice-titulo">Sistema 1: Captación de propiedades con criterio</span></div>
+    <div class="indice-item"><span class="indice-num">04</span><span class="indice-titulo">Sistema 2: Atención de leads en menos de 5 minutos</span></div>
+    <div class="indice-item"><span class="indice-num">05</span><span class="indice-titulo">Sistema 3: Pipeline de seguimiento — que ningún lead se pierda</span></div>
+    <div class="indice-item"><span class="indice-num">06</span><span class="indice-titulo">Sistema 4: Programa de referidos formalizado</span></div>
+    <div class="indice-item"><span class="indice-num">07</span><span class="indice-titulo">Sistema 5: Contenido y marca en redes sociales</span></div>
+    <div class="indice-item"><span class="indice-num">08</span><span class="indice-titulo">Sistema 6: Postventa y fidelización — la mina de oro ignorada</span></div>
+    <div class="indice-item"><span class="indice-num">09</span><span class="indice-titulo">Sistema 7: Métricas — medir para decidir</span></div>
+  </div>
+
+  <div class="indice-parte">
+    <div class="indice-parte-titulo">Parte 3 — Tecnología y automatización</div>
+    <div class="indice-item"><span class="indice-num">10</span><span class="indice-titulo">Qué automatizar y qué no en un negocio de relaciones</span></div>
+    <div class="indice-item"><span class="indice-num">11</span><span class="indice-titulo">Herramientas recomendadas y cómo implementarlas</span></div>
+  </div>
+
+  <div class="indice-parte">
+    <div class="indice-parte-titulo">Parte 4 — Ejecución</div>
+    <div class="indice-item"><span class="indice-num">12</span><span class="indice-titulo">Roadmap de 6 meses, mes a mes</span></div>
+    <div class="indice-item"><span class="indice-num">13</span><span class="indice-titulo">Tablero de indicadores para la reunión mensual</span></div>
+  </div>
+</div>
+
+<!-- 01 DIAGNÓSTICO -->
+<div class="seccion">
+  <div class="sec-label">01 · Fundamentos</div>
+  <h2>El diagnóstico: por qué 1–2 ventas por mes es el techo actual</h2>
+  <p>Antes de aplicar cualquier cambio, hay que entender por qué el negocio está donde está. El techo de 1–2 ventas mensuales no es un problema de esfuerzo ni de mercado — es un problema estructural con causas identificables.</p>
+
+  <div class="causa-grid">
+    <div class="causa-card">
+      <div class="causa-card-titulo">Todo pasa por una persona</div>
+      <div class="causa-card-texto">Santiago atiende, coordina, negocia, publica y cierra. El día tiene 24 horas: ese es el techo.</div>
+    </div>
+    <div class="causa-card">
+      <div class="causa-card-titulo">Leads sin sistema de seguimiento</div>
+      <div class="causa-card-texto">Hasta el 50% de los leads nunca recibe un segundo contacto. Cada lead olvidado es una venta regalada a la competencia.</div>
+    </div>
+    <div class="causa-card">
+      <div class="causa-card-titulo">Información incompleta de propiedades</div>
+      <div class="causa-card-texto">Ya costó al menos una venta: un cliente llegó a la visita sin haber recibido la información. En un mercado sobreofertado, los detalles definen.</div>
+    </div>
+    <div class="causa-card">
+      <div class="causa-card-titulo">Sobreoferta de productos similares</div>
+      <div class="causa-card-texto">Cientos de departamentos de USD 150–250k casi idénticos en Tandil. Sin diferenciación, el cliente elige por precio o por quién le genera más confianza.</div>
+    </div>
+    <div class="causa-card">
+      <div class="causa-card-titulo">Referidos sin sistema</div>
+      <div class="causa-card-texto">El canal que más vende funciona por inercia, no por diseño. Nadie lo alimenta activamente.</div>
+    </div>
+    <div class="causa-card">
+      <div class="causa-card-titulo">Herramientas de volumen en un negocio de relaciones</div>
+      <div class="causa-card-texto">El agente automático y los ads masivos fracasaron porque el cliente inversor de Tandil compra por confianza, no por funnel digital.</div>
+    </div>
+  </div>
+
+  <h3>La conclusión del diagnóstico</h3>
+  <p>El negocio no necesita más herramientas ni más esfuerzo. Necesita sistemas: procesos escritos, repetibles y medibles que funcionen igual de bien un lunes a la mañana que un viernes a la tarde, los haga quien los haga.</p>
+</div>
+
+<!-- 02 PRINCIPIO RECTOR -->
+<div class="seccion">
+  <div class="sec-label">02 · Fundamentos</div>
+  <h2>El principio rector: sistemas de relación, no de volumen</h2>
+  <p>Toda decisión de este manual pasa por un filtro único. Antes de implementar cualquier proceso, herramienta o automatización, la pregunta es:</p>
+
+  <div class="cita">«¿Esto fortalece la confianza y la relación personal, o la reemplaza?»</div>
+
+  <p>Si la fortalece, se implementa. Si la reemplaza, se descarta — aunque esté de moda, aunque la use la competencia, aunque prometa ahorrar tiempo.</p>
+
+  <h3>Por qué este principio es innegociable para este negocio</h3>
+  <ul>
+    <li>El cliente principal es un inversor de perfil tradicional: compra ladrillo para preservar valor, no calcula retornos en una web, quiere hablar con una persona de confianza que le diga si conviene o no.</li>
+    <li>Las ventas actuales vienen de referidos y boca a boca. Ese canal funciona por la calidad de la relación, y crece cuidándola — no automatizándola.</li>
+    <li>En un mercado sobreofertado con cientos de departamentos similares, el único diferencial defendible es ser la inmobiliaria en la que la gente confía. El precio lo puede igualar cualquiera; la confianza no.</li>
+  </ul>
+
+  <h3>La división del trabajo que se desprende del principio</h3>
+  <div class="dos-cols">
+    <div class="col-card">
+      <div class="col-card-header verde">Se automatiza / sistematiza</div>
+      <ul>
+        <li>Registro y seguimiento de leads</li>
+        <li>Recordatorios de visitas y tareas</li>
+        <li>Carga y actualización en portales</li>
+        <li>Plantillas de mensajes frecuentes</li>
+        <li>Reportes y métricas mensuales</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <div class="col-card-header rojo">Se mantiene humano siempre</div>
+      <ul>
+        <li>La primera conversación real con un cliente</li>
+        <li>Las visitas y la negociación</li>
+        <li>El consejo sobre si conviene comprar o no</li>
+        <li>La llamada post-venta y el pedido de referidos</li>
+        <li>La relación con propietarios e inversores clave</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 03 CAPTACIÓN -->
+<div class="seccion">
+  <div class="sec-label">03 · Sistema 1</div>
+  <h2>Captación de propiedades con criterio</h2>
+  <p>Con sobreoferta de departamentos similares, sumar propiedades por sumar es acumular inventario que no se mueve. La captación profesional no busca cantidad — busca propiedades vendibles y, cuando es posible, en condiciones de trabajarlas bien.</p>
+
+  <h3>El filtro de captación: qué propiedad vale la pena tomar</h3>
+  <p>Si no cumple al menos cuatro de los cinco criterios, se conversa con el propietario para corregir (generalmente el precio) o se declina con elegancia:</p>
+
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Criterio</th><th>Qué se evalúa</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Precio de mercado</td><td>¿Está dentro del rango real de operaciones cerradas en la zona? Una propiedad sobrevaluada no se vende y desgasta la relación con el propietario.</td></tr>
+        <tr><td>2</td><td>Motivación del vendedor</td><td>¿Necesita vender o «está viendo qué le ofrecen»? Los propietarios sin urgencia rechazan ofertas razonables durante meses.</td></tr>
+        <tr><td>3</td><td>Documentación en regla</td><td>Escritura, expensas al día, sin inhibiciones. Los problemas documentales matan operaciones en la escribanía.</td></tr>
+        <tr><td>4</td><td>Atractivo para el perfil inversor</td><td>¿Se alquila fácil? ¿La zona tiene demanda? ¿El edificio está bien administrado? El cliente compra para preservar valor.</td></tr>
+        <tr><td>5</td><td>Diferenciable</td><td>¿Tiene algo que contar — piso alto, cochera, refaccionado, buena orientación? En un mar de deptos iguales, lo que no se diferencia no se vende.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Canales de captación priorizados para Tandil</h3>
+  <ol>
+    <li><strong>Propietarios referidos por clientes pasados.</strong> La llamada trimestral incluye siempre: «¿Conocés a alguien que esté pensando en vender?»</li>
+    <li><strong>Inversores que ya compraron.</strong> Quien compró un departamento como inversión puede querer venderlo o rotar su cartera. Nadie más tiene ese vínculo.</li>
+    <li><strong>Alianzas profesionales:</strong> contadores, escribanos, abogados y administradores de consorcios se enteran antes que nadie. Una reunión mensual con 3–4 aliados vale más que cualquier campaña.</li>
+    <li><strong>Farming de zona:</strong> elegir 2–3 zonas de Tandil y trabajar presencia constante — cartelería, contacto con comercios, contenido específico en redes.</li>
+    <li><strong>Dueños que publican solos en portales:</strong> contacto ofreciendo una tasación fundamentada gratuita, no un discurso de venta.</li>
+  </ol>
+
+  <h3>El dossier de tasación: la herramienta que gana captaciones</h3>
+  <p>Documento de 3–4 páginas que se presenta en la reunión de captación:</p>
+  <ul>
+    <li>Análisis de la propiedad: superficie, estado, fortalezas y debilidades honestas.</li>
+    <li>Comparables reales: 4–6 propiedades similares con precios de publicación y de cierre.</li>
+    <li>Precio sugerido con justificación — no el precio que el dueño quiere escuchar.</li>
+    <li>Plan de comercialización concreto: fotos profesionales, video, portales, plazos estimados.</li>
+  </ul>
+
+  <h4>El reporte quincenal al propietario</h4>
+  <p>Cada propietario recibe cada 15 días: cuántas consultas hubo, cuántas visitas, qué feedback dejaron los interesados. Casi ninguna inmobiliaria lo hace. Es la acción de menor costo y mayor impacto para diferenciarse — y la que genera que un propietario recomiende la inmobiliaria a otro.</p>
+</div>
+
+<!-- 04 LEADS -->
+<div class="seccion">
+  <div class="sec-label">04 · Sistema 2</div>
+  <h2>Atención de leads en menos de 5 minutos</h2>
+  <p>Los leads contactados en los primeros 5 minutos tienen hasta <strong>21 veces más probabilidades</strong> de convertirse que los contactados después. En un mercado donde el comprador consulta a 2–3 inmobiliarias a la vez, gana quien responde primero y con contexto.</p>
+
+  <h3>El protocolo de primera respuesta</h3>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr><th>Momento</th><th>Acción</th><th>Responsable</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0–5 minutos</td><td>Respuesta inicial por el mismo canal. Puede ser una plantilla personalizada con el nombre y la propiedad.</td><td>Santi</td></tr>
+        <tr><td>0–30 minutos</td><td>Envío de la ficha completa: precio, m², expensas, fotos, video si hay.</td><td>Santi</td></tr>
+        <tr><td>Mismo día</td><td>Pregunta de calificación: ¿busca para vivir o para invertir? ¿Tiene los fondos? ¿Quiere coordinar visita?</td><td>Santi</td></tr>
+        <tr><td>24h sin respuesta</td><td>Un solo re-contacto amable. Después, pasa a la lista de nutrición (contacto mensual).</td><td>Santi</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Las tres preguntas de calificación</h3>
+  <ol>
+    <li><strong>¿Para vivir o para invertir?</strong> — define el discurso: al inversor se le habla de renta y demanda de alquiler; al que busca vivienda, de la vida en esa zona.</li>
+    <li><strong>¿Tenés definida la forma de pago?</strong> — separa a quien puede comprar ya de quien depende de vender otra propiedad o esperar un crédito.</li>
+    <li><strong>¿Hace cuánto estás buscando?</strong> — quien busca hace más de 6 meses suele necesitar otro tipo de acompañamiento o no está listo.</li>
+  </ol>
+  <p>Con las respuestas, cada lead se clasifica como <strong>A</strong> (puede comprar ya y hay match), <strong>B</strong> (interesado pero con condicionantes) o <strong>C</strong> (frío / a nutrir). Los A reciben atención de Santiago en el día. Los B, seguimiento semanal de Santi. Los C, contacto mensual con novedades.</p>
+
+  <h3>Plantillas de WhatsApp</h3>
+
+  <div class="plantilla">
+    <div class="plantilla-label">Plantilla — primera respuesta</div>
+    <div class="plantilla-texto">«Hola [nombre], ¿cómo estás? Gracias por consultar por el departamento de [dirección/zona]. Te paso la información completa en un momento. ¿Lo estás mirando para vivir o como inversión? Así te cuento lo que más te sirva. Saludos, [nombre] de [inmobiliaria]»</div>
+  </div>
+
+  <div class="plantilla">
+    <div class="plantilla-label">Plantilla — pre-visita (obligatoria, mínimo 1h antes)</div>
+    <div class="plantilla-texto">«Hola [nombre], te confirmo la visita de hoy [hora] en [dirección]. Te adjunto la ficha completa: precio USD [X], [m²] m², expensas $[X], [datos clave]. Cualquier consulta antes de la visita, escribime. ¡Nos vemos!»</div>
+  </div>
+
+  <div class="plantilla">
+    <div class="plantilla-label">Plantilla — post-visita (a las 24 horas)</div>
+    <div class="plantilla-texto">«Hola [nombre], ¿qué te pareció el departamento de ayer? Si te quedó alguna duda o querés ver otras opciones parecidas, contame. Sin compromiso — la idea es que encuentres lo que buscás.»</div>
+  </div>
+</div>
+
+<!-- 05 PIPELINE -->
+<div class="seccion">
+  <div class="sec-label">05 · Sistema 3</div>
+  <h2>Pipeline de seguimiento — que ningún lead se pierda</h2>
+  <p>El pipeline es la columna vertebral del negocio: la vista única donde se ve cada operación posible, en qué etapa está y cuál es el próximo paso. Sin pipeline, el seguimiento depende de la memoria — y la memoria pierde contra el volumen.</p>
+
+  <h3>Las 8 etapas del pipeline</h3>
+  <div class="pipeline">
+    <div class="pipeline-etapa" style="background:#0B1F33">
+      <div class="pe-num" style="color:rgba(255,255,255,0.3); font-size:9px; letter-spacing:1px; text-transform:uppercase;">#</div>
+      <div class="pe-nombre" style="color:rgba(255,255,255,0.5); font-size:10px; letter-spacing:1px; text-transform:uppercase;">Etapa</div>
+      <div class="pe-def" style="color:rgba(255,255,255,0.5); font-size:10px; letter-spacing:1px; text-transform:uppercase;">Definición</div>
+      <div class="pe-paso" style="color:rgba(255,255,255,0.5); font-size:10px; letter-spacing:1px; text-transform:uppercase;">Próximo paso obligatorio</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">1</div>
+      <div class="pe-nombre">Consulta</div>
+      <div class="pe-def">Alguien preguntó por una propiedad</div>
+      <div class="pe-paso">Respuesta en &lt;5 min + calificación</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">2</div>
+      <div class="pe-nombre">Calificado</div>
+      <div class="pe-def">Sabemos qué busca y cómo pagaría</div>
+      <div class="pe-paso">Ofrecer visita o alternativas</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">3</div>
+      <div class="pe-nombre">Visita agendada</div>
+      <div class="pe-def">Fecha y hora confirmadas</div>
+      <div class="pe-paso">Info pre-visita 1h antes</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">4</div>
+      <div class="pe-nombre">Visita realizada</div>
+      <div class="pe-def">Ya vio la propiedad</div>
+      <div class="pe-paso">Seguimiento a las 24h</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">5</div>
+      <div class="pe-nombre">Negociación</div>
+      <div class="pe-def">Hay oferta o discusión de condiciones</div>
+      <div class="pe-paso">Santiago lidera; respuesta en el día</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">6</div>
+      <div class="pe-nombre">Reserva</div>
+      <div class="pe-def">Reserva firmada y seña entregada</div>
+      <div class="pe-paso">Activar protocolo de escribanía</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">7</div>
+      <div class="pe-nombre">Boleto / Escritura</div>
+      <div class="pe-def">En proceso legal</div>
+      <div class="pe-paso">Seguimiento cada 5 días hábiles</div>
+    </div>
+    <div class="pipeline-etapa">
+      <div class="pe-num">8</div>
+      <div class="pe-nombre">Cerrado</div>
+      <div class="pe-def">Escriturado</div>
+      <div class="pe-paso">Activar protocolo postventa (Sistema 6)</div>
+    </div>
+  </div>
+
+  <h3>Reglas de oro del pipeline</h3>
+  <ul>
+    <li><strong>Todo contacto queda registrado el mismo día.</strong> Sin excepción. Un lead que no está en el sistema es un lead que no existe.</li>
+    <li><strong>Cada lead tiene siempre un próximo paso con fecha.</strong> Si no tiene próximo paso, está mal cargado.</li>
+    <li><strong>Ningún lead se archiva sin registrar el motivo:</strong> compró con otro, precio, se enfrió, cambió de plan. Esos motivos son la materia prima de las decisiones estratégicas.</li>
+    <li><strong>Revisión semanal de 30 minutos:</strong> Santiago y Santi repasan el pipeline completo cada lunes.</li>
+  </ul>
+
+  <h3>Implementación práctica</h3>
+  <p><strong>Fase 1 (ya, esta semana):</strong> Google Sheets compartida con columnas: fecha, nombre, teléfono, canal de origen, propiedad de interés, clasificación A/B/C, etapa, próximo paso, fecha del próximo paso, notas.</p>
+  <p><strong>Fase 2 (mes 2–3):</strong> Migrar a un CRM inmobiliario. La regla es clara: si la base está desordenada, ninguna automatización posterior funciona — primero el hábito en la planilla, después la herramienta.</p>
+</div>
+
+<!-- 06 REFERIDOS -->
+<div class="seccion">
+  <div class="sec-label">06 · Sistema 4</div>
+  <h2>Programa de referidos formalizado</h2>
+  <p>Los referidos ya son el canal que más vende — pero funcionan por inercia. Un programa formal convierte esa inercia en un flujo predecible. Un referido llega pre-vendido, porque alguien de su confianza ya habló bien de la inmobiliaria.</p>
+
+  <h3>Los tres círculos de referidores</h3>
+  <div class="circulos">
+    <div class="circulo-card">
+      <div class="circulo-num">Círculo 1</div>
+      <div class="circulo-titulo">Clientes pasados</div>
+      <div class="circulo-quienes">Todos los que compraron o vendieron</div>
+      <div class="circulo-como">Llamada trimestral personal de Santiago (no mensaje: llamada). Se pregunta cómo están y al final: «si conocés a alguien que quiera comprar o vender, mandámelo que lo atiendo personalmente».</div>
+    </div>
+    <div class="circulo-card">
+      <div class="circulo-num">Círculo 2</div>
+      <div class="circulo-titulo">Aliados profesionales</div>
+      <div class="circulo-quienes">Contadores, escribanos, abogados, administradores</div>
+      <div class="circulo-como">Reunión o café periódico. Acuerdo claro de reciprocidad: la inmobiliaria también les deriva clientes. Con los que más derivan, considerar una atención por operación concretada.</div>
+    </div>
+    <div class="circulo-card">
+      <div class="circulo-num">Círculo 3</div>
+      <div class="circulo-titulo">Red de inversores</div>
+      <div class="circulo-quienes">Los inversores que ya compraron y su círculo</div>
+      <div class="circulo-como">Los inversores hablan entre sí. Contacto proactivo cuando aparece una propiedad con el perfil que buscan.</div>
+    </div>
+  </div>
+
+  <h3>El protocolo cuando llega un referido</h3>
+  <ul>
+    <li>Al referido se lo atiende con prioridad visible — mencionando a quien lo mandó: «me dijo [nombre] que estabas buscando, contame».</li>
+    <li>A quien refirió se le agradece en el momento, con una llamada o mensaje personal — nunca se deja pasar.</li>
+    <li>Si el referido avanza a una operación, quien refirió recibe novedades del proceso.</li>
+    <li>Si la operación cierra, quien refirió recibe un gesto concreto: una cena, un regalo de calidad, un descuento en su próxima operación.</li>
+  </ul>
+
+  <h4>Meta del sistema de referidos</h4>
+  <p>Que cada cliente satisfecho genere al menos un referido concreto por año. Con la base actual de clientes más los nuevos de cada mes, este sistema solo puede sostener 2 de las 5 ventas mensuales de la meta.</p>
+</div>
+
+<!-- 07 CONTENIDO -->
+<div class="seccion">
+  <div class="sec-label">07 · Sistema 5</div>
+  <h2>Contenido y marca en redes sociales</h2>
+  <p>En un negocio de confianza, las redes no venden departamentos — venden la razón para confiar en la inmobiliaria antes de conocerla. El contenido correcto hace que cuando alguien de Tandil piense en comprar o vender, el nombre de la inmobiliaria ya esté en su cabeza.</p>
+
+  <h3>El error a evitar: publicar solo propiedades</h3>
+  <p>Las cuentas que solo publican fichas de propiedades no construyen audiencia ni confianza. La gente no sigue catálogos. Sigue personas y contenido que le sirve. La cara visible — Santiago — es el activo de marca principal.</p>
+
+  <h3>La fórmula de contenido semanal</h3>
+  <div class="contenido-grid">
+    <div class="contenido-card">
+      <div class="contenido-tipo">Propiedad destacada</div>
+      <div class="contenido-freq">1–2 por semana</div>
+      <div class="contenido-ejemplo">Recorrido en video de 60–90 segundos con Santiago contando lo que no se ve en las fotos: la luz, el edificio, por qué conviene.</div>
+    </div>
+    <div class="contenido-card">
+      <div class="contenido-tipo">Autoridad de mercado</div>
+      <div class="contenido-freq">1 por semana</div>
+      <div class="contenido-ejemplo">«¿Cuánto vale hoy el m² en el centro de Tandil?», «Qué pasó con los precios este trimestre», «Las 3 zonas con más demanda de alquiler».</div>
+    </div>
+    <div class="contenido-card">
+      <div class="contenido-tipo">Educativo / confianza</div>
+      <div class="contenido-freq">1 por semana</div>
+      <div class="contenido-ejemplo">«Los 5 errores al comprar tu primer departamento», «Qué mirar en las expensas», «Cómo es el proceso de escritura paso a paso».</div>
+    </div>
+    <div class="contenido-card">
+      <div class="contenido-tipo">Historias y prueba social</div>
+      <div class="contenido-freq">2–3 por mes</div>
+      <div class="contenido-ejemplo">Entrega de llaves (con permiso del cliente), testimonios, el detrás de escena del trabajo. Antes y después de propiedades.</div>
+    </div>
+  </div>
+
+  <h3>División de roles en contenido</h3>
+  <ul>
+    <li><strong>La agencia:</strong> define la estrategia mensual, edita el material, maneja la pauta segmentada y mide resultados.</li>
+    <li><strong>Santi:</strong> filma según el plan de la agencia, publica el contenido diario y responde comentarios y mensajes dentro del protocolo de 5 minutos.</li>
+    <li><strong>Santiago:</strong> pone la cara. 30–45 minutos por semana de grabación en bloque alcanzan para toda la semana.</li>
+  </ul>
+
+  <h4>Regla de coherencia</h4>
+  <p>En redes, la inmobiliaria comunica lo mismo que en persona: cercanía, honestidad, conocimiento de Tandil. Si un contenido no lo diría Santiago cara a cara a un cliente, no se publica. La marca es la persona.</p>
+</div>
+
+<!-- 08 POSTVENTA -->
+<div class="seccion">
+  <div class="sec-label">08 · Sistema 6</div>
+  <h2>Postventa y fidelización — la mina de oro ignorada</h2>
+  <p>Aumentar la retención de clientes un 5% puede aumentar los ingresos entre 25% y 95%. Conseguir un cliente nuevo cuesta hasta 5 veces más que reactivar uno existente. La postventa no es cortesía: es el sistema de ventas futuras.</p>
+
+  <h3>El calendario de contacto post-cierre</h3>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr><th>Momento</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Al escriturar</td><td>Regalo de cierre memorable. Idea potente: enviarlo al lugar de trabajo del cliente, donde sus colegas lo ven y preguntan — publicidad orgánica perfecta.</td></tr>
+        <tr><td>A los 7 días</td><td>Llamada breve: ¿todo en orden con la propiedad? ¿Necesitás algún contacto (pintor, gasista, administración)?</td></tr>
+        <tr><td>A los 30 días</td><td>Mensaje con algo útil: contactos de servicios, recordatorio de trámites pendientes si los hay.</td></tr>
+        <tr><td>A los 90 días</td><td>Primera llamada del ciclo trimestral. Si es inversor: ¿cómo va el alquiler? ¿Está rindiendo lo esperado?</td></tr>
+        <tr><td>Aniversario de compra</td><td>Mensaje de aniversario + dato de valor: «tu propiedad hoy está valuada aproximadamente en X, subió Y% desde que compraste». Nadie más hace esto.</td></tr>
+        <tr><td>Permanente</td><td>Cuando aparece una propiedad con perfil de inversión atractivo, los inversores de la base la reciben antes de publicarse: «te lo muestro antes de subirlo a los portales».</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Por qué esto produce las ventas de la meta</h3>
+  <ul>
+    <li>Un inversor satisfecho y contactado trimestralmente compra de nuevo cuando tiene capital — y le compra a quien lo mantuvo cerca.</li>
+    <li>El mensaje de aniversario con la valuación actualizada abre naturalmente conversaciones de venta y de recompra.</li>
+    <li>El acceso anticipado a propiedades convierte a la base de inversores en un canal de venta directo: propiedades que se venden sin publicarse, sin competencia y sin desgaste.</li>
+  </ul>
+</div>
+
+<!-- 09 MÉTRICAS -->
+<div class="seccion">
+  <div class="sec-label">09 · Sistema 7</div>
+  <h2>Métricas — medir para decidir</h2>
+  <p>Sin números, las decisiones se toman por sensación — y la sensación engaña. Con seis números por mes, revisados en una reunión de una hora, el negocio se maneja con datos.</p>
+
+  <h3>Los 6 números del tablero mensual</h3>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr><th>Indicador</th><th>Qué mide</th><th>Meta a 6 meses</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Leads nuevos</td><td>Consultas totales del mes por todos los canales</td><td>50–70 por mes</td></tr>
+        <tr><td>Tiempo de primera respuesta</td><td>Promedio de minutos hasta la primera respuesta</td><td>Menos de 5 min en horario laboral</td></tr>
+        <tr><td>Visitas realizadas</td><td>Cuántas visitas efectivas hubo</td><td>20–25 por mes</td></tr>
+        <tr><td>Tasa de conversión visita→venta</td><td>De cada 100 visitas, cuántas terminan en reserva</td><td>20–25%</td></tr>
+        <tr><td>Ventas cerradas y origen</td><td>Cuántas ventas y de qué canal vino cada una</td><td>5 por mes</td></tr>
+        <tr><td>Propiedades captadas con filtro</td><td>Cuántas propiedades nuevas entraron cumpliendo los 5 criterios</td><td>3–4 por mes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>La reunión mensual de números</h3>
+  <p>Primer lunes de cada mes, una hora, Santiago + Santi. La agenda es siempre la misma:</p>
+  <ol>
+    <li>Repaso de los 6 números contra la meta. Sin juicio: son datos.</li>
+    <li>¿Dónde se cayeron los leads este mes? Los motivos de archivo del pipeline responden esto y señalan qué corregir.</li>
+    <li>¿Qué canal trajo las ventas? Se invierte más energía en lo que funciona y se recorta lo que no.</li>
+    <li>Una sola mejora para el mes siguiente. No cinco: una, bien ejecutada.</li>
+  </ol>
+</div>
+
+<!-- 10 AUTOMATIZACIÓN -->
+<div class="seccion">
+  <div class="sec-label">10 · Tecnología</div>
+  <h2>Qué automatizar y qué no en un negocio de relaciones</h2>
+  <p>La lección ya está aprendida en carne propia: el agente automático que respondía consultas no convertía nunca. La razón es estructural — un inversor tradicional que recibe una respuesta robótica siente que no es importante. Pero la conclusión correcta no es «no automatizar nada», sino <strong>automatizar lo invisible y humanizar lo visible</strong>.</p>
+
+  <div class="dos-cols">
+    <div class="col-card">
+      <div class="col-card-header verde">Automatizar (el cliente no lo ve)</div>
+      <ul>
+        <li>Registro automático de leads de portales al CRM</li>
+        <li>Recordatorios internos de seguimiento y visitas</li>
+        <li>Alertas cuando un lead lleva X días sin contacto</li>
+        <li>Sincronización de propiedades entre portales</li>
+        <li>Reportes quincenales a propietarios (semi-automatizados)</li>
+        <li>Backup y organización de carpetas de propiedades</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <div class="col-card-header rojo">Nunca automatizar (el cliente lo siente)</div>
+      <ul>
+        <li>La conversación de calificación</li>
+        <li>La primera respuesta real a un cliente A</li>
+        <li>La negociación y el manejo de objeciones</li>
+        <li>La llamada trimestral a clientes</li>
+        <li>El pedido de referidos</li>
+        <li>La entrega de llaves y el gesto post-cierre</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>El caso especial del sitio web</h3>
+  <p>El sitio propio tiene valor como respaldo de seriedad — el lugar al que llega alguien que quiere verificar que la inmobiliaria existe y es profesional — no como canal de venta principal. El cliente de este negocio no navega webs: habla por WhatsApp y por teléfono. Mantenerlo prolijo y actualizado alcanza; no invertir más ahí por ahora.</p>
+</div>
+
+<!-- 11 HERRAMIENTAS -->
+<div class="seccion">
+  <div class="sec-label">11 · Tecnología</div>
+  <h2>Herramientas recomendadas y cómo implementarlas</h2>
+
+  <h3>Fase 1 — Meses 1–2 (costo casi cero)</h3>
+  <ul>
+    <li><strong>Google Sheets compartido</strong> como pipeline (estructura del capítulo 5).</li>
+    <li><strong>WhatsApp Business</strong> (no el común): permite respuestas rápidas guardadas, etiquetas por etapa del pipeline, catálogo de propiedades y mensaje de ausencia fuera de horario.</li>
+    <li><strong>Google Drive</strong> con estructura de carpetas por propiedad: 01-Fotos, 02-Video, 03-Documentación, 04-Ficha.</li>
+    <li><strong>Google Calendar compartido</strong> para visitas, con recordatorios automáticos.</li>
+  </ul>
+
+  <h3>Fase 2 — Meses 3–4 (cuando el hábito ya existe)</h3>
+  <ul>
+    <li><strong>CRM inmobiliario argentino</strong> con integración WhatsApp y portales. Opciones a evaluar: Tokko Broker (el más usado en Argentina), ALTOR, PropFlow. Criterio clave: que se conecte con portales y WhatsApp — si el equipo tiene que duplicar carga de datos, vuelve al Excel en dos semanas.</li>
+    <li><strong>Fotografía profesional sistemática:</strong> acordar con un fotógrafo de Tandil un precio por paquete mensual. Las fotos profesionales multiplican las consultas por 2–3 según los portales.</li>
+  </ul>
+
+  <h3>Fase 3 — Meses 5–6 (solo si las fases anteriores funcionan)</h3>
+  <ul>
+    <li>Automatización de reportes a propietarios desde el CRM.</li>
+    <li>Tour virtual / video 360 para las propiedades premium — diferencial fuerte en captación de exclusivas.</li>
+    <li>Email o WhatsApp mensual a la base de inversores con novedades de cartera (curado a mano, enviado en tanda — no spam masivo).</li>
+  </ul>
+</div>
+
+<!-- 12 ROADMAP -->
+<div class="seccion">
+  <div class="sec-label">12 · Ejecución</div>
+  <h2>Roadmap de 6 meses, mes a mes</h2>
+
+  <div class="tablero-meses">
+    <div class="mes-card">
+      <div class="mes-num">Mes 1</div>
+      <div class="mes-foco">Fundaciones</div>
+      <ul>
+        <li>Manual de Santi completo implementado</li>
+        <li>Planilla de pipeline funcionando</li>
+        <li>WhatsApp Business con plantillas</li>
+        <li>Carpetas de las 27 propiedades auditadas</li>
+        <li>Cerrar acuerdo con la agencia</li>
+      </ul>
+    </div>
+    <div class="mes-card">
+      <div class="mes-num">Mes 2</div>
+      <div class="mes-foco">Referidos y captación</div>
+      <ul>
+        <li>Llamar a todos los clientes pasados (ciclo 1)</li>
+        <li>Primera reunión con 3–4 aliados profesionales</li>
+        <li>Dossier de tasación diseñado y probado</li>
+        <li>Contenido semanal arrancado con la agencia</li>
+      </ul>
+    </div>
+    <div class="mes-card">
+      <div class="mes-num">Mes 3</div>
+      <div class="mes-foco">Medición y ajuste</div>
+      <ul>
+        <li>Primera reunión mensual de números completa</li>
+        <li>Decidir CRM y migrar la planilla</li>
+        <li>Fotografía profesional sistematizada</li>
+        <li>Ajustar lo que los números digan</li>
+      </ul>
+    </div>
+    <div class="mes-card">
+      <div class="mes-num">Mes 4</div>
+      <div class="mes-foco">Aceleración</div>
+      <ul>
+        <li>CRM operativo con el equipo entrenado</li>
+        <li>Sistema postventa activo con todos los cierres</li>
+        <li>Primera tanda de acceso anticipado a inversores</li>
+        <li>Meta intermedia: 3 ventas en el mes</li>
+      </ul>
+    </div>
+    <div class="mes-card">
+      <div class="mes-num">Mes 5</div>
+      <div class="mes-foco">Profundización</div>
+      <ul>
+        <li>Segundo ciclo de llamadas a clientes</li>
+        <li>Evaluar qué canal trae más ventas y duplicar</li>
+        <li>Farming de zona: elegir 2–3 zonas y arrancar presencia</li>
+      </ul>
+    </div>
+    <div class="mes-card">
+      <div class="mes-num">Mes 6</div>
+      <div class="mes-foco">Consolidación</div>
+      <ul>
+        <li>Meta: 5 ventas en el mes</li>
+        <li>Auditoría completa de los 7 sistemas</li>
+        <li>Plan del semestre siguiente con datos reales</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>La regla del roadmap</h4>
+  <p>Cada mes tiene UN foco. La tentación va a ser hacer todo junto en el mes 1 — y el resultado sería hacer todo a medias. Los sistemas se construyen en secuencia: primero el hábito, después la herramienta, después la escala.</p>
+</div>
+
+<!-- 13 TABLERO -->
+<div class="seccion">
+  <div class="sec-label">13 · Ejecución</div>
+  <h2>Tablero de indicadores para la reunión mensual</h2>
+  <p>Esta tabla se completa cada mes en la reunión de números:</p>
+
+  <div class="tablero-indicadores">
+    <div class="ti-header">
+      <span>Indicador</span>
+      <span>Mes 1</span>
+      <span>Mes 2</span>
+      <span>Mes 3</span>
+      <span>Mes 4</span>
+      <span>Mes 5</span>
+      <span>Mes 6</span>
+    </div>
+    <div class="ti-row"><span>Leads nuevos</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Tiempo prom. 1ª respuesta</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Visitas realizadas</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Conversión visita→venta</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Ventas cerradas</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row sub"><span>— de referidos</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row sub"><span>— de portales</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row sub"><span>— de redes / agencia</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row sub"><span>— de base de inversores</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Propiedades captadas</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Llamadas a clientes pasados</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+    <div class="ti-row"><span>Referidos recibidos</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span></div>
+  </div>
+</div>
+
+<!-- CIERRE -->
+<div class="cierre">
+  <div class="cierre-texto">El negocio que vende 5 propiedades por mes no es el que trabaja 5 veces más.<br>Es el que convirtió lo que ya funciona — la confianza y las relaciones — en sistemas que trabajan solos.</div>
+  <div class="cierre-nota">Manual elaborado para uso interno · Tandil, 2026</div>
+</div>
+
+</body>
+</html>
