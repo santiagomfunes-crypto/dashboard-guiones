@@ -1,0 +1,75 @@
+name: Auditoría semanal de guiones
+
+# Rutina en nube (paso 9 Fable 5). Corre en infra de GitHub, no necesita la laptop.
+# Baja los guiones recientes de Supabase, los pasa por los criterios virales del
+# verificador y comitea un reporte a reportes/.
+#
+# ANTES DE USAR — cargar estos secrets en:
+#   github.com/santiagomfunes-crypto/dashboard-guiones/settings/secrets/actions
+#     ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY
+
+on:
+  schedule:
+    - cron: "17 12 * * 1"   # lunes 12:17 UTC (~09:17 ART). Off-minute a propósito.
+  workflow_dispatch: {}       # permite correrlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write             # para comitear el reporte
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar Claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Bajar backlog "listo" de Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          # Columnas reales de la tabla: texto, status (NO contenido/estado).
+          # El dolor real es el backlog de ~127 guiones status=listo que nunca se filman,
+          # no los recién creados: se auditan esos para priorizar qué filmar.
+          curl -sS "${SUPABASE_URL}/rest/v1/guiones?select=id,titulo,angulo,hook,texto,status,created_at&status=eq.listo&order=created_at.desc&limit=30" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            > guiones.json
+          echo "Guiones bajados: $(cat guiones.json | node -e 'process.stdin.on("data",d=>console.log(JSON.parse(d).length))')"
+
+      - name: Auditar con criterios virales
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -euo pipefail
+          PROMPT="Sos un verificador independiente de guiones para reels de Santiago Funes Real Estate (Tandil).
+          Leé referencia/voz-santiago.md, referencia/framework-angulos.md y referencia/datos-tandil.md para los criterios.
+          En guiones.json está el backlog de guiones status='listo' que nunca se filmaron. El objetivo NO es generar más: es destrabar este stock.
+          Para cada uno puntuá: hook, enfoque narrativo (E1-E7), voz de Santi, Tandil/crecimiento, no-vende-de-mas.
+          RED FLAGS: datos crudos como protagonista, tono turístico, vender en video top-of-funnel, datos quemados.
+          Devolvé SOLO markdown con DOS secciones:
+          1. '## Filmá estos primero' — top 8 listos para grabar YA (guion | ángulo/enfoque | por qué performa). Priorizá Tandil creciendo + seguridad/desarrollo.
+          2. '## A rehacer o descartar' — tabla (guion | 🔴/🟡 | fix clave o motivo de descarte).
+          Cerrá con los 3 patrones de falla más repetidos en el backlog. Sé conciso.
+          Escribí el resultado en reportes/auditoria-guiones-ultima.md (creá la carpeta si no existe)."
+          claude -p "$PROMPT" --allowedTools "Read,Write,Bash" --model claude-sonnet-5
+
+      - name: Comitear reporte
+        run: |
+          set -euo pipefail
+          git config user.name  "auditoria-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if [ -n "$(git status --porcelain reportes/)" ]; then
+            git add reportes/
+            git commit -m "chore: auditoría semanal de guiones ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "Sin cambios en el reporte."
+          fi

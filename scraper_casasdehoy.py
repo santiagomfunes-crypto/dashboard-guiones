@@ -80,6 +80,7 @@ def get_dolar_blue():
 # ── Carga de credenciales ──────────────────────────────────────────────────────
 
 def load_env():
+    import os
     env = {}
     if ENV_FILE.exists():
         with open(ENV_FILE) as f:
@@ -88,6 +89,11 @@ def load_env():
                 if line and not line.startswith("#") and "=" in line:
                     k, v = line.split("=", 1)
                     env[k.strip()] = v.strip()
+    # Fallback a variables de entorno (para correr en CI / GitHub Actions
+    # donde no hay .env — los secrets llegan como env vars del proceso).
+    for k in ("SUPABASE_URL", "SUPABASE_SERVICE_KEY", "SUPABASE_ANON_KEY"):
+        if not env.get(k) and os.environ.get(k):
+            env[k] = os.environ[k]
     return env
 
 

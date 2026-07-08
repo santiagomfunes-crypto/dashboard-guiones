@@ -1,0 +1,48 @@
+name: Refresco AVM — scraping Tandil
+
+# Rutina en nube (paso 9 Fable 5). Corre en infra de GitHub, no necesita la laptop.
+# Corre el scraper de CasasDeHoy (el portal más confiable en Tandil: urllib puro,
+# sin Cloudflare) y hace upsert en propiedades_mercado. El propio scraper detecta
+# cambios de precio y los registra en propiedades_precio_historial — así la tabla
+# de historial (hoy vacía) se llena sola en cada corrida.
+#
+# Modelo: NINGUNO. Esto es scraping mecánico, no usa la API de Anthropic.
+# Costo: solo minutos de GitHub Actions (gratis en este volumen). Sin flag de costo.
+#
+# ANTES DE USAR — cargar estos secrets en:
+#   github.com/santiagomfunes-crypto/dashboard-guiones/settings/secrets/actions
+#     SUPABASE_URL, SUPABASE_SERVICE_KEY
+#   (SERVICE_KEY, no anon: el upsert necesita permiso de escritura.)
+
+on:
+  schedule:
+    - cron: "23 9 * * 1"    # lunes 09:23 UTC (~06:23 ART). Semanal, mata el stale de 3 semanas.
+  workflow_dispatch:
+    inputs:
+      max_pages:
+        description: "Páginas por categoría (default 5, subir para barrido más profundo)"
+        required: false
+        default: "5"
+
+permissions:
+  contents: read
+
+jobs:
+  scrapear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Correr scraper CasasDeHoy → Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MAX_PAGES: ${{ github.event.inputs.max_pages || '5' }}
+        run: |
+          set -euo pipefail
+          # Solo stdlib (urllib) — sin pip install. load_env() cae a estas env vars.
+          python3 scraper_casasdehoy.py --max-pages "${MAX_PAGES}"
