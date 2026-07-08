@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentación — Santiago Funes RE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+  <script src="supabase.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Montserrat', sans-serif; background: #f4f1ec; color: #333; min-height: 100vh; }
+
+    /* LOGIN */
+    #login { display:flex; align-items:center; justify-content:center; min-height:100vh; background:#1a1a1a; }
+    .login-box { background:#fff; border-radius:12px; padding:40px 36px; width:340px; box-shadow:0 8px 40px rgba(0,0,0,.4); }
+    .login-box h1 { font-family:'Cinzel',serif; color:#8B6F3A; font-size:20px; letter-spacing:2px; margin-bottom:4px; }
+    .login-sub { font-size:11px; color:#999; margin-bottom:28px; letter-spacing:1px; }
+    .login-box label { font-size:11px; font-weight:600; color:#555; display:block; margin-bottom:4px; margin-top:14px; letter-spacing:.5px; }
+    .login-box input { width:100%; border:1.5px solid #ddd; border-radius:7px; padding:10px 12px; font-family:'Montserrat',sans-serif; font-size:13px; outline:none; transition:border .2s; }
+    .login-box input:focus { border-color:#8B6F3A; }
+    .login-btn { width:100%; margin-top:22px; background:#8B6F3A; color:#fff; border:none; border-radius:8px; padding:12px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; cursor:pointer; letter-spacing:.5px; transition:background .2s; }
+    .login-btn:hover { background:#7a5f2f; }
+    .login-err { color:#c0392b; font-size:11px; margin-top:12px; min-height:14px; }
+
+    /* APP */
+    #app { display:none; }
+    .topbar { background:#1a1a1a; color:#fff; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    .topbar-brand { font-family:'Cinzel',serif; letter-spacing:2px; font-size:15px; color:#c9a24b; }
+    .topbar-nav { display:flex; gap:18px; align-items:center; }
+    .topbar-nav a { color:#bbb; text-decoration:none; font-size:12px; font-weight:600; letter-spacing:.5px; transition:color .2s; }
+    .topbar-nav a:hover, .topbar-nav a.active { color:#fff; }
+    .signout { background:none; border:1px solid #444; color:#bbb; border-radius:6px; padding:6px 12px; font-size:11px; cursor:pointer; font-family:inherit; }
+    .signout:hover { border-color:#8B6F3A; color:#fff; }
+
+    .wrap { max-width:1080px; margin:0 auto; padding:28px 24px 80px; }
+    .page-title { font-family:'Cinzel',serif; font-size:22px; color:#1a1a1a; letter-spacing:1px; }
+    .page-sub { font-size:12.5px; color:#8a8577; margin-top:4px; }
+
+    /* Resumen cartera */
+    .summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:22px 0 8px; }
+    .stat { background:#fff; border:1px solid #e6e0d4; border-radius:11px; padding:16px 18px; }
+    .stat .n { font-family:'Cinzel',serif; font-size:26px; color:#8B6F3A; }
+    .stat .l { font-size:11px; color:#8a8577; letter-spacing:.5px; margin-top:2px; }
+
+    .toolbar { display:flex; gap:10px; align-items:center; margin:20px 0 14px; flex-wrap:wrap; }
+    .toolbar input, .toolbar select { border:1.5px solid #ddd; border-radius:7px; padding:9px 12px; font-family:inherit; font-size:13px; outline:none; background:#fff; }
+    .toolbar input:focus, .toolbar select:focus { border-color:#8B6F3A; }
+    .toolbar input[type=search]{ flex:1; min-width:180px; }
+
+    /* Lista propiedades */
+    .prop-card { background:#fff; border:1px solid #e6e0d4; border-radius:12px; padding:18px 20px; margin-bottom:12px; cursor:pointer; transition:box-shadow .18s, border-color .18s; }
+    .prop-card:hover { box-shadow:0 4px 18px rgba(0,0,0,.06); border-color:#d8ccb0; }
+    .prop-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+    .prop-dir { font-size:15px; font-weight:700; color:#1a1a1a; }
+    .prop-meta { font-size:11.5px; color:#8a8577; margin-top:3px; letter-spacing:.3px; }
+    .badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.5px; padding:3px 9px; border-radius:20px; text-transform:uppercase; }
+    .b-tipo { background:#f0ead9; color:#8B6F3A; }
+    .prog-wrap { margin-top:12px; }
+    .prog-bar { height:8px; background:#eee; border-radius:6px; overflow:hidden; }
+    .prog-fill { height:100%; background:linear-gradient(90deg,#8B6F3A,#c9a24b); transition:width .3s; }
+    .prog-txt { display:flex; justify-content:space-between; font-size:11px; color:#8a8577; margin-top:5px; }
+    .prog-txt .miss { color:#c0392b; font-weight:600; }
+    .prog-txt .done { color:#2e7d32; font-weight:600; }
+
+    .empty { text-align:center; color:#a8a293; padding:50px 20px; font-size:13px; }
+
+    /* Modal doc */
+    .overlay { display:none; position:fixed; inset:0; background:rgba(20,18,14,.55); z-index:100; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; }
+    .overlay.open { display:flex; }
+    .modal { background:#f7f4ee; border-radius:14px; width:100%; max-width:760px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+    .modal-head { background:#1a1a1a; color:#fff; padding:20px 24px; border-radius:14px 14px 0 0; display:flex; justify-content:space-between; align-items:flex-start; }
+    .modal-head h2 { font-size:17px; font-weight:700; }
+    .modal-head .sub { font-size:11.5px; color:#c9a24b; margin-top:3px; letter-spacing:.5px; }
+    .modal-close { background:none; border:none; color:#999; font-size:24px; cursor:pointer; line-height:1; }
+    .modal-body { padding:20px 24px 26px; }
+
+    .cat { margin-bottom:20px; }
+    .cat-title { font-family:'Cinzel',serif; font-size:13px; color:#8B6F3A; letter-spacing:1px; text-transform:uppercase; border-bottom:1.5px solid #e0d8c6; padding-bottom:6px; margin-bottom:10px; }
+
+    .doc { background:#fff; border:1px solid #e6e0d4; border-radius:10px; padding:12px 14px; margin-bottom:9px; }
+    .doc-top { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    .doc-name { font-size:13.5px; font-weight:600; color:#2a2a2a; display:flex; align-items:center; gap:8px; }
+    .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .dot.pendiente { background:#c0392b; }
+    .dot.solicitado { background:#e0a800; }
+    .dot.recibido { background:#2e7d32; }
+    .dot.no_aplica { background:#bbb; }
+    .doc-state { border:1.5px solid #ddd; border-radius:7px; padding:6px 10px; font-family:inherit; font-size:12px; background:#fff; outline:none; cursor:pointer; }
+    .doc-state:focus { border-color:#8B6F3A; }
+    .doc-detail { margin-top:10px; display:none; grid-template-columns:1fr 1fr; gap:10px; }
+    .doc.expanded .doc-detail { display:grid; }
+    .fld label { font-size:10.5px; font-weight:600; color:#777; letter-spacing:.4px; display:block; margin-bottom:3px; }
+    .fld input, .fld textarea { width:100%; border:1.5px solid #e0ddd4; border-radius:6px; padding:7px 9px; font-family:inherit; font-size:12px; outline:none; }
+    .fld input:focus, .fld textarea:focus { border-color:#8B6F3A; }
+    .fld.full { grid-column:1/-1; }
+    .file-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
+    .btn-sm { background:#8B6F3A; color:#fff; border:none; border-radius:6px; padding:7px 12px; font-family:inherit; font-size:11.5px; font-weight:600; cursor:pointer; }
+    .btn-sm.ghost { background:#fff; color:#8B6F3A; border:1.5px solid #8B6F3A; }
+    .btn-sm:hover { opacity:.9; }
+    .file-name { font-size:11.5px; color:#2e7d32; font-weight:600; word-break:break-all; }
+    .file-none { font-size:11.5px; color:#aaa; }
+    .expand-toggle { font-size:11px; color:#8B6F3A; cursor:pointer; font-weight:600; margin-top:8px; display:inline-block; }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a1a1a; color:#fff; padding:11px 22px; border-radius:8px; font-size:12.5px; z-index:200; opacity:0; transition:opacity .25s; pointer-events:none; }
+    .toast.show { opacity:1; }
+    .spinner { display:inline-block; width:13px; height:13px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    @media (max-width:600px){
+      .doc-detail, .doc.expanded .doc-detail { grid-template-columns:1fr; }
+      .topbar-nav a:not(.active){ display:none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login">
+    <form class="login-box" id="login-form">
+      <h1>SANTIAGO FUNES</h1>
+      <div class="login-sub">GESTOR DE DOCUMENTACIÓN</div>
+      <label>Email</label>
+      <input type="email" id="in-email" autocomplete="username" required>
+      <label>Contraseña</label>
+      <input type="password" id="in-pass" autocomplete="current-password" required>
+      <button class="login-btn" id="login-btn" type="submit">Ingresar</button>
+      <div class="login-err" id="login-err"></div>
+    </form>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+    <div class="topbar">
+      <div class="topbar-brand">SANTIAGO FUNES RE</div>
+      <div class="topbar-nav">
+        <a href="panel-central.html">Panel</a>
+        <a href="crm.html">CRM</a>
+        <a href="documentacion.html" class="active">Documentación</a>
+        <button class="signout" onclick="doSignOut()">Salir</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="page-title">Documentación de la cartera</div>
+      <div class="page-sub">Cada propiedad con su carpeta: qué pedir, qué llegó y qué falta.</div>
+
+      <div class="summary" id="summary"></div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Buscar por dirección o zona...">
+        <select id="filter-tipo">
+          <option value="">Todos los tipos</option>
+          <option value="casa">Casa</option>
+          <option value="departamento">Departamento</option>
+          <option value="lote">Lote</option>
+          <option value="local">Local</option>
+          <option value="campo">Campo</option>
+          <option value="otro">Otro</option>
+        </select>
+        <select id="filter-estado">
+          <option value="">Toda la cartera</option>
+          <option value="incompletas">Solo incompletas</option>
+          <option value="completas">Solo completas</option>
+        </select>
+      </div>
+
+      <div id="lista"></div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="m-dir">—</h2>
+          <div class="sub" id="m-sub">—</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="m-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ─── SUPABASE ────────────────────────────────────────────────────────────────
+  const SUPA_URL = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+  const SUPA_KEY = 'sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+  const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+  const BUCKET = 'documentos';
+
+  // ─── CHECKLIST ESTÁNDAR (SOP documentación AR / Tandil PBA) ──────────────────
+  // aplica: 'all' o array de tipos. cat = categoría de agrupación.
+  const CHECKLIST = [
+    // Titularidad y dominio
+    { cat:'Titularidad y dominio', tipo:'Escritura / título de propiedad', aplica:'all' },
+    { cat:'Titularidad y dominio', tipo:'DNI del/los titulares', aplica:'all' },
+    { cat:'Titularidad y dominio', tipo:'Certificado de dominio (RPI)', aplica:'all' },
+    { cat:'Titularidad y dominio', tipo:'Certificado de inhibición del titular', aplica:'all' },
+    // Catastro y planos
+    { cat:'Catastro y planos', tipo:'Plano de mensura', aplica:'all' },
+    { cat:'Catastro y planos', tipo:'Partida / cédula catastral', aplica:'all' },
+    { cat:'Catastro y planos', tipo:'Plano de subdivisión PH', aplica:['departamento'] },
+    { cat:'Catastro y planos', tipo:'Certificado de amojonamiento', aplica:['lote','campo'] },
+    // Impuestos y tasas
+    { cat:'Impuestos y tasas', tipo:'Impuesto inmobiliario ARBA (libre deuda)', aplica:'all' },
+    { cat:'Impuestos y tasas', tipo:'Tasa municipal Tandil (libre deuda)', aplica:'all' },
+    // Consorcio (depto / PH)
+    { cat:'Consorcio', tipo:'Reglamento de copropiedad y administración', aplica:['departamento'] },
+    { cat:'Consorcio', tipo:'Libre deuda de expensas', aplica:['departamento'] },
+    { cat:'Consorcio', tipo:'Datos de la administración', aplica:['departamento'] },
+    // Servicios
+    { cat:'Servicios', tipo:'Libre deuda EDEA (luz)', aplica:['casa','departamento','local','campo'] },
+    { cat:'Servicios', tipo:'Libre deuda Camuzzi (gas)', aplica:['casa','departamento','local'] },
+    { cat:'Servicios', tipo:'Libre deuda OSSE (agua)', aplica:['casa','departamento','local'] },
+    // Comercial
+    { cat:'Comercial', tipo:'Autorización de venta firmada', aplica:'all' },
+    { cat:'Comercial', tipo:'Reserva / boleto (si hay operación)', aplica:'all' },
+  ];
+  const CAT_ORDER = ['Titularidad y dominio','Catastro y planos','Impuestos y tasas','Consorcio','Servicios','Comercial'];
+  const ESTADOS = [
+    { v:'pendiente',  l:'Falta pedir' },
+    { v:'solicitado', l:'Solicitado' },
+    { v:'recibido',   l:'Recibido' },
+    { v:'no_aplica',  l:'No aplica' },
+  ];
+
+  function checklistFor(tipo){
+    return CHECKLIST.filter(c => c.aplica==='all' || c.aplica.includes(tipo));
+  }
+
+  // ─── STATE ──────────────────────────────────────────────────────────────────
+  let currentUser = null;
+  let allProps = [];
+  let docsByProp = {};      // propiedad_id -> { tipo_doc -> registro }
+  let openProp = null;
+
+  // ─── AUTH ───────────────────────────────────────────────────────────────────
+  async function init(){
+    const { data:{ session } } = await sb.auth.getSession();
+    if (session){ currentUser = session.user; showApp(); }
+    sb.auth.onAuthStateChange((_e,s)=>{
+      if (s){ currentUser = s.user; showApp(); } else { showLogin(); }
+    });
+  }
+  function showApp(){ document.getElementById('login').style.display='none'; document.getElementById('app').style.display='block'; loadAll(); }
+  function showLogin(){ document.getElementById('login').style.display='flex'; document.getElementById('app').style.display='none'; }
+
+  document.getElementById('login-form').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    btn.textContent='Ingresando...'; btn.disabled=true;
+    const { error } = await sb.auth.signInWithPassword({
+      email: document.getElementById('in-email').value.trim(),
+      password: document.getElementById('in-pass').value
+    });
+    if (error){ document.getElementById('login-err').textContent='Email o contraseña incorrectos'; btn.textContent='Ingresar'; btn.disabled=false; }
+  });
+  async function doSignOut(){ await sb.auth.signOut(); }
+
+  // ─── LOAD ───────────────────────────────────────────────────────────────────
+  async function loadAll(){
+    const [{ data:props }, { data:docs }] = await Promise.all([
+      sb.from('crm_propiedades').select('id,direccion,zona,tipo,estado,operacion').order('creado_en',{ascending:false}),
+      sb.from('crm_documentos').select('*')
+    ]);
+    allProps = props || [];
+    docsByProp = {};
+    (docs||[]).forEach(d=>{
+      (docsByProp[d.propiedad_id] = docsByProp[d.propiedad_id] || {})[d.tipo_doc] = d;
+    });
+    renderSummary();
+    renderLista();
+  }
+
+  // progreso: recibidos / aplicables (excluye no_aplica del denominador)
+  function progresoDe(p){
+    const items = checklistFor(p.tipo || 'otro');
+    const reg = docsByProp[p.id] || {};
+    let aplicables=0, recibidos=0;
+    items.forEach(it=>{
+      const r = reg[it.tipo];
+      if (r && r.estado==='no_aplica') return;
+      aplicables++;
+      if (r && r.estado==='recibido') recibidos++;
+    });
+    return { aplicables, recibidos, pct: aplicables? Math.round(recibidos/aplicables*100):0 };
+  }
+
+  function renderSummary(){
+    const total = allProps.length;
+    let completas=0, docsFaltan=0;
+    allProps.forEach(p=>{
+      const pr = progresoDe(p);
+      if (pr.aplicables>0 && pr.recibidos===pr.aplicables) completas++;
+      docsFaltan += (pr.aplicables - pr.recibidos);
+    });
+    const pctCartera = total ? Math.round(completas/total*100) : 0;
+    document.getElementById('summary').innerHTML = `
+      <div class="stat"><div class="n">${total}</div><div class="l">PROPIEDADES</div></div>
+      <div class="stat"><div class="n">${completas}</div><div class="l">CARPETAS COMPLETAS</div></div>
+      <div class="stat"><div class="n">${docsFaltan}</div><div class="l">DOCUMENTOS POR CONSEGUIR</div></div>
+      <div class="stat"><div class="n">${pctCartera}%</div><div class="l">CARTERA EN ORDEN</div></div>`;
+  }
+
+  function renderLista(){
+    const q = (document.getElementById('q').value||'').toLowerCase();
+    const ft = document.getElementById('filter-tipo').value;
+    const fe = document.getElementById('filter-estado').value;
+    const cont = document.getElementById('lista');
+    let list = allProps.filter(p=>{
+      if (ft && (p.tipo||'')!==ft) return false;
+      if (q && !((p.direccion||'')+' '+(p.zona||'')).toLowerCase().includes(q)) return false;
+      const pr = progresoDe(p);
+      const completa = pr.aplicables>0 && pr.recibidos===pr.aplicables;
+      if (fe==='completas' && !completa) return false;
+      if (fe==='incompletas' && completa) return false;
+      return true;
+    });
+    if (!list.length){ cont.innerHTML='<div class="empty">No hay propiedades para mostrar.</div>'; return; }
+    cont.innerHTML = list.map(p=>{
+      const pr = progresoDe(p);
+      const falta = pr.aplicables - pr.recibidos;
+      return `<div class="prop-card" onclick="openModal(${p.id})">
+        <div class="prop-head">
+          <div>
+            <div class="prop-dir">${esc(p.direccion||'Sin dirección')}</div>
+            <div class="prop-meta">${esc(p.zona||'—')} · ${cap(p.operacion||'')}</div>
+          </div>
+          <span class="badge b-tipo">${esc(p.tipo||'—')}</span>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-bar"><div class="prog-fill" style="width:${pr.pct}%"></div></div>
+          <div class="prog-txt">
+            <span class="done">${pr.recibidos}/${pr.aplicables} recibidos</span>
+            <span class="${falta? 'miss':'done'}">${falta? falta+' por conseguir' : 'Carpeta completa ✓'}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  ['q','filter-tipo','filter-estado'].forEach(id=>document.getElementById(id).addEventListener('input', renderLista));
+
+  // ─── MODAL ──────────────────────────────────────────────────────────────────
+  function openModal(pid){
+    openProp = allProps.find(p=>p.id===pid);
+    if (!openProp) return;
+    document.getElementById('m-dir').textContent = openProp.direccion || 'Sin dirección';
+    document.getElementById('m-sub').textContent = `${(openProp.zona||'—')} · ${(openProp.tipo||'—')}`.toUpperCase();
+    renderDocs();
+    document.getElementById('overlay').classList.add('open');
+  }
+  function closeModal(){ document.getElementById('overlay').classList.remove('open'); openProp=null; }
+  document.getElementById('overlay').addEventListener('click', e=>{ if(e.target.id==='overlay') closeModal(); });
+
+  function renderDocs(){
+    const p = openProp;
+    const items = checklistFor(p.tipo || 'otro');
+    const reg = docsByProp[p.id] || {};
+    const body = document.getElementById('m-body');
+    let html = '';
+    CAT_ORDER.forEach(cat=>{
+      const catItems = items.filter(i=>i.cat===cat);
+      if (!catItems.length) return;
+      html += `<div class="cat"><div class="cat-title">${cat}</div>`;
+      catItems.forEach(it=>{
+        const r = reg[it.tipo] || { estado:'pendiente' };
+        const est = r.estado || 'pendiente';
+        const tipoKey = it.tipo.replace(/"/g,'&quot;');
+        const fileHtml = r.archivo_path
+          ? `<span class="file-name" id="fn-${slug(it.tipo)}">📎 ${esc(r.archivo_nombre||'archivo')}</span>
+             <button class="btn-sm ghost" onclick="verArchivo('${enc(it.tipo)}')">Ver</button>
+             <button class="btn-sm ghost" onclick="pickFile('${enc(it.tipo)}')">Reemplazar</button>`
+          : `<span class="file-none" id="fn-${slug(it.tipo)}">Sin archivo</span>
+             <button class="btn-sm" onclick="pickFile('${enc(it.tipo)}')">Subir archivo</button>`;
+        html += `<div class="doc" id="doc-${slug(it.tipo)}">
+          <div class="doc-top">
+            <div class="doc-name"><span class="dot ${est}"></span>${esc(it.tipo)}</div>
+            <select class="doc-state" onchange="setEstado('${enc(it.tipo)}', this.value)">
+              ${ESTADOS.map(e=>`<option value="${e.v}" ${e.v===est?'selected':''}>${e.l}</option>`).join('')}
+            </select>
+          </div>
+          <span class="expand-toggle" onclick="toggleDoc('${slug(it.tipo)}')">＋ detalle (fechas, nota, link, archivo)</span>
+          <div class="doc-detail">
+            <div class="fld"><label>Fecha solicitado</label><input type="date" value="${r.fecha_solicitado||''}" onchange="setCampo('${enc(it.tipo)}','fecha_solicitado',this.value)"></div>
+            <div class="fld"><label>Fecha recibido</label><input type="date" value="${r.fecha_recibido||''}" onchange="setCampo('${enc(it.tipo)}','fecha_recibido',this.value)"></div>
+            <div class="fld full"><label>Link (Drive / externo)</label><input type="url" placeholder="https://..." value="${r.link_url||''}" onchange="setCampo('${enc(it.tipo)}','link_url',this.value)"></div>
+            <div class="fld full"><label>Nota</label><textarea rows="2" onchange="setCampo('${enc(it.tipo)}','nota',this.value)">${esc(r.nota||'')}</textarea></div>
+            <div class="fld full"><label>Archivo</label><div class="file-row" id="file-${slug(it.tipo)}">${fileHtml}</div></div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  }
+  function toggleDoc(s){ document.getElementById('doc-'+s).classList.toggle('expanded'); }
+
+  // ─── PERSISTENCIA (upsert por propiedad_id + tipo_doc) ───────────────────────
+  async function ensureReg(tipo){
+    const pid = openProp.id;
+    docsByProp[pid] = docsByProp[pid] || {};
+    if (!docsByProp[pid][tipo]){
+      docsByProp[pid][tipo] = { propiedad_id:pid, tipo_doc:tipo, estado:'pendiente' };
+    }
+    return docsByProp[pid][tipo];
+  }
+  async function persist(reg){
+    const pid = openProp.id;
+    const payload = {
+      propiedad_id: pid, tipo_doc: reg.tipo_doc, estado: reg.estado||'pendiente',
+      fecha_solicitado: reg.fecha_solicitado||null, fecha_recibido: reg.fecha_recibido||null,
+      nota: reg.nota||null, link_url: reg.link_url||null,
+      archivo_path: reg.archivo_path||null, archivo_nombre: reg.archivo_nombre||null
+    };
+    if (reg.id){
+      const { error } = await sb.from('crm_documentos').update(payload).eq('id', reg.id);
+      if (error) return toast('Error al guardar');
+    } else {
+      const { data, error } = await sb.from('crm_documentos').insert(payload).select().single();
+      if (error) return toast('Error al guardar');
+      reg.id = data.id;
+    }
+  }
+
+  async function setEstado(tipo, val){
+    tipo = dec(tipo);
+    const reg = await ensureReg(tipo);
+    reg.estado = val;
+    if (val==='solicitado' && !reg.fecha_solicitado) reg.fecha_solicitado = today();
+    if (val==='recibido' && !reg.fecha_recibido) reg.fecha_recibido = today();
+    await persist(reg);
+    // actualizar dot + progreso sin recargar todo
+    const s = slug(tipo);
+    const dot = document.querySelector(`#doc-${s} .dot`);
+    if (dot) dot.className = 'dot '+val;
+    renderSummary(); renderLista();
+    toast('Guardado');
+  }
+  async function setCampo(tipo, campo, val){
+    tipo = dec(tipo);
+    const reg = await ensureReg(tipo);
+    reg[campo] = val;
+    await persist(reg);
+    toast('Guardado');
+  }
+
+  // ─── ARCHIVOS (Storage privado) ──────────────────────────────────────────────
+  function pickFile(tipo){
+    tipo = dec(tipo);
+    const inp = document.createElement('input');
+    inp.type='file';
+    inp.accept='.pdf,.jpg,.jpeg,.png,.webp,.doc,.docx';
+    inp.onchange = ()=>{ if(inp.files[0]) uploadFile(tipo, inp.files[0]); };
+    inp.click();
+  }
+  async function uploadFile(tipo, file){
+    const s = slug(tipo);
+    const zone = document.getElementById('file-'+s);
+    if (zone) zone.innerHTML = '<span class="file-none"><span class="spinner"></span> Subiendo...</span>';
+    const path = `${openProp.id}/${s}-${Date.now()}-${sanitizeName(file.name)}`;
+    const { error } = await sb.storage.from(BUCKET).upload(path, file, { upsert:true });
+    if (error){ toast('Error al subir'); renderDocs(); return; }
+    const reg = await ensureReg(tipo);
+    reg.archivo_path = path;
+    reg.archivo_nombre = file.name;
+    if (reg.estado==='pendiente'){ reg.estado='recibido'; if(!reg.fecha_recibido) reg.fecha_recibido=today(); }
+    await persist(reg);
+    renderDocs();
+    document.getElementById('doc-'+s)?.classList.add('expanded');
+    renderSummary(); renderLista();
+    toast('Archivo subido');
+  }
+  async function verArchivo(tipo){
+    tipo = dec(tipo);
+    const reg = (docsByProp[openProp.id]||{})[tipo];
+    if (!reg || !reg.archivo_path) return;
+    const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(reg.archivo_path, 3600);
+    if (error){ toast('No se pudo abrir'); return; }
+    window.open(data.signedUrl, '_blank');
+  }
+
+  // ─── HELPERS ────────────────────────────────────────────────────────────────
+  function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function cap(s){ return s? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+  function slug(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+  function enc(s){ return encodeURIComponent(s); }
+  function dec(s){ return decodeURIComponent(s); }
+  function sanitizeName(n){ return n.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_'); }
+  function today(){ return new Date().toISOString().slice(0,10); }
+  let toastT;
+  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1800); }
+
+  init();
+  </script>
+</body>
+</html>
