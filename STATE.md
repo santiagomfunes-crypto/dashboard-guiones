@@ -37,6 +37,8 @@ Sistema nuevo para la parte administrativa: qué documentación pedir por cada p
 - Propiedades salen de `crm_propiedades` (`select id,direccion,zona,tipo,estado,operacion order by creado_en`). **Ojo:** la columna de fecha es `creado_en`, NO `created_at` (crm.html tiene ese bug latente, acá está bien).
 - Storage: bucket **privado** `documentos` (50MB). Archivos se ven con `createSignedUrl(path, 3600)` (no hay URL pública). Path: `${propId}/${slug}-${timestamp}-${nombreSanitizado}`.
 
+**Pedido al propietario (copy-paste / WhatsApp)** — jul 2026: en el modal de cada propiedad hay dos botones (`copiarPedido()` / `waPedido()`, dorado y verde WA). Arman un mensaje con la documentación que TODAVÍA falta (estado ≠ recibido y ≠ no_aplica), agrupada por categoría, en tono Santi. Propiedad nueva → lista todo; propiedad avanzada → solo lo pendiente. `Copiar` usa clipboard API con fallback execCommand; `WhatsApp` abre `wa.me/?text=` (sin número, Santi elige el contacto). Lógica en `buildPedido()`.
+
 **Checklist (template en el JS, no en DB)** — se filtra por tipo de propiedad vía campo `aplica` ('all' o array):
 Titularidad y dominio · Catastro y planos · Impuestos y tasas · Consorcio (solo depto) · Servicios · Comercial.
 Estados: `pendiente` (falta pedir) · `solicitado` · `recibido` · `no_aplica`. El progreso = recibidos / aplicables (excluye no_aplica del denominador). Subir un archivo auto-marca `recibido`; cambiar estado auto-setea la fecha del día.
@@ -54,7 +56,13 @@ Título esperado: "Documentación — Santiago Funes RE". agent-browser NO puede
 
 **Hosting**: GitHub Pages → `santiagomfunes-crypto.github.io/dashboard-guiones/documentacion.html` (pushear para que quede live).
 
-**Estado backend (verificado jul 8 2026)**: ✅ tabla `crm_documentos` viva · ✅ bucket privado `documentos` creado · ✅ RLS: policy `docs_auth_all` (ALL/authenticated) en la tabla y `docs_obj_all` (ALL/authenticated) en storage.objects. Todo listo para que Santiago logueado suba/lea archivos. Falta solo: pushear a GitHub Pages + una prueba de upload→signed-url logueado en el navegador real.
+**Estado backend (verificado jul 8 2026)**: ✅ tabla `crm_documentos` viva · ✅ bucket privado `documentos` creado · ✅ RLS: policy `docs_auth_all` (ALL/authenticated) en la tabla y `docs_obj_all` (ALL/authenticated) en storage.objects · ✅ live en GitHub Pages.
+
+**⚠️ GOTCHA RLS (arreglado jul 8 2026)**: `crm_propiedades` y `crm_contactos` tenían RLS **prendido pero SIN ninguna policy** → `authenticated` no podía leer NADA. La página mostraba "0 propiedades" aunque hubiera datos, y el CRM tampoco leía/escribía. Fix aplicado: `create policy prop_auth_all on crm_propiedades for all to authenticated using(true) with check(true)` (y `cont_auth_all` igual en crm_contactos). Regla: **toda tabla `crm_*` nueva necesita su policy ALL/authenticated o queda muda.**
+
+**Nota de datos**: la documentación se genera POR propiedad leyendo `crm_propiedades`. Si esa tabla está vacía, la página muestra "No hay propiedades". Cargar propiedades desde el CRM → aparecen solas en Documentación con su checklist completo.
+
+**Carga inicial de cartera (jul 8 2026)**: se importaron las **52 propiedades** de la web `propiedades.santiagofunes.com.ar` a `crm_propiedades`. La web usa OTRO Supabase (`bsvcorcwcijpvwzxjzgu`, tabla `propiedades`); se leyó vía Management API (token account-level sirve para ambos proyectos) y se mapeó → `crm_propiedades` (destino `pgnmpxqljxrpnvexcygh`). Mapeo: `titulo→direccion`, `initcap(tipo)→tipo`, `modalidad→operacion`, precio/superficie parseados con regexp a numérico, `dormitorios→ambientes` (si es entero), `estado` tal cual (disponible/reservado/borrador/no_disponible), `url_publicacion='.../propiedades/'||slug`, `notas` con el edificio. `zona` quedó null (la web no la tiene por barrio). Re-correr el import duplicaría: si hay que resincronizar, primero `truncate crm_propiedades` o dedup por `url_publicacion`.
 
 ## Backups
 - `index.html.bak` — copia del monolito pre-split (redundante con git, borrar cuando el split esté confirmado en prod).
