@@ -202,31 +202,34 @@
 
   // ─── CHECKLIST ESTÁNDAR (SOP documentación AR / Tandil PBA) ──────────────────
   // aplica: 'all' o array de tipos. cat = categoría de agrupación.
+  // pedir: true = lo aporta el propietario (entra en el pedido). false = lo gestiona
+  //   Santi/escribanía (certificados registrales, agrimensor, servicios) — se trackea
+  //   igual pero NO se le pide al dueño. pedirLabel: cómo nombrarlo en el mensaje.
   const CHECKLIST = [
     // Titularidad y dominio
-    { cat:'Titularidad y dominio', tipo:'Escritura / título de propiedad', aplica:'all' },
-    { cat:'Titularidad y dominio', tipo:'DNI del/los titulares', aplica:'all' },
-    { cat:'Titularidad y dominio', tipo:'Certificado de dominio (RPI)', aplica:'all' },
-    { cat:'Titularidad y dominio', tipo:'Certificado de inhibición del titular', aplica:'all' },
+    { cat:'Titularidad y dominio', tipo:'Escritura / título de propiedad', aplica:'all', pedir:true },
+    { cat:'Titularidad y dominio', tipo:'DNI del/los titulares', aplica:'all', pedir:true, pedirLabel:'DNI de todos los titulares' },
+    { cat:'Titularidad y dominio', tipo:'Certificado de dominio (RPI)', aplica:'all', pedir:false },
+    { cat:'Titularidad y dominio', tipo:'Certificado de inhibición del titular', aplica:'all', pedir:false },
     // Catastro y planos
-    { cat:'Catastro y planos', tipo:'Plano de mensura', aplica:'all' },
-    { cat:'Catastro y planos', tipo:'Partida / cédula catastral', aplica:'all' },
-    { cat:'Catastro y planos', tipo:'Plano de subdivisión PH', aplica:['departamento'] },
-    { cat:'Catastro y planos', tipo:'Certificado de amojonamiento', aplica:['lote','campo'] },
+    { cat:'Catastro y planos', tipo:'Plano de mensura', aplica:'all', pedir:true, pedirLabel:'Plano de mensura (si lo tenés a mano)' },
+    { cat:'Catastro y planos', tipo:'Partida / cédula catastral', aplica:'all', pedir:true },
+    { cat:'Catastro y planos', tipo:'Plano de subdivisión PH', aplica:['departamento'], pedir:true, pedirLabel:'Plano de subdivisión / PH (si lo tenés)' },
+    { cat:'Catastro y planos', tipo:'Certificado de amojonamiento', aplica:['lote','campo'], pedir:false },
     // Impuestos y tasas
-    { cat:'Impuestos y tasas', tipo:'Impuesto inmobiliario ARBA (libre deuda)', aplica:'all' },
-    { cat:'Impuestos y tasas', tipo:'Tasa municipal Tandil (libre deuda)', aplica:'all' },
+    { cat:'Impuestos y tasas', tipo:'Impuesto inmobiliario ARBA (libre deuda)', aplica:'all', pedir:true, pedirLabel:'Última boleta de impuesto inmobiliario (ARBA)' },
+    { cat:'Impuestos y tasas', tipo:'Tasa municipal Tandil (libre deuda)', aplica:'all', pedir:true, pedirLabel:'Última boleta de tasa municipal' },
     // Consorcio (depto / PH)
-    { cat:'Consorcio', tipo:'Reglamento de copropiedad y administración', aplica:['departamento'] },
-    { cat:'Consorcio', tipo:'Libre deuda de expensas', aplica:['departamento'] },
-    { cat:'Consorcio', tipo:'Datos de la administración', aplica:['departamento'] },
+    { cat:'Consorcio', tipo:'Reglamento de copropiedad y administración', aplica:['departamento'], pedir:true, pedirLabel:'Reglamento de copropiedad' },
+    { cat:'Consorcio', tipo:'Libre deuda de expensas', aplica:['departamento'], pedir:true, pedirLabel:'Libre deuda de expensas (lo emite la administración)' },
+    { cat:'Consorcio', tipo:'Datos de la administración', aplica:['departamento'], pedir:true, pedirLabel:'Datos de contacto de la administración del consorcio' },
     // Servicios
-    { cat:'Servicios', tipo:'Libre deuda EDEA (luz)', aplica:['casa','departamento','local','campo'] },
-    { cat:'Servicios', tipo:'Libre deuda Camuzzi (gas)', aplica:['casa','departamento','local'] },
-    { cat:'Servicios', tipo:'Libre deuda OSSE (agua)', aplica:['casa','departamento','local'] },
+    { cat:'Servicios', tipo:'Libre deuda EDEA (luz)', aplica:['casa','departamento','local','campo'], pedir:false },
+    { cat:'Servicios', tipo:'Libre deuda Camuzzi (gas)', aplica:['casa','departamento','local'], pedir:false },
+    { cat:'Servicios', tipo:'Libre deuda OSSE (agua)', aplica:['casa','departamento','local'], pedir:false },
     // Comercial
-    { cat:'Comercial', tipo:'Autorización de venta firmada', aplica:'all' },
-    { cat:'Comercial', tipo:'Reserva / boleto (si hay operación)', aplica:'all' },
+    { cat:'Comercial', tipo:'Autorización de venta firmada', aplica:'all', pedir:true },
+    { cat:'Comercial', tipo:'Reserva / boleto (si hay operación)', aplica:'all', pedir:false },
   ];
   const CAT_ORDER = ['Titularidad y dominio','Catastro y planos','Impuestos y tasas','Consorcio','Servicios','Comercial'];
   const ESTADOS = [
@@ -414,22 +417,26 @@
     const p = openProp; if (!p) return '';
     const items = checklistFor(p.tipo || 'otro');
     const reg = docsByProp[p.id] || {};
+    // Solo lo que aporta el propietario (pedir:true) y todavía no llegó.
     const faltan = items.filter(it=>{
+      if (it.pedir === false) return false;
       const est = (reg[it.tipo]||{}).estado || 'pendiente';
       return est !== 'recibido' && est !== 'no_aplica';
     });
-    let msg = `Hola 👋 Te escribo por *${p.direccion||'la propiedad'}*.\n\n`;
+    const dir = p.direccion || 'la propiedad';
     if (!faltan.length){
-      msg += 'Ya tengo toda la documentación de esta propiedad. ¡Gracias!';
-      return msg;
+      return `Hola! 👋 Te escribo por *${dir}*.\n\nYa tengo de tu lado toda la documentación que necesitaba, así que la carpeta queda completa y lista para avanzar. Cualquier cosa que surja te aviso. ¡Gracias por la mano! 🙌`;
     }
-    msg += 'Para dejar la carpeta lista y poder avanzar con la venta sin demoras, necesito que me acerques esta documentación:\n';
+    let msg = `Hola! 👋 Te escribo por *${dir}*.\n\n`;
+    msg += 'Antes de salir a mostrarla quiero dejar armada la carpeta con toda la documentación. Es lo que después nos permite cerrar rápido cuando aparece el comprador: la mayoría de las operaciones que se demoran o se caen es justamente por papeles que aparecen tarde. Mejor tenerlo resuelto desde el arranque.\n\n';
+    msg += 'De tu lado necesitaría que juntemos esto:\n';
     CAT_ORDER.forEach(cat=>{
       const del = faltan.filter(i=>i.cat===cat);
       if (!del.length) return;
-      msg += `\n*${cat}*\n` + del.map(i=>`• ${i.tipo}`).join('\n') + '\n';
+      msg += '\n' + del.map(i=>`• ${i.pedirLabel || i.tipo}`).join('\n') + '\n';
     });
-    msg += '\nLo que no tengas a mano lo vemos juntos. Cualquier duda me avisás. ¡Gracias! 🙌';
+    msg += '\nLos certificados del Registro (dominio, inhibición) y los trámites con la escribanía los gestiono yo, así que de eso no te ocupes.\n\n';
+    msg += 'Lo que tengas a mano pasámelo cuando puedas —aunque sea una foto— y lo que falte lo vamos consiguiendo juntos, sin apuro. Cualquier duda estoy acá. ¡Gracias! 🙌';
     return msg;
   }
   function copiarPedido(){
