@@ -59,7 +59,7 @@ body{
 .sec-ttl{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:28px}
 
 /* ── TEAM CARDS ── */
-.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
 .tc{
   background:var(--card);border-radius:var(--r);padding:24px;
@@ -279,7 +279,7 @@ footer strong{color:rgba(255,255,255,.55)}
     </div>
     <div class="hdr-kpis">
       <div class="hdr-kpi">
-        <div class="hdr-kpi-v">4</div>
+        <div class="hdr-kpi-v">3</div>
         <div class="hdr-kpi-l">Personas</div>
       </div>
       <div class="hdr-kpi">
@@ -306,29 +306,15 @@ footer strong{color:rgba(255,255,255,.55)}
       <div class="tc-icon">🏆</div>
       <div class="tc-name">Santiago</div>
       <div class="tc-role">Dueño · Director</div>
-      <div class="tc-comm">65%</div>
+      <div class="tc-comm">90% <small>del neto</small></div>
       <div class="tc-div"></div>
       <ul class="tc-tasks">
         <li>Captar propiedades</li>
         <li>Negociar con propietarios</li>
-        <li>Realizar visitas con clientes</li>
-        <li>Cerrar ventas</li>
-        <li>Estrategia general</li>
-      </ul>
-    </div>
-
-    <div class="tc tc-santi">
-      <div class="tc-icon">⚡</div>
-      <div class="tc-name">Santi</div>
-      <div class="tc-role">Operativo</div>
-      <div class="tc-comm">5%</div>
-      <div class="tc-div"></div>
-      <ul class="tc-tasks">
-        <li>Responder consultas &lt;1 hora</li>
-        <li>Coordinar visitas</li>
+        <li>Responder consultas y calificar leads</li>
+        <li>Coordinar y realizar visitas</li>
         <li>Publicar en Zonaprop, Argenprop, ML</li>
-        <li>Filmar propiedades</li>
-        <li>Primer contacto con clientes</li>
+        <li>Cerrar ventas · Estrategia general</li>
       </ul>
     </div>
 
@@ -336,14 +322,14 @@ footer strong{color:rgba(255,255,255,.55)}
       <div class="tc-icon">📡</div>
       <div class="tc-name">Agencia</div>
       <div class="tc-role">Marketing Digital</div>
-      <div class="tc-comm">10%</div>
+      <div class="tc-comm">10% <small>del neto</small></div>
       <div class="tc-div"></div>
       <ul class="tc-tasks">
         <li>Estrategia de captación digital</li>
         <li>Campañas segmentadas para inversores</li>
-        <li>Producción y edición de contenido</li>
+        <li>Producción, filmación y edición de contenido</li>
         <li>Métricas y análisis</li>
-        <li>Dirige el contenido que filma Santi</li>
+        <li>Cobra solo si el lead es trackeable a su contenido o pauta</li>
       </ul>
     </div>
 
@@ -351,7 +337,7 @@ footer strong{color:rgba(255,255,255,.55)}
       <div class="tc-icon">⚖️</div>
       <div class="tc-name">Juan</div>
       <div class="tc-role">Martillero Oficial</div>
-      <div class="tc-comm">20% <small>+ 50/50</small></div>
+      <div class="tc-comm">20% <small>del bruto</small></div>
       <div class="tc-div"></div>
       <ul class="tc-tasks">
         <li>Firma como martillero en toda operación</li>
@@ -375,24 +361,24 @@ footer strong{color:rgba(255,255,255,.55)}
         <span class="flow-who fw-violet">Agencia</span>
       </div>
       <div class="flow-step">
-        <div class="flow-node fn-gray">2</div>
+        <div class="flow-node fn-blue">2</div>
         <p class="flow-txt">Respuesta &lt;1h</p>
-        <span class="flow-who fw-gray">Santi</span>
+        <span class="flow-who fw-blue">Santiago</span>
       </div>
       <div class="flow-step">
-        <div class="flow-node fn-gray">3</div>
+        <div class="flow-node fn-blue">3</div>
         <p class="flow-txt">Calificación del lead</p>
-        <span class="flow-who fw-gray">Santi</span>
+        <span class="flow-who fw-blue">Santiago</span>
       </div>
       <div class="flow-step">
-        <div class="flow-node fn-gray">4</div>
+        <div class="flow-node fn-blue">4</div>
         <p class="flow-txt">Agenda visita</p>
-        <span class="flow-who fw-gray">Santi</span>
+        <span class="flow-who fw-blue">Santiago</span>
       </div>
       <div class="flow-step">
-        <div class="flow-node fn-gray">5</div>
+        <div class="flow-node fn-violet">5</div>
         <p class="flow-txt">Filma la propiedad</p>
-        <span class="flow-who fw-gray">Santi</span>
+        <span class="flow-who fw-violet">Agencia</span>
       </div>
       <div class="flow-step">
         <div class="flow-node fn-blue">6</div>
@@ -417,7 +403,6 @@ footer strong{color:rgba(255,255,255,.55)}
     </div>
     <div class="flow-legend">
       <div class="fl-item"><div class="fl-dot" style="background:var(--blue)"></div>Santiago</div>
-      <div class="fl-item"><div class="fl-dot" style="background:var(--gray)"></div>Santi</div>
       <div class="fl-item"><div class="fl-dot" style="background:var(--violet)"></div>Agencia</div>
       <div class="fl-item"><div class="fl-dot" style="background:var(--green)"></div>Juan</div>
     </div>
@@ -463,6 +448,14 @@ footer strong{color:rgba(255,255,255,.55)}
         <input type="range" id="r-c" min="4" max="8" step="0.5" value="5" oninput="onSl()">
       </div>
 
+      <div class="sg">
+        <div class="sg-hdr">
+          <span class="sg-lbl">Gastos de oficina <small style="opacity:.6">(fijo/mes)</small></span>
+          <span><span class="sg-unit">USD </span><span class="sg-val" id="v-g">500</span></span>
+        </div>
+        <input type="range" id="r-g" min="0" max="3000" step="100" value="500" oninput="onSl()">
+      </div>
+
       <div class="trow">
         <div class="titem">
           <span class="tlbl">Lead viene de la agencia</span>
@@ -484,55 +477,46 @@ footer strong{color:rgba(255,255,255,.55)}
     <!-- Results -->
     <div class="cpanel">
       <div class="res-total">
-        <p class="rt-lbl">Comisión mensual total</p>
+        <p class="rt-lbl">Comisión bruta mensual</p>
         <p class="rt-val" id="r-tot">$9,000</p>
         <p class="rt-sub" id="r-sub">1 venta × $180,000 × 5%</p>
-        <p class="rt-annual">Proyección anual: <b id="r-ann">$108,000</b></p>
       </div>
 
+      <!-- Costos que se descuentan del bruto -->
+      <div style="margin:14px 0;padding:12px 14px;border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text2)"><span>Juan · firma (20% del bruto)</span><span id="c-ju" style="color:var(--green);font-weight:600">–$1,800</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text2)"><span>Pauta publicitaria (10% del bruto)</span><span id="c-pa" style="font-weight:600">–$900</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text2)"><span>Gastos de oficina (fijo)</span><span id="c-ga" style="font-weight:600">–$500</span></div>
+      </div>
+
+      <div class="res-total" style="background:rgba(37,99,235,.06)">
+        <p class="rt-lbl">Neto · ganancia real</p>
+        <p class="rt-val" id="r-net">$5,800</p>
+        <p class="rt-annual">Proyección anual: <b id="r-ann">$69,600</b></p>
+      </div>
+
+      <p style="font-size:12px;color:var(--text2);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.05em">Reparto del neto</p>
       <div class="rbars">
         <div class="rbar">
           <div class="rbar-top">
             <span class="rbar-name"><span class="rdot" style="background:var(--blue)"></span>Santiago</span>
             <span class="rbar-right">
-              <span class="ramt" id="a-san" style="color:var(--blue)">$5,850</span>
-              <span class="rpct" id="p-san">65%</span>
+              <span class="ramt" id="a-san" style="color:var(--blue)">$5,220</span>
+              <span class="rpct" id="p-san">90%</span>
             </span>
           </div>
-          <div class="rtrack"><div class="rfill" id="b-san" style="background:var(--blue);width:65%"></div></div>
-        </div>
-
-        <div class="rbar">
-          <div class="rbar-top">
-            <span class="rbar-name"><span class="rdot" style="background:var(--green)"></span>Juan</span>
-            <span class="rbar-right">
-              <span class="ramt" id="a-ju" style="color:var(--green)">$1,800</span>
-              <span class="rpct" id="p-ju">20%</span>
-            </span>
-          </div>
-          <div class="rtrack"><div class="rfill" id="b-ju" style="background:var(--green);width:20%"></div></div>
+          <div class="rtrack"><div class="rfill" id="b-san" style="background:var(--blue);width:90%"></div></div>
         </div>
 
         <div class="rbar">
           <div class="rbar-top">
             <span class="rbar-name"><span class="rdot" style="background:var(--violet)"></span>Agencia</span>
             <span class="rbar-right">
-              <span class="ramt" id="a-ag" style="color:var(--violet)">$900</span>
+              <span class="ramt" id="a-ag" style="color:var(--violet)">$580</span>
               <span class="rpct" id="p-ag">10%</span>
             </span>
           </div>
           <div class="rtrack"><div class="rfill" id="b-ag" style="background:var(--violet);width:10%"></div></div>
-        </div>
-
-        <div class="rbar">
-          <div class="rbar-top">
-            <span class="rbar-name"><span class="rdot" style="background:var(--gray)"></span>Santi</span>
-            <span class="rbar-right">
-              <span class="ramt" id="a-sa" style="color:var(--gray)">$450</span>
-              <span class="rpct" id="p-sa">5%</span>
-            </span>
-          </div>
-          <div class="rtrack"><div class="rfill" id="b-sa" style="background:var(--gray);width:5%"></div></div>
         </div>
       </div>
     </div>
@@ -549,21 +533,21 @@ footer strong{color:rgba(255,255,255,.55)}
     <div class="acard">
       <div class="acard-icon">📡</div>
       <h3 class="acard-ttl">Lead de agencia</h3>
-      <p class="acard-body">El lead entra por campañas digitales gestionadas por la agencia. La agencia cobra su 10% sobre el total de la comisión. Distribución base: Santiago 65% · Santi 5% · Agencia 10% · Juan 20%.</p>
-      <span class="atag" style="background:var(--violet-l);color:var(--violet)">✓ Agencia cobra 10%</span>
+      <p class="acard-body">El lead es trackeable a un contenido que filmó la agencia o a la pauta publicitaria. Recién ahí cobra su 10% <strong>sobre el neto</strong> — la ganancia real después de descontar el 20% de Juan, la pauta (10%) y los gastos de oficina. Reparto del neto: Santiago 90% · Agencia 10%.</p>
+      <span class="atag" style="background:var(--violet-l);color:var(--violet)">✓ Agencia cobra 10% del neto</span>
     </div>
 
     <div class="acard">
       <div class="acard-icon">🤝</div>
-      <h3 class="acard-ttl">Lead referido o directo</h3>
-      <p class="acard-body">El lead llega por referido, contacto directo de Santiago o red propia. La agencia no participó en la captación, por lo que no cobra. Su 10% se suma a Santiago. Distribución: Santiago 75% · Santi 5% · Juan 20%.</p>
+      <h3 class="acard-ttl">Lead directo o de marca personal</h3>
+      <p class="acard-body">Alguien escribe al teléfono de Santiago porque lo viene siguiendo, o llega por referido o red propia. La agencia no participó en la captación, así que no cobra. Todo el neto queda para Santiago (100% del neto, después de Juan, pauta y gastos).</p>
       <span class="atag" style="background:var(--gray-l);color:var(--gray)">✗ Agencia no cobra</span>
     </div>
 
     <div class="acard">
       <div class="acard-icon">⚖️</div>
       <h3 class="acard-ttl">Operación compartida con Juan</h3>
-      <p class="acard-body">Juan trae un cliente propio a una propiedad de la inmobiliaria. La comisión total se divide 50/50. Juan cobra su mitad completa. Nuestra mitad (50%) se distribuye entre Santiago, Santi y Agencia en las mismas proporciones.</p>
+      <p class="acard-body">Juan trae un cliente propio a una propiedad de la inmobiliaria. La comisión bruta se divide 50/50. Sobre nuestra mitad, después de descontar pauta y gastos, se arma el neto y se reparte igual: Santiago 90% · Agencia 10% (si el lead fue de la agencia).</p>
       <span class="atag" style="background:var(--green-l);color:var(--green)">50 / 50 con Juan</span>
     </div>
 
@@ -573,18 +557,20 @@ footer strong{color:rgba(255,255,255,.55)}
 <!-- TABLA DE ESCENARIOS -->
 <section class="sec" style="padding-bottom:0">
   <p class="sec-eye">Referencia rápida</p>
-  <h2 class="sec-ttl">Comparativo de escenarios (5% comisión · USD 180K prom.)</h2>
+  <h2 class="sec-ttl">Comparativo de escenarios (5% comisión · USD 180K prom. · gastos $500/mes)</h2>
   <div class="ctable-wrap">
     <table>
       <thead>
         <tr>
           <th>Escenario</th>
-          <th>Comisión total/mes</th>
-          <th>Santiago (65%)</th>
-          <th>Agencia (10%)</th>
+          <th>Bruto/mes</th>
           <th>Juan (20%)</th>
-          <th>Santi (5%)</th>
-          <th>Anual (×12)</th>
+          <th>Pauta (10%)</th>
+          <th>Gastos</th>
+          <th>Neto</th>
+          <th>Agencia (10% neto)</th>
+          <th>Santiago (90% neto)</th>
+          <th>Anual neto</th>
         </tr>
       </thead>
       <tbody id="tbl-body"></tbody>
@@ -611,42 +597,43 @@ function sliderPct(el){
 }
 
 function calc(){
-  const v=+$('r-v').value, p=+$('r-p').value, c=+$('r-c').value
+  const v=+$('r-v').value, p=+$('r-p').value, c=+$('r-c').value, g=+$('r-g').value
   const agency=$('t-a').checked, shared=$('t-s').checked
   const tot=v*p*c/100
 
-  let pS,pSa,pA,pJ
-  if(shared){
-    pJ=50
-    const h=50
-    if(agency){ pS=(65/80)*h; pSa=(5/80)*h; pA=(10/80)*h }
-    else       { pS=(65/70)*h; pSa=(5/70)*h; pA=0 }
-  } else {
-    pJ=20
-    if(agency){ pS=65; pSa=5; pA=10 }
-    else      { pS=75; pSa=5; pA=0  }
-  }
+  // Costos que se descuentan del bruto para llegar al neto
+  const juan  = tot * (shared ? 0.50 : 0.20)   // firma martillero (incluye matrícula)
+  const pauta = tot * 0.10                      // pauta publicitaria
+  const gastos= g                               // gastos de oficina, fijo mensual
+  const neto  = Math.max(0, tot - juan - pauta - gastos)
+
+  // Reparto del neto: Agencia 10% (solo si lead atribuible), Santiago el resto
+  const pA = agency ? 10 : 0
+  const pS = 100 - pA
 
   $('r-tot').textContent=fU(tot)
   $('r-sub').textContent=`${v} venta${v>1?'s':''} × $${p.toLocaleString('en-US')} × ${c}%`
-  $('r-ann').textContent=fU(tot*12)
+  $('c-ju').textContent='–'+fU(juan)
+  $('c-pa').textContent='–'+fU(pauta)
+  $('c-ga').textContent='–'+fU(gastos)
+  $('r-net').textContent=fU(neto)
+  $('r-ann').textContent=fU(neto*12)
 
   function set(who,pct,amt){
     $('a-'+who).textContent=fU(amt)
     $('p-'+who).textContent=pct.toFixed(1).replace('.0','')+'%'
     $('b-'+who).style.width=pct+'%'
   }
-  set('san',pS,tot*pS/100)
-  set('sa',pSa,tot*pSa/100)
-  set('ag',pA,tot*pA/100)
-  set('ju',pJ,tot*pJ/100)
+  set('san',pS,neto*pS/100)
+  set('ag',pA,neto*pA/100)
 }
 
 function onSl(){
   $('v-v').textContent=$('r-v').value
   $('v-p').textContent=(+$('r-p').value).toLocaleString('en-US')
   $('v-c').textContent=$('r-c').value
-  sliderPct($('r-v')); sliderPct($('r-p')); sliderPct($('r-c'))
+  $('v-g').textContent=(+$('r-g').value).toLocaleString('en-US')
+  sliderPct($('r-v')); sliderPct($('r-p')); sliderPct($('r-c')); sliderPct($('r-g'))
   calc()
 }
 
@@ -664,18 +651,23 @@ const rows=[
   {label:'5 ventas/mes (meta)',v:5},
   {label:'8 ventas/mes',      v:8},
 ]
+const GASTOS_REF=500
 const tbody=$('tbl-body')
 rows.forEach(r=>{
   const tot=r.v*180000*0.05
+  const juan=tot*.20, pauta=tot*.10, gastos=GASTOS_REF
+  const neto=Math.max(0,tot-juan-pauta-gastos)
   const tr=document.createElement('tr')
   tr.innerHTML=`
     <td><strong>${r.label}</strong></td>
     <td><strong>${fU(tot)}</strong></td>
-    <td style="color:var(--blue);font-weight:700">${fU(tot*.65)}</td>
-    <td style="color:var(--violet);font-weight:700">${fU(tot*.10)}</td>
-    <td style="color:var(--green);font-weight:700">${fU(tot*.20)}</td>
-    <td style="color:var(--gray);font-weight:700">${fU(tot*.05)}</td>
-    <td style="color:var(--text2);font-weight:700">${fU(tot*12)}</td>
+    <td style="color:var(--green);font-weight:700">–${fU(juan)}</td>
+    <td style="font-weight:700">–${fU(pauta)}</td>
+    <td style="font-weight:700">–${fU(gastos)}</td>
+    <td><strong>${fU(neto)}</strong></td>
+    <td style="color:var(--violet);font-weight:700">${fU(neto*.10)}</td>
+    <td style="color:var(--blue);font-weight:700">${fU(neto*.90)}</td>
+    <td style="color:var(--text2);font-weight:700">${fU(neto*12)}</td>
   `
   tbody.appendChild(tr)
 })
