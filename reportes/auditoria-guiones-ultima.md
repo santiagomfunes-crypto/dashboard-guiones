@@ -1,38 +1,36 @@
-# Auditoría de backlog — guiones "listo" (30 en stock)
+# Auditoría de backlog — guiones "listo" (guiones.json, 30 en stock)
 
 ## Filmá estos primero
 
 | # | Guion | Ángulo/enfoque | Por qué performa |
 |---|---|---|---|
-| 1 | **Tandil puede duplicar su población sin expandirse** | Contrario — desarrollo urbano | Densificación vs. expansión es el ángulo de desarrollo más fuerte del stock: cita a un urbanista real, no dato quemado, cierre sin medias tintas ("no es opinión popular"). Tandil creciendo bien planteado. |
-| 2 | **Hace dos años no había un depto para alquilar. Hoy sobran** | Solución | Historia de mercado real (boom de torres → sobreoferta), cita CEMART fresca, cierra con opinión pro-desarrollo ("el ladrillo resuelve más que cualquier regulación"). Cero venta. |
-| 3 | **Tandil top 10 para vivir, puesto 72 para comprar** | Problema | Tensión perfecta: ciudad linda para vivir, difícil de comprar. Dato nuevo (Índice de Hábitat Urbano), no quemado, cierre con postura ("el problema no es Tandil, es el sistema financiero"). |
-| 4 | **Llevan tres años esperando que los precios bajen. El m² subió 36%** | Comparación | Contrarian directo a la frase más común de la audiencia, con números frescos (no los quemados) y cierre sin vender nada. |
-| 5 | **Mis mejores clientes no son de Tandil** | Autoridad | Validación externa (Necochea, Azul, Tres Arroyos comprando en Tandil) = Tandil creciendo contado desde afuera, no autobombo. Voz de sistemas/diferencial intacta. |
-| 6 | **Tengo 22 años. Analizo 900 propiedades con IA** | Autoridad | Es el guion que mejor explica el diferencial real de Santiago (sistemas, no experiencia). Ningún dato quemado, cierre de opinión fuerte sobre el sector. |
-| 7 | **Me denunciaron ante el colegio de martilleros por hacer contenido** | Autoridad/Historia | Coincide punto por punto con la historia real de posicionamiento (anti-establishment del sector). Ninguna otra en el stock tiene tanta voz propia. |
-| 8 | **Soy agente inmobiliario. Y en este momento de mi vida, prefiero alquilar** | Contrario/personal | Honesto incómodo por definición — dice lo que "no se supone" que diga un agente. Cierra con opinión, no vende nada. |
-
-**Nota:** ninguno de los 30 guiones toca inseguridad — es un hueco real del stock, no hay nada para filmar ahí todavía.
+| 1 | **Por qué la gente de Buenos Aires elige Tandil para vivir** (CU2) | Autoridad | Tandil creciendo contado desde la plata real (comparación de precios) + toca seguridad sin negarla ni vender miedo ("no te voy a decir que Tandil no tiene inseguridad"). Sin dato quemado, cierre firme. |
+| 2 | **Tandil está creciendo donde nadie mira** (CU1) | Predicción | El ángulo de desarrollo más fuerte del stock: zonas emergentes + Parque Industrial + Tesla XXI en obra. Crecimiento tangible, sin vender una propiedad puntual. |
+| 3 | **En Tandil están vendiendo terrenos por Instagram sin aprobación municipal** (WJUL5) | Problema | Seguridad del comprador ligada directo al boom de desarrollo (loteos irregulares crecen porque crece la demanda). Protege en vez de vender — el opuesto del top-of-funnel agresivo. |
+| 4 | **Hace dos años no había un depto para alquilar. Hoy sobran** (60e196e9) | Solución | Historia de mercado real (boom de torres → sobreoferta), cita CEMART fresca, cierra con postura pro-desarrollo. Cero venta. |
+| 5 | **Tandil puede duplicar su población sin expandirse** (69d68fa5) | Contrario | Cita a un urbanista real (Guadagna), no dato quemado, defiende el desarrollo (grúas, densificación) sin medias tintas. |
+| 6 | **Tengo 22 años. Analizo 900 propiedades con IA** (WJUL3) | Autoridad | El guion que mejor explica el diferencial real de Santiago (sistemas, no experiencia ni familia). Ningún dato quemado, cierre de opinión fuerte sobre el sector. |
+| 7 | **Me denunciaron ante el colegio de martilleros por hacer contenido** (3f4c31fa) | Autoridad/Historia | Coincide punto por punto con el posicionamiento real (anti-establishment del sector, "más hambre, no miedo"). Ninguna otra en el stock tiene tanta voz propia. |
+| 8 | **En 2023 los inversores de Buenos Aires compraban en Tandil. En 2026 se frenó** (WJUL2) | Predicción | Honesto incómodo: no esconde la desaceleración, pero remata en que los fundamentos (UNICEN, Globant, Cluster) siguen intactos. Crecimiento sin maquillaje. |
 
 ## A rehacer o descartar
 
 | Guion | 🔴/🟡 | Fix clave o motivo de descarte |
 |---|---|---|
-| 12 hooks sueltos tipo "[E1] Mentalidad", "[E5] Crédito", "[E5] Tandil", "[E2] Mentalidad", "[E5] Escena", "[E1] Historia Personal", "[E3] Polémicos", "[E6] Crédito", "[E2] Tandil", "[E4] Marca Personal", "[E7] Inversión", "[E1] Crédito" | 🔴 | Tienen 47–63 palabras. La voz exige 200–350 (menos de 200 = incompleto, no guardar). Son hooks de guionado, no guiones — se marcaron "listo" sin cuerpo ni cierre. Completarlos o bajarlos de status. |
-| Construir en Tandil vs comprar usado (COMP9) | 🔴 | CTA de venta explícito ("mandame un mensaje... para tu caso") + formato de diálogo entre comillas línea por línea, no es la voz natural de Santi. |
-| El mismo crédito UVA: $788K vs $1.45M (COMP8) | 🔴 | Mismo problema: CTA de venta ("mandame un mensaje y lo armamos juntos") + formato de comillas. Suena a listicle bancario, no a Santi hablando. |
-| En Tandil hay más alquileres que nunca. Y los precios no bajan | 🔴 | Duplica casi textual al guion #2 del top 8 (misma cita CEMART, mismo dato, mismo tema). Tiene además bug de tipeo (faltan espacios: "ahora.Antes"). Descartar, ya está cubierto. |
-| Hace 5 años necesitabas 14 sueldos para comprar en CABA (COMP7) | 🟡 | Formato de comillas por línea en vez de prosa, y la mitad del texto son datos de CABA (no Tandil) — dato como protagonista. Reescribir en prosa corrida y recortar la parte CABA a 2-3 líneas. |
-| El crédito está en el mínimo histórico. Hipotecas cayeron 62% | 🟡 | Datos crudos (tasas, %, bancos) tapan la voz; mismo tema que el guion de abajo. Elegir uno de los dos ángulos "por qué no se usa el crédito barato", no filmar ambos. |
-| Tasas mínimas históricas. Pero 89% de escrituras en cash | 🟡 | Ídem — se pisa con "El crédito está en el mínimo histórico". Fusionar en un solo guion o espaciarlos varios meses. |
-| En 2023 los inversores de Buenos Aires compraban en Tandil... se frenó | 🟡 | Buen dato de mercado, pero el cierre es más tibio que el resto del top 8 (mensaje mixto de desaceleración). Reforzar con una postura más firme al cierre. |
-| Mi primera operación la cagué yo (AUT-PV1) | 🟡 | Historia de error válida, pero el error (gastos de mantenimiento mal dichos) es genérico comparado con el placard sin fondo. Guardar como banco, no urgente. |
-| A los 21 entendí por qué el alquiler te deja en cero | 🟡 | Buen guion, pero pisa el mismo tema que "prefiero alquilar" (#8 del top 8) y COMP9. Espaciar en el calendario, no filmar la misma semana que esos. |
-| El error de mi generación no es gastar mal... (48ee4212) | 🟡 | Voz correcta pero sin un solo dato de Tandil — es mentalidad genérica, podría grabarlo cualquier creador. Anclarlo a un dato local o bajarlo de prioridad. |
+| 12 hooks sueltos: `[E1] Mentalidad`, `[E1] Crédito`, `[E1] Historia Personal`, `[E2] Tandil`, `[E2] Mentalidad`, `[E3] Polémicos`, `[E4] Marca Personal`, `[E5] Crédito`, `[E5] Escena`, `[E5] Tandil`, `[E6] Crédito`, `[E7] Inversión` | 🔴 | 45–65 palabras cada uno. La voz exige 200–350 (menos de 200 = incompleto, no guardar). Son hooks, no guiones — se marcaron `listo` sin credencial, sin cuerpo con datos, sin cierre desarrollado. Completar la estructura o bajarlos de status. |
+| Tandil top 10 para vivir, puesto 72 para comprar (db6628ae) | 🔴 | Duplica casi textual a WJUL4 (mismo hook, mismo Índice de Hábitat Urbano, mismo 7,79/3,89), publicado 9 días antes. Descartar esta versión, ya cubierta por WJUL4 en el top 8... si se prioriza filmar, elegir solo uno de los dos. |
+| Tandil es la 10° mejor ciudad para vivir. Y la 72° para comprar (WJUL4) | 🟡 | Mismo dato/hook que db6628ae; además reformula "creció 20% en población en una década" — variante del dato quemado 20,5% vs 14,8% nacional. Diferenciar el ángulo antes de filmar o quedarse con uno solo de los dos. |
+| Las tasas hipotecarias están en mínimos. El crédito cayó 4% en un trimestre (WJUL6) | 🔴 | Datos crudos como protagonista (tasas, %, bancos, cifras nacionales) tapan la voz de Santi; no menciona Tandil en ningún momento. Lee como informe del Macro Analyst, no como reel. Reescribir anclado en un caso de Tandil o descartar. |
+| El crédito está en el mínimo histórico. Y las hipotecas cayeron 62% (ea62b27a) | 🟡 | Mismo tema que WJUL6 (crédito nacional, tasas, % de cash) con solo un párrafo de Tandil al final. Fusionar los dos guiones en uno solo anclado en Tandil desde el hook, no filmar ambos. |
+| Lo que nadie me enseñó sobre ser agente a los 22 (AUT-22A) | 🟡 | Historia auténtica y bien escrita, pero sin ángulo Tandil/seguridad-desarrollo — prioridad baja para este objetivo, no urgente. |
+| Soy agente inmobiliario. Y en este momento de mi vida, prefiero alquilar (WJUL1) | 🟡 | Voz honesta correcta, pero sin dato ni mención de Tandil creciendo; pisa el mismo tema que AUT-ALQ1. Espaciar en el calendario, no filmar la misma semana que esa. |
+| Mi primera operación la cagué yo (AUT-PV1) | 🟡 | Historia de error válida (voz "reconoce errores concretos"), pero no conecta con Tandil/desarrollo. Guardar como banco, no urgente. |
+| A los 21 entendí por qué el alquiler te deja en cero (AUT-ALQ1) | 🟡 | El argumento empieza a sonar a venta top-of-funnel ("comprar es mejor que alquilar"); se salva parcialmente con el matiz sobre barreras de crédito. Reforzar el matiz honesto y sacar todo tono de pitch antes de filmar. |
+| El error de mi generación no es gastar mal. Es creer que el tiempo es infinito (48ee4212) | 🟡 | Voz correcta pero sin un solo dato de Tandil — mentalidad genérica, podría grabarla cualquier creador. Anclarlo a un dato local o bajarlo de prioridad. |
+| Mis mejores clientes no son de Tandil (b51498e7) | 🟡 | Buen dato de liquidez, pero el cierre ("Tandil está en el podio... si estás pensando en invertir") roza vender Tandil como inversión en un video top-of-funnel. Cortar el cierre tipo pitch, dejar el dato solo. |
 
 ## Los 3 patrones de falla más repetidos
 
-1. **"Listo" no significa terminado**: 12 de 30 guiones (40% del stock) son hooks sueltos de 50-60 palabras marcados como `listo` sin cuerpo ni cierre — nunca deberían haber pasado el QA loop del CMO.
-2. **CTA de venta colándose en la serie COMP**: los tres guiones tipo comparación (COMP7/8/9) usan formato de diálogo entre comillas y dos de ellos rompen la regla más básica de la voz ("mandame un mensaje") — vender en contenido top-of-funnel.
-3. **Saturación temática sin variedad de ángulo**: crédito/hipotecas aparece en 6 guiones y alquilar-vs-comprar en al menos 4 — se repite el tema en vez de usar los 8 ángulos del framework PPOS para cubrir más terreno.
+1. **"Listo" no significa terminado**: 12 de 30 guiones (40% del stock) son hooks sueltos de 45-65 palabras marcados como `listo` sin credencial, cuerpo de datos ni cierre — nunca deberían haber pasado el QA loop del CMO. Esto es estructural: revisar el criterio de aprobación, no solo estos 12 guiones (ver `referencia/arreglar-el-sistema.md`).
+2. **Duplicación temática sin chequeo previo**: el mismo tema y el mismo dato se escriben dos veces con días de diferencia (WJUL4/db6628ae sobre el ranking hábitat-vs-acceso; WJUL6/ea62b27a sobre tasas mínimas y caída de hipotecas). La producción no verifica contra lo ya escrito antes de generar un guion nuevo.
+3. **Datos macro-nacionales como protagonista, sin anclar en Tandil**: WJUL6 y ea62b27a leen como informe de research (tasas, bancos, porcentajes nacionales) en vez de Santi hablando de Tandil — el formato de reporte se filtra en el guion de reel.
