@@ -30,7 +30,7 @@ var VIEWS={
     archivo:   {cont:'v-archivo',    grid:'pz-grid-archivo',    archivo:true}
 };
 
-var all=[], allArch=[], curId=null, curView='guiones', overlaysBuilt=false, builtViews={};
+var all=[], allArch=[], archSel={}, curId=null, curView='guiones', overlaysBuilt=false, builtViews={};
 
 function esc(s){ if(typeof window.esc==='function')return window.esc(s); var d=document.createElement('div');d.textContent=(s==null?'':s);return d.innerHTML; }
 function toast(m,e){ if(typeof window.toast==='function')return window.toast(m,e); }
@@ -119,13 +119,14 @@ function ensureViewMarkup(view){
     }else if(v.archivo){
         cont.innerHTML=[
 '<div class="pz-wrap">',
-'  <div class="pz-section-head"><div><h2>Archivo</h2><p>Guiones viejos del equipo anterior. Buscá, abrí para leer, o recuperá al flujo nuevo el que quieras filmar.</p></div><span class="pz-count" id="pz-count-archivo">0</span></div>',
+'  <div class="pz-section-head"><div><h2>Banco de guiones</h2><p>Tus 393 guiones ya escritos. Tocá el ✓ para elegir varios y pasalos a Guiones para filmar. Abrí cualquiera para leerlo.</p></div><span class="pz-count" id="pz-count-archivo">0</span></div>',
 '  <div class="pz-archbar">',
-'    <input type="text" id="pz-q-arch" placeholder="Buscar entre los viejos (título, hook, texto)...">',
+'    <input type="text" id="pz-q-arch" placeholder="Buscar en el banco (título, hook, texto)...">',
 '    <select id="pz-cat-arch"></select>',
 '    <select id="pz-st-arch"></select>',
 '  </div>',
-'  <div id="'+v.grid+'" class="pz-grid"></div>',
+'  <div id="'+v.grid+'" class="pz-grid" style="padding-bottom:70px"></div>',
+'  <div id="pz-selbar" class="pz-selbar" style="display:none"><div class="inner"><span id="pz-selcount">0 seleccionados</span><span style="flex:1"></span><button class="pz-btn" onclick="PZ.limpiarSel()">Limpiar</button><button class="pz-btn pz-btn-primary" onclick="PZ.pasarSel()">Pasar a Guiones →</button></div></div>',
 '</div>'
         ].join('\n');
     }else{
@@ -170,8 +171,9 @@ function load(view){
     ensureOverlays();
     ensureViewMarkup(curView);
     if(curView==='archivo'){
+        archSel={};
         sb.from('guiones').select('*').is('flujo',null).order('id',{ascending:false}).range(0,4999).then(function(res){
-            if(res.error){toast('Error al cargar archivo: '+res.error.message,true);return;}
+            if(res.error){toast('Error al cargar banco: '+res.error.message,true);return;}
             allArch=res.data||[];
             buildArchFilters();
             render();
@@ -228,16 +230,45 @@ function renderArch(){
         return true;
     });
     el('pz-count-archivo').textContent=list.length+(list.length===1?' guion':' guiones');
-    if(!allArch.length){g.className='pz-empty';g.innerHTML='<h3>No hay guiones viejos</h3><p>El archivo está vacío.</p>';return;}
-    if(!list.length){g.className='pz-empty';g.innerHTML='<h3>Sin resultados</h3><p>Ningún guion viejo coincide con la búsqueda.</p>';return;}
-    g.className='pz-grid';
+    if(!allArch.length){g.className='pz-empty';g.innerHTML='<h3>El banco está vacío</h3><p>No hay guiones viejos.</p>';updateSelBar();return;}
+    if(!list.length){g.className='pz-empty';g.innerHTML='<h3>Sin resultados</h3><p>Ningún guion coincide con la búsqueda.</p>';updateSelBar();return;}
+    g.className='pz-grid';g.style.paddingBottom='70px';
     g.innerHTML=list.map(function(x){return cardHtml(x,'recuperar');}).join('');
+    updateSelBar();
+}
+/* selección múltiple del Banco */
+function toggleSel(id,elem){
+    if(archSel[id]){delete archSel[id];if(elem){elem.classList.remove('on');var c=elem.closest('.pz-card');if(c)c.classList.remove('pz-card-sel');}}
+    else{archSel[id]=1;if(elem){elem.classList.add('on');var c2=elem.closest('.pz-card');if(c2)c2.classList.add('pz-card-sel');}}
+    updateSelBar();
+}
+function updateSelBar(){
+    var bar=el('pz-selbar');if(!bar)return;
+    var n=Object.keys(archSel).length;
+    bar.style.display=n?'flex':'none';
+    var c=el('pz-selcount');if(c)c.textContent=n+(n===1?' guion elegido':' guiones elegidos');
+}
+function limpiarSel(){archSel={};if(curView==='archivo')render();updateSelBar();}
+function pasarSel(){
+    var ids=Object.keys(archSel);
+    if(!ids.length)return;
+    if(!confirm('Pasar '+ids.length+' guion'+(ids.length>1?'es':'')+' a Guiones para filmar?'))return;
+    sb.from('guiones').update({flujo:'pieza',status:'guionado',updated_at:new Date().toISOString()}).in('id',ids).then(function(res){
+        if(res.error){toast('Error: '+res.error.message,true);return;}
+        allArch=allArch.filter(function(x){return !archSel[x.id];});
+        var n=ids.length;archSel={};
+        render();
+        toast(n+' pasado'+(n>1?'s':'')+' a Guiones');
+    });
 }
 function cardHtml(g,action){
     var st=g.status||'idea', pf=g.performance||'sin_datos';
     var stLbl=STATUS_LBL[st]||(st.charAt(0).toUpperCase()+st.slice(1));
-    var h='<div class="pz-card" onclick="PZ.openFicha(\''+esc(g.id)+'\')">';
-    h+='<div class="pz-card-top"><span class="pz-card-id">'+esc(g.id)+'</span><span class="pzst pzst-'+st+'">'+esc(stLbl)+'</span></div>';
+    var arch=(action==='recuperar'), seled=arch&&!!archSel[g.id];
+    var h='<div class="pz-card'+(seled?' pz-card-sel':'')+'" onclick="PZ.openFicha(\''+esc(g.id)+'\')">';
+    h+='<div class="pz-card-top">';
+    if(arch)h+='<span class="pz-check'+(seled?' on':'')+'" title="Elegir" onclick="event.stopPropagation();PZ.toggleSel(\''+esc(g.id)+'\',this)"></span>';
+    h+='<span class="pz-card-id">'+esc(g.id)+'</span><span class="pzst pzst-'+st+'">'+esc(stLbl)+'</span></div>';
     h+='<div class="pz-card-title">'+esc(g.titulo||'(sin título)')+'</div>';
     if(g.hook)h+='<div class="pz-card-hook">'+esc(g.hook)+'</div>';
     var meta='';
@@ -247,7 +278,7 @@ function cardHtml(g,action){
     if(meta)h+='<div class="pz-card-meta">'+meta+'</div>';
     h+='<div class="pz-card-foot">'+(g.tema?'<span class="chip">'+esc(g.tema)+'</span>':'<span></span>');
     if(action==='pick')h+='<button class="pz-pick" onclick="event.stopPropagation();PZ.pick(\''+esc(g.id)+'\')">Para grabar →</button>';
-    else if(action==='recuperar')h+='<button class="pz-pick pz-rec" onclick="event.stopPropagation();PZ.recuperar(\''+esc(g.id)+'\')">Recuperar →</button>';
+    else if(arch)h+='<span class="pz-hint">✓ elegir · clic para leer</span>';
     else h+='<span class="pzperf pzperf-'+pf+'"><span class="dot"></span>'+PERF_LBL[pf]+'</span>';
     h+='</div></div>';
     return h;
@@ -404,5 +435,6 @@ document.addEventListener('keydown',function(e){
 
 window.PZ={load:load,render:render,openFicha:openFicha,closeFicha:closeFicha,saveFicha:saveFicha,
     quickStatus:quickStatus,quickPerf:quickPerf,marcarPublicado:marcarPublicado,archivar:archivar,pick:pick,recuperar:recuperar,
+    toggleSel:toggleSel,pasarSel:pasarSel,limpiarSel:limpiarSel,
     openImport:openImport,closeImport:closeImport,doImport:doImport,grow:grow};
 })();

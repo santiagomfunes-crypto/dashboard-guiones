@@ -70,6 +70,18 @@
 .pz-rec{background:#8B6F3A}
 .pz-rec:hover{background:#1a1a2e}
 
+/* ---- Selección múltiple del Banco ---- */
+.pz-check{width:18px;height:18px;border:2px solid #CFC7B5;border-radius:5px;flex-shrink:0;cursor:pointer;transition:all .12s;position:relative}
+.pz-check:hover{border-color:#8B6F3A}
+.pz-check.on{background:#8B6F3A;border-color:#8B6F3A}
+.pz-check.on::after{content:"✓";position:absolute;top:-2px;left:2px;color:#fff;font-size:13px;font-weight:800}
+.pz-card-top{gap:8px}
+.pz-card-sel{border-color:#8B6F3A;box-shadow:0 0 0 2px #8B6F3A33}
+.pz-hint{font-size:9px;color:#B8A87F;letter-spacing:.3px;white-space:nowrap}
+.pz-selbar{position:sticky;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #E8E4DD;padding:12px 4px;box-shadow:0 -3px 16px #0001;z-index:40;align-items:center;border-radius:12px 12px 0 0}
+.pz-selbar .inner{max-width:1240px;margin:0 auto;width:100%;display:flex;align-items:center;gap:12px;padding:0 8px}
+.pz-selbar #pz-selcount{font-weight:700;font-size:13px;color:#8B6F3A;font-family:'Cinzel',serif}
+
 /* ---- Barra de filtros del Archivo ---- */
 .pz-archbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
 .pz-archbar input{flex:1;min-width:220px;padding:9px 14px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;outline:none}
