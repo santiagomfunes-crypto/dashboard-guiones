@@ -1,0 +1,163 @@
+/* ============================================================
+   PIEZAS — vista de contenido (reels) integrada a `guiones`
+   Reutiliza styles.css como base (fonts, colores, login, topbar,
+   filterbar, modal, botones). Acá solo lo específico del flujo:
+   grid de piezas, ficha de grabación y pills de estado/formato.
+   Paleta base: oro #8B6F3A · crema #F5F5F3 · navy #1a1a2e · borde #E8E4DD
+   ============================================================ */
+
+/* ---- Toolbar acciones ---- */
+.pz-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pz-btn{padding:9px 16px;border:1px solid #E8E4DD;border-radius:9px;font-size:12px;font-weight:600;letter-spacing:.3px;background:#fff;color:#1a1a2e;transition:all .15s}
+.pz-btn:hover{border-color:#8B6F3A;background:#F5F5F3}
+.pz-btn-primary{background:#1a1a2e;color:#fff;border-color:#1a1a2e}
+.pz-btn-primary:hover{background:#8B6F3A;border-color:#8B6F3A;color:#fff}
+.pz-btn-ghost{background:none;border:none;color:#999;font-size:12px}
+.pz-btn-ghost:hover{color:#8B6F3A}
+.pz-btn-danger{color:#C8453A;border-color:#F0D6D2}
+.pz-btn-danger:hover{background:#FDE8E8;border-color:#C8453A}
+
+/* ---- Grid de cards ---- */
+.pz-wrap{padding:20px;max-width:1240px;margin:0 auto}
+.pz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.pz-card{background:#fff;border:1px solid #E8E4DD;border-radius:12px;padding:16px 16px 13px;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px #0001;display:flex;flex-direction:column;gap:9px}
+.pz-card:hover{border-color:#8B6F3A66;box-shadow:0 4px 16px #0002;transform:translateY(-1px)}
+.pz-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pz-card-id{font-family:'Cinzel',serif;font-size:11px;color:#B8A87F;letter-spacing:.5px}
+.pz-card-title{font-weight:700;font-size:15px;line-height:1.3;color:#1a1a2e}
+.pz-card-hook{font-size:12.5px;color:#6b6b6b;line-height:1.5;font-style:italic;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;border-left:2px solid #E8E4DD;padding-left:10px}
+.pz-card-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pz-card-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:2px;padding-top:10px;border-top:1px solid #F0EFED}
+
+/* ---- Pills / badges ---- */
+.pill{font-size:9px;letter-spacing:.6px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.chip{font-size:10px;padding:3px 9px;border-radius:6px;font-weight:600;background:#ECEAE4;color:#5f5f5f;white-space:nowrap}
+.chip-dur{background:#EFEDE7;color:#6b6b6b;font-family:'Cinzel',serif;font-size:10px}
+
+/* client_type */
+.ct-inversor{background:#EAECF5;color:#3B3B6D}
+.ct-vivienda{background:#FBEEE6;color:#B5643C}
+.ct-ambos{background:#FDF8E8;color:#8B6F3A}
+
+/* format */
+.fmt{background:#F0EFED;color:#6b6b6b;border:1px solid #E8E4DD}
+
+/* status */
+.pzst{font-size:9px;letter-spacing:.6px;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-weight:700;white-space:nowrap;background:#ECEAE4;color:#7a7a7a}
+.pzst-idea{background:#F1F1EF;color:#9a9a9a}
+.pzst-guionado{background:#FDF8E8;color:#8B6F3A}
+.pzst-para_grabar{background:#FFF1DC;color:#B67A12;border:1px solid #E9C687}
+.pzst-grabado{background:#E8F5EE;color:#2D8C5A}
+.pzst-editando{background:#EEEFFB;color:#5B5BD6}
+.pzst-publicado{background:#E8F0FD;color:#3B7FCC}
+
+/* performance */
+.pzperf{font-size:9px;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.pzperf-sin_datos{background:#EFEEEB;color:#8a8a8a}
+.pzperf-funciono{background:#E8F5EE;color:#2D8C5A}
+.pzperf-normal{background:#FDF8E8;color:#8B6F3A}
+.pzperf-no_funciono{background:#FDE8E8;color:#C8453A}
+.pzperf .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+
+/* ---- Encabezado de sección (Para filmar / Filmados / Selector) ---- */
+.pz-section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:8px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #E8E4DD}
+.pz-section-head h2{font-family:'Cinzel',serif;font-size:19px;color:#1a1a2e;font-weight:600;letter-spacing:.3px}
+.pz-section-head p{font-size:12px;color:#999;margin-top:3px}
+
+/* ---- Botón "Para grabar" del Selector / "Recuperar" del Archivo ---- */
+.pz-pick{margin-left:auto;background:#1a1a2e;color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap;transition:background .15s}
+.pz-pick:hover{background:#8B6F3A}
+.pz-rec{background:#8B6F3A}
+.pz-rec:hover{background:#1a1a2e}
+
+/* ---- Barra de filtros del Archivo ---- */
+.pz-archbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.pz-archbar input{flex:1;min-width:220px;padding:9px 14px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;outline:none}
+.pz-archbar input:focus{border-color:#8B6F3A}
+.pz-archbar select{padding:9px 12px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#F5F5F3;color:#1a1a2e;outline:none;min-width:150px}
+.pz-archbar select:focus{border-color:#8B6F3A}
+
+/* ---- Empty / count ---- */
+.pz-empty{text-align:center;padding:80px 20px;color:#c4c4c4}
+.pz-empty h3{font-family:'Cinzel',serif;color:#B8A87F;font-size:18px;margin-bottom:8px;font-weight:600}
+.pz-empty p{font-size:13px;line-height:1.6;max-width:360px;margin:0 auto 18px}
+.pz-count{font-size:11px;color:#bbb;white-space:nowrap;margin-left:auto}
+
+/* ============================================================
+   FICHA DE GRABACIÓN  (overlay — no parece una base de datos)
+   ============================================================ */
+.pz-ficha-bg{display:none;position:fixed;inset:0;background:rgba(20,20,30,.5);z-index:200;overflow-y:auto;padding:0}
+.pz-ficha-bg.open{display:block}
+.pz-ficha{background:#FBFAF8;min-height:100vh;max-width:820px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.25);position:relative}
+@media(min-width:900px){.pz-ficha{margin:24px auto;min-height:auto;border-radius:16px;padding-bottom:0}}
+
+/* barra superior sticky de la ficha */
+.pz-ficha-head{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E8E4DD;padding:12px 22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-radius:16px 16px 0 0}
+.pz-ficha-head .fid{font-family:'Cinzel',serif;font-size:12px;color:#B8A87F;letter-spacing:1px}
+.pz-ficha-head .grow{flex:1}
+.pz-ficha-head select{padding:7px 10px;border:1px solid #E8E4DD;border-radius:8px;font-size:11px;font-weight:600;background:#F5F5F3;color:#1a1a2e;outline:none;cursor:pointer}
+.pz-ficha-head select:focus{border-color:#8B6F3A}
+.pz-ficha-x{background:none;border:none;color:#c4c4c4;font-size:26px;line-height:1;padding:0 4px}
+.pz-ficha-x:hover{color:#1a1a2e}
+
+.pz-ficha-body{padding:26px 30px 120px}
+@media(max-width:600px){.pz-ficha-body{padding:20px 18px 120px}}
+
+/* etiquetas de sección */
+.pz-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#B8A87F;font-weight:700;margin:22px 0 7px;display:flex;align-items:center;gap:8px}
+.pz-lbl:first-child{margin-top:0}
+
+/* inputs de la ficha (parecen texto, no formulario) */
+.pz-in{width:100%;border:1px solid transparent;border-radius:9px;background:transparent;font-family:inherit;color:#1a1a2e;padding:6px 9px;outline:none;resize:none;transition:all .15s;overflow:hidden}
+.pz-in:hover{background:#F3F1EC}
+.pz-in:focus{background:#fff;border-color:#8B6F3A55;box-shadow:0 0 0 3px #8B6F3A12}
+
+.pz-title-in{font-size:26px;font-weight:800;line-height:1.2;letter-spacing:-.3px;padding:4px 9px}
+
+/* HOOK — bloque destacado, lo primero que hay que recordar */
+.pz-hook-box{background:linear-gradient(180deg,#FFFBEF,#FDF6E3);border:1px solid #EAD9A8;border-left:5px solid #C9A64B;border-radius:12px;padding:14px 16px;margin-top:4px}
+.pz-hook-box .pz-lbl{margin:0 0 4px;color:#A9822E}
+.pz-hook-in{width:100%;border:none;background:transparent;font-family:'Cinzel',serif;font-size:20px;line-height:1.4;color:#5C441A;font-weight:600;outline:none;resize:none;overflow:hidden}
+.pz-hook-in::placeholder{color:#c9b98c}
+
+/* fila meta editable (cliente / formato / duración) */
+.pz-meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.pz-meta-row .cell{display:flex;flex-direction:column;gap:4px}
+.pz-meta-row label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#B8A87F;font-weight:700}
+.pz-meta-row select,.pz-meta-row input{padding:8px 11px;border:1px solid #E8E4DD;border-radius:8px;font-size:12px;background:#fff;color:#1a1a2e;outline:none;font-weight:600}
+.pz-meta-row select:focus,.pz-meta-row input:focus{border-color:#8B6F3A}
+
+/* guion — cuerpo legible tipo ficha */
+.pz-script-in{font-size:16.5px;line-height:1.75;color:#2a2a2a;background:#fff;border:1px solid #EDE9E1;border-radius:12px;padding:18px 20px;min-height:180px}
+.pz-script-in:focus{border-color:#8B6F3A55}
+
+/* pizarra / apoyo visual — callout */
+.pz-board-box{background:#1a1a2e;border-radius:12px;padding:6px 4px 4px;margin-top:4px}
+.pz-board-box .pz-lbl{color:#C9A64B;padding:10px 14px 0;margin:0}
+.pz-board-in{width:100%;background:transparent;border:none;color:#F0EAD8;font-family:'Cinzel',serif;font-size:15px;line-height:1.65;padding:8px 14px 12px;outline:none;resize:none;overflow:hidden}
+.pz-board-in::placeholder{color:#8a8296}
+
+.pz-small-in{font-size:14.5px;line-height:1.6;color:#333;background:#fff;border:1px solid #EDE9E1;border-radius:10px;padding:12px 14px;min-height:44px}
+.pz-small-in:focus{border-color:#8B6F3A55}
+
+/* barra inferior fija: guardar */
+.pz-ficha-bar{position:fixed;bottom:0;left:0;right:0;z-index:210;background:#fff;border-top:1px solid #E8E4DD;padding:12px 20px;display:none;align-items:center;gap:12px;box-shadow:0 -2px 14px #0001}
+.pz-ficha-bg.open .pz-ficha-bar{display:flex}
+.pz-ficha-bar .inner{max-width:820px;margin:0 auto;width:100%;display:flex;align-items:center;gap:12px}
+.pz-save-msg{font-size:12px;color:#2D8C5A;min-width:60px}
+.pz-save-msg.err{color:#C8453A}
+
+/* ---- Modal importar ---- */
+.pz-import-ta{width:100%;min-height:260px;border:1px solid #E8E4DD;border-radius:10px;padding:14px;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.55;background:#F9F8F6;color:#1a1a2e;outline:none;resize:vertical}
+.pz-import-ta:focus{border-color:#8B6F3A}
+.pz-import-hint{font-size:12px;color:#999;line-height:1.6;margin:6px 0 14px}
+.pz-import-hint code{background:#F0EFED;padding:1px 6px;border-radius:4px;font-size:11px;color:#8B6F3A}
+.pz-import-err{color:#C8453A;font-size:12.5px;line-height:1.5;margin-top:10px;white-space:pre-wrap}
+.pz-import-ok{color:#2D8C5A;font-size:12.5px;margin-top:10px}
+.modal-h{font-family:'Cinzel',serif;font-size:18px;letter-spacing:1px;margin-bottom:4px}
+.modal-sub{font-size:12px;color:#999;margin-bottom:16px}
+
+/* toast */
+.pz-toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:opacity .2s;pointer-events:none;box-shadow:0 4px 20px #0003}
+.pz-toast.show{opacity:1}
+.pz-toast.err{background:#C8453A}
