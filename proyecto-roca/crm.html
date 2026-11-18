@@ -148,6 +148,27 @@ code{background:var(--papel);padding:2px 5px;border-radius:4px;font-size:11px}
 .bur small{display:block;font-size:10.5px;color:var(--gris);margin-top:3px}
 .agente{font-size:12px;color:var(--gris)}
 
+/* decisiones */
+.dsec{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--gris);margin:22px 0 10px}
+.dsec:first-child{margin-top:0}
+.d{background:var(--panel);border:1px solid var(--linea);border-radius:11px;padding:16px 18px;margin-bottom:11px;border-left:4px solid var(--naranja)}
+.d.p1{border-left-color:#C8453A}.d.p3{border-left-color:#B9B3AA}
+.d.resp{border-left-color:var(--ambar)}.d.hecha{border-left-color:var(--verde);opacity:.8}
+.d .ar{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.d h4{font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin:3px 0 8px;line-height:1.35}
+.d .que{font-size:14px;line-height:1.5}
+.d .rec{margin-top:9px;font-size:13.5px;background:#F2EFE9;border-radius:8px;padding:9px 12px}
+.d .rec b{font-weight:700}
+.d .arch{font-size:12px;color:var(--gris);margin-top:7px}
+.d .ops{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.d .ops button{padding:9px 14px;border-radius:8px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;border:1px solid var(--linea);background:#fff;color:var(--tinta)}
+.d .ops button.si{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.d .ops button.no{color:#C8453A}
+.d textarea{width:100%;margin-top:10px;padding:9px 11px;border:1px solid var(--linea);border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;min-height:44px;background:#fff}
+.d .estado{margin-top:10px;font-size:13px;color:var(--tinta)}
+.d .estado b{font-weight:700}
+.d .chico{background:none;border:0;color:var(--gris);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;margin-left:8px}
+
 @media(max-width:860px){
  #app{display:block}
  aside{position:static;height:auto;width:100%;flex:none;border-right:0;
@@ -197,11 +218,22 @@ code{background:var(--papel);padding:2px 5px;border-radius:4px;font-size:11px}
 
 <main>
   <div class="tabs">
-    <button data-tab="ig" class="on">Instagram<i id="igbadge"></i></button>
+    <button data-tab="dec" class="on">Decisiones<i id="decbadge"></i></button>
+    <button data-tab="ig">Instagram<i id="igbadge"></i></button>
     <button data-tab="form">Formularios</button>
   </div>
 
-  <div id="vista-ig">
+  <div id="vista-dec">
+    <div class="cab">
+      <h2>Lo que tenés que decidir</h2>
+      <span class="agente">El equipo ejecuta lo que aprobás en la próxima vuelta (cada hora).</span>
+      <div class="sp"></div>
+      <button class="btn" id="dec-recargar">Actualizar</button>
+    </div>
+    <div id="dec-lista"><div class="vacio"><b>Cargando decisiones…</b></div></div>
+  </div>
+
+  <div id="vista-ig" style="display:none">
     <div class="cab">
       <h2>Conversaciones de Instagram</h2>
       <span class="agente" id="ig-agente"></span>
@@ -613,6 +645,7 @@ document.addEventListener('click',function(e){
   if(t){
     var tab=t.getAttribute('data-tab');
     document.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('on',x===t);});
+    document.getElementById('vista-dec').style.display=tab==='dec'?'':'none';
     document.getElementById('vista-ig').style.display=tab==='ig'?'':'none';
     document.getElementById('vista-form').style.display=tab==='form'?'':'none';
     return;
@@ -645,12 +678,92 @@ document.addEventListener('click',function(e){
 });
 document.getElementById('ig-recargar').addEventListener('click',function(){igCargar(false);});
 
+/* ── Decisiones ────────────────────────────────────────────────────────────
+   El equipo deja acá lo que necesita tu OK. Lo que respondés lo toma en la
+   próxima vuelta y, cuando lo ejecuta, pasa a "Hechas". */
+var dec=[],decCargando=false;
+function decTarjeta(x){
+  var d=x.detalle||{},r=x.respuesta,clase='d p'+(x.prioridad||2);
+  if(x.tipo==='decision_hecha')clase+=' hecha';else if(r)clase+=' resp';
+  var h='<article class="'+clase+'" data-dec="'+x.id+'">'
+    +'<div class="ar">'+esc(d.area||'')+' · '+cuando(x.creado_en)+'</div>'
+    +'<h4>'+esc(x.titulo)+'</h4>'
+    +(d.que?'<div class="que">'+esc(d.que)+'</div>':'')
+    +(d.recomendacion?'<div class="rec"><b>Te recomiendo:</b> '+esc(d.recomendacion)+'</div>':'')
+    +(d.archivo?'<div class="arch">Detalle: '+esc(d.archivo)+'</div>':'');
+  if(x.tipo==='decision_hecha'){
+    h+='<div class="estado"><b>Hecho.</b> '+esc(d.ejecutado||'')+'</div>';
+  }else if(r){
+    h+='<div class="estado"><b>Respondiste:</b> '+esc(r.respuesta==='aprobar'?(r.opcion||'Sí'):r.respuesta==='rechazar'?'No':'Comentario')
+      +(r.comentario?' — '+esc(r.comentario):'')+' · el equipo lo toma en la próxima vuelta'
+      +'<button class="chico dec-reabrir">Cambiar</button></div>';
+  }else{
+    var ops=(d.opciones&&d.opciones.length?d.opciones:['Sí']);
+    h+='<div class="ops">'+ops.map(function(o,i){
+        return '<button class="'+(i===0?'si':'')+' dec-op" data-op="'+esc(o)+'">'+esc(o)+'</button>';}).join('')
+      +'<button class="no dec-no">No</button></div>'
+      +'<textarea class="dec-com" placeholder="Comentario o cambio que quieras (opcional)"></textarea>'
+      +'<div class="ops"><button class="dec-comentar">Mandar solo el comentario</button></div>';
+  }
+  return h+'</article>';
+}
+function decPintar(){
+  var pend=dec.filter(function(x){return x.tipo==='decision'&&!x.respuesta;});
+  var resp=dec.filter(function(x){return x.tipo==='decision'&&x.respuesta;});
+  var hechas=dec.filter(function(x){return x.tipo==='decision_hecha';}).slice(0,15);
+  pend.sort(function(a,b){return (a.prioridad||2)-(b.prioridad||2);});
+  var h='';
+  h+='<div class="dsec">Para decidir · '+pend.length+'</div>'
+    +(pend.length?pend.map(decTarjeta).join(''):'<div class="vacio"><b>No hay nada pendiente</b>Cuando el equipo necesite tu OK, aparece acá.</div>');
+  if(resp.length)h+='<div class="dsec">Respondidas, en curso · '+resp.length+'</div>'+resp.map(decTarjeta).join('');
+  if(hechas.length)h+='<div class="dsec">Hechas</div>'+hechas.map(decTarjeta).join('');
+  document.getElementById('dec-lista').innerHTML=h;
+  document.getElementById('decbadge').textContent=pend.length||'';
+}
+function decCargar(silencioso){
+  if(decCargando)return;decCargando=true;
+  token().then(function(t){return fetch(API+'/decisiones',{headers:{Authorization:'Bearer '+t}});})
+  .then(function(r){
+    if(r.status===401)throw new Error('La sesión venció: salí y volvé a entrar.');
+    if(!r.ok)throw new Error('El servidor respondió '+r.status);
+    return r.json();
+  }).then(function(d){
+    // no repintar si estás escribiendo un comentario
+    var act=document.activeElement;
+    if(silencioso&&act&&act.classList&&act.classList.contains('dec-com')&&act.value)return;
+    dec=d.decisiones||[];decPintar();
+  }).catch(function(x){
+    if(!silencioso)document.getElementById('dec-lista').innerHTML='<div class="vacio"><b>No pude traer las decisiones</b>'+esc(x.message)+'</div>';
+  }).then(function(){decCargando=false;});
+}
+function decResponder(id,respuesta,opcion,comentario,btn){
+  if(btn){btn.disabled=true;btn.textContent='Guardando…';}
+  token().then(function(t){
+    return fetch(API+'/decisiones/responder',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},
+      body:JSON.stringify({id:id,respuesta:respuesta,opcion:opcion||'',comentario:comentario||''})});
+  }).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok)throw new Error(d.error||'error');
+    decCargando=false;decCargar(false);
+  }).catch(function(x){alert('No se guardó: '+x.message);decPintar();});
+}
+document.getElementById('dec-recargar').addEventListener('click',function(){decCargar(false);});
+document.getElementById('dec-lista').addEventListener('click',function(e){
+  var art=e.target.closest('[data-dec]');if(!art)return;
+  var id=Number(art.getAttribute('data-dec')),com=art.querySelector('.dec-com'),c=com?com.value.trim():'';
+  var b;
+  if((b=e.target.closest('.dec-op')))decResponder(id,'aprobar',b.getAttribute('data-op'),c,b);
+  else if((b=e.target.closest('.dec-no')))decResponder(id,'rechazar','',c,b);
+  else if((b=e.target.closest('.dec-comentar'))){if(!c){com.focus();return;}decResponder(id,'comentar','',c,b);}
+  else if((b=e.target.closest('.dec-reabrir')))decResponder(id,'reabrir','','',b);
+});
+
 function entrar(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
   cargar();
   igCargar(false);
-  setInterval(function(){igCargar(true);},60000);
+  decCargar(false);
+  setInterval(function(){igCargar(true);decCargar(true);},60000);
   if(window.Notification&&Notification.permission==='default')
     document.addEventListener('click',function pedir(){Notification.requestPermission();
       document.removeEventListener('click',pedir);});
