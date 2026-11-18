@@ -179,9 +179,8 @@ code{background:var(--papel);padding:2px 5px;border-radius:4px;font-size:11px}
 
 <div id="login"><form id="lf">
   <h1>Ro<b>C</b>A 36 · CRM</h1>
-  <p>Entrá una vez. La sesión queda guardada en este navegador.</p>
-  <input id="em" type="email" placeholder="Email" autocomplete="username" required>
-  <input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password" required>
+  <p>Poné tu PIN. Queda guardado en este navegador.</p>
+  <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="PIN" autocomplete="off" required>
   <button id="lb">Entrar</button>
   <div class="err" id="le"></div>
 </form></div>
@@ -265,19 +264,24 @@ var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
 // persistSession + autoRefreshToken: entrás una vez y la sesión se renueva sola.
 // Además se copia a una cookie de un año, como el panel de BD: si el navegador
 // limpia el almacenamiento del sitio pero conserva cookies, la sesión sobrevive.
-var sb=window.supabase.createClient(SB_URL,SB_KEY,
-  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-
-var CK='roca_crm_sesion';
-function guardarCookie(s){
-  if(!s)return;
-  try{document.cookie=CK+'='+encodeURIComponent(JSON.stringify(
-    {refresh_token:s.refresh_token}))+';path=/;max-age=31536000;SameSite=Lax'
+// Entrada con PIN: el servidor lo valida y devuelve una sesión firmada que dura
+// 4 meses. Se guarda en este navegador (y en una cookie, por si se borra el resto).
+var CK='roca_crm_pin';
+function sesionGuardada(){
+  try{var v=localStorage.getItem(CK);if(v)return v;}catch(e){}
+  try{var m=document.cookie.match(new RegExp('(?:^|; )'+CK+'=([^;]*)'));return m?decodeURIComponent(m[1]):'';}catch(e){return '';}
+}
+function guardarSesion(t){
+  try{localStorage.setItem(CK,t);}catch(e){}
+  try{document.cookie=CK+'='+encodeURIComponent(t)+';path=/;max-age=10368000;SameSite=Lax'
     +(location.protocol==='https:'?';Secure':'');}catch(e){}
 }
-function cookieGuardada(){
-  try{var m=document.cookie.match(new RegExp('(?:^|; )'+CK+'=([^;]*)'));
-      return m?JSON.parse(decodeURIComponent(m[1])):null;}catch(e){return null;}
+function salir(motivo){
+  try{localStorage.removeItem(CK);}catch(e){}
+  document.cookie=CK+'=;path=/;max-age=0';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.getElementById('le').textContent=motivo||'';
 }
 
 var ETAPAS=[['nuevo','Sin contactar','#C8453A'],['contactado','Contactado','#4A90D9'],
@@ -466,8 +470,11 @@ function pintar(){
 function guardar(id,campo,valor,aviso){
   aviso.textContent='Guardando…';
   var d={actualizado:new Date().toISOString()};d[campo]=valor||null;
-  sb.from('roca_leads').update(d).eq('id',id).then(function(r){
-    if(r.error){aviso.textContent='No se guardó: '+r.error.message;return;}
+  token().then(function(t){
+    return fetch(API+'/formularios/guardar',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},
+      body:JSON.stringify({id:id,campo:campo,valor:valor||null})});
+  }).then(function(r){return r.json();}).then(function(r){
+    if(!r.ok){aviso.textContent='No se guardó: '+(r.error||'error');return;}
     var l=leads.filter(function(x){return x.id===id;})[0];
     if(l) l[campo]=valor;
     if(campo==='estado'){pintar();return;}
@@ -516,10 +523,10 @@ document.getElementById('busca').addEventListener('input',function(e){
 });
 
 function cargar(){
-  sb.from('roca_leads').select('*').order('creado',{ascending:false}).then(function(r){
-    if(r.error){alert('No pude leer las consultas: '+r.error.message);return;}
-    leads=r.data||[];pintar();
-  });
+  token().then(function(t){return fetch(API+'/formularios',{headers:{Authorization:'Bearer '+t}});})
+  .then(function(r){if(r.status===401){salir('Volvé a poner tu PIN.');throw new Error('sesión');}return r.json();})
+  .then(function(r){leads=r.leads||[];pintar();})
+  .catch(function(x){if(x.message!=='sesión')alert('No pude leer las consultas: '+x.message);});
 }
 document.getElementById('recargar').addEventListener('click',cargar);
 
@@ -527,11 +534,12 @@ document.getElementById('lf').addEventListener('submit',function(e){
   e.preventDefault();
   var b=document.getElementById('lb'),er=document.getElementById('le');
   b.disabled=true;b.textContent='Entrando…';er.textContent='';
-  sb.auth.signInWithPassword({email:document.getElementById('em').value.trim(),
-                              password:document.getElementById('pw').value})
-   .then(function(r){ if(r.error)throw r.error; guardarCookie(r.data.session); entrar(); })
-   .catch(function(x){ er.textContent=x.message==='Invalid login credentials'
-      ?'Email o contraseña incorrectos.':(x.message||'Error'); })
+  fetch(API+'/pin',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({pin:document.getElementById('pin').value.trim()})})
+   .then(function(r){return r.json();})
+   .then(function(r){ if(!r.token)throw new Error(r.error||'Error'); guardarSesion(r.token);
+      document.getElementById('pin').value=''; entrar(); })
+   .catch(function(x){ er.textContent=x.message==='Failed to fetch'?'No hay conexión con el servidor.':x.message; })
    .then(function(){ b.disabled=false;b.textContent='Entrar'; });
 });
 
@@ -545,8 +553,7 @@ function igVisto(){try{return JSON.parse(localStorage.getItem(VISTO)||'{}');}cat
 function igMarcar(id,f){try{var v=igVisto();v[id]=f;localStorage.setItem(VISTO,JSON.stringify(v));}catch(e){}}
 function igNuevo(c){return c.ultimo_de==='user'&&(igVisto()[c.id]||'')<c.ultimo;}
 
-function token(){return sb.auth.getSession().then(function(r){
-  return r.data.session?r.data.session.access_token:'';});}
+function token(){return Promise.resolve(sesionGuardada());}
 
 function cuando(f){
   if(!f)return '';var d=new Date(f),m=(Date.now()-d)/60000;
@@ -619,7 +626,7 @@ function igCargar(silencioso){
   token().then(function(t){
     return fetch(API,{headers:{Authorization:'Bearer '+t}});
   }).then(function(r){
-    if(r.status===401)throw new Error('La sesión venció: salí y volvé a entrar.');
+    if(r.status===401){salir('Volvé a poner tu PIN.');throw new Error('Volvé a poner tu PIN.');}
     if(!r.ok)throw new Error('El servidor respondió '+r.status);
     return r.json();
   }).then(function(d){
@@ -724,7 +731,7 @@ function decCargar(silencioso){
   if(decCargando)return;decCargando=true;
   token().then(function(t){return fetch(API+'/decisiones',{headers:{Authorization:'Bearer '+t}});})
   .then(function(r){
-    if(r.status===401)throw new Error('La sesión venció: salí y volvé a entrar.');
+    if(r.status===401){salir('Volvé a poner tu PIN.');throw new Error('Volvé a poner tu PIN.');}
     if(!r.ok)throw new Error('El servidor respondió '+r.status);
     return r.json();
   }).then(function(d){
@@ -757,7 +764,10 @@ document.getElementById('dec-lista').addEventListener('click',function(e){
   else if((b=e.target.closest('.dec-reabrir')))decResponder(id,'reabrir','','',b);
 });
 
+var adentro=false;
 function entrar(){
+  if(adentro){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';cargar();igCargar(false);decCargar(false);return;}
+  adentro=true;
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
   cargar();
@@ -769,14 +779,6 @@ function entrar(){
       document.removeEventListener('click',pedir);});
 }
 
-sb.auth.getSession().then(function(r){
-  if(r.data.session){ guardarCookie(r.data.session); entrar(); return; }
-  var ck=cookieGuardada();
-  if(ck&&ck.refresh_token){
-    sb.auth.refreshSession({refresh_token:ck.refresh_token}).then(function(x){
-      if(x.data&&x.data.session){ guardarCookie(x.data.session); entrar(); }
-    });
-  }
-});
+if(sesionGuardada())entrar();
 </script>
 </body></html>
