@@ -1,0 +1,669 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoCA 36 · CRM</title>
+<script src="../supabase.min.js"></script>
+<script src="pauta.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--papel:#F7F5F2;--panel:#fff;--tinta:#141211;--gris:#6E6862;--linea:#E3DED7;
+ --naranja:#FF3508;--verde:#1E8E5A;--ambar:#C8891F;--f:Inter,-apple-system,sans-serif}
+body{background:var(--papel);color:var(--tinta);font-family:var(--f);font-size:15px;line-height:1.5}
+
+/* login */
+#login{position:fixed;inset:0;background:var(--papel);display:flex;align-items:center;
+ justify-content:center;z-index:50;padding:24px}
+#login form{width:100%;max-width:330px}
+#login h1{font-size:27px;font-weight:800;letter-spacing:-.025em;margin-bottom:6px}
+#login h1 b{color:var(--naranja)}
+#login p{color:var(--gris);font-size:14px;margin-bottom:24px}
+#login input{width:100%;padding:13px 14px;border:1px solid var(--linea);border-radius:9px;
+ font:inherit;margin-bottom:10px;background:#fff}
+#login button{width:100%;padding:13px;background:var(--tinta);color:#fff;border:0;
+ border-radius:9px;font:inherit;font-weight:700;cursor:pointer}
+#login .err{color:#C8453A;font-size:13.5px;margin-top:10px;min-height:19px}
+
+/* estructura */
+#app{display:flex;min-height:100vh;align-items:stretch}
+aside{flex:0 0 288px;background:var(--panel);border-right:1px solid var(--linea);
+ padding:22px 20px 40px;position:sticky;top:0;height:100vh;overflow-y:auto}
+main{flex:1;padding:22px 26px 70px;min-width:0}
+
+aside h1{font-size:18px;font-weight:800;letter-spacing:-.02em}
+aside h1 b{color:var(--naranja)}
+aside .est{font-size:11.5px;color:var(--gris);margin-top:2px}
+h3{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+ color:var(--gris);margin:26px 0 10px}
+
+/* números grandes del costado */
+.cif{display:flex;gap:18px;margin-top:16px}
+.cif div b{display:block;font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.cif div span{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--gris)}
+.cif div.v b{color:var(--verde)}
+
+/* filtros */
+.fl{display:block;width:100%;text-align:left;background:none;border:0;font:inherit;
+ font-size:14px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--tinta);
+ display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fl:hover{background:var(--papel)}
+.fl.on{background:var(--tinta);color:#fff;font-weight:600}
+.fl i{font-style:normal;font-size:12px;color:var(--gris);font-variant-numeric:tabular-nums}
+.fl.on i{color:#fff9}
+.fl .pt{width:7px;height:7px;border-radius:50%;flex:none;margin-right:-2px}
+
+/* bloques de datos */
+.bl{border-top:1px solid var(--linea);padding-top:14px;margin-top:22px}
+.ln{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:5px 0}
+.ln span{color:var(--gris)}
+.ln b{font-weight:700;font-variant-numeric:tabular-nums}
+.ln b.caro{color:var(--naranja)}
+.ayuda{font-size:11.5px;color:var(--gris);line-height:1.45;margin-top:10px}
+code{background:var(--papel);padding:2px 5px;border-radius:4px;font-size:11px}
+
+/* lista */
+.cab{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.cab h2{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.cab .sp{flex:1}
+.btn{padding:9px 15px;border:1px solid var(--linea);background:#fff;border-radius:8px;
+ font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--tinta)}
+.btn:hover{background:var(--panel)}
+#busca{padding:9px 13px;border:1px solid var(--linea);border-radius:8px;font:inherit;
+ font-size:14px;width:210px;background:#fff}
+
+.l{background:var(--panel);border:1px solid var(--linea);border-radius:11px;
+ padding:16px 18px;margin-bottom:11px;border-left:4px solid #D7D2CA}
+.l.si{border-left-color:var(--verde)}
+.l.p60{border-left-color:var(--ambar)}
+.l1{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.l1 .n{font-size:17px;font-weight:700;letter-spacing:-.015em}
+.l1 .f{font-size:12px;color:var(--gris);margin-top:1px}
+.l1 .sp{flex:1}
+.tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+ padding:4px 8px;border-radius:5px;white-space:nowrap}
+.tag.si{background:#DFF2E8;color:var(--verde)}
+.tag.p60{background:#FBEFD8;color:var(--ambar)}
+.tag.no{background:#EFECE8;color:var(--gris)}
+.resp{display:flex;gap:26px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
+ border-top:1px solid var(--linea)}
+.resp div{font-size:13.5px}
+.resp span{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+ color:var(--gris);margin-bottom:1px}
+.msj{margin-top:13px;padding-top:13px;border-top:1px solid var(--linea)}
+.msj h4{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+ color:var(--gris);margin-bottom:7px}
+.msj .txt{background:#F2EFE9;border:1px solid var(--linea);border-radius:9px;
+ padding:13px 15px;font-size:14px;line-height:1.5;white-space:pre-wrap;
+ color:var(--tinta);outline:none}
+.msj .txt:focus{border-color:var(--tinta);background:#fff}
+.acc a.escribir{background:#25D366;color:#09120c}
+.acc{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:13px}
+.acc a{background:var(--verde);color:#fff;text-decoration:none;font-size:13px;font-weight:700;
+ padding:9px 16px;border-radius:8px}
+.acc a.tel{background:#EFECE8;color:var(--tinta)}
+.acc select,.acc input[type=date]{padding:8px 10px;border:1px solid var(--linea);
+ border-radius:8px;font:inherit;font-size:13px;background:#fff;color:var(--tinta)}
+.l textarea{width:100%;margin-top:10px;padding:9px 11px;border:1px solid var(--linea);
+ border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;min-height:44px;background:#fff}
+.guardando{font-size:11.5px;color:var(--gris);height:16px;margin-top:4px}
+.vacio{background:var(--panel);border:1px dashed var(--linea);border-radius:11px;
+ padding:38px 24px;text-align:center;color:var(--gris)}
+.vacio b{display:block;color:var(--tinta);font-size:16px;margin-bottom:6px}
+
+/* pestañas */
+.tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--linea)}
+.tabs button{background:none;border:0;font:inherit;font-size:14.5px;font-weight:600;color:var(--gris);
+ padding:9px 4px 11px;margin-right:16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--tinta);border-bottom-color:var(--naranja)}
+.tabs i{font-style:normal;background:var(--naranja);color:#fff;font-size:11px;font-weight:800;
+ border-radius:9px;padding:1px 7px;margin-left:6px}
+.tabs i:empty{display:none}
+
+/* instagram */
+.igcif{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.igcif div{background:var(--panel);border:1px solid var(--linea);border-radius:10px;padding:11px 15px;min-width:118px}
+.igcif b{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.igcif span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.chips button{border:1px solid var(--linea);background:#fff;border-radius:20px;padding:6px 13px;
+ font:inherit;font-size:13px;cursor:pointer;color:var(--tinta)}
+.chips button.on{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.l.reunion{border-left-color:var(--verde)}
+.l.humano{border-left-color:var(--naranja)}
+.tag.reunion{background:#DFF2E8;color:var(--verde)}
+.tag.humano{background:#FFE4DC;color:var(--naranja)}
+.tag.charlando{background:#EFECE8;color:var(--gris)}
+.tag.nuevo{background:var(--naranja);color:#fff}
+.temp{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px;color:var(--gris)}
+.temp::before{content:"";width:8px;height:8px;border-radius:50%;background:#B9B3AA}
+.temp.caliente{color:#C8453A}.temp.caliente::before{background:#E5482F}
+.temp.tibio{color:var(--ambar)}.temp.tibio::before{background:var(--ambar)}
+.res{margin-top:11px;font-size:14px;line-height:1.5}
+.sig{margin-top:8px;font-size:13.5px;background:#F2EFE9;border-radius:8px;padding:9px 12px}
+.sig b{font-weight:700}
+.chat{margin-top:12px;border-top:1px solid var(--linea);padding-top:12px;display:none;max-height:420px;overflow-y:auto}
+.l.abierto .chat{display:block}
+.bur{max-width:82%;padding:8px 12px;border-radius:12px;font-size:13.5px;margin:0 0 7px;white-space:pre-wrap;line-height:1.45}
+.bur.user{background:#EFECE8}
+.bur.assistant{background:#E9F1FB;margin-left:auto}
+.bur small{display:block;font-size:10.5px;color:var(--gris);margin-top:3px}
+.agente{font-size:12px;color:var(--gris)}
+
+@media(max-width:860px){
+ #app{display:block}
+ aside{position:static;height:auto;width:100%;flex:none;border-right:0;
+  border-bottom:1px solid var(--linea)}
+ main{padding:20px 16px 60px}
+}
+</style></head><body>
+
+<div id="login"><form id="lf">
+  <h1>Ro<b>C</b>A 36 · CRM</h1>
+  <p>Entrá una vez. La sesión queda guardada en este navegador.</p>
+  <input id="em" type="email" placeholder="Email" autocomplete="username" required>
+  <input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password" required>
+  <button id="lb">Entrar</button>
+  <div class="err" id="le"></div>
+</form></div>
+
+<div id="app" style="display:none">
+
+<aside>
+  <h1>Ro<b>C</b>A 36 · CRM</h1>
+  <div class="est" id="estado-pauta"></div>
+
+  <div class="cif" id="cifras"></div>
+
+  <h3>Por dónde va cada uno</h3>
+  <div id="filtros"></div>
+
+  <h3>Por el anticipo</h3>
+  <div id="filtros-ant"></div>
+
+  <div class="bl">
+    <h3 style="margin-top:0">Lo que cuesta</h3>
+    <div id="costos"></div>
+  </div>
+
+  <div class="bl">
+    <h3 style="margin-top:0">De dónde vienen</h3>
+    <div id="formularios"></div>
+  </div>
+
+  <div class="bl">
+    <div class="ayuda">Para traer las consultas nuevas de Meta:<br>
+      <code>python3 meta/sync_roca.py</code></div>
+  </div>
+</aside>
+
+<main>
+  <div class="tabs">
+    <button data-tab="ig" class="on">Instagram<i id="igbadge"></i></button>
+    <button data-tab="form">Formularios</button>
+  </div>
+
+  <div id="vista-ig">
+    <div class="cab">
+      <h2>Conversaciones de Instagram</h2>
+      <span class="agente" id="ig-agente"></span>
+      <div class="sp"></div>
+      <button class="btn" id="ig-recargar">Actualizar</button>
+    </div>
+    <div class="igcif" id="ig-cifras"></div>
+    <div class="chips" id="ig-chips"></div>
+    <div id="ig-lista"><div class="vacio"><b>Cargando conversaciones…</b>Armando los resúmenes, tarda unos segundos.</div></div>
+  </div>
+
+  <div id="vista-form" style="display:none">
+  <div class="cab">
+    <h2 id="titulo">Todas las consultas</h2>
+    <div class="sp"></div>
+    <input id="busca" type="search" placeholder="Buscar por nombre o teléfono">
+    <button class="btn" id="recargar">Actualizar</button>
+  </div>
+  <div id="lista"></div>
+  </div>
+</main>
+
+</div>
+
+<script>
+var SB_URL='https://pgnmpxqljxrpnvexcygh.supabase.co';
+var SB_KEY='sb_publishable_HmiBL9VpEhaYyPqjA1v67w_F38x48El';
+
+// persistSession + autoRefreshToken: entrás una vez y la sesión se renueva sola.
+// Además se copia a una cookie de un año, como el panel de BD: si el navegador
+// limpia el almacenamiento del sitio pero conserva cookies, la sesión sobrevive.
+var sb=window.supabase.createClient(SB_URL,SB_KEY,
+  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+
+var CK='roca_crm_sesion';
+function guardarCookie(s){
+  if(!s)return;
+  try{document.cookie=CK+'='+encodeURIComponent(JSON.stringify(
+    {refresh_token:s.refresh_token}))+';path=/;max-age=31536000;SameSite=Lax'
+    +(location.protocol==='https:'?';Secure':'');}catch(e){}
+}
+function cookieGuardada(){
+  try{var m=document.cookie.match(new RegExp('(?:^|; )'+CK+'=([^;]*)'));
+      return m?JSON.parse(decodeURIComponent(m[1])):null;}catch(e){return null;}
+}
+
+var ETAPAS=[['nuevo','Sin contactar','#C8453A'],['contactado','Contactado','#4A90D9'],
+            ['reunion','Reunión agendada','#7B4A9E'],['visito','Visitó','#C8891F'],
+            ['reservo','Reservó','#1E8E5A'],['descartado','Descartado','#9A948C']];
+var ANT=[['si','Tiene el anticipo'],['p60','Lo tiene en 60 días'],['no','Sin anticipo']];
+
+var leads=[],filtro='todos',filtroAnt='',texto='';
+
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function clase(a){
+  a=(a||'').toLowerCase();
+  if(a.indexOf('disponibles')>=0)return 'si';
+  if(a.indexOf('60')>=0)return 'p60';
+  if(a.indexOf('todav')>=0)return 'no';
+  return '';
+}
+function etiqueta(a){
+  var c=clase(a);if(!c)return '';
+  var t={si:'Tiene el anticipo',p60:'Lo tiene en 60 días',no:'Sin anticipo'}[c];
+  return '<span class="tag '+c+'">'+t+'</span>';
+}
+function plata(n){return n==null?'—':'US$ '+Number(n).toLocaleString('es-AR',
+  {minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function visibles(){
+  return leads.filter(function(l){
+    var e=l.estado||'nuevo';
+    if(filtro==='contactados'){ if(e==='nuevo')return false; }
+    else if(filtro!=='todos'&&e!==filtro) return false;
+    if(filtroAnt&&clase(l.anticipo)!==filtroAnt) return false;
+    if(texto){
+      var h=((l.nombre||'')+' '+(l.telefono||'')+' '+(l.email||'')).toLowerCase();
+      if(h.indexOf(texto)<0) return false;
+    }
+    return true;
+  });
+}
+
+function pintarCostado(){
+  var sin=leads.filter(function(l){return (l.estado||'nuevo')==='nuevo';}).length;
+  var con=leads.length-sin;
+  var cal=leads.filter(function(l){return clase(l.anticipo)==='si';}).length;
+
+  document.getElementById('cifras').innerHTML=
+     '<div><b>'+leads.length+'</b><span>Llegaron</span></div>'
+    +'<div><b>'+con+'</b><span>Contactados</span></div>'
+    +'<div class="v"><b>'+cal+'</b><span>Con plata</span></div>';
+
+  var f=[['todos','Todas las consultas','#6E6862'],['contactados','Ya contactados','#4A90D9']];
+  document.getElementById('filtros').innerHTML=
+    f.map(function(x){
+      var n=x[0]==='todos'?leads.length:con;
+      return boton(x[0],x[1],x[2],n);
+    }).join('')
+   +ETAPAS.map(function(e){
+      var n=leads.filter(function(l){return (l.estado||'nuevo')===e[0];}).length;
+      return boton(e[0],e[1],e[2],n);
+    }).join('');
+
+  document.getElementById('filtros-ant').innerHTML=
+    ANT.map(function(a){
+      var n=leads.filter(function(l){return clase(l.anticipo)===a[0];}).length;
+      return '<button class="fl'+(filtroAnt===a[0]?' on':'')+'" data-ant="'+a[0]+'">'
+        +'<span>'+a[1]+'</span><i>'+n+'</i></button>';
+    }).join('');
+
+  // la pauta
+  var p=window.PAUTA;
+  document.getElementById('estado-pauta').textContent=
+    p?('Pauta '+(p.estado==='ACTIVE'?'corriendo':p.estado.toLowerCase())):'';
+  var c=document.getElementById('costos');
+  if(!p){ c.innerHTML='<div class="ayuda">Todavía no corrí <code>sync_roca.py</code>.</div>'; }
+  else{
+    c.innerHTML='<div class="ln"><span>Gastado hasta hoy</span><b>'+plata(p.gasto)+'</b></div>'
+     +'<div class="ln"><span>Consultas</span><b>'+p.resultados+'</b></div>'
+     +'<div class="ln"><span>Cada consulta</span><b class="'+(p.costo>10?'caro':'')+'">'
+       +plata(p.costo)+'</b></div>'
+     +p.conjuntos.map(function(x){
+        return '<div class="ln" style="padding-left:10px"><span>'+esc(x.conjunto)+' · '
+         +x.resultados+'</span><b>'+plata(x.costo)+'</b></div>';}).join('');
+  }
+
+  // de dónde vienen
+  var porForm={};
+  leads.forEach(function(l){var k=l.formulario||'—';porForm[k]=(porForm[k]||0)+1;});
+  var ks=Object.keys(porForm);
+  document.getElementById('formularios').innerHTML= ks.length
+   ? ks.map(function(k){return '<div class="ln"><span>'+esc(k)+'</span><b>'+porForm[k]+'</b></div>';}).join('')
+   : '<div class="ayuda">Un formulario activo: <b>REUNIÓN · RoCA 36 · v2</b>. Todavía sin respuestas.</div>';
+}
+
+function boton(id,txt,color,n){
+  return '<button class="fl'+(filtro===id?' on':'')+'" data-f="'+id+'">'
+    +'<span style="display:flex;align-items:center;gap:8px">'
+    +'<i class="pt" style="background:'+color+'"></i>'+txt+'</span><i>'+n+'</i></button>';
+}
+
+/* El mensaje ya escrito, uno por consulta.
+   Corto a propósito: los cinco pidieron que los llamemos, así que el WhatsApp
+   solo avisa que vas a llamar y pide la hora. El plan completo va en la llamada.
+   Santiago no es "de RoCA 36": comercializa el proyecto. Se presenta con su
+   nombre y nombra el edificio como lo que la persona consultó. */
+function mensaje(l){
+  var nom=(l.nombre||'').trim().split(/\s+/)[0]||'';
+  var fecha=(l.reunion||'').toLowerCase();
+  var cita=fecha.indexOf('semana')>=0&&fecha.indexOf('prefiero')<0;
+  var p=['Hola'+(nom?' '+nom:'')+', soy Santiago Funes.'];
+  p.push(cita
+    ? 'Me dejaste tus datos por el departamento de Roca 36 y que podías venir '
+      +(l.reunion||'').toLowerCase()+'.'
+    : 'Me dejaste tus datos por el departamento de Roca 36 y que preferías que te llamemos.');
+  p.push('Mientras tanto, acá está todo: precio, plan de pago, qué unidades quedan '
+    +'y quién lo construye.\nhttps://roca36.com.ar');
+  p.push(cita
+    ? 'Te llamo para coordinar el día. ¿A qué hora te viene bien?'
+    : '¿Te llamo ahora o preferís más tarde?');
+  return p.join('\n\n');
+}
+
+function tarjeta(l){
+  var wa=(l.telefono||'').replace(/\D/g,'');
+  var msj=mensaje(l);
+  var fecha=l.creado?new Date(l.creado).toLocaleString('es-AR',
+    {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+  var resp='';
+  if(l.destino) resp+='<div><span>Lo busca para</span>'+esc(l.destino)+'</div>';
+  if(l.reunion) resp+='<div><span>Puede venir</span>'+esc(l.reunion)+'</div>';
+  if(l.anticipo) resp+='<div><span>Anticipo</span>'+esc(l.anticipo)+'</div>';
+  if(l.email) resp+='<div><span>Mail</span>'+esc(l.email)+'</div>';
+  var ops=ETAPAS.map(function(e){
+    return '<option value="'+e[0]+'"'+((l.estado||'nuevo')===e[0]?' selected':'')+'>'
+      +e[1]+'</option>';}).join('');
+  return '<article class="l '+clase(l.anticipo)+'" data-id="'+esc(l.id)+'">'
+   +'<div class="l1"><div><div class="n">'+esc(l.nombre||'Sin nombre')+'</div>'
+     +'<div class="f">'+fecha+(l.anuncio?' · '+esc(l.anuncio):'')+'</div></div>'
+     +'<div class="sp"></div>'+etiqueta(l.anticipo)+'</div>'
+   +(resp?'<div class="resp">'+resp+'</div>':'')
+   +'<div class="msj"><h4>El mensaje que le mandás</h4>'
+     +'<div class="txt" contenteditable="true" spellcheck="false">'+esc(msj)+'</div></div>'
+   +'<div class="acc">'
+     +'<button class="btn copiar">1 · Copiar mensaje</button>'
+     +(wa?'<a class="escribir" href="https://web.whatsapp.com/send?phone='+wa
+          +'" target="_blank">2 · Abrir el chat</a>':'')
+     +(l.telefono?'<a class="tel" href="tel:'+esc(l.telefono)+'">'+esc(l.telefono)+'</a>':'')
+     +'<select data-c="estado">'+ops+'</select>'
+     +'<input type="date" data-c="proximo_paso" title="Próximo paso" value="'
+       +(l.proximo_paso||'')+'">'
+   +'</div>'
+   +'<textarea data-c="nota" placeholder="Nota de la conversación">'+esc(l.nota||'')+'</textarea>'
+   +'<div class="guardando"></div></article>';
+}
+
+/* Sincrónico a propósito: navigator.clipboard es una promesa y se cancela si
+   la página abre otra pestaña en el mismo clic. */
+function copiar(t){
+  var ok=false;
+  var ta=document.createElement('textarea');
+  ta.value=t;ta.style.position='fixed';ta.style.top='0';ta.style.opacity='0';
+  document.body.appendChild(ta);
+  ta.focus();ta.setSelectionRange(0,t.length);
+  try{ok=document.execCommand('copy');}catch(x){}
+  document.body.removeChild(ta);
+  if(!ok&&navigator.clipboard&&navigator.clipboard.writeText){
+    try{navigator.clipboard.writeText(t);ok=true;}catch(x){}
+  }
+  return ok;
+}
+
+function pintar(){
+  pintarCostado();
+  var v=visibles();
+  var nom={todos:'Todas las consultas',contactados:'Ya contactados'};
+  ETAPAS.forEach(function(e){nom[e[0]]=e[1];});
+  document.getElementById('titulo').textContent=nom[filtro]+' · '+v.length;
+  document.getElementById('lista').innerHTML= v.length
+    ? v.map(tarjeta).join('')
+    : '<div class="vacio"><b>No hay consultas acá</b>'
+      +(leads.length?'Probá con otro filtro.'
+        :'Cuando alguien complete el formulario de RoCA, corré '
+         +'<code>python3 meta/sync_roca.py</code> y aparece en esta lista.')+'</div>';
+}
+
+function guardar(id,campo,valor,aviso){
+  aviso.textContent='Guardando…';
+  var d={actualizado:new Date().toISOString()};d[campo]=valor||null;
+  sb.from('roca_leads').update(d).eq('id',id).then(function(r){
+    if(r.error){aviso.textContent='No se guardó: '+r.error.message;return;}
+    var l=leads.filter(function(x){return x.id===id;})[0];
+    if(l) l[campo]=valor;
+    if(campo==='estado'){pintar();return;}
+    aviso.textContent='Guardado';
+    setTimeout(function(){aviso.textContent='';},1600);
+  });
+}
+
+document.addEventListener('click',function(e){
+  /* WhatsApp Web ignora el texto precargado en muchos casos. Entonces, al abrir
+     el chat, el mensaje también se copia al portapapeles: si el cuadro aparece
+     vacío, alcanza con pegar. */
+
+  var c=e.target.closest&&e.target.closest('.copiar');
+  if(c){
+    var ok=copiar(c.closest('.l').querySelector('.msj .txt').innerText);
+    var v=c.textContent;
+    c.textContent=ok?'Copiado · pegá con Cmd+V':'No pude copiar: seleccionalo a mano';
+    c.style.background=ok?'#DFF2E8':'#FBE3E0';
+    setTimeout(function(){c.textContent=v;c.style.background='';},2600);
+    return;
+  }
+  var b=e.target.closest&&e.target.closest('.fl');
+  if(!b)return;
+  if(b.getAttribute('data-ant')!=null){
+    var a=b.getAttribute('data-ant');
+    filtroAnt=(filtroAnt===a?'':a);
+  }else{
+    filtro=b.getAttribute('data-f');
+  }
+  pintar();
+});
+document.addEventListener('change',function(e){
+  var c=e.target.getAttribute&&e.target.getAttribute('data-c');
+  if(!c||c==='nota')return;
+  var art=e.target.closest('.l');
+  guardar(art.getAttribute('data-id'),c,e.target.value,art.querySelector('.guardando'));
+});
+document.addEventListener('blur',function(e){
+  if(!e.target.getAttribute||e.target.getAttribute('data-c')!=='nota')return;
+  var art=e.target.closest('.l');
+  guardar(art.getAttribute('data-id'),'nota',e.target.value,art.querySelector('.guardando'));
+},true);
+document.getElementById('busca').addEventListener('input',function(e){
+  texto=e.target.value.trim().toLowerCase();pintar();
+});
+
+function cargar(){
+  sb.from('roca_leads').select('*').order('creado',{ascending:false}).then(function(r){
+    if(r.error){alert('No pude leer las consultas: '+r.error.message);return;}
+    leads=r.data||[];pintar();
+  });
+}
+document.getElementById('recargar').addEventListener('click',cargar);
+
+document.getElementById('lf').addEventListener('submit',function(e){
+  e.preventDefault();
+  var b=document.getElementById('lb'),er=document.getElementById('le');
+  b.disabled=true;b.textContent='Entrando…';er.textContent='';
+  sb.auth.signInWithPassword({email:document.getElementById('em').value.trim(),
+                              password:document.getElementById('pw').value})
+   .then(function(r){ if(r.error)throw r.error; guardarCookie(r.data.session); entrar(); })
+   .catch(function(x){ er.textContent=x.message==='Invalid login credentials'
+      ?'Email o contraseña incorrectos.':(x.message||'Error'); })
+   .then(function(){ b.disabled=false;b.textContent='Entrar'; });
+});
+
+/* ── Instagram ─────────────────────────────────────────────────────────────
+   Las charlas viven en la base del agente (otro Supabase). Las trae el servidor
+   del agente, que solo responde si el pedido viene con la sesión de este CRM. */
+var API='https://sofia-bot-production-e17d.up.railway.app/instagram/panel';
+var ig=[],igFiltro='todas',igAbiertos={},igCargando=false;
+var VISTO='roca_ig_visto';
+function igVisto(){try{return JSON.parse(localStorage.getItem(VISTO)||'{}');}catch(e){return {};}}
+function igMarcar(id,f){try{var v=igVisto();v[id]=f;localStorage.setItem(VISTO,JSON.stringify(v));}catch(e){}}
+function igNuevo(c){return c.ultimo_de==='user'&&(igVisto()[c.id]||'')<c.ultimo;}
+
+function token(){return sb.auth.getSession().then(function(r){
+  return r.data.session?r.data.session.access_token:'';});}
+
+function cuando(f){
+  if(!f)return '';var d=new Date(f),m=(Date.now()-d)/60000;
+  if(m<1)return 'recién';if(m<60)return 'hace '+Math.round(m)+' min';
+  if(m<1440)return 'hace '+Math.round(m/60)+' h';
+  return d.toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+function telDeNotas(n){
+  var m=(n||'').match(/(\+?\d[\d\s-]{7,}\d)/g);if(!m)return '';
+  var d=m[m.length-1].replace(/\D/g,'');
+  if(d.length===10)d='549'+d;else if(d.length===12&&d.indexOf('54')===0)d='549'+d.slice(2);
+  return d;
+}
+var IG_EST={reunion:'Pidió reunión',humano:'Te toca a vos',charlando:'Charlando con el agente'};
+
+function igTarjeta(c){
+  var tel=telDeNotas(c.notas);
+  var chat=c.mensajes.map(function(m){
+    return '<div class="bur '+m.r+'">'+esc(m.t)+'<small>'+(m.r==='user'?esc(c.nombre):'Roca 36')
+      +' · '+cuando(m.f)+'</small></div>';}).join('');
+  var notas=(c.notas||'').split('\n').filter(Boolean).map(function(n){return esc(n.replace(/^\[[^\]]*\]\s*/,''));});
+  return '<article class="l '+c.estado+(igAbiertos[c.id]?' abierto':'')+'" data-ig="'+esc(c.id)+'">'
+   +'<div class="l1"><div><div class="n">'+esc(c.nombre)+'</div>'
+     +'<div class="f">Último mensaje '+cuando(c.ultimo)+' · '+c.cantidad+' mensajes</div></div>'
+     +'<div class="sp"></div>'
+     +(igNuevo(c)?'<span class="tag nuevo">Nuevo</span>':'')
+     +(c.temperatura?'<span class="temp '+esc(c.temperatura)+'">'+esc(c.temperatura.replace('frio','frío'))+'</span>':'')
+     +'<span class="tag '+c.estado+'">'+IG_EST[c.estado]+'</span></div>'
+   +(c.resumen?'<div class="res">'+esc(c.resumen)+'</div>':'')
+   +(c.siguiente?'<div class="sig"><b>Qué hacer:</b> '+esc(c.siguiente)+'</div>':'')
+   +(notas.length?'<div class="resp"><div><span>Registro</span>'+notas.join('<br>')+'</div></div>':'')
+   +'<div class="acc">'
+     +'<button class="btn ig-ver">'+(igAbiertos[c.id]?'Ocultar conversación':'Ver conversación')+'</button>'
+     +(tel?'<a class="escribir" href="https://wa.me/'+tel+'" target="_blank">WhatsApp</a>':'')
+     +'<button class="btn ig-pausa">'+(c.pausado?'Volver a activar el agente':'Pausar el agente (contesto yo)')+'</button>'
+   +'</div>'
+   +'<div class="chat">'+chat+'</div></article>';
+}
+
+function igPintar(){
+  var n={todas:ig.length,
+    nuevas:ig.filter(igNuevo).length,
+    caliente:ig.filter(function(c){return c.temperatura==='caliente';}).length,
+    reunion:ig.filter(function(c){return c.estado==='reunion';}).length,
+    humano:ig.filter(function(c){return c.estado==='humano';}).length};
+  document.getElementById('ig-cifras').innerHTML=
+     '<div><b>'+n.todas+'</b><span>Conversaciones</span></div>'
+    +'<div><b>'+n.nuevas+'</b><span>Sin leer</span></div>'
+    +'<div><b style="color:#C8453A">'+n.caliente+'</b><span>Calientes</span></div>'
+    +'<div><b style="color:var(--verde)">'+n.reunion+'</b><span>Pidieron reunión</span></div>'
+    +'<div><b style="color:var(--naranja)">'+n.humano+'</b><span>Te toca a vos</span></div>';
+  var ch=[['todas','Todas'],['nuevas','Sin leer'],['caliente','Calientes'],['reunion','Pidieron reunión'],['humano','Te toca a vos']];
+  document.getElementById('ig-chips').innerHTML=ch.map(function(x){
+    return '<button data-igf="'+x[0]+'" class="'+(igFiltro===x[0]?'on':'')+'">'+x[1]+' · '+n[x[0]]+'</button>';}).join('');
+  var v=ig.filter(function(c){
+    if(igFiltro==='nuevas')return igNuevo(c);
+    if(igFiltro==='caliente')return c.temperatura==='caliente';
+    if(igFiltro==='reunion'||igFiltro==='humano')return c.estado===igFiltro;
+    return true;});
+  document.getElementById('ig-lista').innerHTML=v.length?v.map(igTarjeta).join('')
+    :'<div class="vacio"><b>Nada por acá</b>'+(ig.length?'Probá con otro filtro.':'Todavía no hay conversaciones.')+'</div>';
+  var b=n.nuevas+n.humano;
+  document.getElementById('igbadge').textContent=b||'';
+  document.title=(b?'('+b+') ':'')+'RoCA 36 · CRM';
+}
+
+function igCargar(silencioso){
+  if(igCargando)return;igCargando=true;
+  var antes={};ig.forEach(function(c){antes[c.id]=c.estado;});
+  token().then(function(t){
+    return fetch(API,{headers:{Authorization:'Bearer '+t}});
+  }).then(function(r){
+    if(r.status===401)throw new Error('La sesión venció: salí y volvé a entrar.');
+    if(!r.ok)throw new Error('El servidor respondió '+r.status);
+    return r.json();
+  }).then(function(d){
+    var primera=!ig.length;
+    ig=d.conversaciones||[];
+    document.getElementById('ig-agente').textContent=d.agente_prendido?'● Agente respondiendo':'○ Agente en pausa';
+    // aviso del navegador cuando alguien pide reunión o necesita una persona
+    if(!primera&&window.Notification&&Notification.permission==='granted'){
+      ig.forEach(function(c){
+        if(c.estado!=='charlando'&&antes[c.id]!==c.estado)
+          new Notification('Roca 36 · '+IG_EST[c.estado],{body:c.nombre+(c.siguiente?' — '+c.siguiente:'')});
+      });
+    }
+    igPintar();
+  }).catch(function(x){
+    if(!silencioso)document.getElementById('ig-lista').innerHTML=
+      '<div class="vacio"><b>No pude traer las conversaciones</b>'+esc(x.message)+'</div>';
+  }).then(function(){igCargando=false;});
+}
+
+document.addEventListener('click',function(e){
+  var t=e.target.closest&&e.target.closest('.tabs button');
+  if(t){
+    var tab=t.getAttribute('data-tab');
+    document.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('on',x===t);});
+    document.getElementById('vista-ig').style.display=tab==='ig'?'':'none';
+    document.getElementById('vista-form').style.display=tab==='form'?'':'none';
+    return;
+  }
+  var f=e.target.closest&&e.target.closest('[data-igf]');
+  if(f){igFiltro=f.getAttribute('data-igf');igPintar();return;}
+  var art=e.target.closest&&e.target.closest('[data-ig]');
+  if(!art)return;
+  var id=art.getAttribute('data-ig'),c=ig.filter(function(x){return x.id===id;})[0];
+  if(!c)return;
+  if(e.target.closest('.ig-ver')){
+    igAbiertos[id]=!igAbiertos[id];
+    if(igAbiertos[id])igMarcar(id,c.ultimo);
+    igPintar();
+    var ch=document.querySelector('[data-ig="'+id+'"] .chat');if(ch)ch.scrollTop=ch.scrollHeight;
+    return;
+  }
+  if(e.target.closest('.ig-pausa')){
+    var btn=e.target.closest('.ig-pausa');btn.disabled=true;btn.textContent='Guardando…';
+    token().then(function(t){
+      return fetch(API+'/pausa',{method:'POST',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},
+        body:JSON.stringify({id:id,pausado:!c.pausado})});
+    }).then(function(r){return r.json();}).then(function(d){
+      if(!d.ok)throw new Error(d.error||'error');
+      c.pausado=d.pausado;
+      if(d.pausado)c.estado='humano';else if(c.estado==='humano')c.estado=/Pidió reunión/.test(c.notas||'')?'reunion':'charlando';
+      igPintar();
+    }).catch(function(x){alert('No se guardó: '+x.message);igPintar();});
+  }
+});
+document.getElementById('ig-recargar').addEventListener('click',function(){igCargar(false);});
+
+function entrar(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  cargar();
+  igCargar(false);
+  setInterval(function(){igCargar(true);},60000);
+  if(window.Notification&&Notification.permission==='default')
+    document.addEventListener('click',function pedir(){Notification.requestPermission();
+      document.removeEventListener('click',pedir);});
+}
+
+sb.auth.getSession().then(function(r){
+  if(r.data.session){ guardarCookie(r.data.session); entrar(); return; }
+  var ck=cookieGuardada();
+  if(ck&&ck.refresh_token){
+    sb.auth.refreshSession({refresh_token:ck.refresh_token}).then(function(x){
+      if(x.data&&x.data.session){ guardarCookie(x.data.session); entrar(); }
+    });
+  }
+});
+</script>
+</body></html>
